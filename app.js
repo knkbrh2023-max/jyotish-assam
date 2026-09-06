@@ -86,18 +86,18 @@ async function submitReading(e){
       order_id:order.razorpayOrderId,
       prefill:{name:data.name,email:data.email},
       theme:{color:"#c89b3c"},
-      handler:async function(response){
-        status.textContent=lang==="as"?"Payment verify কৰা হৈছে...":lang==="hi"?"भुगतान सत्यापित हो रहा है...":"Verifying payment...";
-        const vr=await fetch(JA_CONFIG.apiBaseUrl.replace(/\/$/,"")+"/verify-payment",{
-          method:"POST",headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({...response,orderId:order.orderId})
-        });
-        const result=await vr.json();
-        if(!vr.ok) throw new Error(result.message||"Payment verification failed");
-        localStorage.setItem("ja_last_order",JSON.stringify(result));
-        status.textContent=lang==="as"?"Payment সফল। Report generate হৈ আছে।":lang==="hi"?"भुगतान सफल। रिपोर्ट तैयार हो रही है।":"Payment successful. Your report is being generated.";
-        setTimeout(()=>location.href="report.html?order="+encodeURIComponent(order.orderId),800);
-      },
+     handler:async function(response){
+status.textContent=lang==="as"?"Payment verify কৰা হৈছে...":lang==="hi"?"भुगतान सत्यापित हो रहा है...":"Verifying payment...";
+const vr=await fetch(JA_CONFIG.apiBaseUrl.replace(/\/$/,"")+"/verify-payment",{
+method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({...response,orderId:order.orderId})
+});
+const result=await vr.json();
+if(!vr.ok) throw new Error(result.message||"Payment verification failed");
+localStorage.setItem("ja_last_order",JSON.stringify(result));
+status.textContent=lang==="as"?"Payment সফল। Report generate হৈ আছে!":lang==="hi"?"भुगतान सफल। रिपोर्ट तैयार हो रही है।":"Payment successful. Your report is generating...";
+setTimeout(()=>location.href="report.html?order="+encodeURIComponent(order.orderId),800);
+},
       modal:{ondismiss:()=>{status.textContent="Payment cancelled.";}}
     });
     rzp.open();
