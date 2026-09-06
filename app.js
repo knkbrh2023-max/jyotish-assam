@@ -106,3 +106,63 @@ async function submitReading(e){
     status.textContent=err.message||"Something went wrong.";
   }
 }
+// --- Gemini AI Report Generation & PDF Download ---
+const GEMINI_API_KEY = "AQ.Ab8RN6JPHsllhBYqc8gt7-60fg6s6AVljxhB3gu01lr-QqLQyg"; 
+
+async function generateAIReportAndDownload(userData) {
+  try {
+    alert("Payment সফল হৈছে! AI-এ আপোনাৰ জ্যোতিষ ৰিপোৰ্ট প্ৰস্তুত কৰি আছে, অনুগ্ৰহ কৰি ১০ ছেকেণ্ড অপেক্ষা কৰক...");
+
+    const prompt = `
+আপুনি এজন অভিজ্ঞ অসমীয়া জ্যোতিষী। তলত দিয়া জন্মৰ তথ্য অনুসৰি এটা বিস্তৃত কুণ্ডলী আৰু ভাগ্যফল ৰিপোৰ্ট প্রস্তুত কৰক:
+- নাম: ${userData.name}
+- জন্মৰ তারিখ: ${userData.dob}
+- জন্মৰ সময়: ${userData.tob}
+- জন্মৰ স্থান: ${userData.pob}
+
+ৰিপোৰ্টটোত স্পষ্ট অসমীয়াত অন্তৰ্ভুক্ত কৰক:
+১. ব্যক্তিত্ব আৰু গ্ৰহৰ প্ৰভাৱ
+২. কেৰিয়াৰ, শিক্ষা আৰু আৰ্থিক দিশ
+৩. স্বাস্থ্য আৰু পৰিয়াল
+৪. শুভ ৰং, শুভ সংখ্যা আৰু সৰু প্ৰতিকাৰ (Remedies)`;
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      }
+    );
+
+    const data = await response.json();
+    const reportText = data.candidates[0].content.parts[0].text;
+
+    const element = document.createElement("div");
+    element.style.padding = "20px";
+    element.style.fontFamily = "Nirmala UI, Arial, sans-serif";
+    element.innerHTML = `
+      <div style="text-align: center; border-bottom: 2px solid #b8860b; padding-bottom: 10px;">
+        <h1 style="color: #b8860b; margin: 0;">জ্যোতিষ অসম</h1>
+        <p style="margin: 5px 0;">অনলাইন জন্ম কুণ্ডলী আৰু ভাগ্যফল ৰিপোৰ্ট</p>
+      </div>
+      <div style="margin-top: 20px; font-size: 14px; line-height: 1.8; color: #333;">
+        ${reportText.replace(/\n/g, '<br/>')}
+      </div>
+    `;
+
+    const opt = {
+      margin:       10,
+      filename:     `${userData.name}_Jyotish_Report.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+
+  } catch (error) {
+    console.error("Report generation error:", error);
+    alert("ৰিপোৰ্ট তৈয়াৰ কৰাত অসুবিধা হ'ল।");
+  }
+}
