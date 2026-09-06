@@ -212,3 +212,7 @@ Include the following sections clearly in English:
     alert("আচল সমস্যাটো হ'ল: " + error.message);
   }
 }
+// --- Global Event Attacher for "Get Reading" Buttons ---
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof applyLang === "function") applyLang();
+});
