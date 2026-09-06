@@ -64,10 +64,18 @@ async function submitReading(e){
       throw new Error("Backend is not configured.");
     }
 
-    const res=await fetch(JA_CONFIG.apiBaseUrl.replace(/\/$/,"")+"/create-order",{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({...data, language:data.reportLanguage})
-    });
+    const res = await fetch(
+  JA_CONFIG.apiBaseUrl.replace(/\/$/, "") + "/create-order",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": JA_CONFIG.supabaseAnonKey,
+      "Authorization": `Bearer ${JA_CONFIG.supabaseAnonKey}`
+    },
+    body: JSON.stringify({...data, language: data.reportLanguage})
+  }
+);
     if(!res.ok) throw new Error("Unable to create order");
     const order=await res.json();
 
