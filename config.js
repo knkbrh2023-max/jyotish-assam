@@ -1,9 +1,12 @@
-// PUBLIC configuration only. Never put secret API keys here.
+// Public configuration. Secret keys must NEVER be placed here.
 window.JA_CONFIG = {
   brand: "জ্যোতিষ অসম",
-  paymentLink: "https://rzp.io/l/YOUR_PAYMENT_LINK", // CHANGE THIS
   currency: "INR",
-  siteUrl: "https://YOUR-DOMAIN.example/",
-  adsensePublisherId: "ca-pub-XXXXXXXXXXXXXXXX", // CHANGE after AdSense approval
-  usePaymentLink: true
+  apiBaseUrl: "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1",
+  razorpayKeyId: "rzp_test_TXeg61WItGnzFQ",
+  paymentLink: "https://rzp.io/l/YOUR_PAYMENT_LINK",
+  usePaymentLink: false,
+  siteUrl: "https://knkbrh2023-max.github.io/jyotish-assam/",
+  adsensePublisherId: "ca-pub-XXXXXXXXXXXXXXXX",
+  useBackend: true
 };

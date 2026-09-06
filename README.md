@@ -1,43 +1,63 @@
-# Jyotish Assam — Professional Income Website
+# জ্যোতিষ অসম — Production-ready frontend + backend starter
 
-This is a GitHub Pages-ready static frontend.
+## What is included
+- Daily 12-sign Rashifal
+- Assamese / English / Hindi UI
+- Birth Chart ₹299
+- Love Reading ₹99
+- Career Reading ₹199
+- Customer birth-details form
+- Razorpay Checkout integration hook
+- Payment verification API contract
+- Customer report/status page
+- Production admin architecture
+- Supabase database schema
+- AI report-generation architecture
+- No WhatsApp booking
 
-## 1. Quick setup
-- Upload all files to a GitHub repository.
-- Settings → Pages → Deploy from branch → `main` → `/ (root)`.
-- Edit `config.js`:
-  - ``
-  - `paymentLink`
-  - `siteUrl`
-- Replace `YOUR-DOMAIN.example` in `index.html`, `robots.txt`, `sitemap.xml`.
+## Very important
+The ZIP is **not claiming that real payments/AI/PDF are live yet**. GitHub Pages cannot securely run payment verification or hold secret API keys.
 
-## 2. Automatic Daily Rashifal
-The frontend automatically changes the displayed daily seed based on the current date. The actual editorial content lives in `rashifal.js`.
-For a true scheduled CMS workflow, connect Supabase/Firebase and a scheduled server/edge function that publishes a new record every day.
+### Step 1 — Upload frontend
+Upload the website files to your GitHub Pages repository.
 
-## 3. Admin Panel
-`admin.html` is a demonstration panel. Demo PIN: `1234`.
-Do NOT use this PIN or localStorage admin for a real production admin system.
-For production, use Supabase Auth/Firebase Auth with database security rules/RLS.
+### Step 2 — Create Supabase
+Create a Supabase project and run `supabase/schema.sql` in SQL Editor.
 
-## 4. Payments
-The template supports a hosted payment-link approach: put your real payment link in `config.js`.
-For a full automated Razorpay/Stripe checkout, add a server-side backend that creates orders and verifies signatures. Never expose secret keys in GitHub Pages JavaScript.
+### Step 3 — Deploy backend
+Deploy the API/Edge Functions described in `backend/README.md` and `supabase/functions/`.
 
-## 5. AdSense
-Do not place ads until the site is approved and you have the official publisher/ad-unit code. Add the official script and ad-unit markup supplied by Google.
+### Step 4 — Configure frontend
+Edit `config.js`:
+- `apiBaseUrl` = your real backend URL
+- `siteUrl` = your real website URL
 
-## 6. Custom domain
-In GitHub repository Settings → Pages → Custom domain, enter your domain.
-At your DNS provider, point the domain to the GitHub Pages DNS records shown by GitHub. Enable HTTPS after DNS verification.
-Then update `siteUrl`, canonical URL, sitemap and Search Console property.
+### Step 5 — Razorpay
+Create a Razorpay account and use its Key ID in the backend only. The secret key must never be placed in GitHub files.
 
-## 7. Production launch checklist
-- - Replace payment link.
-- Add a real domain.
-- Add real Privacy/Terms/Refund policy.
-- Add analytics only with a privacy notice.
-- Configure a real authenticated backend for admin.
-- Configure payment verification if using API checkout.
-- Add original, useful astrology articles for SEO.
-- Submit sitemap to Google Search Console.
+### Step 6 — AI + astrology engine
+Connect a reliable astrology calculation engine/API on the backend. Calculate planetary positions first; then send those structured results to the AI for interpretation.
+
+### Step 7 — PDF + email
+Generate the PDF server-side and store it in private storage or a signed URL. Send the report link to the customer's email after successful payment.
+
+### Step 8 — Admin
+Use Supabase Auth (or another real auth provider) and RLS. Never use a frontend PIN/localStorage as production security.
+
+### Step 9 — AdSense
+Only add the official AdSense code after approval.
+
+## Prices
+- Birth Chart — ₹299
+- Love Reading — ₹99
+- Career Reading — ₹199
+
+
+## Current public configuration
+- Website: https://knkbrh2023-max.github.io/jyotish-assam/
+- Supabase project: https://ihbdrtnkfitytklonnel.supabase.co
+- Razorpay mode: TEST
+- Razorpay Key ID is configured in `config.js`.
+
+## Required for final live automation
+Razorpay Secret Key, Supabase service-role key, and AI/astrology provider secrets must be stored only as backend/Edge Function secrets. Never put them in GitHub/frontend files.

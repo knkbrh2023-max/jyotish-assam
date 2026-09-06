@@ -11,5 +11,90 @@ function getData(z){return lang==="as"?z.asData:lang==="hi"?z.hiData:z.enData;}
 function render(filter=""){const q=filter.toLowerCase();const list=ZODIAC.filter(z=>(z.as+z.en+z.hi).toLowerCase().includes(q));document.getElementById("zodiacGrid").innerHTML=list.map(z=>{const d=getData(z);const seed=(dayIndex()+ZODIAC.indexOf(z)*7)%10;const levels=lang==="hi"?["अच्छा","मध्यम","बहुत अच्छा","सावधान"]:lang==="en"?["Good","Moderate","Very Good","Caution"]:["ভাল","মধ্যম","অতি ভাল","সাৱধান"];return `<article class="zodiac-card" onclick="openRashi('${z.id}')"><div class="zsymbol">${z.s}</div><div><h3>${lang==="as"?z.as:lang==="hi"?z.hi:z.en}</h3><p>${d.overview}</p></div><div class="meters"><span>❤️ ${levels[seed%4]}</span><span>💼 ${levels[(seed+1)%4]}</span><span>💰 ${levels[(seed+2)%4]}</span></div></article>`}).join("");}
 window.openRashi=function(id){const z=ZODIAC.find(x=>x.id===id),d=getData(z),t=translations[lang];document.getElementById("modalContent").innerHTML=`<div class="big-symbol">${z.s}</div><h2>${lang==="as"?z.as:lang==="hi"?z.hi:z.en}</h2><div class="modal-text"><p><strong>✨ ${lang==="as"?"সাৰাংশ":lang==="hi"?"सारांश":"Overview"}:</strong> ${d.overview}</p><p>❤️ <strong>${t.love}:</strong> ${d.love}</p><p>💼 <strong>${t.career}:</strong> ${d.career}</p><p>💰 <strong>${t.finance}:</strong> ${d.finance}</p><p>🌿 <strong>${t.health}:</strong> ${d.health}</p><p>💡 <strong>${t.advice}:</strong> ${d.advice}</p><p>🎨 <strong>${t.lucky}:</strong> ${d.lucky} &nbsp; • &nbsp; 🔢 <strong>${t.number}:</strong> ${d.number}</p></div><p class="note">${t.guidance}</p>`;document.getElementById("modal").hidden=false;};
 window.closeModal=()=>document.getElementById("modal").hidden=true;
-window.buyService=function(type){if(C.usePaymentLink&&C.paymentLink&&!C.paymentLink.includes("YOUR_PAYMENT"))window.open(C.paymentLink,"_blank");else alert(lang==="hi"?"Payment link अभी सेट नहीं किया गया है।":lang==="en"?"Payment link is not configured yet.":"Payment link এতিয়াও set কৰা হোৱা নাই।");};
+window.buyService=function(type){
+  const prices={birth:299,love:99,career:199};
+  const names={birth:"Birth Chart",love:"Love Reading",career:"Career Reading"};
+  const modal=document.getElementById("modal");
+  const box=document.getElementById("modalContent");
+  const labels=lang==="as"
+    ? {title:"আপোনাৰ জন্ম তথ্য দিয়ক",name:"নাম",email:"ই-মেইল",dob:"জন্ম তাৰিখ",tob:"জন্ম সময়",pob:"জন্ম স্থান",language:"ৰিপ'ৰ্টৰ ভাষা",submit:"Payment লৈ আগবাঢ়ক",note:"সঠিক জন্ম সময় আৰু স্থান দিলে reading অধিক উপযোগী হ'ব।"}
+    : lang==="hi"
+    ? {title:"अपनी जन्म जानकारी दें",name:"नाम",email:"ईमेल",dob:"जन्म तिथि",tob:"जन्म समय",pob:"जन्म स्थान",language:"रिपोर्ट की भाषा",submit:"भुगतान पर जाएँ",note:"सही जन्म समय और स्थान देने से reading अधिक उपयोगी होगी।"}
+    : {title:"Enter your birth details",name:"Name",email:"Email",dob:"Birth date",tob:"Birth time",pob:"Birth place",language:"Report language",submit:"Continue to Payment",note:"Accurate birth time and place help make the reading more useful."};
+
+  box.innerHTML=`<h2>${labels.title}</h2>
+    <p class="form-service"><b>${names[type]}</b> — ₹${prices[type]}</p>
+    <form id="readingForm" class="reading-form">
+      <input type="hidden" name="service" value="${type}">
+      <label>${labels.name}<input name="name" required maxlength="80" autocomplete="name"></label>
+      <label>${labels.email}<input name="email" type="email" required maxlength="160" autocomplete="email"></label>
+      <div class="form-row">
+        <label>${labels.dob}<input name="birthDate" type="date" required></label>
+        <label>${labels.tob}<input name="birthTime" type="time" required></label>
+      </div>
+      <label>${labels.pob}<input name="birthPlace" required maxlength="160" placeholder="Village/Town, District, State, Country"></label>
+      <label>${labels.language}<select name="reportLanguage"><option value="as">অসমীয়া</option><option value="en">English</option><option value="hi">हिन्दी</option></select></label>
+      <label class="consent"><input type="checkbox" name="consent" required> I agree to the Privacy Policy and Terms.</label>
+      <button class="btn gold" type="submit">${labels.submit} ₹${prices[type]}</button>
+      <p class="form-note">${labels.note}</p>
+      <p id="formStatus" class="form-status" aria-live="polite"></p>
+    </form>`;
+  modal.hidden=false;
+  const f=document.getElementById("readingForm");
+  f.reportLanguage.value=lang;
+  f.onsubmit=(e)=>submitReading(e);
+};
 document.getElementById("todayDate").textContent=formatDate();document.getElementById("year").textContent=new Date().getFullYear();document.getElementById("langToggle").onclick=()=>{const order=["as","en","hi"];lang=order[(order.indexOf(lang)+1)%3];localStorage.setItem("ja_lang",lang);applyLang()};document.querySelectorAll(".lang-option").forEach(b=>b.onclick=()=>{lang=b.dataset.lang;localStorage.setItem("ja_lang",lang);applyLang()});document.getElementById("searchRashi").oninput=e=>render(e.target.value);applyLang();
+
+async function submitReading(e){
+  e.preventDefault();
+  const f=e.currentTarget, status=document.getElementById("formStatus");
+  const data=Object.fromEntries(new FormData(f).entries());
+  status.textContent=lang==="as"?"Processing...":lang==="hi"?"प्रोसेस हो रहा है...":"Processing...";
+  try{
+    if(!JA_CONFIG.useBackend || !JA_CONFIG.apiBaseUrl || JA_CONFIG.apiBaseUrl.includes("YOUR-BACKEND")){
+      if(JA_CONFIG.paymentLink && !JA_CONFIG.paymentLink.includes("YOUR_PAYMENT")){
+        localStorage.setItem("ja_pending_reading",JSON.stringify(data));
+        window.open(JA_CONFIG.paymentLink,"_blank");
+        status.textContent=lang==="as"?"Payment link খোলিছে। Payment কৰাৰ পিছত admin/backend সংযোগ কৰিব লাগিব।":
+          lang==="hi"?"Payment link खुल रहा है। Automated report के लिए backend connect करना होगा।":
+          "Payment link opened. Connect the backend to enable automated reports.";
+        return;
+      }
+      throw new Error("Backend is not configured.");
+    }
+
+    const res=await fetch(JA_CONFIG.apiBaseUrl.replace(/\/$/,"")+"/create-order",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({...data, language:data.reportLanguage})
+    });
+    if(!res.ok) throw new Error("Unable to create order");
+    const order=await res.json();
+
+    if(!window.Razorpay) throw new Error("Razorpay checkout is not loaded.");
+    const rzp=new Razorpay({
+      key:order.keyId, amount:order.amount, currency:order.currency,
+      name:JA_CONFIG.brand, description:order.serviceName,
+      order_id:order.razorpayOrderId,
+      prefill:{name:data.name,email:data.email},
+      theme:{color:"#c89b3c"},
+      handler:async function(response){
+        status.textContent=lang==="as"?"Payment verify কৰা হৈছে...":lang==="hi"?"भुगतान सत्यापित हो रहा है...":"Verifying payment...";
+        const vr=await fetch(JA_CONFIG.apiBaseUrl.replace(/\/$/,"")+"/verify-payment",{
+          method:"POST",headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({...response,orderId:order.orderId})
+        });
+        const result=await vr.json();
+        if(!vr.ok) throw new Error(result.message||"Payment verification failed");
+        localStorage.setItem("ja_last_order",JSON.stringify(result));
+        status.textContent=lang==="as"?"Payment সফল। Report generate হৈ আছে।":lang==="hi"?"भुगतान सफल। रिपोर्ट तैयार हो रही है।":"Payment successful. Your report is being generated.";
+        setTimeout(()=>location.href="report.html?order="+encodeURIComponent(order.orderId),800);
+      },
+      modal:{ondismiss:()=>{status.textContent="Payment cancelled.";}}
+    });
+    rzp.open();
+  }catch(err){
+    console.error(err);
+    status.textContent=err.message||"Something went wrong.";
+  }
+}

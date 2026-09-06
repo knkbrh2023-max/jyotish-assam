@@ -1,40 +1,17 @@
 <!doctype html>
-<html lang="as"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | Jyotish Assam</title><link rel="stylesheet" href="style.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | Jyotish Assam</title><link rel="stylesheet" href="style.css"></head>
 <body class="admin-body">
 <header class="topbar"><div class="wrap nav"><a class="brand" href="index.html">🔮 Jyotish Assam Admin</a><a class="small-btn" href="index.html">View Site</a></div></header>
 <main class="wrap admin">
-<div id="login">
- <h1>Admin Panel</h1><p>এই demo panel local browser-ত settings/content preview manage কৰে। Real production adminৰ বাবে Supabase/Firebase authentication সংযোগ কৰক।</p>
- <input id="pin" type="password" placeholder="Demo PIN (1234)">
- <button class="btn gold" onclick="login()">Login</button>
-</div>
-<div id="panel" hidden>
- <div class="admin-head"><div><span class="eyebrow">CONTROL CENTER</span><h1>Website Admin</h1></div><button class="btn" onclick="logout()">Logout</button></div>
- <div class="admin-grid">
-  <section class="admin-card"><h3>Site settings</h3>
-   <label><input id="wa"></label>
-   <label>Payment Link<input id="pay"></label>
-   <label>Site URL<input id="site"></label>
-   <button class="btn gold" onclick="save()">Save settings</button>
-  </section>
-  <section class="admin-card"><h3>Daily content</h3>
-   <p>Automatic daily Rashifal is generated from the editorial dataset in <code>rashifal.js</code>. For true scheduled publishing, connect a CMS/Supabase and a cron job.</p>
-   <button class="btn" onclick="preview()">Preview today's content</button>
-  </section>
-  <section class="admin-card"><h3>Monetization checklist</h3>
-   <ul><li>AdSense publisher ID</li><li>Payment gateway / Payment Link</li><li>Custom domain</li><li>Privacy, Terms, Disclaimer</li><li>Analytics + Search Console</li></ul>
-  </section>
- </div>
- <div id="previewBox" class="admin-card" hidden></div>
+<div class="admin-card">
+<h1>Production Admin</h1>
+<p>This page is a frontend shell. Real authentication, customer data, payment status and reports must be served by your backend/Supabase with Row Level Security.</p>
+<label>Backend URL<input id="api" placeholder="https://your-backend.example.com"></label>
+<button class="btn gold" onclick="save()">Save locally</button>
+<p id="msg"></p>
 </div>
 </main>
-<script src="config.js"></script><script src="rashifal.js"></script>
 <script>
-function login(){if(document.getElementById("pin").value==="1234"){localStorage.setItem("ja_admin","1");show()}else alert("Demo PIN ভুল।")}
-function show(){document.getElementById("login").hidden=true;document.getElementById("panel").hidden=false;wa.value=JA_CONFIG.;pay.value=JA_CONFIG.paymentLink;site.value=JA_CONFIG.siteUrl}
-function logout(){localStorage.removeItem("ja_admin");location.reload()}
-function save(){localStorage.setItem("ja_settings",JSON.stringify({:wa.value,paymentLink:pay.value,siteUrl:site.value}));alert("Saved locally. For production, store these in your backend/CMS.");}
-function preview(){previewBox.hidden=false;previewBox.innerHTML="<h3>Today's preview</h3>"+ZODIAC.map(z=>"<p><b>"+z.s+" "+z.as+"</b> — "+z.base+"</p>").join("")}
-if(localStorage.getItem("ja_admin"))show();
-</script>
-</body></html>
+api.value=localStorage.getItem("ja_api")||"";
+function save(){localStorage.setItem("ja_api",api.value.trim());msg.textContent="Saved locally. Configure the same URL in config.js for all visitors."}
+</script></body></html>
