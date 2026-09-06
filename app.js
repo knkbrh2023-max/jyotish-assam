@@ -87,17 +87,19 @@ async function submitReading(e){
       prefill:{name:data.name,email:data.email},
       theme:{color:"#c89b3c"},
      handler: async function (response) {
-  status.textContent = lang === "as" ? "Payment সফল! AI ৰিপোৰ্ট প্ৰস্তুত হৈ আছে..." : "Payment successful! Generating AI Report...";
-  
-  // ফৰ্মৰ তথ্যসমূহ সংগ্ৰহ কৰা
-  const formData = {
-    name: data.name || "গ্ৰাহক",
-    email: data.email || "",
-    dob: data.dob || "",
-    tob: data.tob || "",
-    pob: data.pob || ""
-  };
+        status.textContent = "Payment সফল! AI ৰিপোৰ্ট প্ৰস্তুত হৈ আছে...";
+        
+        const userData = {
+          name: data?.name || document.getElementById("name")?.value || "গ্ৰাহক",
+          dob: data?.dob || document.getElementById("dob")?.value || "",
+          tob: data?.tob || document.getElementById("tob")?.value || "",
+          pob: data?.pob || document.getElementById("pob")?.value || ""
+        };
 
+        if (modal) modal.hidden = true;
+
+        await generateAIReportAndDownload(userData);
+      },
   // মডাল বন্ধ কৰা
   modal.hidden = true;
 
