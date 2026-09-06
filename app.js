@@ -175,6 +175,6 @@ async function generateAIReportAndDownload(userData) {
 
   } catch (error) {
     console.error("Report generation error:", error);
-    alert("ৰিপোৰ্ট তৈয়াৰ কৰাত অসুবিধা হ'ল।");
+    alert("ৰিপোৰ্ট তৈয়াৰ কৰাত অসুবিধা হ'ল: " + error.message);
   }
 }
