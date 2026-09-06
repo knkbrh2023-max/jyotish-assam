@@ -121,9 +121,16 @@ async function submitReading(e){
 // --- Gemini AI Report Generation & PDF Download ---
 const GEMINI_API_KEY = "AQ.Ab8RN6JPHsllhBYqc8gt7-60fg6s6AVljxhB3gu01lr-QqLQyg"; 
 
+// --- Gemini AI Report Generation & PDF Download Function ---
 async function generateAIReportAndDownload(userData) {
   try {
-    alert("Payment সফল হৈছে! AI-এ আপোনাৰ জ্যোতিষ ৰিপোৰ্ট প্ৰস্তুত কৰি আছে, অনুগ্ৰহ কৰি ১০ ছেকেণ্ড অপেক্ষা কৰক...");
+    // ১. Check HTML2PDF Library
+    if (typeof html2pdf === "undefined") {
+      alert("Error: html2pdf Library টো index.html-ত নাই! অনুগ্ৰহ কৰি Script Tag টো যোগ কৰক।");
+      return;
+    }
+
+    alert("Payment সফল হৈছে! AI-এ আপোনাৰ জ্যোতিষ ৰিপোৰ্ট প্ৰস্তুত কৰি আছে...");
 
     const prompt = `
 আপুনি এজন অভিজ্ঞ অসমীয়া জ্যোতিষী। তলত দিয়া জন্মৰ তথ্য অনুসৰি এটা বিস্তৃত কুণ্ডলী আৰু ভাগ্যফল ৰিপোৰ্ট প্রস্তুত কৰক:
@@ -138,6 +145,7 @@ async function generateAIReportAndDownload(userData) {
 ৩. স্বাস্থ্য আৰু পৰিয়াল
 ৪. শুভ ৰং, শুভ সংখ্যা আৰু সৰু প্ৰতিকাৰ (Remedies)`;
 
+    // ২. Gemini API Call
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
@@ -148,8 +156,20 @@ async function generateAIReportAndDownload(userData) {
     );
 
     const data = await response.json();
-    const reportText = data.candidates[0].content.parts[0].text;
 
+    if (data.error) {
+      alert("Gemini API Error: " + data.error.message);
+      return;
+    }
+
+    const reportText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!reportText) {
+      alert("AI-ৰ পৰা উত্তৰ পোৱা নগ'ল। API Key পৰীক্ষা কৰক।");
+      return;
+    }
+
+    // ৩. Create PDF Content
     const element = document.createElement("div");
     element.style.padding = "20px";
     element.style.fontFamily = "Nirmala UI, Arial, sans-serif";
@@ -174,7 +194,6 @@ async function generateAIReportAndDownload(userData) {
     html2pdf().set(opt).from(element).save();
 
   } catch (error) {
-    console.error("Report generation error:", error);
-    alert("ৰিপোৰ্ট তৈয়াৰ কৰাত অসুবিধা হ'ল: " + error.message);
+    alert("আচল সমস্যাটো হ'ল: " + error.message);
   }
 }
