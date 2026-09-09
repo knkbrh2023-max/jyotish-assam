@@ -1,878 +1,607 @@
-const C = window.JA_CONFIG || {
-  brand: "জ্যোতিষ অসম",
-  currency: "INR",
-  apiBaseUrl: "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1",
-  razorpayKeyId: "rzp_test_TXeg61WItGnzFQ",
-  siteUrl: "https://knkbrh2023-max.github.io/jyotish-assam/",
-  adsensePublisherId: "ca-pub-XXXXXXXXXXXXXXXX",
-  useBackend: true
-};
+// Configuration
+const C = window.JA_CONFIG;
 
-const translations = {
-  as: {
-    brand: "জ্যোতিষ অসম",
-    nav_rashifal: "ৰাশিফল",
-    nav_services: "সেৱা",
-    nav_about: "আমাৰ বিষয়ে",
-    nav_contact: "যোগাযোগ",
-    hero_pill: "অসমীয়া জ্যোতিষ • দৈনিক মাৰ্গদৰ্শন"
-  },
-  en: {
-    brand: "Jyotish Assam",
-    nav_rashifal: "Rashifal",
-    nav_services: "Services",
-    nav_about: "About",
-    nav_contact: "Contact",
-    hero_pill: "Indian Astrology • Daily Guidance"
-  },
-  hi: {
-    brand: "ज्योतिष असम",
-    nav_rashifal: "राशिफल",
-    nav_services: "सेवाएँ",
-    nav_about: "हमारे बारे में",
-    nav_contact: "संपर्क",
-    hero_pill: "भारतीय ज्योतिष • दैनिक मार्गदर्शन"
-  }
-};
+// Global state
+let selectedService = null;
+let currentOrder = null;
 
-let lang = localStorage.getItem("ja_lang") || "as";
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    setupEventListeners();
+    checkExistingOrder();
+});
 
-function applyLang() {
-  document.documentElement.lang = lang;
+// Setup event listeners
+function setupEventListeners() {
+    // Service buttons
+    const serviceButtons = document.querySelectorAll('.service-btn');
+    serviceButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.service-card');
+            const serviceName = card.querySelector('h3').textContent;
+            const price = parseInt(card.querySelector('.service-price').textContent.match(/\d+/)[0]);
+            const icon = card.querySelector('.service-icon').textContent;
+            
+            // Map service name to service code
+            let serviceCode = 'birth';
+            if (serviceName.includes('Love') || serviceName.includes('প্রেম')) {
+                serviceCode = 'love';
+            } else if (serviceName.includes('Career') || serviceName.includes('ক্যারিয়ার')) {
+                serviceCode = 'career';
+            }
+            
+            selectService(serviceCode, serviceName, price, icon);
+        });
+    });
 
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.dataset.i18n;
-
-    if (translations[lang] && translations[lang][key]) {
-      el.textContent = translations[lang][key];
+    // Form submission
+    const form = document.getElementById('birthDetailsForm');
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
     }
-  });
-}
 
-function formatDate() {
-  return new Date().toLocaleDateString(
-    lang === "as"
-      ? "as-IN"
-      : lang === "hi"
-      ? "hi-IN"
-      : "en-IN",
-    {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric"
+    // Close modal
+    const modal = document.getElementById('serviceModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeServiceModal();
+            }
+        });
     }
-  );
+
+    // Language change
+    const langBtns = document.querySelectorAll('.lang-btn');
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            langBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const lang = this.textContent.trim().substring(0, 2).toLowerCase();
+            changeLanguage(lang);
+        });
+    });
 }
 
-function getData(z) {
-  return z.asData;
+// Select service
+function selectService(serviceCode, serviceName, price, icon) {
+    selectedService = {
+        code: serviceCode,
+        name: serviceName,
+        price: price,
+        icon: icon
+    };
+
+    showServiceModal(serviceCode, serviceName, price);
 }
 
-function render(filter = "") {
-  if (typeof ZODIAC === "undefined") return;
+// Show service modal with form
+function showServiceModal(serviceCode, serviceName, price) {
+    // Create modal if doesn't exist
+    let modal = document.getElementById('serviceModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'serviceModal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeServiceModal()">&times;</span>
+                <div id="modalBody"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
 
-  const q = filter.toLowerCase();
+        // Add modal styles
+        if (!document.getElementById('modalStyles')) {
+            const style = document.createElement('style');
+            style.id = 'modalStyles';
+            style.textContent = `
+                .modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 2000;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.6);
+                    animation: fadeIn 0.3s;
+                }
 
-  const list = ZODIAC.filter(z =>
-    (z.as + z.en + z.hi)
-      .toLowerCase()
-      .includes(q)
-  );
+                .modal.active {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
 
-  return list;
+                .modal-content {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    width: 90%;
+                    max-width: 500px;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    position: relative;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                }
+
+                .modal-close {
+                    position: absolute;
+                    right: 1.5rem;
+                    top: 1.5rem;
+                    font-size: 2rem;
+                    cursor: pointer;
+                    color: #666;
+                    transition: color 0.3s;
+                }
+
+                .modal-close:hover {
+                    color: #000;
+                }
+
+                .form-group {
+                    margin-bottom: 1.5rem;
+                }
+
+                .form-group label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-weight: 600;
+                    color: #333;
+                    font-size: 0.95rem;
+                }
+
+                .form-group input,
+                .form-group select {
+                    width: 100%;
+                    padding: 0.75rem;
+                    border: 1px solid #ddd;
+                    border-radius: 6px;
+                    font-size: 1rem;
+                    transition: border-color 0.3s;
+                }
+
+                .form-group input:focus,
+                .form-group select:focus {
+                    outline: none;
+                    border-color: #6b46c1;
+                    box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+                }
+
+                .form-row {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1rem;
+                }
+
+                @media (max-width: 600px) {
+                    .form-row {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .modal-content {
+                        width: 95%;
+                        padding: 1.5rem;
+                    }
+                }
+
+                .service-header {
+                    text-align: center;
+                    margin-bottom: 2rem;
+                    padding-bottom: 1.5rem;
+                    border-bottom: 2px solid #f0f0f0;
+                }
+
+                .service-header-icon {
+                    font-size: 3rem;
+                    margin-bottom: 0.5rem;
+                }
+
+                .service-header h2 {
+                    font-size: 1.5rem;
+                    color: #333;
+                    margin-bottom: 0.5rem;
+                }
+
+                .service-header p {
+                    color: #d4af37;
+                    font-weight: 600;
+                    font-size: 1.2rem;
+                }
+
+                .form-actions {
+                    display: flex;
+                    gap: 1rem;
+                    margin-top: 2rem;
+                }
+
+                .form-actions button {
+                    flex: 1;
+                    padding: 0.75rem 1.5rem;
+                    border: none;
+                    border-radius: 6px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    font-size: 1rem;
+                }
+
+                .btn-submit {
+                    background: linear-gradient(135deg, #6b46c1, #7c3aed);
+                    color: white;
+                }
+
+                .btn-submit:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+                }
+
+                .btn-cancel {
+                    background: #f0f0f0;
+                    color: #333;
+                }
+
+                .btn-cancel:hover {
+                    background: #e0e0e0;
+                }
+
+                .loading {
+                    display: none;
+                    text-align: center;
+                    padding: 2rem;
+                }
+
+                .loading.active {
+                    display: block;
+                }
+
+                .spinner {
+                    border: 4px solid #f3f3f3;
+                    border-top: 4px solid #6b46c1;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 1rem;
+                }
+
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+
+                .error-message {
+                    background: #fee;
+                    color: #c33;
+                    padding: 1rem;
+                    border-radius: 6px;
+                    margin-bottom: 1rem;
+                    display: none;
+                }
+
+                .error-message.show {
+                    display: block;
+                }
+
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    // Populate modal
+    const modalBody = document.getElementById('modalBody');
+    const serviceNames = {
+        birth: 'জন্ম কুণ্ডলী বিশ্লেষণ',
+        love: 'প্রেম আৰু সম্পৰ্ক',
+        career: 'ক্যারিয়ার বিশ্লেষণ'
+    };
+
+    const serviceIcons = {
+        birth: '🔮',
+        love: '❤️',
+        career: '💼'
+    };
+
+    modalBody.innerHTML = `
+        <div class="service-header">
+            <div class="service-header-icon">${serviceIcons[serviceCode]}</div>
+            <h2>${serviceNames[serviceCode]}</h2>
+            <p>₹${price}</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="birthDetailsForm">
+            <div class="form-group">
+                <label>নাম / Name *</label>
+                <input type="text" name="name" placeholder="আপোনাৰ সম্পূৰ্ণ নাম" required>
+            </div>
+
+            <div class="form-group">
+                <label>ইমেইল / Email *</label>
+                <input type="email" name="email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>জন্ম তাৰিখ / Date *</label>
+                    <input type="date" name="birthDate" required>
+                </div>
+                <div class="form-group">
+                    <label>জন্ম সময় / Time *</label>
+                    <input type="time" name="birthTime" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>জন্ম স্থান / Place *</label>
+                <input type="text" name="birthPlace" placeholder="City, State, Country" required>
+            </div>
+
+            <div class="form-group">
+                <label>ভাষা / Language *</label>
+                <select name="language" required>
+                    <option value="as">Assamese (অসমীয়া)</option>
+                    <option value="en">English</option>
+                    <option value="hi">Hindi (हिन्दी)</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" onclick="closeServiceModal()">বাতিল / Cancel</button>
+                <button type="submit" class="btn-submit">পেমেন্ট কৰক / Pay ₹${price}</button>
+            </div>
+        </form>
+
+        <div class="loading" id="loadingDiv">
+            <div class="spinner"></div>
+            <p>প্রক্রিয়াকরণ চলছে... Processing...</p>
+        </div>
+    `;
+
+    // Add form submit listener
+    document.getElementById('birthDetailsForm').addEventListener('submit', handleFormSubmit);
+
+    // Show modal
+    modal.classList.add('active');
 }
 
-
-/* =========================================================
-   RASHI MODAL
-========================================================= */
-
-window.openRashi = function (id) {
-
-  const z = ZODIAC.find(x => x.id === id);
-
-  if (!z) return;
-
-  const d = getData(z);
-
-  document.getElementById("modalContent").innerHTML = `
-    <h2>${z.as}</h2>
-    <p>${d.summary}</p>
-  `;
-
-  document.getElementById("modal").hidden = false;
-};
-
-
-window.closeModal = function () {
-  document.getElementById("modal").hidden = true;
-};
-
-
-/* =========================================================
-   SERVICE INFORMATION
-========================================================= */
-
-const SERVICE_PRICES = {
-  birth: 299,
-  love: 99,
-  career: 199
-};
-
-const SERVICE_NAMES = {
-  birth: {
-    as: "জন্ম কুণ্ডলী",
-    en: "Birth Chart",
-    hi: "जन्म कुंडली"
-  },
-
-  love: {
-    as: "প্ৰেম ৰিডিং",
-    en: "Love Reading",
-    hi: "लव रीडिंग"
-  },
-
-  career: {
-    as: "কেৰিয়াৰ ৰিডিং",
-    en: "Career Reading",
-    hi: "करियर रीडिंग"
-  }
-};
-
-
-/* =========================================================
-   BUY SERVICE
-========================================================= */
-
-window.buyService = function (type) {
-
-  if (!SERVICE_PRICES[type]) {
-    alert("Invalid service");
-    return;
-  }
-
-  const modal = document.getElementById("modal");
-  const box = document.getElementById("modalContent");
-
-  const price = SERVICE_PRICES[type];
-
-  const serviceName =
-    SERVICE_NAMES[type][lang] ||
-    SERVICE_NAMES[type].en;
-
-  box.innerHTML = `
-
-    <h2>
-      ${
-        lang === "as"
-          ? "আপোনাৰ জন্ম তথ্য দিয়ক"
-          : lang === "hi"
-          ? "अपनी जन्म जानकारी दें"
-          : "Enter Your Birth Details"
-      }
-    </h2>
-
-    <p class="form-service">
-      <b>${serviceName}</b> — ₹${price}
-    </p>
-
-    <form id="reading-form">
-
-      <input
-        type="hidden"
-        name="service"
-        value="${type}"
-      >
-
-      <label>
-        ${lang === "as" ? "নাম" : lang === "hi" ? "नाम" : "Name"}
-        <input
-          type="text"
-          id="name"
-          required
-          autocomplete="name"
-        >
-      </label>
-
-      <br>
-
-      <label>
-        ${lang === "as" ? "ই-মেইল" : lang === "hi" ? "ई-मेल" : "Email"}
-        <input
-          type="email"
-          id="email"
-          required
-          autocomplete="email"
-        >
-      </label>
-
-      <br>
-
-      <label>
-        ${
-          lang === "as"
-            ? "জন্ম তাৰিখ"
-            : lang === "hi"
-            ? "जन्म तिथि"
-            : "Date of Birth"
-        }
-
-        <input
-          type="date"
-          id="dob"
-          required
-        >
-      </label>
-
-      <br>
-
-      <label>
-        ${
-          lang === "as"
-            ? "জন্ম সময়"
-            : lang === "hi"
-            ? "जन्म समय"
-            : "Time of Birth"
-        }
-
-        <input
-          type="time"
-          id="tob"
-          required
-        >
-      </label>
-
-      <br>
-
-      <label>
-        ${
-          lang === "as"
-            ? "জন্ম স্থান"
-            : lang === "hi"
-            ? "जन्म स्थान"
-            : "Birth Place"
-        }
-
-        <input
-          type="text"
-          id="pob"
-          required
-          placeholder="Bihpuria, Assam"
-        >
-      </label>
-
-      <br>
-
-      <label>
-        ${
-          lang === "as"
-            ? "ৰিপোৰ্টৰ ভাষা"
-            : lang === "hi"
-            ? "रिपोर्ट की भाषा"
-            : "Report Language"
-        }
-
-        <select
-          id="report-lang"
-          style="
-            padding:8px;
-            margin-top:5px;
-            width:100%;
-          "
-        >
-
-          <option
-            value="as"
-            ${lang === "as" ? "selected" : ""}
-          >
-            অসমীয়া (Assamese)
-          </option>
-
-          <option
-            value="en"
-            ${lang === "en" ? "selected" : ""}
-          >
-            English
-          </option>
-
-          <option
-            value="hi"
-            ${lang === "hi" ? "selected" : ""}
-          >
-            हिन्दी (Hindi)
-          </option>
-
-        </select>
-
-      </label>
-
-      <br><br>
-
-      <button
-        type="submit"
-        id="pay-btn"
-        style="
-          padding:12px 22px;
-          background:#b8860b;
-          color:white;
-          border:none;
-          border-radius:6px;
-          cursor:pointer;
-          font-weight:bold;
-        "
-      >
-        ${
-          lang === "as"
-            ? `₹${price} Payment লৈ আগবাঢ়ক`
-            : lang === "hi"
-            ? `₹${price} भुगतान करें`
-            : `Proceed to Pay ₹${price}`
-        }
-      </button>
-
-    </form>
-  `;
-
-  modal.hidden = false;
-
-
-  /* =======================================================
-     FORM SUBMIT
-  ======================================================= */
-
-  document.getElementById("reading-form").onsubmit =
-    async function (e) {
-
-      e.preventDefault();
-
-      const payButton =
-        document.getElementById("pay-btn");
-
-      payButton.disabled = true;
-
-      payButton.textContent =
-        lang === "as"
-          ? "Order তৈয়াৰ হৈ আছে..."
-          : lang === "hi"
-          ? "ऑर्डर बनाया जा रहा है..."
-          : "Creating Order...";
-
-
-      const userData = {
-
-        name:
-          document.getElementById("name").value.trim(),
-
-        email:
-          document.getElementById("email").value.trim(),
-
-        dob:
-          document.getElementById("dob").value,
-
-        tob:
-          document.getElementById("tob").value,
-
-        pob:
-          document.getElementById("pob").value.trim(),
-
-        reportLang:
-          document.getElementById("report-lang").value || lang
-      };
-
-
-      try {
-
-        /* =================================================
-           1. CREATE RAZORPAY ORDER THROUGH SUPABASE
-        ================================================= */
-
-        if (!C.useBackend) {
-          throw new Error(
-            "Backend payment system is disabled."
-          );
-        }
-
-        if (!C.apiBaseUrl) {
-          throw new Error(
-            "Supabase API URL is not configured."
-          );
-        }
-
-
-        const createResponse = await fetch(
-          `${C.apiBaseUrl}/create-order`,
-          {
-            method: "POST",
-
+// Close modal
+function closeServiceModal() {
+    const modal = document.getElementById('serviceModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// Handle form submission
+async function handleFormSubmit(e) {
+    e.preventDefault();
+
+    if (!selectedService) {
+        showError('Service not selected');
+        return;
+    }
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    // Validate inputs
+    if (!formData.get('name') || !formData.get('email') || !formData.get('birthDate') || 
+        !formData.get('birthTime') || !formData.get('birthPlace')) {
+        showError('সকল field fill কৰক / Fill all fields');
+        return;
+    }
+
+    showLoading(true);
+
+    try {
+        // Create order
+        const orderResponse = await fetch(`${C.apiBaseUrl}/create-order`, {
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
-
             body: JSON.stringify({
-
-              service: type,
-
-              name: userData.name,
-
-              email: userData.email,
-
-              birthDate: userData.dob,
-
-              birthTime: userData.tob,
-
-              birthPlace: userData.pob,
-
-              language: userData.reportLang
-
+                service: selectedService.code,
+                name: formData.get('name'),
+                email: formData.get('email'),
+                birthDate: formData.get('birthDate'),
+                birthTime: formData.get('birthTime'),
+                birthPlace: formData.get('birthPlace'),
+                language: formData.get('language')
             })
-          }
-        );
+        });
 
-
-        const order = await createResponse.json();
-
-
-        if (!createResponse.ok || !order.success) {
-
-          throw new Error(
-            order.message ||
-            "Failed to create order"
-          );
-
+        if (!orderResponse.ok) {
+            throw new Error('Order creation failed');
         }
 
+        const orderData = await orderResponse.json();
 
-        /* =================================================
-           2. OPEN RAZORPAY CHECKOUT
-        ================================================= */
-
-        if (
-          typeof Razorpay === "undefined"
-        ) {
-
-          throw new Error(
-            "Razorpay Checkout library not loaded."
-          );
-
+        if (!orderData.success) {
+            throw new Error(orderData.error || 'Order creation failed');
         }
 
+        currentOrder = orderData;
+        
+        // Initialize Razorpay
+        handleRazorpayPayment(orderData);
 
-        if (!order.razorpayOrderId) {
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Error: ' + error.message);
+        showLoading(false);
+    }
+}
 
-          throw new Error(
-            "Razorpay Order ID not received."
-          );
-
-        }
-
-
-        const razorpayOptions = {
-
-          key:
-            order.keyId ||
-            C.razorpayKeyId,
-
-          amount:
-            order.amount,
-
-          currency:
-            order.currency || "INR",
-
-          name:
-            "জ্যোতিষ অসম",
-
-          description:
-            order.serviceName ||
-            serviceName,
-
-          order_id:
-            order.razorpayOrderId,
-
-          prefill: {
-
-            name:
-              userData.name,
-
-            email:
-              userData.email
-
-          },
-
-          theme: {
-            color: "#c89b3c"
-          },
-
-
-          handler:
-            async function (response) {
-
-              await verifyPayment(
-                response,
-                order.orderId,
-                userData
-              );
-
-            },
-
-
-          modal: {
-
-            ondismiss:
-              function () {
-
-                payButton.disabled = false;
-
-                payButton.textContent =
-                  lang === "as"
-                    ? `₹${price} Payment লৈ আগবাঢ়ক`
-                    : lang === "hi"
-                    ? `₹${price} भुगतान करें`
-                    : `Proceed to Pay ₹${price}`;
-
-              }
-
-          }
-
-        };
-
-
-        const rzp =
-          new Razorpay(
-            razorpayOptions
-          );
-
-
-        rzp.on(
-          "payment.failed",
-          function (response) {
-
-            console.error(
-              "Razorpay payment failed:",
-              response
+// Handle Razorpay payment
+function handleRazorpayPayment(orderData) {
+    const options = {
+        key: C.razorpayKeyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: C.brand,
+        description: `${orderData.serviceName} Reading`,
+        order_id: orderData.razorpayOrderId,
+        handler: function(response) {
+            verifyPayment(
+                orderData.orderId,
+                response.razorpay_order_id,
+                response.razorpay_payment_id,
+                response.razorpay_signature
             );
-
-            alert(
-              lang === "as"
-                ? "Payment সফল নহ'ল। পুনৰ চেষ্টা কৰক।"
-                : lang === "hi"
-                ? "भुगतान असफल हुआ। कृपया पुनः प्रयास करें।"
-                : "Payment failed. Please try again."
-            );
-
-            payButton.disabled = false;
-
-          }
-        );
-
-
-        rzp.open();
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          lang === "as"
-            ? "সমস্যা হৈছে: " + error.message
-            : lang === "hi"
-            ? "समस्या हुई: " + error.message
-            : "Error: " + error.message
-        );
-
-        payButton.disabled = false;
-
-        payButton.textContent =
-          lang === "as"
-            ? `₹${price} Payment লৈ আগবাঢ়ক`
-            : lang === "hi"
-            ? `₹${price} भुगतान करें`
-            : `Proceed to Pay ₹${price}`;
-
-      }
-
-    };
-};
-
-
-/* =========================================================
-   VERIFY PAYMENT
-========================================================= */
-
-async function verifyPayment(
-  razorpayResponse,
-  orderId,
-  userData
-) {
-
-  try {
-
-    const verifyResponse = await fetch(
-      `${C.apiBaseUrl}/verify-payment`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json"
         },
-
-        body: JSON.stringify({
-
-          orderId,
-
-          razorpay_order_id:
-            razorpayResponse.razorpay_order_id,
-
-          razorpay_payment_id:
-            razorpayResponse.razorpay_payment_id,
-
-          razorpay_signature:
-            razorpayResponse.razorpay_signature
-
-        })
-      }
-    );
-
-
-    const result =
-      await verifyResponse.json();
-
-
-    if (
-      !verifyResponse.ok ||
-      !result.success
-    ) {
-
-      throw new Error(
-        result.message ||
-        "Payment verification failed"
-      );
-
-    }
-
-
-    document.getElementById("modal").hidden = true;
-
-
-    const messages = {
-
-      as:
-        "Payment সফল হৈছে! আপোনাৰ জ্যোতিষ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে।",
-
-      en:
-        "Payment successful! Your astrology report is being prepared.",
-
-      hi:
-        "भुगतान सफल हुआ! आपकी ज्योतिष रिपोर्ट तैयार की जा रही है।"
-
+        prefill: {
+            name: currentOrder.name,
+            email: currentOrder.email
+        },
+        theme: {
+            color: '#6b46c1'
+        }
     };
 
-
-    alert(
-      messages[userData.reportLang] ||
-      messages.as
-    );
-
-
-    /*
-      IMPORTANT:
-      Report generation should happen ONLY
-      after successful server-side payment verification.
-    */
-
-    await requestReport(
-      orderId,
-      userData.reportLang
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "Payment verification error:",
-      error
-    );
-
-    alert(
-      lang === "as"
-        ? "Payment verify কৰোঁতে সমস্যা হৈছে: " +
-          error.message
-        : lang === "hi"
-        ? "भुगतान सत्यापन में समस्या: " +
-          error.message
-        : "Payment verification error: " +
-          error.message
-    );
-
-  }
-
+    const razorpay = new Razorpay(options);
+    razorpay.open();
 }
 
+// Verify payment
+async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature) {
+    try {
+        const verifyResponse = await fetch(`${C.apiBaseUrl}/verify-payment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId: orderId,
+                razorpay_order_id: razorpayOrderId,
+                razorpay_payment_id: razorpayPaymentId,
+                razorpay_signature: razorpaySignature
+            })
+        });
 
-/* =========================================================
-   REQUEST REPORT
-========================================================= */
+        const verifyData = await verifyResponse.json();
 
-async function requestReport(
-  orderId,
-  reportLanguage
-) {
-
-  try {
-
-    /*
-      Your report Edge Function should eventually
-      accept this request.
-
-      Example:
-      /generate-report
-    */
-
-    const response =
-      await fetch(
-        `${C.apiBaseUrl}/generate-report`,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-
-            orderId,
-
-            language:
-              reportLanguage
-
-          })
+        if (!verifyData.success) {
+            showError('Payment verification failed');
+            showLoading(false);
+            return;
         }
-      );
 
+        // Payment verified, generate report
+        generateReport(orderId, currentOrder.language || 'as');
 
-    const data =
-      await response.json();
-
-
-    if (
-      !response.ok ||
-      !data.success
-    ) {
-
-      throw new Error(
-        data.message ||
-        "Report generation failed"
-      );
-
+    } catch (error) {
+        console.error('Verification error:', error);
+        showError('Payment verification error: ' + error.message);
+        showLoading(false);
     }
-
-
-    /*
-      If backend returns a report URL,
-      open it.
-    */
-
-    if (data.reportUrl) {
-
-      window.location.href =
-        data.reportUrl;
-
-      return;
-
-    }
-
-
-    /*
-      If backend returns report HTML,
-      open report page.
-    */
-
-    window.location.href =
-      `report.html?orderId=${encodeURIComponent(
-        orderId
-      )}`;
-
-  } catch (error) {
-
-    console.error(
-      "Report generation error:",
-      error
-    );
-
-    alert(
-      lang === "as"
-        ? "Payment সফল হৈছে, কিন্তু report তৈয়াৰ কৰোঁতে সমস্যা হৈছে। Order ID: " +
-          orderId
-        : lang === "hi"
-        ? "भुगतान सफल है, लेकिन रिपोर्ट तैयार करने में समस्या हुई। Order ID: " +
-          orderId
-        : "Payment was successful, but report generation failed. Order ID: " +
-          orderId
-    );
-
-  }
-
 }
 
+// Generate report
+async function generateReport(orderId, language) {
+    try {
+        const reportResponse = await fetch(`${C.apiBaseUrl}/generate-report`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId: orderId,
+                language: language
+            })
+        });
 
-/* =========================================================
-   LANGUAGE BUTTON
-========================================================= */
+        const reportData = await reportResponse.json();
 
-window.setLanguage = function (newLang) {
-
-  if (
-    !["as", "en", "hi"].includes(newLang)
-  ) {
-    return;
-  }
-
-  lang = newLang;
-
-  localStorage.setItem(
-    "ja_lang",
-    lang
-  );
-
-  applyLang();
-
-  if (
-    typeof render === "function"
-  ) {
-    render();
-  }
-
-};
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
-
-    applyLang();
-
-    if (
-      typeof formatDate === "function"
-    ) {
-
-      const dateElements =
-        document.querySelectorAll(
-          "[data-today-date]"
-        );
-
-      dateElements.forEach(
-        el => {
-          el.textContent =
-            formatDate();
+        if (!reportData.success) {
+            showError('Report generation failed');
+            showLoading(false);
+            return;
         }
-      );
 
+        // Display report
+        displayReport(reportData.report);
+        showLoading(false);
+        closeServiceModal();
+
+    } catch (error) {
+        console.error('Report generation error:', error);
+        showError('Report generation error: ' + error.message);
+        showLoading(false);
     }
+}
 
-  }
-);
+// Display report
+function displayReport(reportHtml) {
+    const reportWindow = window.open();
+    reportWindow.document.write(reportHtml);
+    reportWindow.document.close();
+}
+
+// Show/hide loading
+function showLoading(isLoading) {
+    const loading = document.getElementById('loadingDiv');
+    const form = document.getElementById('birthDetailsForm');
+    if (loading) {
+        loading.classList.toggle('active', isLoading);
+        if (form) {
+            form.style.display = isLoading ? 'none' : 'block';
+        }
+    }
+}
+
+// Show error message
+function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.classList.add('show');
+        setTimeout(() => {
+            errorDiv.classList.remove('show');
+        }, 5000);
+    } else {
+        alert(message);
+    }
+}
+
+// Change language
+function changeLanguage(lang) {
+    // Store language preference
+    localStorage.setItem('preferredLanguage', lang);
+    
+    // You can add more language switching logic here
+    console.log('Language changed to:', lang);
+}
+
+// Check for existing order (for report page redirect)
+function checkExistingOrder() {
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('orderId');
+    
+    if (orderId) {
+        // If coming from report page, fetch and display report
+        console.log('Loading report for order:', orderId);
+    }
+}
+
+// Razorpay script loader
+function loadRazorpayScript() {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.head.appendChild(script);
+}
+
+// Load Razorpay on page load
+window.addEventListener('load', loadRazorpayScript);
