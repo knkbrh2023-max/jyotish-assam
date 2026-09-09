@@ -887,6 +887,40 @@
 
         // Initialize
         renderContent();
+               // Supabase Edge Function-ৰ পৰা Report অনাৰ কোড
+async function fetchAstrologyReport(orderId) {
+  try {
+    console.log("Report বনোৱা আৰম্ভ হৈছে Order ID:", orderId);
+    
+    // আপুনি ইয়াত এটা loading message বা spinner দেখুৱাব পাৰে
+    // document.getElementById("loading-msg").innerText = "আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে...";
+    
+    const response = await fetch("https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/calculate-chart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ orderId: orderId })
+    });
+
+    const result = await response.json();
+    
+    if(result.success) {
+      console.log("SUCCESS! Chart Data:", result.chart);
+      alert("আপোনাৰ ৰিপোৰ্ট সফলতাৰে বনোৱা হৈছে! (Console check কৰক)");
+      
+      // পৰৱৰ্তী step-ত আমি ইয়াত ৰিপোৰ্টটো ধুনীয়াকৈ Website-ত দেখুওৱা কোড দিম
+      // displayReportToUser(result.chart);
+      
+    } else {
+      console.error("Error:", result.error);
+      alert("ৰিপোৰ্ট বনাওঁতে কিবা সমস্যা হৈছে: " + result.error);
+    }
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    alert("ইণ্টাৰনেটৰ সমস্যা বা চাৰ্ভাৰত সংযোগ হোৱা নাই।");
+  }
+}
     </script>
 </body>
 </html>
