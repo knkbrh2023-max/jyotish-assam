@@ -187,7 +187,6 @@ async function handleFormSubmit(e) {
     
     const formattedTime = `${hour.toString().padStart(2, '0')}:${minute}:00`;
 
-    // Language আৰু Service கோড Save কৰি ৰখা
     const selectedLang = formData.get('language') || 'as';
 
     showLoading(true);
@@ -212,8 +211,8 @@ async function handleFormSubmit(e) {
         if (!orderData.success) throw new Error(orderData.error || 'Order creation failed');
 
         currentOrder = orderData;
-        currentOrder.selectedLanguage = selectedLang; // Language save কৰা হ'ল
-        currentOrder.serviceCode = selectedService.code; // Service code save কৰা হ'ල්
+        currentOrder.selectedLanguage = selectedLang;
+        currentOrder.serviceCode = selectedService.code;
 
         handleRazorpayPayment(orderData);
 
@@ -286,7 +285,7 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report with Multi-language & Specific Service Support
+// Generate report with Detailed Love Reading & Multi-language Support
 async function generateReport(orderId, language, serviceCode) {
     try {
         const loadingText = document.querySelector('#loadingDiv p');
@@ -312,13 +311,13 @@ async function generateReport(orderId, language, serviceCode) {
 
         const c = result.chart;
 
-        // Dictionaries for Multi-language support
+        // Multi-language Dictionaries
         const dict = {
             as: {
                 title: "সম্পূৰ্ণ জ্যোতিষ ৰিপোৰ্ট",
                 subtitle: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশ (Lahiri Ayanamsa) পদ্ধতিত প্ৰস্তুতকৃত",
                 birthTitle: "১. জন্মৰ বিৱৰণ (Birth Details)",
-                birthDesc: "আপুনি প্ৰদান কৰা জন্মৰ সঠিক সময় আৰু স্থানৰ ওপਰত ভিত্তি কৰি গ্ৰহগণনা কৰা হৈছে:",
+                birthDesc: "আপুনি প্ৰদান কৰা জন্মৰ সঠিক সময় আৰু স্থানৰ ওপৰত ভিত্তি কৰি গ্ৰহগণনা কৰা হৈছে:",
                 date: "জন্ম তাৰিখ", time: "জন্ম সময়", place: "জন্ম স্থান",
                 ascTitle: "২. লগ্ন আৰু ব্যক্তিত্ব বিশ্লেষণ",
                 lagna: "জন্ম লগ্ন", nakshatra: "জন্ম নক্ষত্ৰ", ayanamsa: "অয়নাংশ",
@@ -327,14 +326,27 @@ async function generateReport(orderId, language, serviceCode) {
                 planetDesc: "জন্মৰ সময়ত আকাশমণ্ডলত গ্ৰহসমূহ কোনটো ৰাশি আৰু নক্ষত্ৰত অৱস্থান কৰিছিল:",
                 thPlanet: "গ্ৰহ আৰু ইয়াৰ কাৰকতা", thSign: "ৰাশি", thNak: "নক্ষত্ৰ আৰু পদ", thDeg: "ডিগ্ৰী",
                 dashaTitle: "৪. বিংশোত্তৰী মহা দশা চক্ৰ",
-                dashaDesc: "বৈদিক জ্যোতিষশাস্ত্ৰৰ মতে মানুহৰ জীৱनত বিভিন্ন গ্ৰহৰ মহা দশা আহে:",
+                dashaDesc: "বৈদিক জ্যোতিষশাস্ত্ৰৰ মতে মানুহৰ জীৱনত বিভিন্ন গ্ৰহৰ মহা দশা আহে:",
                 thDasha: "মহা দশা", thStart: "আৰম্ভণি", thEnd: "সমাপ্তি", thDur: "সময়কাল",
                 printBtn: "🖨️ সম্পূৰ্ণ ৰিপোৰ্ট প্ৰিণ্ট কৰক",
-                // Specific Service Headings & Descriptions
+                
                 serviceBirth: "🔮 জন্ম কুণ্ডলী বিশ্লেষণ (Complete Birth Chart)",
-                serviceLove: "❤️ প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)",
+                serviceLove: "❤️ প্ৰেম আৰু সম্পৰ্ক বিশদ পৰামৰ্শ (Advanced Love & Relationship Reading)",
                 serviceCareer: "💼 কেৰিয়াৰ আৰু ব্যৱসায়িক ভৱিষ্যৎ (Career & Business Forecast)",
-                loveDesc: "পঞ্চম আৰু সপ্তম ভাবৰ বিচাৰ অনুসৰি আপোনাৰ প্ৰেম জীৱন আৰু সম্পৰ্কত মধুৰতা আৰু আৱেগিক বুজাবুজি অটুট ৰাখিবলৈ এই পৰামৰ্শ প্ৰস্তুত কৰা হৈছে। অংশীদাৰৰ সৈতে আৱেগিক সম্পৰ্ক শক্তিশালী হ'ব।",
+                
+                // Detailed Love Reading Sections in Assamese
+                loveTimingTitle: "🕰️ প্ৰেম কেতিয়া হোৱাৰ সম্ভাৱনা আছে?",
+                loveTimingDesc: "আপোনাৰ কুণ্ডলীৰ পঞ্চম ভাব (প্ৰেমৰ স্থান), সপ্তম ভাব (বিবাহ) আৰু শুক্ৰ তথা মংগল গ্ৰহৰ অৱস্থান বিচাৰ কৰি দেখা গৈছে যে আপোনাৰ জীৱনত প্ৰেমৰ আগমন এক বিশেষ মহা দশা বা অন্তৰ্দশাৰ সময়ত ঘটিব। বিশেষকৈ শুক্ৰ বা বৃহস্পতিৰ প্ৰভাৱ থকা সময়ছোৱাত প্ৰেম সম্পৰ্কত প্ৰৱেশ কৰাৰ প্ৰবল যোগ থাকে।",
+                
+                partnerNatureTitle: "👥 সংগী (ল’ৰা/ছোৱালীজন) কেনেকুৱা স্বভাৱৰ হ’ব?",
+                partnerNatureDesc: "সপ্তম ভাবৰ ৰাশি আৰু গ্ৰহৰ প্ৰভাৱ অনুসৰি আপোনাৰ ভৱিষ্যৎ সংগী অত্যন্ত আকৰ্ষণীয়, ৰোমাঞ্চপ্ৰিয়, বুধিয়ক আৰু পৰিয়ালৰ প্ৰতি দায়িত্বশীল হোৱাৰ সম্ভাৱনা আছে। তেওঁ মিলাৰী স্বভাৱৰ আৰু আপোনাৰ দুখ-সুখত ভাগ লোৱات আগ্ৰহী হ’ব।",
+                
+                partnerProfTitle: "💼 সংগীৰ পেছা (Profession) কি হ’ব পাৰে?",
+                partnerProfDesc: "গ্ৰহৰ স্থিতিৰ পৰা অনুমান কৰা হয় যে আপোনাৰ সংগীজন শিক্ষা, বেংক, প্ৰযুক্তিবিদ্যা (IT), কলা-সংস্কৃতি, ব্যৱসায় বা চৰকাৰী খণ্ডৰ কোনো সুপ্ৰতিষ্ঠিত পেছাত যুক্ত হোৱাৰ যোগ আছে।",
+                
+                marriageTypeTitle: "💍 প্ৰেম বিবাহ (Love Marriage) নে এৰেঞ্জ মেৰিজ (Arrange)?",
+                marriageTypeDesc: "পঞ্চম আৰু সপ্তম ভাবৰ পতিৰ সম্পৰ্কৰ ওপৰত ভিত্তি কৰি কুণ্ডলীত প্ৰেম বিবাহৰ সম্ভাৱনা প্ৰায় ৬০-৭০% পৰিলক্ষিত হয়। যদি দুয়োটা ভাবৰ সুদৃঢ় যোগ থাকে, তେশেন প্ৰেম সম্পৰ্ক বিবাহলৈ ৰূপান্তৰিত হোৱাৰ পূৰ্ণ সম্ভাৱনা থাকে। অন্যথা পৰিয়ালৰ সন্মতিৰে হোৱা বিবাহো সফল হ’ব।",
+
                 careerDesc: "দশম ভাব (কৰ্মস্থান) আৰু বৃহস্পতি-শনিৰ অৱস্থানৰ ওপਰত ভিত্তি কৰি আপোনাৰ পেছাদাৰী জীৱন, চাকৰি বা ব্যৱসায়ত উন্নতি আৰু সফলতা লাভৰ সঠিক দিশ নির্দেশনা দিয়া হৈছে।"
             },
             en: {
@@ -353,10 +365,20 @@ async function generateReport(orderId, language, serviceCode) {
                 dashaDesc: "Planetary periods influencing different phases of your life according to Vedic astrology:",
                 thDasha: "Maha Dasha", thStart: "Start Date", thEnd: "End Date", thDur: "Duration",
                 printBtn: "🖨️ Print Complete Report",
+                
                 serviceBirth: "🔮 Complete Birth Chart Analysis",
-                serviceLove: "❤️ Love & Relationship Reading",
+                serviceLove: "❤️ Advanced Love & Relationship Reading",
                 serviceCareer: "💼 Career & Business Forecast",
-                loveDesc: "Based on the 5th and 7th houses, this section guides you on emotional compatibility, harmony, and strengthening relationships with your partner.",
+                
+                loveTimingTitle: "🕰️ When is Love likely to happen?",
+                loveTimingDesc: "Based on your 5th house (romance), 7th house (marriage), and Venus/Mars placements, love is strongly indicated during favorable dasha periods, especially under Venus or Jupiter influences.",
+                partnerNatureTitle: "👥 What will your Partner be like?",
+                partnerNatureDesc: "Your partner is likely to be charming, affectionate, intelligent, and deeply committed, bringing emotional stability and happiness to your life.",
+                partnerProfTitle: "💼 What could be your Partner's Profession?",
+                partnerProfDesc: "Indications point towards fields like education, IT, banking, creative arts, business, or administrative sectors.",
+                marriageTypeTitle: "💍 Love Marriage vs. Arrange Marriage",
+                marriageTypeDesc: "There is a strong possibility of a love marriage (approx 60-70%) if the 5th and 7th house lords form a supportive yoga. Otherwise, a harmonious arranged marriage with mutual understanding is foreseen.",
+
                 careerDesc: "Based on the 10th house (career) and planetary transits, this provides insights for professional growth, job stability, or business success."
             },
             hi: {
@@ -375,17 +397,26 @@ async function generateReport(orderId, language, serviceCode) {
                 dashaDesc: "वैदिक ज्योतिष के अनुसार जीवन के विभिन्न चरणों को प्रभावित करने वाली महादशाएं:",
                 thDasha: "महा दशा", thStart: "ारंभ तिथि", thEnd: "समाप्ति तिथि", thDur: "अवधि",
                 printBtn: "🖨️ पूर्ण रिपोर्ट प्रिंट करें",
+                
                 serviceBirth: "🔮 पूर्ण जन्म कुंडली विश्लेषण",
-                serviceLove: "❤️ प्रेम और संबंध परामर्श (Love Reading)",
+                serviceLove: "❤️ प्रेम और संबंध विस्तृत परामर्श (Love Reading)",
                 serviceCareer: "💼 करियर और व्यवसाय पूर्वानुमान (Career Forecast)",
-                loveDesc: "पंचम और सप्तम भाव के विश्लेषण के आधार पर, यह रिपोर्ट आपके प्रेम जीवन, आपसी समझ और रिश्तों में मधुरता बनाए रखने के लिए मार्गदर्शन करती है।",
-                careerDesc: "দশম (कर्म) भाव और ग्रहों की स्थिति के आधार पर यह आपके पेशेवर जीवन, नौकरी या व्यवसाय में सफलता और उन्नति का मार्ग प्रशस्त करती है।"
+                
+                loveTimingTitle: "🕰️ प्रेम कब होने की संभावना है?",
+                loveTimingDesc: "कुंडली के पंचम (प्रेम) और सप्तम (विवाह) भाव के विश्लेषण से, अनुकूल महादशा या शुक्र/गुरु के प्रभाव काल में प्रेम संबंध बनने के प्रबल योग हैं।",
+                partnerNatureTitle: "👥 साथी (लड़का/लड़की) का स्वभाव कैसा होगा?",
+                partnerNatureDesc: "सप्तम भाव के प्रभाव से आपका जीवनसाथी आकर्षक, मिलनसार, बुद्धिमान और परिवार के प्रति समर्पित स्वभाव का हो सकता है।",
+                partnerProfTitle: "💼 साथी का पेशा (Profession) क्या हो सकता है?",
+                partnerProfDesc: "संभावना है कि आपके साथी शिक्षा, बैंकिंग, आईटी, कला या व्यवसाय क्षेत्र से जुड़े हों।",
+                marriageTypeTitle: "💍 लव मैरिज (Love Marriage) या अरेंज मैरिज?",
+                marriageTypeDesc: "पंचम और सप्तमेश के आपसी संबंध के आधार पर लव मैरिज के 60-70% योग बनते हैं। अन्यथा पारिवारिक सहमति से एक सफल और सुखी विवाह का योग है।",
+
+                careerDesc: "दशम (कर्म) भाव और ग्रहों की स्थिति के आधार पर यह आपके पेशेवर जीवन में सफलता का मार्ग प्रशस्त करती है."
             }
         };
 
         const t = dict[lang] || dict['as'];
 
-        // Planet Names translation dictionaries
         const pNameDict = {
             as: { Sun: 'সূৰ্য', Moon: 'চন্দ্ৰ', Mars: 'মংগল', Mercury: 'বুধ', Jupiter: 'বৃহস্পতি', Venus: 'শুক্ৰ', Saturn: 'শনি', Rahu: 'ৰাহু', Ketu: 'কেতু' },
             en: { Sun: 'Sun', Moon: 'Moon', Mars: 'Mars', Mercury: 'Mercury', Jupiter: 'Jupiter', Venus: 'Venus', Saturn: 'Saturn', Rahu: 'Rahu', Ketu: 'Ketu' },
@@ -424,13 +455,32 @@ async function generateReport(orderId, language, serviceCode) {
             `;
         });
 
-        // Determine which service section to highlight dynamically
+        // Dynamic Service Specific Section Generation
         let serviceSpecificContent = '';
         if (sCode === 'love') {
             serviceSpecificContent = `
                 <div class="section" style="background: #fff1f2; border-left: 6px solid #e11d48;">
                     <h2 class="section-title" style="color: #e11d48;">💖 ${t.serviceLove}</h2>
-                    <p style="font-size: 16px; color: #475569; line-height: 1.8;">${t.loveDesc}</p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #9f1239; font-size: 18px; margin-bottom: 8px;">${t.loveTimingTitle}</h3>
+                        <p style="font-size: 15px; color: #475569; line-height: 1.8;">${t.loveTimingDesc}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #9f1239; font-size: 18px; margin-bottom: 8px;">${t.partnerNatureTitle}</h3>
+                        <p style="font-size: 15px; color: #475569; line-height: 1.8;">${t.partnerNatureDesc}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #9f1239; font-size: 18px; margin-bottom: 8px;">${t.partnerProfTitle}</h3>
+                        <p style="font-size: 15px; color: #475569; line-height: 1.8;">${t.partnerProfDesc}</p>
+                    </div>
+
+                    <div>
+                        <h3 style="color: #9f1239; font-size: 18px; margin-bottom: 8px;">${t.marriageTypeTitle}</h3>
+                        <p style="font-size: 15px; color: #475569; line-height: 1.8;">${t.marriageTypeDesc}</p>
+                    </div>
                 </div>
             `;
         } else if (sCode === 'career') {
@@ -565,7 +615,7 @@ async function generateReport(orderId, language, serviceCode) {
                         <p>${t.title}</p>
                     </div>
 
-                    <!-- Dynamic Service Specific Highlight -->
+                    <!-- Dynamic Service Specific Highlight (Love, Career or Birth) -->
                     ${serviceSpecificContent}
                     
                     <div class="section">
