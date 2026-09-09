@@ -508,27 +508,69 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report
+// Generate report (Updated to call calculate-chart)
 async function generateReport(orderId, language) {
     try {
-        const reportResponse = await fetch(`${C.apiBaseUrl}/generate-report`, {
+        // Loading text সলনি কৰা হৈছে
+        const loadingText = document.querySelector('#loadingDiv p');
+        if (loadingText) loadingText.innerText = "আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অপেক্ষা কৰক";
+
+        const reportResponse = await fetch("https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/calculate-chart", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                orderId: orderId,
-                language: language
+                orderId: orderId
             })
         });
 
-        const reportData = await reportResponse.json();
+        const result = await reportResponse.json();
 
-        if (!reportData.success) {
-            showError('Report generation failed');
+        if (!result.success) {
+            showError('ৰিপোৰ্ট বনোৱাত সমস্যা হৈছে: ' + result.error);
             showLoading(false);
             return;
         }
+
+        console.log("SUCCESS! Chart Data:", result.chart);
+        
+        // বৰ্তমানৰ বাবে ডাটাখিনি চাবলৈ এটা সাধাৰণ HTML বনোৱা হৈছে (পৰৱৰ্তী step-ত আমি ইয়াক ধুনীয়া কৰিম)
+        const debugHtml = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>আপোনাৰ জ্যোতিষ ৰিপোৰ্ট</title>
+                <style>
+                    body { font-family: sans-serif; padding: 20px; background: #f8fafc; }
+                    .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                    pre { background: #1e293b; color: #00ff00; padding: 15px; border-radius: 8px; overflow-x: auto; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h2 style="color: #8B5CF6;">✨ ৰিপোৰ্ট সফলতাৰে বনোৱা হৈছে!</h2>
+                    <p>আপোনাৰ গ্ৰহ, ৰাশি, লগ্ন আৰু দশাৰ সকলো হিচাপ সম্পূৰ্ণ হৈছে। বৰ্তমান Raw Data তলত দিয়া হৈছে:</p>
+                    <pre>${JSON.stringify(result.chart, null, 2)}</pre>
+                    <p style="color: #64748b; margin-top: 20px;">(পৰৱৰ্তী Step-ত আমি এই ডাটাখিনি ধুনীয়া ডিজাইনত দেখুৱাম)</p>
+                </div>
+            </body>
+            </html>
+        `;
+
+        // নতুন উইণ্ড'ত ৰিপোৰ্ট দেখুওৱা
+        displayReport(debugHtml);
+        
+        showLoading(false);
+        closeServiceModal();
+
+    } catch (error) {
+        console.error('Report generation error:', error);
+        showError('ইণ্টাৰনেটৰ সমস্যা: ' + error.message);
+        showLoading(false);
+    }
+}
 
         // Display report
         displayReport(reportData.report);
