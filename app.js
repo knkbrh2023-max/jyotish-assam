@@ -23,8 +23,8 @@ function setupEventListeners() {
             const icon = card.querySelector('.service-icon').textContent;
             
             let serviceCode = 'birth';
-            if (serviceName.includes('Love') || serviceName.includes('প্রেম')) serviceCode = 'love';
-            else if (serviceName.includes('Career') || serviceName.includes('ক্যারিয়ার')) serviceCode = 'career';
+            if (serviceName.includes('Love') || serviceName.includes('প্রেম') || serviceName.includes('प्रेम')) serviceCode = 'love';
+            else if (serviceName.includes('Career') || serviceName.includes('ক্যারিয়ার') || serviceName.includes('करियर')) serviceCode = 'career';
             
             selectService(serviceCode, serviceName, price, icon);
         });
@@ -187,6 +187,9 @@ async function handleFormSubmit(e) {
     
     const formattedTime = `${hour.toString().padStart(2, '0')}:${minute}:00`;
 
+    // Language আৰু Service கோড Save কৰি ৰখা
+    const selectedLang = formData.get('language') || 'as';
+
     showLoading(true);
 
     try {
@@ -200,7 +203,7 @@ async function handleFormSubmit(e) {
                 birthDate: formData.get('birthDate'),
                 birthTime: formattedTime,
                 birthPlace: formData.get('birthPlace'),
-                language: formData.get('language')
+                language: selectedLang
             })
         });
 
@@ -209,6 +212,9 @@ async function handleFormSubmit(e) {
         if (!orderData.success) throw new Error(orderData.error || 'Order creation failed');
 
         currentOrder = orderData;
+        currentOrder.selectedLanguage = selectedLang; // Language save কৰা হ'ল
+        currentOrder.serviceCode = selectedService.code; // Service code save কৰা হ'ල්
+
         handleRazorpayPayment(orderData);
 
     } catch (error) {
@@ -269,7 +275,9 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
             return;
         }
 
-        generateReport(orderId, currentOrder.language || 'as');
+        const lang = currentOrder ? currentOrder.selectedLanguage : 'as';
+        const sCode = currentOrder ? currentOrder.serviceCode : 'birth';
+        generateReport(orderId, lang, sCode);
 
     } catch (error) {
         console.error('Verification error:', error);
@@ -278,13 +286,15 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report with Detailed Assamese Explanations
-async function generateReport(orderId, language) {
+// Generate report with Multi-language & Specific Service Support
+async function generateReport(orderId, language, serviceCode) {
     try {
         const loadingText = document.querySelector('#loadingDiv p');
-        if (loadingText) loadingText.innerText = "আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অপেক্ষা কৰক";
+        if (loadingText) loadingText.innerText = "Generating Report... / ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে...";
 
         const finalOrderId = orderId || "JA-MTS82YYC-34BBE39C";
+        const lang = language || 'as';
+        const sCode = serviceCode || 'birth';
 
         const reportResponse = await fetch("https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/calculate-chart", {
             method: 'POST',
@@ -295,36 +305,108 @@ async function generateReport(orderId, language) {
         const result = await reportResponse.json();
 
         if (!result.success) {
-            showError('ৰিপোৰ্ট বনোৱাত সমস্যা হৈছে: ' + (result.error || JSON.stringify(result)));
+            showError('Error: ' + (result.error || JSON.stringify(result)));
             showLoading(false);
             return;
         }
 
         const c = result.chart;
 
-        const pName = { Sun: 'সূৰ্য', Moon: 'চন্দ্ৰ', Mars: 'মংগল', Mercury: 'বুধ', Jupiter: 'বৃহস্পতি', Venus: 'শুক্ৰ', Saturn: 'শনি', Rahu: 'ৰাহু', Ketu: 'কেতু' };
-        const rName = { Aries: 'মেষ', Taurus: 'বৃষ', Gemini: 'মিথুন', Cancer: 'কৰ্কট', Leo: 'সিংহ', Virgo: 'কন্যা', Libra: 'তুলা', Scorpio: 'বৃশ্চিক', Sagittarius: 'ধনু', Capricorn: 'মকৰ', Aquarius: 'কুম্ভ', Pisces: 'মীন' };
-
-        // গ্ৰহৰ ফলবোৰ সহজকৈ বুজাবলৈ সৰু বৰ্ণনা
-        const pDesc = {
-            Sun: 'আত্মা, নেতৃত্ব, আৰু আত্মবিশ্বাসৰ কাৰক।',
-            Moon: 'মন, আৱেগ, আৰু মানসিক শান্তিৰ প্ৰতীক।',
-            Mars: 'সাহস, শক্তি, পৰাক্ৰম আৰু ভাই-ভনীৰ কাৰক।',
-            Mercury: 'বুদ্ধিমত্তা, বাকশক্তি, শিক্ষা আৰু ব্যৱসায়ৰ কাৰক।',
-            Jupiter: 'জ্ঞান, ভাগ্য়, ধৰ্মীয় চিন্তা আৰু ধন-সম্পত্তিৰ কাৰক।',
-            Venus: 'প্ৰেম, সৌন্দৰ্য, আনন্দ আৰু বৈভৱৰ কাৰক।',
-            Saturn: 'কৰ্মফলদাতা, অনুশাসন, ধৈৰ্য আৰু ন্যায়ৰ দেৱতা।',
-            Rahu: 'মায়া, উচ্চাকাংক্ষা, আকস্মিক পৰিৱৰ্তন আৰু উদ্ভাৱনী শক্তি।',
-            Ketu: 'আধ্যাত্মিকতা, মোক্ষ, অন্তৰ্দৃষ্টি আৰু বৈৰাগ্যৰ কাৰক।'
+        // Dictionaries for Multi-language support
+        const dict = {
+            as: {
+                title: "সম্পূৰ্ণ জ্যোতিষ ৰিপোৰ্ট",
+                subtitle: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশ (Lahiri Ayanamsa) পদ্ধতিত প্ৰস্তুতকৃত",
+                birthTitle: "১. জন্মৰ বিৱৰণ (Birth Details)",
+                birthDesc: "আপুনি প্ৰদান কৰা জন্মৰ সঠিক সময় আৰু স্থানৰ ওপਰত ভিত্তি কৰি গ্ৰহগণনা কৰা হৈছে:",
+                date: "জন্ম তাৰিখ", time: "জন্ম সময়", place: "জন্ম স্থান",
+                ascTitle: "২. লগ্ন আৰু ব্যক্তিত্ব বিশ্লেষণ",
+                lagna: "জন্ম লগ্ন", nakshatra: "জন্ম নক্ষত্ৰ", ayanamsa: "অয়নাংশ",
+                lagnaDesc: `আপোনাৰ জন্ম <strong>${c.ascendant.rashi} লগ্নত</strong> হৈছে। বৈদিক জ্যোতিষত লগ্নই আপোনাৰ শৰীৰ, স্বভাৱ, আৰু সমগ্ৰ জীৱনৰ দিশ নিৰ্ধাৰণ কৰে।`,
+                planetTitle: "৩. নৱগ্ৰহৰ অৱস্থান আৰু ইয়াৰ প্ৰভাৱ",
+                planetDesc: "জন্মৰ সময়ত আকাশমণ্ডলত গ্ৰহসমূহ কোনটো ৰাশি আৰু নক্ষত্ৰত অৱস্থান কৰিছিল:",
+                thPlanet: "গ্ৰহ আৰু ইয়াৰ কাৰকতা", thSign: "ৰাশি", thNak: "নক্ষত্ৰ আৰু পদ", thDeg: "ডিগ্ৰী",
+                dashaTitle: "৪. বিংশোত্তৰী মহা দশা চক্ৰ",
+                dashaDesc: "বৈদিক জ্যোতিষশাস্ত্ৰৰ মতে মানুহৰ জীৱनত বিভিন্ন গ্ৰহৰ মহা দশা আহে:",
+                thDasha: "মহা দশা", thStart: "আৰম্ভণি", thEnd: "সমাপ্তি", thDur: "সময়কাল",
+                printBtn: "🖨️ সম্পূৰ্ণ ৰিপোৰ্ট প্ৰিণ্ট কৰক",
+                // Specific Service Headings & Descriptions
+                serviceBirth: "🔮 জন্ম কুণ্ডলী বিশ্লেষণ (Complete Birth Chart)",
+                serviceLove: "❤️ প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)",
+                serviceCareer: "💼 কেৰিয়াৰ আৰু ব্যৱসায়িক ভৱিষ্যৎ (Career & Business Forecast)",
+                loveDesc: "পঞ্চম আৰু সপ্তম ভাবৰ বিচাৰ অনুসৰি আপোনাৰ প্ৰেম জীৱন আৰু সম্পৰ্কত মধুৰতা আৰু আৱেগিক বুজাবুজি অটুট ৰাখিবলৈ এই পৰামৰ্শ প্ৰস্তুত কৰা হৈছে। অংশীদাৰৰ সৈতে আৱেগিক সম্পৰ্ক শক্তিশালী হ'ব।",
+                careerDesc: "দশম ভাব (কৰ্মস্থান) আৰু বৃহস্পতি-শনিৰ অৱস্থানৰ ওপਰত ভিত্তি কৰি আপোনাৰ পেছাদাৰী জীৱন, চাকৰি বা ব্যৱসায়ত উন্নতি আৰু সফলতা লাভৰ সঠিক দিশ নির্দেশনা দিয়া হৈছে।"
+            },
+            en: {
+                title: "Complete Astrology Report",
+                subtitle: "Prepared using Vedic Astrology & Lahiri Ayanamsa",
+                birthTitle: "1. Birth Details",
+                birthDesc: "Planetary calculations based on your precise birth time and location:",
+                date: "Birth Date", time: "Birth Time", place: "Birth Place",
+                ascTitle: "2. Ascendant & Personality Analysis",
+                lagna: "Ascendant (Lagna)", nakshatra: "Birth Nakshatra", ayanamsa: "Ayanamsa",
+                lagnaDesc: `Your birth is in <strong>${c.ascendant.rashi} Ascendant</strong>. In Vedic astrology, the ascendant determines your physical traits, personality, and life path.`,
+                planetTitle: "3. Planetary Positions & Effects",
+                planetDesc: "Positions of planets in zodiac signs and nakshatras at the time of your birth:",
+                thPlanet: "Planet & Significance", thSign: "Sign", thNak: "Nakshatra & Pada", thDeg: "Degree",
+                dashaTitle: "4. Vimshottari Maha Dasha Cycle",
+                dashaDesc: "Planetary periods influencing different phases of your life according to Vedic astrology:",
+                thDasha: "Maha Dasha", thStart: "Start Date", thEnd: "End Date", thDur: "Duration",
+                printBtn: "🖨️ Print Complete Report",
+                serviceBirth: "🔮 Complete Birth Chart Analysis",
+                serviceLove: "❤️ Love & Relationship Reading",
+                serviceCareer: "💼 Career & Business Forecast",
+                loveDesc: "Based on the 5th and 7th houses, this section guides you on emotional compatibility, harmony, and strengthening relationships with your partner.",
+                careerDesc: "Based on the 10th house (career) and planetary transits, this provides insights for professional growth, job stability, or business success."
+            },
+            hi: {
+                title: "पूर्ण ज्योतिष रिपोर्ट",
+                subtitle: "वैदिक ज्योतिष और लाहिरी अयांश पद्धति पर आधारित",
+                birthTitle: "1. जन्म विवरण (Birth Details)",
+                birthDesc: "आपके सटीक जन्म समय और स्थान के आधार पर ग्रहों की गणना:",
+                date: "जन्म तिथि", time: "जन्म समय", place: "जन्म स्थान",
+                ascTitle: "2. लग्न और व्यक्तित्व विश्लेषण",
+                lagna: "लग्न (Ascendant)", nakshatra: "जन्म नक्षत्र", ayanamsa: "अयांश",
+                lagnaDesc: `आपका जन्म <strong>${c.ascendant.rashi} लग्न</strong> में हुआ है। वैदिक ज्योतिष में लग्न आपके स्वभाव और जीवन की दिशा तय करता है।`,
+                planetTitle: "3. ग्रह स्थिति और प्रभाव (Planetary Positions)",
+                planetDesc: "आपके जन्म के समय आकाशमंडल में ग्रहों की स्थिति:",
+                thPlanet: "ग्रह और कारक", thSign: "राशि", thNak: "नक्षत्र और पद", thDeg: "डिग्री",
+                dashaTitle: "4. विंशोत्तरी महा दशा चक्र",
+                dashaDesc: "वैदिक ज्योतिष के अनुसार जीवन के विभिन्न चरणों को प्रभावित करने वाली महादशाएं:",
+                thDasha: "महा दशा", thStart: "ारंभ तिथि", thEnd: "समाप्ति तिथि", thDur: "अवधि",
+                printBtn: "🖨️ पूर्ण रिपोर्ट प्रिंट करें",
+                serviceBirth: "🔮 पूर्ण जन्म कुंडली विश्लेषण",
+                serviceLove: "❤️ प्रेम और संबंध परामर्श (Love Reading)",
+                serviceCareer: "💼 करियर और व्यवसाय पूर्वानुमान (Career Forecast)",
+                loveDesc: "पंचम और सप्तम भाव के विश्लेषण के आधार पर, यह रिपोर्ट आपके प्रेम जीवन, आपसी समझ और रिश्तों में मधुरता बनाए रखने के लिए मार्गदर्शन करती है।",
+                careerDesc: "দশম (कर्म) भाव और ग्रहों की स्थिति के आधार पर यह आपके पेशेवर जीवन, नौकरी या व्यवसाय में सफलता और उन्नति का मार्ग प्रशस्त करती है।"
+            }
         };
+
+        const t = dict[lang] || dict['as'];
+
+        // Planet Names translation dictionaries
+        const pNameDict = {
+            as: { Sun: 'সূৰ্য', Moon: 'চন্দ্ৰ', Mars: 'মংগল', Mercury: 'বুধ', Jupiter: 'বৃহস্পতি', Venus: 'শুক্ৰ', Saturn: 'শনি', Rahu: 'ৰাহু', Ketu: 'কেতু' },
+            en: { Sun: 'Sun', Moon: 'Moon', Mars: 'Mars', Mercury: 'Mercury', Jupiter: 'Jupiter', Venus: 'Venus', Saturn: 'Saturn', Rahu: 'Rahu', Ketu: 'Ketu' },
+            hi: { Sun: 'सूर्य', Moon: 'चन्द्र', Mars: 'मंगल', Mercury: 'बुध', Jupiter: 'गुरु', Venus: 'शुक्र', Saturn: 'शनि', Rahu: 'राहु', Ketu: 'केतु' }
+        };
+        const pN = pNameDict[lang] || pNameDict['as'];
+
+        const rNameDict = {
+            as: { Aries: 'মেষ', Taurus: 'বৃষ', Gemini: 'মিথুন', Cancer: 'কৰ্কট', Leo: 'সিংহ', Virgo: 'কন্যা', Libra: 'তুলা', Scorpio: 'বৃশ্চিক', Sagittarius: 'ধনু', Capricorn: 'মকৰ', Aquarius: 'কুম্ভ', Pisces: 'মীন' },
+            en: { Aries: 'Aries', Taurus: 'Taurus', Gemini: 'Gemini', Cancer: 'Cancer', Leo: 'Leo', Virgo: 'Virgo', Libra: 'Libra', Scorpio: 'Scorpio', Sagittarius: 'Sagittarius', Capricorn: 'Capricorn', Aquarius: 'Aquarius', Pisces: 'Pisces' },
+            hi: { Aries: 'मेष', Taurus: 'वृषभ', Gemini: 'मिथुन', Cancer: 'कर्क', Leo: 'सिंह', Virgo: 'कन्या', Libra: 'तुला', Scorpio: 'वृश्चिक', Sagittarius: 'धनु', Capricorn: 'मकर', Aquarius: 'कुंभ', Pisces: 'मीन' }
+        };
+        const rN = rNameDict[lang] || rNameDict['as'];
 
         let planetsHtml = '';
         for (const [planet, data] of Object.entries(c.planets)) {
             planetsHtml += `
                 <tr>
-                    <td><strong>${pName[planet] || planet}</strong><br><small style="color:#64748b;">${pDesc[planet] || ''}</small></td>
-                    <td>${rName[data.rashi] || data.rashi}</td>
-                    <td>${data.nakshatra} (পদ ${data.pada})</td>
+                    <td><strong>${pN[planet] || planet}</strong></td>
+                    <td>${rN[data.rashi] || data.rashi}</td>
+                    <td>${data.nakshatra} (Pad ${data.pada})</td>
                     <td>${data.longitude.toFixed(2)}°</td>
                 </tr>
             `;
@@ -334,21 +416,46 @@ async function generateReport(orderId, language) {
         c.dashas.forEach(d => {
             dashasHtml += `
                 <tr>
-                    <td><strong>${pName[d.lord] || d.lord} মহা দশা</strong></td>
+                    <td><strong>${pN[d.lord] || d.lord} Maha Dasha</strong></td>
                     <td>${d.start_date}</td>
                     <td>${d.end_date}</td>
-                    <td>${d.duration_years} বছৰ</td>
+                    <td>${d.duration_years} Years</td>
                 </tr>
             `;
         });
 
+        // Determine which service section to highlight dynamically
+        let serviceSpecificContent = '';
+        if (sCode === 'love') {
+            serviceSpecificContent = `
+                <div class="section" style="background: #fff1f2; border-left: 6px solid #e11d48;">
+                    <h2 class="section-title" style="color: #e11d48;">💖 ${t.serviceLove}</h2>
+                    <p style="font-size: 16px; color: #475569; line-height: 1.8;">${t.loveDesc}</p>
+                </div>
+            `;
+        } else if (sCode === 'career') {
+            serviceSpecificContent = `
+                <div class="section" style="background: #eff6ff; border-left: 6px solid #2563eb;">
+                    <h2 class="section-title" style="color: #2563eb;">💼 ${t.serviceCareer}</h2>
+                    <p style="font-size: 16px; color: #475569; line-height: 1.8;">${t.careerDesc}</p>
+                </div>
+            `;
+        } else {
+            serviceSpecificContent = `
+                <div class="section" style="background: #f5f3ff; border-left: 6px solid #7c3aed;">
+                    <h2 class="section-title" style="color: #7c3aed;">🔮 ${t.serviceBirth}</h2>
+                    <p style="font-size: 16px; color: #475569; line-height: 1.8;">This complete birth chart covers all foundational aspects of your life including overall destiny, strengths, and spiritual path.</p>
+                </div>
+            `;
+        }
+
         const finalHtml = `
             <!DOCTYPE html>
-            <html lang="as">
+            <html lang="${lang}">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>সম্পূৰ্ণ জ্যোতিষ ৰিপোৰ্ট - Jyotish Assam</title>
+                <title>${t.title} - Jyotish Assam</title>
                 <style>
                     :root {
                         --primary: #6D28D9;
@@ -454,60 +561,63 @@ async function generateReport(orderId, language) {
             <body>
                 <div class="report-container">
                     <div class="header">
-                        <h1>✨ জ্যোতিষ অসম - সম্পূৰ্ণ কুুণ্ডলী ৰিপোৰ্ট</h1>
-                        <p>বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশ (Lahiri Ayanamsa) পদ্ধতিত প্ৰস্তুতকৃত</p>
+                        <h1>✨ জ্যোতিষ অসম - Jyotish Assam</h1>
+                        <p>${t.title}</p>
                     </div>
+
+                    <!-- Dynamic Service Specific Highlight -->
+                    ${serviceSpecificContent}
                     
                     <div class="section">
-                        <h2 class="section-title">👤 ১. জন্মৰ বিৱৰণ (Birth Details)</h2>
-                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">আপুনি প্ৰদান কৰা জন্মৰ সঠিক সময় আৰু স্থানৰ ওপৰত ভিত্তি কৰি গ্ৰহগণনা কৰা হৈছে:</p>
+                        <h2 class="section-title">👤 ${t.birthTitle}</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">${t.birthDesc}</p>
                         <div class="info-grid">
                             <div class="info-box">
-                                <div class="info-label">জন্ম তাৰিখ</div>
+                                <div class="info-label">${t.date}</div>
                                 <div class="info-value">${c.birth.date}</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">জন্ম সময়</div>
+                                <div class="info-label">${t.time}</div>
                                 <div class="info-value">${c.birth.time}</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">জন্ম স্থান</div>
+                                <div class="info-label">${t.place}</div>
                                 <div class="info-value" style="text-transform: capitalize;">${c.birth.place}</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">🎯 ২. লগ্ন আৰু ব্যক্তিত্ব বিশ্লেষণ (Ascendant Analysis)</h2>
+                        <h2 class="section-title">🎯 ${t.ascTitle}</h2>
                         <div class="info-grid">
                             <div class="info-box">
-                                <div class="info-label">জন্ম লগ্ন</div>
-                                <div class="info-value">${rName[c.ascendant.rashi] || c.ascendant.rashi} লগ্ন</div>
+                                <div class="info-label">${t.lagna}</div>
+                                <div class="info-value">${rN[c.ascendant.rashi] || c.ascendant.rashi}</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">জন্ম নক্ষত্ৰ</div>
-                                <div class="info-value">${c.ascendant.nakshatra} (পদ ${c.ascendant.pada})</div>
+                                <div class="info-label">${t.nakshatra}</div>
+                                <div class="info-value">${c.ascendant.nakshatra} (Pad ${c.ascendant.pada})</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">অয়নাংশ</div>
-                                <div class="info-value">লাহিৰী (${c.ayanamsa_value.toFixed(2)}°)</div>
+                                <div class="info-label">${t.ayanamsa}</div>
+                                <div class="info-value">${c.ayanamsa_value.toFixed(2)}°</div>
                             </div>
                         </div>
                         <div class="desc-box">
-                            <strong>লগ্নৰ গুত্বপূৰ্ণ ফল:</strong> আপোনাৰ জন্ম <strong>${rName[c.ascendant.rashi] || c.ascendant.rashi} লগ্নত</strong> হৈছে। বৈদিক জ্যোতিষত লগ্নই আপোনাৰ শৰীৰ, স্বভাৱ, আৰু সমগ্ৰ জীৱনৰ দিশ নিৰ্ধাৰণ কৰে। এই লগ্নৰ প্ৰভাৱে আপোনাক জীৱনৰ প্ৰতিটো ক্ষেত্ৰতে সঠিক সিদ্ধান্ত ল’বলৈ আৰু নিজৰ লক্ষ্যত অবিচল থাকিবলৈ সহায় কৰিব।
+                            ${t.lagnaDesc}
                         </div>
                     </div>
                     
                     <div class="section">
-                        <h2 class="section-title">🪐 ৩. নৱগ্ৰহৰ অৱস্থান আৰু ইয়াৰ প্ৰভাৱ (Planetary Positions)</h2>
-                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">জন্মৰ সময়ত আকাশমণ্ডলত গ্ৰহসমূহ কোনটো ৰাশি আৰু নক্ষত্ৰত অৱস্থান কৰিছিল তাৰ সম্পূৰ্ণ বিৱৰণ:</p>
+                        <h2 class="section-title">🪐 ${t.planetTitle}</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">${t.planetDesc}</p>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>গ্ৰহ আৰু ইয়াৰ কাৰকতা</th>
-                                    <th>ৰাশি</th>
-                                    <th>নক্ষত্ৰ আৰু পদ</th>
-                                    <th>ডিগ্ৰী</th>
+                                    <th>${t.thPlanet}</th>
+                                    <th>${t.thSign}</th>
+                                    <th>${t.thNak}</th>
+                                    <th>${t.thDeg}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -517,15 +627,15 @@ async function generateReport(orderId, language) {
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">⏳ ৪. বিংশোত্তৰী মহা দশা চক্ৰ (Vimshottari Dasha Cycle)</h2>
-                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">বৈদিক জ্যোতিষশাস্ত্ৰৰ মতে মানুহৰ জীৱনত বিভিন্ন গ্ৰহৰ মহা দশা আহে। তলত আপোনাৰ জীৱনৰ দশাৰ কালছোৱা দেখুৱाइ হ’ল:</p>
+                        <h2 class="section-title">⏳ ${t.dashaTitle}</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">${t.dashaDesc}</p>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>মহা দশা</th>
-                                    <th>আৰম্ভণি তাৰিখ</th>
-                                    <th>সমাপ্তি তাৰিখ</th>
-                                    <th>সময়কাল</th>
+                                    <th>${t.thDasha}</th>
+                                    <th>${t.thStart}</th>
+                                    <th>${t.thEnd}</th>
+                                    <th>${t.thDur}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -534,7 +644,7 @@ async function generateReport(orderId, language) {
                         </table>
                     </div>
                     
-                    <button class="print-btn" onclick="window.print()">🖨️ সম্পূৰ্ণ ৰিপোৰ্ট প্ৰিণ্ট কৰক</button>
+                    <button class="print-btn" onclick="window.print()">${t.printBtn}</button>
                 </div>
             </body>
             </html>
