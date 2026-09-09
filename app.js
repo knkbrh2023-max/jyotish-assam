@@ -56,19 +56,13 @@ function selectService(serviceCode, serviceName, price, icon) {
     showServiceModal(serviceCode, serviceName, price);
 }
 
-// Show service modal with form (Updated Time Input)
+// Show service modal with form
 function showServiceModal(serviceCode, serviceName, price) {
     let modal = document.getElementById('serviceModal');
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'serviceModal';
         modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <span class="modal-close" onclick="closeServiceModal()">&times;</span>
-                <div id="modalBody"></div>
-            </div>
-        `;
         document.body.appendChild(modal);
 
         if (!document.getElementById('modalStyles')) {
@@ -109,55 +103,56 @@ function showServiceModal(serviceCode, serviceName, price) {
         }
     }
 
-    const modalBody = document.getElementById('modalBody');
-    const serviceNames = { birth: 'জন্ম কুণ্ডলী বিশ্লেষণ', love: 'প্রেম আৰু সম্পৰ্ক', career: 'ক্যারিয়ার বিশ্লেষণ' };
     const serviceIcons = { birth: '🔮', love: '❤️', career: '💼' };
 
-    modalBody.innerHTML = `
-        <div class="service-header">
-            <div class="service-header-icon">${serviceIcons[serviceCode]}</div>
-            <h2>${serviceNames[serviceCode]}</h2>
-            <p>₹${price}</p>
-        </div>
-        <div class="error-message" id="errorMessage"></div>
-        <form id="birthDetailsForm">
-            <div class="form-group"><label>নাম / Name *</label><input type="text" name="name" placeholder="আপোনাৰ সম্পূৰ্ণ নাম" required></div>
-            <div class="form-group"><label>ইমেইল / Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
-            
-            <div class="form-row">
-                <div class="form-group"><label>জন্ম তাৰিখ / Date *</label><input type="date" name="birthDate" required></div>
-                
-                <!-- NEW TIME INPUT DESIGN -->
-                <div class="form-group">
-                    <label>জন্ম সময় / Time *</label>
-                    <div class="time-inputs">
-                        <input type="number" name="birthHour" placeholder="ঘণ্টা" min="1" max="12" required style="width: 33%;">
-                        <input type="number" name="birthMinute" placeholder="মিনিট" min="0" max="59" required style="width: 33%;">
-                        <select name="birthAmpm" required style="width: 34%;">
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeServiceModal()">&times;</span>
+            <div id="modalBody">
+                <div class="service-header">
+                    <div class="service-header-icon">${serviceIcons[serviceCode] || '🔮'}</div>
+                    <h2>${serviceName}</h2>
+                    <p>₹${price}</p>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+                <form id="birthDetailsForm">
+                    <div class="form-group"><label>নাম / Name *</label><input type="text" name="name" placeholder="আপোনাৰ সম্পূৰ্ণ নাম" required></div>
+                    <div class="form-group"><label>ইমেইল / Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
+                    
+                    <div class="form-row">
+                        <div class="form-group"><label>জন্ম তাৰিখ / Date *</label><input type="date" name="birthDate" required></div>
+                        <div class="form-group">
+                            <label>জন্ম সময় / Time *</label>
+                            <div class="time-inputs">
+                                <input type="number" name="birthHour" placeholder="ঘণ্টা" min="1" max="12" required style="width: 33%;">
+                                <input type="number" name="birthMinute" placeholder="মিনিট" min="0" max="59" required style="width: 33%;">
+                                <select name="birthAmpm" required style="width: 34%;">
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group"><label>জন্ম স্থান / Place *</label><input type="text" name="birthPlace" placeholder="City, State, Country" required></div>
+                    <div class="form-group">
+                        <label>ভাষা / Language *</label>
+                        <select name="language" required>
+                            <option value="as">Assamese (অসমীয়া)</option>
+                            <option value="en">English</option>
+                            <option value="hi">Hindi (हिन्दी)</option>
                         </select>
                     </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeServiceModal()">বাতিল / Cancel</button>
+                        <button type="submit" class="btn-submit">পেমেন্ট কৰক / Pay ₹${price}</button>
+                    </div>
+                </form>
+                <div class="loading" id="loadingDiv">
+                    <div class="spinner"></div>
+                    <p>প্রক্রিয়াকরণ চলছে... Processing...</p>
                 </div>
             </div>
-
-            <div class="form-group"><label>জন্ম স্থান / Place *</label><input type="text" name="birthPlace" placeholder="City, State, Country" required></div>
-            <div class="form-group">
-                <label>ভাষা / Language *</label>
-                <select name="language" required>
-                    <option value="as">Assamese (অসমীয়া)</option>
-                    <option value="en">English</option>
-                    <option value="hi">Hindi (हिन्दी)</option>
-                </select>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-cancel" onclick="closeServiceModal()">বাতিল / Cancel</button>
-                <button type="submit" class="btn-submit">পেমেন্ট কৰক / Pay ₹${price}</button>
-            </div>
-        </form>
-        <div class="loading" id="loadingDiv">
-            <div class="spinner"></div>
-            <p>প্রক্রিয়াকরণ চলছে... Processing...</p>
         </div>
     `;
 
@@ -170,7 +165,7 @@ function closeServiceModal() {
     if (modal) modal.classList.remove('active');
 }
 
-// Handle form submission (Converts 12-hour AM/PM to 24-hour before sending)
+// Handle form submission
 async function handleFormSubmit(e) {
     e.preventDefault();
 
@@ -183,7 +178,7 @@ async function handleFormSubmit(e) {
         return;
     }
 
-    // Convert Time to HH:MM:SS for Database
+    // Convert Time to 24-hour format
     let hour = parseInt(formData.get('birthHour'));
     const minute = formData.get('birthMinute').padStart(2, '0');
     const ampm = formData.get('birthAmpm');
@@ -204,7 +199,7 @@ async function handleFormSubmit(e) {
                 name: formData.get('name'),
                 email: formData.get('email'),
                 birthDate: formData.get('birthDate'),
-                birthTime: formattedTime, // Successfully converted time goes here
+                birthTime: formattedTime,
                 birthPlace: formData.get('birthPlace'),
                 language: formData.get('language')
             })
@@ -284,13 +279,12 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report 
+// Generate report (Current window to prevent Pop-up block)
 async function generateReport(orderId, language) {
     try {
         const loadingText = document.querySelector('#loadingDiv p');
         if (loadingText) loadingText.innerText = "আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অপেক্ষা কৰক";
 
-        // Fallback to our testing Order ID if backend ID somehow fails
         const finalOrderId = orderId || "JA-MTS82YYC-34BBE39C";
 
         const reportResponse = await fetch("https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/calculate-chart", {
@@ -343,12 +337,11 @@ async function generateReport(orderId, language) {
     }
 }
 
+// Pop-up block নহ'বলৈ একেখন পেজতেই ৰিপোৰ্টটো দেখুৱাম
 function displayReport(reportHtml) {
-    // Pop-up block নহ'বলৈ আমি একেখন পেজতেই ৰিপোৰ্টটো দেখুৱাম
     document.open();
     document.write(reportHtml);
     document.close();
-}
 }
 
 function showLoading(isLoading) {
