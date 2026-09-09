@@ -537,7 +537,9 @@
         <!-- CTA Section -->
         <section class="cta-section">
             <h2 id="ctaTitle">আজই আপোনাৰ জ্যোতিষ যাত্রা আৰম্ভ কৰক</h2>
-            <button class="btn" onclick="openModal()" id="ctaButton">প্রিমিয়াম সদস্য হওক এখনে</button>
+            <button class="btn" onclick="openPaidService(0)" id="ctaButton">
+    প্রিমিয়াম সদস্য হওক এখনে
+</button>
         </section>
     </div>
 
@@ -832,10 +834,22 @@
             `).join('');
         }
 
-        function openModal() {
-            document.getElementById('orderModal').style.display = 'block';
-        }
+        function openPaidService(index) {
+    const data = content[currentLang];
+    const service = data.services[index];
 
+    const serviceCodes = ['birth', 'love', 'career'];
+
+    const serviceCode = serviceCodes[index];
+    const price = parseInt(service.price.replace(/[^\d]/g, ''));
+
+    selectService(
+        serviceCode,
+        service.name,
+        price,
+        service.icon
+    );
+}
         function closeModal() {
             document.getElementById('orderModal').style.display = 'none';
         }
