@@ -1,140 +1,948 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="as">
 <head>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>জ্যোতিষ অসম | আজিৰ ৰাশিফল, জন্ম কুণ্ডলী & Astrology</title>
-<meta name="description" content="জ্যোতিষ অসমৰ দৈনিক ৰাশিফল, প্ৰেম, কেৰিয়াৰ, ধন-সম্পত্তি আৰু ব্যক্তিগত জন্ম কুণ্ডলী সেৱা। Assamese & English astrology guidance.">
-<meta name="keywords" content="Assamese rashifal, আজিৰ ৰাশিফল, Assamese astrology, birth chart Assam, জ্যোতিষ অসম">
-<meta name="author" content="Jyotish Assam">
-<meta name="robots" content="index,follow">
-<link rel="canonical" href="https://YOUR-DOMAIN.example/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="জ্যোতিষ অসম | আজিৰ ৰাশিফল">
-<meta property="og:description" content="Daily Assamese Rashifal, Love, Career, Finance and Birth Chart services.">
-<meta property="og:url" content="https://YOUR-DOMAIN.example/">
-<meta name="theme-color" content="#21140e">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"জ্যোতিষ অসম","url":"https://YOUR-DOMAIN.example/","description":"Assamese and English astrology guidance website","inLanguage":["as","en"]}
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জ্যোতিষ অসম - Vedic Astrology Reports</title>
+    <meta name="description" content="Professional Vedic Astrology readings in Assamese. Birth charts, love readings, career guidance.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6b46c1;
+            --secondary: #d4af37;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --text: #2d3748;
+            --border: #e2e8f0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: #ffffff;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--secondary);
+            background: transparent;
+            color: var(--secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        .lang-btn:hover {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            padding: 150px 2rem 100px;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(107, 70, 193, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary) 0%, #e5c158 100%);
+            color: var(--dark);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 2rem;
+            background: var(--light);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+
+        .section-title span {
+            color: var(--secondary);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .service-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .service-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .service-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .service-btn:hover {
+            transform: translateX(4px);
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 100px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -1rem;
+            top: 60px;
+            font-size: 2rem;
+            color: var(--secondary);
+            opacity: 0.3;
+        }
+
+        /* Features */
+        .features {
+            padding: 100px 2rem;
+            background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features .section-title {
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            padding: 2rem;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .feature:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--secondary);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .feature p {
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 2rem;
+            background: var(--light);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .testimonial-stars {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 100px 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--light);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #f0f0f0;
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-content {
+            padding: 0 1.5rem 1.5rem;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+            color: white;
+            padding: 60px 2rem;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.85rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .step:not(:last-child)::after {
+                display: none;
+            }
+
+            .footer-links {
+                gap: 1rem;
+            }
+        }
+
+        /* Loading & Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .service-card {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .service-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .service-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .service-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+    </style>
 </head>
 <body>
-<header class="topbar">
-  <div class="wrap nav">
-    <a class="brand" href="#home">🔮 <span data-i18n="brand">জ্যোতিষ অসম</span></a>
-    <nav>
-      <a href="#rashifal" data-i18n="nav_rashifal">ৰাশিফল</a>
-      <a href="#services" data-i18n="nav_services">সেৱা</a>
-      <a href="#about" data-i18n="nav_about">আমাৰ বিষয়ে</a>
-      <a href="#contact" data-i18n="nav_contact">যোগাযোগ</a>
-    </nav>
-    <div class="actions">
-      <button id="langToggle" class="small-btn" aria-label="Change language">AS</button><div class="language-menu"><button class="lang-option active" data-lang="as">অসমীয়া</button><button class="lang-option" data-lang="en">English</button><button class="lang-option" data-lang="hi">हिन्दी</button></div>
-      <a class="small-btn gold" href="admin.html">Admin</a>
-    </div>
-  </div>
-</header>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="#" class="logo">✨ জ্যোতিষ অসম</a>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#how">How It Works</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="lang-selector">
+                <button class="lang-btn active" onclick="changeLang('as')">অসমীয়া</button>
+                <button class="lang-btn" onclick="changeLang('en')">English</button>
+                <button class="lang-btn" onclick="changeLang('hi')">हिन्दी</button>
+            </div>
+        </nav>
+    </header>
 
-<main id="home">
-<section class="hero">
- <div class="wrap hero-inner">
-   <div>
-     <span class="pill" data-i18n="hero_pill">অসমীয়া জ্যোতিষ • Daily Guidance</span>
-     <h1 data-i18n="hero_title">আজিৰ ৰাশিফল জানক</h1>
-     <p data-i18n="hero_desc">প্ৰেম ❤️ · কেৰিয়াৰ 💼 · ধন 💰 · দৈনিক guidance</p>
-     <div class="hero-buttons">
-       <a class="btn gold" href="#rashifal" data-i18n="see_rashifal">ৰাশিফল চাওক</a>
-       <a class="btn outline" href="#services" data-i18n="view_services">Paid Services</a>
-     </div>
-   </div>
-   <div class="hero-card">
-     <div class="date-label" data-i18n="today">আজিৰ তাৰিখ</div>
-     <strong id="todayDate"></strong>
-     <div class="mini-grid">
-       <span>❤️ <span data-i18n="love">Love</span></span><span>💼 <span data-i18n="career">Career</span></span><span>💰 <span data-i18n="finance">Finance</span></span><span>🌿 <span data-i18n="health">Health</span></span>
-     </div>
-   </div>
- </div>
-</section>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>আপোনাৰ ভৱিষ্যৎ আপোনাৰ তাৰকাত লিখা আছে</h1>
+            <p>বিশ্বস্ত Vedic Astrology readings যি আপোনাৰ জীৱনৰ দিশ নিৰ্ধাৰণ কৰে। আমাৰ expert astrologers এ আপোনাৰ birth chart বিশ্লেষণ কৰি accurate insights প্রদান কৰে।</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="scrollToServices()">আজই শুৰু কৰক</button>
+                <a href="#how" class="btn btn-secondary">কেনেকৈ কাজ কৰে?</a>
+            </div>
+        </div>
+    </section>
 
-<section id="rashifal" class="wrap section">
-  <div class="section-head">
-    <div><span class="eyebrow" data-i18n="daily_label">DAILY RASHIFAL</span><h2 data-i18n="rashifal_title">১২টা ৰাশিৰ আজিৰ ৰাশিফল</h2></div>
-    <input id="searchRashi" type="search" placeholder="ৰাশি বিচাৰক..." aria-label="Search zodiac">
-  </div>
-  <div id="zodiacGrid" class="zodiac-grid"></div>
-</section>
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <h2 class="section-title">আমাৰ <span>Services</span></h2>
+        
+        <div class="services-grid">
+            <!-- Birth Chart -->
+            <div class="service-card">
+                <div class="service-icon">🔮</div>
+                <h3>Birth Chart Analysis</h3>
+                <p>আপোনাৰ সম্পূৰ্ণ জন্ম কুণ্ডলী বিশ্লেষণ যি আপোনাৰ ব্যক্তিত্ব, ভাগ্য আৰু জীৱনৰ পথ প্রকাশ কৰে।</p>
+                <div class="service-price">₹299</div>
+                <button class="service-btn" onclick="selectService('birth', 'Birth Chart', 299)">Get Reading</button>
+            </div>
 
-<section class="wrap ad-slot" aria-label="Advertisement">
-  <span data-i18n="advertisement">ADVERTISEMENT</span>
-  <p data-i18n="ad_text">AdSense ad space — add your approved publisher code in <code>adsense.js</code>.</p>
-</section>
+            <!-- Love Reading -->
+            <div class="service-card">
+                <div class="service-icon">❤️</div>
+                <h3>Love & Relationship</h3>
+                <p>প্রেম, বিবাহ আৰু সম্পৰ্কৰ বিষয়ে গভীর অন্তৰ্দৃষ্টি যা আপোনাৰ হৃদয়ৰ প্রশ্নৰ উত্তর দেয়।</p>
+                <div class="service-price">₹99</div>
+                <button class="service-btn" onclick="selectService('love', 'Love Reading', 99)">Get Reading</button>
+            </div>
 
-<section id="services" class="section soft">
- <div class="wrap">
-  <div class="section-head">
-    <div><span class="eyebrow" data-i18n="premium_label">PREMIUM ASTROLOGY</span><h2 data-i18n="services_title">ব্যক্তিগত জ্যোতিষ সেৱা</h2></div>
-  </div>
-  <div class="service-grid">
-   <article class="service-card featured">
-    <span class="tag" data-i18n="popular">POPULAR</span><h3 data-i18n="birth_title">🔮 জন্ম কুণ্ডলী</h3>
-    <p data-i18n="birth_desc">জন্ম তাৰিখ, সময় আৰু স্থানৰ ভিত্তিত ব্যক্তিগত birth chart reading.</p>
-    <div class="price">₹299 <small data-i18n="one_time">one-time</small></div>
-    <button class="btn gold" onclick="buyService('birth')" data-i18n="buy_now">এতিয়াই বুক কৰক</button>
-   </article>
-   <article class="service-card">
-    <h3 data-i18n="love_title">❤️ Love Reading</h3>
-    <p data-i18n="love_desc">প্ৰেম আৰু relationship সম্পৰ্কীয় ব্যক্তিগত guidance.</p>
-    <div class="price">₹99 <small data-i18n="one_time">one-time</small></div>
-    <button class="btn gold" onclick="buyService('love')" data-i18n="buy_now">Get Reading</button>
-   </article>
-   <article class="service-card">
-    <h3 data-i18n="career_title">💼 Career Reading</h3>
-    <p data-i18n="career_desc">কেৰিয়াৰ, work direction আৰু finance-focused astrology guidance.</p>
-    <div class="price">₹199 <small data-i18n="one_time">one-time</small></div>
-    <button class="btn gold" onclick="buyService('career')" data-i18n="buy_now">Get Reading</button>
-   </article>
-  </div>
- </div>
-</section>
+            <!-- Career Reading -->
+            <div class="service-card">
+                <div class="service-icon">💼</div>
+                <h3>Career Guidance</h3>
+                <p>আপোনাৰ ক্যারিয়াৰ সম্ভাৱনা আৰু সফলতাৰ সময় জানুন। সঠিক পেশা আৰু ব্যবসায়িক সিদ্ধান্তৰ বাবে guidance।</p>
+                <div class="service-price">₹199</div>
+                <button class="service-btn" onclick="selectService('career', 'Career Reading', 199)">Get Reading</button>
+            </div>
+        </div>
+    </section>
 
-<section id="about" class="wrap section two-col">
- <div><span class="eyebrow" data-i18n="about_label">ABOUT</span><h2 data-i18n="about_title">সহজ, স্থানীয় আৰু বিশ্বাসযোগ্য অভিজ্ঞতা</h2>
- <p data-i18n="about_text">জ্যোতিষ অসমে Assamese আৰু English ভাষাত দৈনিক astrology guidance আৰু paid personalised readings প্ৰদান কৰে। এই সেৱা entertainment/guidance উদ্দেশ্যৰ বাবে।</p></div>
- <div class="trust-card"><h3 data-i18n="trust1">✓ Assamese + English + Hindi</h3><h3 data-i18n="trust2">✓ Mobile Friendly</h3><h3 data-i18n="trust3">✓ Secure Payment Gateway</h3><h3 data-i18n="trust4">✓ Personalised Reports</h3></div>
-</section>
+    <!-- How It Works -->
+    <section class="how-it-works" id="how">
+        <h2 class="section-title">কেনেকৈ <span>কাজ কৰে</span></h2>
+        
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Service বাছাই কৰক</h3>
+                <p>Birth Chart, Love Reading বা Career Guidance - আপোনাৰ প্রয়োজন অনুযায়ী বাছাই কৰক।</p>
+            </div>
 
-<section id="contact" class="section soft">
- <div class="wrap contact">
-  <div><span class="eyebrow" data-i18n="contact_label">CONTACT</span><h2 data-i18n="contact_title">আপোনাৰ reading আৰম্ভ কৰক</h2><p data-i18n="contact_text">Service বাছি লৈ payment কৰক। Payment সফল হোৱাৰ পিছত report system-ত process কৰা হ’ব।</p></div>
-  <a class="btn gold" href="#services" data-i18n="pay_note">Payment কৰক</a>
- </div>
-</section>
-</main>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>জন্ম তথ্য পূৰণ কৰক</h3>
+                <p>আপোনাৰ জন্মৰ তাৰিখ, সময় আৰু স্থান সঠিকভাবে দিন।</p>
+            </div>
 
-<section id="report-status" class="wrap section">
-  <div class="trust-card">
-    <span class="eyebrow">REPORT</span>
-    <h2>আপোনাৰ Report</h2>
-    <p>Payment কৰাৰ পিছত report status চাবলৈ আপোনাৰ order link ব্যৱহাৰ কৰক।</p>
-    <a class="btn gold" href="report.html">Open Report</a>
-  </div>
-</section>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Payment কৰক</h3>
+                <p>Razorpay-ৰ মাধ্যমে secure payment কৰক।</p>
+            </div>
 
-<footer>
- <div class="wrap footer-grid">
-  <div><strong>🔮 <span data-i18n="brand">জ্যোতিষ অসম</span></strong><p><span id="year"></span> <span data-i18n="footer_about">© Jyotish Assam</span></p></div>
-  <div><a href="privacy.html" data-i18n="privacy">Privacy Policy</a><a href="terms.html" data-i18n="terms">Terms</a><a href="disclaimer.html" data-i18n="disclaimer">Disclaimer</a></div>
- </div>
-</footer>
-<div id="modal" class="modal" hidden><div class="modal-box"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
-<script src="config.js"></script>
-<script src="rashifal.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="app.js"></script>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Report পান</h3>
+                <p>কয়েক মিনিটৰ ভিতৰে আপোনাৰ detailed astrology report পাবেন।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2 class="section-title">কিয় আমাক <span>বিশ্বাস কৰবেন</span></h2>
+        
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <h3>বিশেষজ্ঞ Astrologers</h3>
+                <p>বছৰৰ অভিজ্ঞতাসম্পন্ন Vedic astrology specialists।</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>সম্পূৰ্ণ গোপনীয়তা</h3>
+                <p>আপোনাৰ ব্যক্তিগত তথ্য সম্পূৰ্ণ সুৰক্ষিত।</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>দ্রুত Report</h3>
+                <p>Payment-ৰ পিছত কয়েক মিনিটৰ ভিতৰে report পান।</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>সহজ Access</h3>
+                <p>যেকোনো device-ৰ পৰা যেকোনো সময় report access কৰক।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2 class="section-title">গ্রাহকদের <span>মতামত</span></h2>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"অসাধারণ! Report এতই detail আৰু accurate ছিল। মোৰ ব্যক্তিত্ব সম্পৰ্কে সবকিছু perfectly describe করা আছে।"</p>
+                <div class="testimonial-author">— প্রিয়া গোস্বামী</div>
+            </div>
+
+            <div class="testimonial">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"Career reading অত্যন্ত helpful আছিল। মোক career change কৰিবলৈ সঠিক direction দেখিয়েছে।"</p>
+                <div class="testimonial-author">— রাজীৱ শৰ্মা</div>
+            </div>
+
+            <div class="testimonial">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"প্রতিটি detail পড়ে আমি অবাক! কীভাবে আমাৰ ভৱিষ্যৎ এত accurately predict করিব পাৰে, এইটা বিশ্বাস হচ্ছেই নাই।"</p>
+                <div class="testimonial-author">— রিনা দাস</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <h2 class="section-title">Frequently Asked <span>Questions</span></h2>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Report কেনেকৈ generate হয়?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-content">
+                    আমাৰ expert astrologers আপোনাৰ birth chart বিশ্লেষণ কৰে আৰু AI-এর সাহায্যে detailed report তৈরি করে। এটা সম্পূর্ণভাবে automated আৰু accurate হয়।
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>কত সময়ে report পাব?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-content">
+                    সাধারণত payment confirm হওয়াৰ ২-৫ মিনিটৰ ভিতৰে report আপোনাৰ account-ত available থাকে।
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Birth time কেন গুরুত্বপূর্ণ?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-content">
+                    Birth time ছাড়া accurate birth chart তৈরি করা যায় না। এটা lagna (ascendant) এবং houses determine করে যা আপোনাৰ ব্যক্তিত্ব আৰু ভবিষ্যৎ বুজতে অত্যন্ত গুরুত্বপূর্ণ।
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>কি ধরনের payment method ব্যবহার করতে পারি?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-content">
+                    আমরা Razorpay ব্যবহার করি যেখানে Credit Card, Debit Card, UPI, NetBanking সবকিছু accepted হয়।
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Report কি format-এ পাব?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-content">
+                    Report HTML format-এ পাবেন যা যেকোনো device-এ দেখতে পারবেন। ভবিষ্যতে PDF download option add করা হবে।
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>আপোনাৰ ভৱিষ্যৎ আবিষ্কার কৰক আজই</h2>
+        <p>হাজাৰো সন্তুষ্ট গ্রাহক ইতিমধ্যে তাদের জীৱনৰ পথ খুঁজে পেয়েছেন।</p>
+        <button class="btn btn-primary" onclick="scrollToServices()">এখনই শুরু করুন →</button>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+                <a href="#">About Us</a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 জ্যোতিষ অসম | All Rights Reserved</p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem;">এই রিপোর্ট বিনোদন উদ্দেশ্যে। এটি পেশাদার পরামর্শের বিকল্প নয়।</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Language selector
+        function changeLang(lang) {
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Implement language change logic here
+            console.log('Language changed to:', lang);
+            // You would typically reload the page or change text here
+        }
+
+        // Select service and go to booking
+        function selectService(service, name, price) {
+            // This will integrate with your existing app.js
+            // For now, scroll to services section
+            scrollToServices();
+        }
+
+        // Scroll to services
+        function scrollToServices() {
+            document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // FAQ toggle
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const allItems = document.querySelectorAll('.faq-item');
+            
+            allItems.forEach(el => {
+                if (el !== item) {
+                    el.classList.remove('active');
+                }
+            });
+            
+            item.classList.toggle('active');
+        }
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Navbar hide on scroll
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const header = document.querySelector('header');
+            
+            if (scrollTop > 100) {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+    </script>
 </body>
 </html>
