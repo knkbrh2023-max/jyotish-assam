@@ -344,14 +344,11 @@ async function generateReport(orderId, language) {
 }
 
 function displayReport(reportHtml) {
-    const reportWindow = window.open('', '_blank');
-    if(reportWindow) {
-        reportWindow.document.write(reportHtml);
-        reportWindow.document.close();
-    } else {
-        showError("আপোনাৰ ব্ৰাউজাৰে Pop-up block কৰিছে। অনুগ্ৰহ কৰি Pop-up allow কৰক।");
-        showLoading(false);
-    }
+    // Pop-up block নহ'বলৈ আমি একেখন পেজতেই ৰিপোৰ্টটো দেখুৱাম
+    document.open();
+    document.write(reportHtml);
+    document.close();
+}
 }
 
 function showLoading(isLoading) {
