@@ -1,5 +1,5 @@
-// Configuration
-const C = window.JA_CONFIG;
+// Configuration - Added safety check
+const C = window.JA_CONFIG || {};
 
 // Global state
 let selectedService = null;
@@ -7,13 +7,15 @@ let currentOrder = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    if (!window.JA_CONFIG) {
+        console.error("সতৰ্কবাণী: config.js ঠিকমতে load হোৱা নাই বা JA_CONFIG পোৱা নাই।");
+    }
     setupEventListeners();
     checkExistingOrder();
 });
 
 // Setup event listeners
 function setupEventListeners() {
-    // Service buttons
     const serviceButtons = document.querySelectorAll('.service-btn');
     serviceButtons.forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -23,7 +25,6 @@ function setupEventListeners() {
             const price = parseInt(card.querySelector('.service-price').textContent.match(/\d+/)[0]);
             const icon = card.querySelector('.service-icon').textContent;
             
-            // Map service name to service code
             let serviceCode = 'birth';
             if (serviceName.includes('Love') || serviceName.includes('প্রেম')) {
                 serviceCode = 'love';
@@ -35,13 +36,11 @@ function setupEventListeners() {
         });
     });
 
-    // Form submission
     const form = document.getElementById('birthDetailsForm');
     if (form) {
         form.addEventListener('submit', handleFormSubmit);
     }
 
-    // Close modal
     const modal = document.getElementById('serviceModal');
     if (modal) {
         modal.addEventListener('click', function(e) {
@@ -51,7 +50,6 @@ function setupEventListeners() {
         });
     }
 
-    // Language change
     const langBtns = document.querySelectorAll('.lang-btn');
     langBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -65,19 +63,21 @@ function setupEventListeners() {
 
 // Select service
 function selectService(serviceCode, serviceName, price, icon) {
+    if (!serviceCode) {
+        alert("Error: Service Code undefined হৈ আছে।");
+        return;
+    }
     selectedService = {
         code: serviceCode,
         name: serviceName,
         price: price,
         icon: icon
     };
-
     showServiceModal(serviceCode, serviceName, price);
 }
 
 // Show service modal with form
 function showServiceModal(serviceCode, serviceName, price) {
-    // Create modal if doesn't exist
     let modal = document.getElementById('serviceModal');
     if (!modal) {
         modal = document.createElement('div');
@@ -91,221 +91,46 @@ function showServiceModal(serviceCode, serviceName, price) {
         `;
         document.body.appendChild(modal);
 
-        // Add modal styles
         if (!document.getElementById('modalStyles')) {
             const style = document.createElement('style');
             style.id = 'modalStyles';
             style.textContent = `
-                .modal {
-                    display: none;
-                    position: fixed;
-                    z-index: 2000;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.6);
-                    animation: fadeIn 0.3s;
-                }
-
-                .modal.active {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                .modal-content {
-                    background: white;
-                    padding: 2rem;
-                    border-radius: 15px;
-                    width: 90%;
-                    max-width: 500px;
-                    max-height: 90vh;
-                    overflow-y: auto;
-                    position: relative;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                }
-
-                .modal-close {
-                    position: absolute;
-                    right: 1.5rem;
-                    top: 1.5rem;
-                    font-size: 2rem;
-                    cursor: pointer;
-                    color: #666;
-                    transition: color 0.3s;
-                }
-
-                .modal-close:hover {
-                    color: #000;
-                }
-
-                .form-group {
-                    margin-bottom: 1.5rem;
-                }
-
-                .form-group label {
-                    display: block;
-                    margin-bottom: 0.5rem;
-                    font-weight: 600;
-                    color: #333;
-                    font-size: 0.95rem;
-                }
-
-                .form-group input,
-                .form-group select {
-                    width: 100%;
-                    padding: 0.75rem;
-                    border: 1px solid #ddd;
-                    border-radius: 6px;
-                    font-size: 1rem;
-                    transition: border-color 0.3s;
-                }
-
-                .form-group input:focus,
-                .form-group select:focus {
-                    outline: none;
-                    border-color: #6b46c1;
-                    box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
-                }
-
-                .form-row {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 1rem;
-                }
-
-                @media (max-width: 600px) {
-                    .form-row {
-                        grid-template-columns: 1fr;
-                    }
-
-                    .modal-content {
-                        width: 95%;
-                        padding: 1.5rem;
-                    }
-                }
-
-                .service-header {
-                    text-align: center;
-                    margin-bottom: 2rem;
-                    padding-bottom: 1.5rem;
-                    border-bottom: 2px solid #f0f0f0;
-                }
-
-                .service-header-icon {
-                    font-size: 3rem;
-                    margin-bottom: 0.5rem;
-                }
-
-                .service-header h2 {
-                    font-size: 1.5rem;
-                    color: #333;
-                    margin-bottom: 0.5rem;
-                }
-
-                .service-header p {
-                    color: #d4af37;
-                    font-weight: 600;
-                    font-size: 1.2rem;
-                }
-
-                .form-actions {
-                    display: flex;
-                    gap: 1rem;
-                    margin-top: 2rem;
-                }
-
-                .form-actions button {
-                    flex: 1;
-                    padding: 0.75rem 1.5rem;
-                    border: none;
-                    border-radius: 6px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    font-size: 1rem;
-                }
-
-                .btn-submit {
-                    background: linear-gradient(135deg, #6b46c1, #7c3aed);
-                    color: white;
-                }
-
-                .btn-submit:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
-                }
-
-                .btn-cancel {
-                    background: #f0f0f0;
-                    color: #333;
-                }
-
-                .btn-cancel:hover {
-                    background: #e0e0e0;
-                }
-
-                .loading {
-                    display: none;
-                    text-align: center;
-                    padding: 2rem;
-                }
-
-                .loading.active {
-                    display: block;
-                }
-
-                .spinner {
-                    border: 4px solid #f3f3f3;
-                    border-top: 4px solid #6b46c1;
-                    border-radius: 50%;
-                    width: 40px;
-                    height: 40px;
-                    animation: spin 1s linear infinite;
-                    margin: 0 auto 1rem;
-                }
-
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-
-                .error-message {
-                    background: #fee;
-                    color: #c33;
-                    padding: 1rem;
-                    border-radius: 6px;
-                    margin-bottom: 1rem;
-                    display: none;
-                }
-
-                .error-message.show {
-                    display: block;
-                }
-
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
+                .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); animation: fadeIn 0.3s; }
+                .modal.active { display: flex; justify-content: center; align-items: center; }
+                .modal-content { background: white; padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+                .modal-close { position: absolute; right: 1.5rem; top: 1.5rem; font-size: 2rem; cursor: pointer; color: #666; transition: color 0.3s; }
+                .modal-close:hover { color: #000; }
+                .form-group { margin-bottom: 1.5rem; }
+                .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333; font-size: 0.95rem; }
+                .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; transition: border-color 0.3s; }
+                .form-group input:focus, .form-group select:focus { outline: none; border-color: #6b46c1; box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1); }
+                .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+                @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .modal-content { width: 95%; padding: 1.5rem; } }
+                .service-header { text-align: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid #f0f0f0; }
+                .service-header-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+                .service-header h2 { font-size: 1.5rem; color: #333; margin-bottom: 0.5rem; }
+                .service-header p { color: #d4af37; font-weight: 600; font-size: 1.2rem; }
+                .form-actions { display: flex; gap: 1rem; margin-top: 2rem; }
+                .form-actions button { flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
+                .btn-submit { background: linear-gradient(135deg, #6b46c1, #7c3aed); color: white; }
+                .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3); }
+                .btn-cancel { background: #f0f0f0; color: #333; }
+                .btn-cancel:hover { background: #e0e0e0; }
+                .loading { display: none; text-align: center; padding: 2rem; }
+                .loading.active { display: block; }
+                .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #6b46c1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                .error-message { background: #fee; color: #c33; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; display: none; }
+                .error-message.show { display: block; }
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
             `;
             document.head.appendChild(style);
         }
     }
 
-    // Populate modal
     const modalBody = document.getElementById('modalBody');
-    const serviceNames = {
-        birth: 'জন্ম কুণ্ডলী বিশ্লেষণ',
-        love: 'প্রেম আৰু সম্পৰ্ক',
-        career: 'ক্যারিয়ার বিশ্লেষণ'
-    };
-
-    const serviceIcons = {
-        birth: '🔮',
-        love: '❤️',
-        career: '💼'
-    };
+    const serviceNames = { birth: 'জন্ম কুণ্ডলী বিশ্লেষণ', love: 'প্রেম আৰু সম্পৰ্ক', career: 'ক্যারিয়ার বিশ্লেষণ' };
+    const serviceIcons = { birth: '🔮', love: '❤️', career: '💼' };
 
     modalBody.innerHTML = `
         <div class="service-header">
@@ -313,36 +138,15 @@ function showServiceModal(serviceCode, serviceName, price) {
             <h2>${serviceNames[serviceCode]}</h2>
             <p>₹${price}</p>
         </div>
-
         <div class="error-message" id="errorMessage"></div>
-
         <form id="birthDetailsForm">
-            <div class="form-group">
-                <label>নাম / Name *</label>
-                <input type="text" name="name" placeholder="আপোনাৰ সম্পূৰ্ণ নাম" required>
-            </div>
-
-            <div class="form-group">
-                <label>ইমেইল / Email *</label>
-                <input type="email" name="email" placeholder="your@email.com" required>
-            </div>
-
+            <div class="form-group"><label>নাম / Name *</label><input type="text" name="name" placeholder="আপোনাৰ সম্পূৰ্ণ নাম" required></div>
+            <div class="form-group"><label>ইমেইল / Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
             <div class="form-row">
-                <div class="form-group">
-                    <label>জন্ম তাৰিখ / Date *</label>
-                    <input type="date" name="birthDate" required>
-                </div>
-                <div class="form-group">
-                    <label>জন্ম সময় / Time *</label>
-                    <input type="time" name="birthTime" required>
-                </div>
+                <div class="form-group"><label>জন্ম তাৰিখ / Date *</label><input type="date" name="birthDate" required></div>
+                <div class="form-group"><label>জন্ম সময় / Time *</label><input type="time" name="birthTime" required></div>
             </div>
-
-            <div class="form-group">
-                <label>জন্ম স্থান / Place *</label>
-                <input type="text" name="birthPlace" placeholder="City, State, Country" required>
-            </div>
-
+            <div class="form-group"><label>জন্ম স্থান / Place *</label><input type="text" name="birthPlace" placeholder="City, State, Country" required></div>
             <div class="form-group">
                 <label>ভাষা / Language *</label>
                 <select name="language" required>
@@ -351,37 +155,34 @@ function showServiceModal(serviceCode, serviceName, price) {
                     <option value="hi">Hindi (हिन्दी)</option>
                 </select>
             </div>
-
             <div class="form-actions">
                 <button type="button" class="btn-cancel" onclick="closeServiceModal()">বাতিল / Cancel</button>
                 <button type="submit" class="btn-submit">পেমেন্ট কৰক / Pay ₹${price}</button>
             </div>
         </form>
-
         <div class="loading" id="loadingDiv">
             <div class="spinner"></div>
             <p>প্রক্রিয়াকরণ চলছে... Processing...</p>
         </div>
     `;
 
-    // Add form submit listener
     document.getElementById('birthDetailsForm').addEventListener('submit', handleFormSubmit);
-
-    // Show modal
     modal.classList.add('active');
 }
 
-// Close modal
 function closeServiceModal() {
     const modal = document.getElementById('serviceModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
+    if (modal) modal.classList.remove('active');
 }
 
 // Handle form submission
 async function handleFormSubmit(e) {
     e.preventDefault();
+
+    if (!C.apiBaseUrl) {
+        showError("সতৰ্কবাণী: config.js ত apiBaseUrl নাই (undefined)।");
+        return;
+    }
 
     if (!selectedService) {
         showError('Service not selected');
@@ -391,7 +192,6 @@ async function handleFormSubmit(e) {
     const form = e.target;
     const formData = new FormData(form);
 
-    // Validate inputs
     if (!formData.get('name') || !formData.get('email') || !formData.get('birthDate') || 
         !formData.get('birthTime') || !formData.get('birthPlace')) {
         showError('সকল field fill কৰক / Fill all fields');
@@ -401,12 +201,9 @@ async function handleFormSubmit(e) {
     showLoading(true);
 
     try {
-        // Create order
         const orderResponse = await fetch(`${C.apiBaseUrl}/create-order`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 service: selectedService.code,
                 name: formData.get('name'),
@@ -419,7 +216,7 @@ async function handleFormSubmit(e) {
         });
 
         if (!orderResponse.ok) {
-            throw new Error('Order creation failed');
+            throw new Error('Order creation failed (Server error)');
         }
 
         const orderData = await orderResponse.json();
@@ -428,9 +225,13 @@ async function handleFormSubmit(e) {
             throw new Error(orderData.error || 'Order creation failed');
         }
 
+        if (!orderData.razorpayOrderId) {
+            showError("Backend-ৰ পৰা razorpayOrderId অহা নাই (undefined)।");
+            showLoading(false);
+            return;
+        }
+
         currentOrder = orderData;
-        
-        // Initialize Razorpay
         handleRazorpayPayment(orderData);
 
     } catch (error) {
@@ -442,11 +243,16 @@ async function handleFormSubmit(e) {
 
 // Handle Razorpay payment
 function handleRazorpayPayment(orderData) {
+    if (!C.razorpayKeyId) {
+        showError("config.js ত Razorpay Key নাই (undefined)।");
+        return;
+    }
+
     const options = {
         key: C.razorpayKeyId,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: C.brand,
+        name: C.brand || 'Jyotish Assam',
         description: `${orderData.serviceName} Reading`,
         order_id: orderData.razorpayOrderId,
         handler: function(response) {
@@ -461,23 +267,30 @@ function handleRazorpayPayment(orderData) {
             name: currentOrder.name,
             email: currentOrder.email
         },
-        theme: {
-            color: '#6b46c1'
-        }
+        theme: { color: '#6b46c1' }
     };
 
-    const razorpay = new Razorpay(options);
-    razorpay.open();
+    try {
+        const razorpay = new Razorpay(options);
+        razorpay.open();
+    } catch(err) {
+        showError("Razorpay SDK load হোৱা নাই। ইণ্টাৰনেট চেক কৰক।");
+        showLoading(false);
+    }
 }
 
 // Verify payment
 async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature) {
+    if (!orderId) {
+        showError("Backend-ৰ পৰা orderId অহা নাই (undefined)।");
+        showLoading(false);
+        return;
+    }
+
     try {
         const verifyResponse = await fetch(`${C.apiBaseUrl}/verify-payment`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 orderId: orderId,
                 razorpay_order_id: razorpayOrderId,
@@ -494,7 +307,6 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
             return;
         }
 
-        // Payment verified, generate report
         generateReport(orderId, currentOrder.language || 'as');
 
     } catch (error) {
@@ -512,12 +324,8 @@ async function generateReport(orderId, language) {
 
         const reportResponse = await fetch("https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/calculate-chart", {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                orderId: orderId
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: orderId })
         });
 
         const result = await reportResponse.json();
@@ -554,67 +362,56 @@ async function generateReport(orderId, language) {
         `;
 
         displayReport(debugHtml);
-        
         showLoading(false);
         closeServiceModal();
 
     } catch (error) {
         console.error('Report generation error:', error);
-        showError('ইণ্টাৰনেটৰ সমস্যা: ' + error.message);
+        showError('ইণ্টাৰনেটৰ সমস্যা বা চাৰ্ভাৰত সংযোগ হোৱা নাই।');
         showLoading(false);
     }
 }
 
-// Display report
 function displayReport(reportHtml) {
-    const reportWindow = window.open();
-    reportWindow.document.write(reportHtml);
-    reportWindow.document.close();
+    const reportWindow = window.open('', '_blank');
+    if(reportWindow) {
+        reportWindow.document.write(reportHtml);
+        reportWindow.document.close();
+    } else {
+        showError("আপোনাৰ ব্ৰাউজাৰে Pop-up block কৰিছে। অনুগ্ৰহ কৰি Pop-up allow কৰক।");
+    }
 }
 
-// Show/hide loading
 function showLoading(isLoading) {
     const loading = document.getElementById('loadingDiv');
     const form = document.getElementById('birthDetailsForm');
     if (loading) {
         loading.classList.toggle('active', isLoading);
-        if (form) {
-            form.style.display = isLoading ? 'none' : 'block';
-        }
+        if (form) form.style.display = isLoading ? 'none' : 'block';
     }
 }
 
-// Show error message
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
     if (errorDiv) {
         errorDiv.textContent = message;
         errorDiv.classList.add('show');
-        setTimeout(() => {
-            errorDiv.classList.remove('show');
-        }, 5000);
+        setTimeout(() => { errorDiv.classList.remove('show'); }, 6000);
     } else {
         alert(message);
     }
 }
 
-// Change language
 function changeLanguage(lang) {
     localStorage.setItem('preferredLanguage', lang);
-    console.log('Language changed to:', lang);
 }
 
-// Check for existing order (for report page redirect)
 function checkExistingOrder() {
     const params = new URLSearchParams(window.location.search);
     const orderId = params.get('orderId');
-    
-    if (orderId) {
-        console.log('Loading report for order:', orderId);
-    }
+    if (orderId) console.log('Loading report for order:', orderId);
 }
 
-// Razorpay script loader
 function loadRazorpayScript() {
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -622,5 +419,4 @@ function loadRazorpayScript() {
     document.head.appendChild(script);
 }
 
-// Load Razorpay on page load
 window.addEventListener('load', loadRazorpayScript);
