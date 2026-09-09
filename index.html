@@ -91,7 +91,38 @@
             border: 1px solid rgba(109, 40, 217, 0.1);
         }
 
-        .hero h1 { font-size: 36px; margin-bottom: 15px; color: var(--text-dark); font-weight: 700; }
+        /* Hero Title Special Design */
+.hero-title-styled {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    position: relative;
+    display: inline-block;
+}
+
+/* Gradient text effect (Purple to Pink) */
+.hero-title-styled span {
+    background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 5px 15px rgba(109, 40, 217, 0.15);
+}
+
+/* Glowing underline effect */
+.hero-title-styled::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, #6D28D9, #DB2777);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(219, 39, 119, 0.5);
+}
         .hero p { font-size: 16px; color: var(--text-light); max-width: 700px; margin: 0 auto 20px; }
 
         /* Trust Badges */
