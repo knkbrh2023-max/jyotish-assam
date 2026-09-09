@@ -430,5 +430,20 @@
     <footer id="footer">
         সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম | <a href="#">গোপনীয়তা নীতি</a> | <a href="#">নিয়ম আৰু চৰ্তাৱলী</a>
     </footer>
+    <script>
+    function changeLang(lang) {
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('btn-active'));
+        // Active class toggle
+        event.target.classList.add('active');
+        
+        if(lang === 'english') {
+            alert("English mode activated! (Full multi-language text can be extended here)");
+        } else if(lang === 'hindi') {
+            alert("हिंदी मोड सक्रिय किया गया!");
+        } else {
+            alert("অসমীয়া মোড সক্ক্রিয় কৰা হ'ল!");
+        }
+    }
+</script>
 </body>
 </html>
