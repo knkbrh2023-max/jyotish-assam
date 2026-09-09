@@ -285,12 +285,8 @@ function showServiceModal(serviceCode, serviceName, price) {
                 }
 
                 @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                    }
-                    to {
-                        opacity: 1;
-                    }
+                    from { opacity: 0; }
+                    to { opacity: 1; }
                 }
             `;
             document.head.appendChild(style);
@@ -508,10 +504,9 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report (Updated to call calculate-chart)
+// Generate report (Updated with new Edge Function API)
 async function generateReport(orderId, language) {
     try {
-        // Loading text সলনি কৰা হৈছে
         const loadingText = document.querySelector('#loadingDiv p');
         if (loadingText) loadingText.innerText = "আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অপেক্ষা কৰক";
 
@@ -535,7 +530,6 @@ async function generateReport(orderId, language) {
 
         console.log("SUCCESS! Chart Data:", result.chart);
         
-        // বৰ্তমানৰ বাবে ডাটাখিনি চাবলৈ এটা সাধাৰণ HTML বনোৱা হৈছে (পৰৱৰ্তী step-ত আমি ইয়াক ধুনীয়া কৰিম)
         const debugHtml = `
             <!DOCTYPE html>
             <html>
@@ -559,7 +553,6 @@ async function generateReport(orderId, language) {
             </html>
         `;
 
-        // নতুন উইণ্ড'ত ৰিপোৰ্ট দেখুওৱা
         displayReport(debugHtml);
         
         showLoading(false);
@@ -568,18 +561,6 @@ async function generateReport(orderId, language) {
     } catch (error) {
         console.error('Report generation error:', error);
         showError('ইণ্টাৰনেটৰ সমস্যা: ' + error.message);
-        showLoading(false);
-    }
-}
-
-        // Display report
-        displayReport(reportData.report);
-        showLoading(false);
-        closeServiceModal();
-
-    } catch (error) {
-        console.error('Report generation error:', error);
-        showError('Report generation error: ' + error.message);
         showLoading(false);
     }
 }
@@ -619,10 +600,7 @@ function showError(message) {
 
 // Change language
 function changeLanguage(lang) {
-    // Store language preference
     localStorage.setItem('preferredLanguage', lang);
-    
-    // You can add more language switching logic here
     console.log('Language changed to:', lang);
 }
 
@@ -632,7 +610,6 @@ function checkExistingOrder() {
     const orderId = params.get('orderId');
     
     if (orderId) {
-        // If coming from report page, fetch and display report
         console.log('Loading report for order:', orderId);
     }
 }
