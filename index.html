@@ -155,7 +155,7 @@
             background: #faf5ff;
             padding: 20px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             color: #334155;
             max-width: 800px;
             margin: 0 auto;
@@ -263,18 +263,18 @@
             </div>
         </section>
 
-        <!-- Daily Horoscope Section (Auto-updates/Interactive) -->
+        <!-- Daily Horoscope Section -->
         <div class="horoscope-box">
-            <h3 id="horo-heading">✨ আজকের দৈনিক ৰাশিফল</h3>
-            <div class="horoscope-date" id="currentDateText">তাৰিখ: আজিলৈ আপডেট কৰা হৈছে</div>
+            <h3 id="horo-heading">✨ আজিৰ বিশদ দৈনিক ৰাশিফল</h3>
+            <div class="horoscope-date" id="currentDateText">তাৰিখ: আপডেট হৈ আছে</div>
             
             <div class="rashi-selector">
-                <button class="rashi-btn active" onclick="showHoroscope('aries', this)" id="r-aries">মেষ (Aries)</button>
-                <button class="rashi-btn" onclick="showHoroscope('taurus', this)" id="r-taurus">বৃষ (Taurus)</button>
-                <button class="rashi-btn" onclick="showHoroscope('gemini', this)" id="r-gemini">মিথুন (Gemini)</button>
-                <button class="rashi-btn" onclick="showHoroscope('cancer', this)" id="r-cancer">কৰ্কট (Cancer)</button>
-                <button class="rashi-btn" onclick="showHoroscope('leo', this)" id="r-leo">সিংহ (Leo)</button>
-                <button class="rashi-btn" onclick="showHoroscope('virgo', this)" id="r-virgo">কন্যা (Virgo)</button>
+                <button class="rashi-btn active" onclick="showHoroscope('aries', this)">মেষ (Aries)</button>
+                <button class="rashi-btn" onclick="showHoroscope('taurus', this)">বৃষ (Taurus)</button>
+                <button class="rashi-btn" onclick="showHoroscope('gemini', this)">মিথুন (Gemini)</button>
+                <button class="rashi-btn" onclick="showHoroscope('cancer', this)">কৰ্কট (Cancer)</button>
+                <button class="rashi-btn" onclick="showHoroscope('leo', this)">সিংহ (Leo)</button>
+                <button class="rashi-btn" onclick="showHoroscope('virgo', this)">কন্যা (Virgo)</button>
             </div>
 
             <div class="horoscope-content" id="horoscopeText">
@@ -293,7 +293,7 @@
                     <h3 id="srv1-title">সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
                     <p class="service-desc" id="srv1-desc">নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।</p>
                     <div class="service-price">₹299</div>
-                    <button class="service-btn" id="btn1">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn service-btn-action" data-service="birth">সেৱা গ্ৰহণ কৰক</button>
                 </div>
 
                 <div class="service-card">
@@ -301,7 +301,7 @@
                     <h3 id="srv2-title">প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
                     <p class="service-desc" id="srv2-desc">প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ, পেছা আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
                     <div class="service-price">₹99</div>
-                    <button class="service-btn" id="btn2">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn service-btn-action" data-service="love">সেৱা গ্ৰহণ কৰক</button>
                 </div>
 
                 <div class="service-card">
@@ -309,7 +309,7 @@
                     <h3 id="srv3-title">কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
                     <p class="service-desc" id="srv3-desc">চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
                     <div class="service-price">₹199</div>
-                    <button class="service-btn" id="btn3">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn service-btn-action" data-service="career">সেৱা গ্ৰহণ কৰক</button>
                 </div>
             </div>
         </section>
@@ -330,13 +330,12 @@
 
     <!-- Multi-Language & Daily Horoscope Script -->
     <script>
-        // Language Text Dictionaries
         const texts = {
             as: {
                 hTitle: "আপোনাৰ ভৱিষ্যৎ আজি সঠিকভাৱে জানি লওক",
                 hSubtitle: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।",
                 b1: "✔ ১০০% বৈদিক শুদ্ধতা", b2: "✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক", b3: "✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি", b4: "✔ নিৰাপদ পেমেন্ট (Razorpay)",
-                horoHeading: "✨ আজিৰ দৈনিক ৰাশিফল",
+                horoHeading: "✨ আজিৰ বিশদ দৈনিক ৰাশিফল",
                 sTitle: "আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ",
                 sSubtitle: "আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক",
                 srv1Title: "সম্পূৰ্ণ জন্ম কুণ্ডলী", srv1Desc: "নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।",
@@ -351,7 +350,7 @@
                 hTitle: "Know Your Future Accurately Today",
                 hSubtitle: "Authentic birth charts and predictions generated using precise Vedic astrology & Lahiri Ayanamsa.",
                 b1: "✔ 100% Vedic Accuracy", b2: "✔ 10,000+ Happy Customers", b3: "✔ Instant Report Delivery", b4: "✔ Secure Payments (Razorpay)",
-                horoHeading: "✨ Today's Daily Horoscope",
+                horoHeading: "✨ Today's Detailed Horoscope",
                 sTitle: "Our Premium Astrology Services",
                 sSubtitle: "Get expert astrological guidance tailored for specific aspects of your life",
                 srv1Title: "Complete Birth Chart", srv1Desc: "Detailed Vedic analysis of planetary positions, ascendant, and Vimshottari dasha.",
@@ -366,7 +365,7 @@
                 hTitle: "आज ही अपने भविष्य को सटीक रूप से जानें",
                 hSubtitle: "वैदिक ज्योतिष और लाहिरी अयांश की सटीक गणना के साथ तैयार प्रामाणिक कुंडली और भविष्यवाणियां।",
                 b1: "✔ 100% वैदिक शुद्धता", b2: "✔ 10,000+ संतुष्ट ग्राहक", b3: "✔ तत्काल रिपोर्ट प्राप्ति", b4: "✔ सुरक्षित भुगतान (Razorpay)",
-                horoHeading: "✨ आज का दैनिक राशिफल",
+                horoHeading: "✨ आज का विस्तृत दैनिक राशिफल",
                 sTitle: "हमारी प्रीमियम ज्योतिष सेवाएं",
                 sSubtitle: "अपने जीवन के विशिष्ट पहलुओं के लिए विशेषज्ञ ज्योतिषीय मार्गदर्शन प्राप्त करें",
                 srv1Title: "पूर्ण जन्म कुंडली", srv1Desc: "ग्रहों की स्थिति, लग्न और विंशोत्तरी महादशा का विस्तृत वैदिक विश्लेषण।",
@@ -379,31 +378,138 @@
             }
         };
 
-        // Dynamic Daily Horoscopes (Changes based on date + rashi)
         const horoscopes = {
             as: {
-                aries: "আজ আপোনাৰ দিনটো অতি শুভ। কৰ্মক্ষেত্ৰত প্ৰশংসা লাভ কৰিব আৰু বিত্তীয় স্থিৰতা বজি থাকিব। স্বাস্থ্যৰ প্ৰতি সজাগ থাকক।",
-                taurus: "পৰিয়ালৰ লগত সময় অতিবাহিত কৰাৰ সুযোগ পাব। ব্যৱসায়ত নতুন বিনিয়োগ লাভদায়ক হ'ব। মন প্ৰফুল্ল থাকিব।",
-                gemini: "শিক্ষার্থীসকলৰ বাবে দিনটো ভাল। নতুন কাম আৰম্ভ কৰাৰ বাবে অনুকূল সময়। যাত্ৰাত সাৱধান হ'ব।",
-                cancer: "আৱেগিকভাৱে শক্তিশালী অনুভৱ কৰিব। প্ৰেমৰ সম্পৰ্কত মধুৰতা বৃদ্ধি পাব। আৰ্থিক লাভৰ যোগ আছে।",
-                leo: "नेतৃত্ব দিয়াৰ ক্ষমতা বৃদ্ধি পাব। অফিচত দায়িত্ব αυঢ়ি যাব পাৰে। আত্মবিশ্বাস অটুট ৰাখক।",
-                virgo: "প্ৰতিদ্বন্দ্বীসকলৰ ওপৰত বিজয় লাভ কৰিব। স্বাস্থ্য উন্নত হ'ব। বন্ধুবৰ্গৰ পৰা সহযোগিতা পাব।"
+                aries: {
+                    overview: "আজ আপোনাৰ দিনটো অতি শুভ আৰু শক্তিপূৰ্ণ। নতুন কামৰ আৰম্ভণি কৰিব পাৰে।",
+                    career: "কৰ্মক্ষেত্ৰত আপোনাৰ কামৰ প্ৰশংসা হ'ব। উচ্চপদস্থ বিষয়াৰ সহযোগিতা পাব।",
+                    love: "প্ৰেম সম্পৰ্কত আৱেগিক বুজাবুজি বৃদ্ধি পাব। সংগীৰ লগত ফুৰিবলৈ যোৱাৰ যোগ আছে।",
+                    health: "স্বাস্থ্য মোটামুটি ভাল থাকিব, কিন্তু পুৱাৰ ভাগত সামান্য ক্লান্তি অনুভৱ কৰিব পাৰে।",
+                    luckyColor: "বগলীয়া (White)", luckyNumber: "৯"
+                },
+                taurus: {
+                    overview: "আৰ্থিক লেনদেনত সাৱধান হ'ব। পৰিয়ালৰ কোনো জ্যেষ্ঠ ব্যক্তিৰ পৰামৰ্শ লাভৱান হ'ব।",
+                    career: "ব্যৱসায়ত লাভৰ নতুন পথ মুকলি হ'ব। সহকৰ্মীসকলৰ পৰা পূৰ্ণ সহযোগিতা পাব।",
+                    love: "বিবাহিত জীৱনত সুখ আৰু শান্তি বজায় থাকিব। অবিবাহিতসকলৰ বাবে ভাল প্ৰস্তাৱ আহিব পাৰে।",
+                    health: "পেটৰ সামান্য সমস্যা হ'ব পাৰে, খোৱা-বোৱাত সাৱধান হওক।",
+                    luckyColor: "সেউজীয়া (Green)", luckyNumber: "৬"
+                },
+                gemini: {
+                    overview: "বুদ্ধিমত্তা আৰু বাকপটুতাৰে কঠিন কামো সহজে সমাধান কৰিব পাৰিব।",
+                    career: "শিক্ষার্থী আৰু গৱেষকসকলৰ বাবে দিনটো অত্যন্ত ফলপ্ৰসূ। নতুন প্ৰকল্প হাতত ল'ব পাৰে।",
+                    love: "প্ৰেমৰ ক্ষেত্ৰত ভুল বুজাবুজি দূৰ হব। মনৰ কথা মুকলিকৈ প্ৰকাশ কৰক।",
+                    health: "মানসিক হেঁচা হ'ব পাৰে, যোগাৱাসন কৰিলে সুফল পাব।",
+                    luckyColor: "হালধীয়া (Yellow)", luckyNumber: "৩"
+                },
+                cancer: {
+                    overview: "আৱেগিকভাৱে দিনটো সংবেদনশীল হ'ব। যিকোনো সিদ্ধান্ত লোৱাৰ পূৰ্বে ভালদৰে চিন্তা কৰক।",
+                    career: "কৰ্মক্ষেত্ৰত পৰিৱৰ্তনৰ সম্ভাৱনা আছে। কাৰোবাক টকা ধাৰলৈ নিদিব।",
+                    love: "প্ৰেমাস্পদৰ সৈতে মতানৈক্য দূৰ হ'ব। আৱেগ নিয়ন্ত্ৰণত ৰাখক।",
+                    health: "ৰাতি টোপনি সম্পূৰ্ণ হোৱাটো জৰুৰী। পানী বেছিকৈ খাওক।",
+                    luckyColor: "ৰূপালী (Silver)", luckyNumber: "২"
+                },
+                leo: {
+                    overview: "আত্মবিশ্বাস তুংগত থাকিব। সমাজত মান-সন্মান বৃদ্ধি পাব।",
+                    career: "ব্যৱসায় বা চাকৰিত পদোন্নতিৰ যোগ আছে। নেতৃত্ব দিয়াৰ সুবৰ্ণ সুযোগ পাব।",
+                    love: "প্ৰেম জীৱন ৰোমাঞ্চকৰ হ'ব। সংগীয়ে আপোনাক উপহাৰ দিব পাৰে।",
+                    health: "শাৰীৰিক শক্তি প্ৰচুৰ পৰিমাণে থাকিব।",
+                    luckyColor: "কমলা (Orange)", luckyNumber: "১"
+                },
+                virgo: {
+                    overview: "পিকল্পিতভাৱে কাম কৰিলে শতকৰা ১০০ ভাগ সফলতা লাভ কৰিব। খৰচ নিয়ন্ত্ৰণ কৰক।",
+                    career: "অফিচত আপোনাৰ কামৰ পৰিসৰ বৃদ্ধি পাব। নতুন দায়িত্ব গ্ৰহণ কৰিবলৈ সাজু থাকক।",
+                    love: "পৰিয়ালৰ লোকৰ সমৰ্থনে প্ৰেম জীৱন সহজ কৰি তুলিব।",
+                    health: "ক্লান্তি দূৰ কৰিবলৈ জিণিৰ প্ৰয়োজন আছে।",
+                    luckyColor: "নীলা (Blue)", luckyNumber: "৫"
+                }
             },
             en: {
-                aries: "Today is a very auspicious day. You will receive praise at work and financial stability will remain. Take care of your health.",
-                taurus: "You will get opportunities to spend time with family. New investments in business will be profitable. Mind will be cheerful.",
-                gemini: "Good day for students. Favorable time to start new ventures. Be cautious while traveling.",
-                cancer: "You will feel emotionally strong. Sweetness in love relationships will increase. Financial gains are foreseen.",
-                leo: "Leadership abilities will increase. Responsibilities at the office may grow. Keep your confidence high.",
-                virgo: "You will overcome competitors. Health will improve. Support from friends will be helpful."
+                aries: {
+                    overview: "Today is a very auspicious and energetic day. You can start new ventures.",
+                    career: "Your work will be praised at the workplace. Support from superiors will be helpful.",
+                    love: "Emotional understanding in love relationships will increase. Good day for an outing.",
+                    health: "Health will be generally good, though minor fatigue in the morning is possible.",
+                    luckyColor: "White", luckyNumber: "9"
+                },
+                taurus: {
+                    overview: "Be cautious in financial transactions. Advice from an elderly family member will be beneficial.",
+                    career: "New avenues of profit will open in business. Full support from colleagues.",
+                    love: "Peace and happiness in married life. Good proposals might come for singles.",
+                    health: "Minor stomach issues possible, watch your diet.",
+                    luckyColor: "Green", luckyNumber: "6"
+                },
+                gemini: {
+                    overview: "You will easily solve tough tasks with intelligence and communication skills.",
+                    career: "Extremely fruitful day for students and researchers. New projects can be initiated.",
+                    love: "Misunderstandings in love will clear up. Express your feelings openly.",
+                    health: "Mental stress is possible, yoga will bring relief.",
+                    luckyColor: "Yellow", luckyNumber: "3"
+                },
+                cancer: {
+                    overview: "The day will be emotionally sensitive. Think thoroughly before making major decisions.",
+                    career: "Possibility of changes at work. Avoid lending money to anyone.",
+                    love: "Differences with partner will resolve. Keep your emotions in check.",
+                    health: "Proper sleep is essential. Drink plenty of water.",
+                    luckyColor: "Silver", luckyNumber: "2"
+                },
+                leo: {
+                    overview: "Confidence will be at its peak. Respect and social status will increase.",
+                    career: "Chances of promotion in business or job. Great opportunity to showcase leadership.",
+                    love: "Love life will be romantic. Partner might surprise you with a gift.",
+                    health: "Physical energy will be abundant.",
+                    luckyColor: "Orange", luckyNumber: "1"
+                },
+                virgo: {
+                    overview: "Working systematically will bring 100% success. Keep a check on expenses.",
+                    career: "Work responsibilities at the office will increase. Be ready to take new charges.",
+                    love: "Family support will make your love life smoother.",
+                    health: "Adequate rest is needed to avoid exhaustion.",
+                    luckyColor: "Blue", luckyNumber: "5"
+                }
             },
             hi: {
-                aries: "आज का दिन बहुत शुभ है। कार्यक्षेत्र में प्रशंसा मिलेगी और आर्थिक स्थिति स्थिर रहेगी। स्वास्थ्य का ध्यान रखें।",
-                taurus: "परिवार के साथ समय बिताने का अवसर मिलेगा। व्यापार में नए निवेश लाभदायक रहेंगे। मन प्रसन्न रहेगा।",
-                gemini: "विद्यार्थियों के लिए दिन अच्छा है। नया काम शुरू करने के लिए अनुकूल समय। यात्रा में सावधानी बरतें।",
-                cancer: "आप भावनात्मक रूप से मजबूत महसूस करेंगे। प्रेम संबंधों में मधुरता बढ़ेगी। धन लाभ के योग हैं।",
-                leo: "नेतृत्व क्षमता में वृद्धि होगी। ऑफिस में जिम्मेदारियां बढ़ सकती हैं। आत्मविश्वास बनाए रखें।",
-                virgo: "विरोधियों पर विजय प्राप्त होगी। स्वास्थ्य में सुधार होगा। मित्रों का सहयोग प्राप्त होगा।"
+                aries: {
+                    overview: "आज का दिन बेहद शुभ और ऊर्जावान रहेगा। नए कार्यों की शुरुआत कर सकते हैं।",
+                    career: "कार्यक्षेत्र में आपके काम की सराहना होगी। वरिष्ठ अधिकारियों का सहयोग प्राप्त होगा।",
+                    love: "प्रेम संबंध में भावनात्मक समझ बढ़ेगी। पार्टनर के साथ घूमने जाने के योग हैं।",
+                    health: "स्वास्थ्य सामान्यतः अच्छा रहेगा, सुबह हल्की थकान हो सकती है।",
+                    luckyColor: "सफेद (White)", luckyNumber: "9"
+                },
+                taurus: {
+                    overview: "आर्थिक लेन-देन में सावधानी बरतें। परिवार के किसी बुजुर्ग की सलाह फायदेमंद साबित होगी।",
+                    career: "व्यापार में लाभ के नए रास्ते खुलेंगे। सहकर्मियों का पूरा सहयोग मिलेगा।",
+                    love: "वैवाहिक जीवन में सुख-शांति बनी रहेगी। अविवाहितों के लिए अच्छे प्रस्ताव आ सकते हैं।",
+                    health: "पेट से जुड़ी हल्की समस्या हो सकती है, खानपान का ध्यान रखें।",
+                    luckyColor: "हरा (Green)", luckyNumber: "6"
+                },
+                gemini: {
+                    overview: "अपनी बुद्धिमत्ता और वाणी से आप कठिन कार्यों को भी आसानी से सुलझा लेंगे।",
+                    career: "विद्यार्थियों और शोधकर्ताओं के लिए दिन अत्यंत फलदायी है। नए प्रोजेक्ट शुरू कर सकते हैं।",
+                    love: "प्रेम संबंधों में दूरियां मिटेंगी। अपने मन की बात खुलकर साझा करें।",
+                    health: "मानसिक तनाव हो सकता है, योगाभ्यास से लाभ मिलेगा।",
+                    luckyColor: "पीला (Yellow)", luckyNumber: "3"
+                },
+                cancer: {
+                    overview: "भावनात्मक रूप से दिन संवेदनशील रहेगा। कोई भी बड़ा निर्णय लेने से पहले विचार करें।",
+                    career: "कार्यक्षेत्र में बदलाव के संकेत हैं। किसी को भी धन उधार न दें।",
+                    love: "प्रियजन के साथ मतभेद दूर होंगे। अपनी भावनाओं पर नियंत्रण रखें।",
+                    health: "पर्याप्त नींद लेना जरूरी है। पानी अधिक मात्रा में पिएं।",
+                    luckyColor: "चांदी जैसा (Silver)", luckyNumber: "2"
+                },
+                leo: {
+                    overview: "आत्मविश्वास उच्च स्तर पर रहेगा। समाज में मान-सम्मान और प्रतिष्ठा बढ़ेगी।",
+                    career: "व्यापार या नौकरी में पदोन्नति के योग हैं। नेतृत्व दिखाने का सुनहरा अवसर मिलेगा।",
+                    love: "प्रेम जीवन रोमांस से भरा रहेगा। साथी आपको कोई उपहार दे सकते हैं।",
+                    health: "शारीरिक ऊर्जा भरपूर बनी रहेगी।",
+                    luckyColor: "नारंगी (Orange)", luckyNumber: "1"
+                },
+                virgo: {
+                    overview: "योजनाबद्ध तरीके से काम करने पर शत-प्रतिशत सफलता मिलेगी। खर्चों पर नियंत्रण रखें।",
+                    career: "ऑफिस में आपके कार्यों का दायरा बढ़ेगा। नई जिम्मेदारियां संभालने के लिए तैयार रहें।",
+                    love: "परिवार के सहयोग से आपका प्रेम जीवन और सहज होगा।",
+                    health: "थकान दूर करने के लिए थोड़ा आराम जरूरी है।",
+                    luckyColor: "नीला (Blue)", luckyNumber: "5"
+                }
             }
         };
 
@@ -412,11 +518,9 @@
         function switchLanguage(lang) {
             currentLang = lang;
             
-            // Update active button state
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
 
-            // Update text elements safely
             const t = texts[lang];
             document.getElementById('h-title').innerText = t.hTitle;
             document.getElementById('h-subtitle').innerText = t.hSubtitle;
@@ -435,15 +539,12 @@
             document.getElementById('srv3-title').innerText = t.srv3Title;
             document.getElementById('srv3-desc').innerText = t.srv3Desc;
 
-            document.getElementById('btn1').innerText = t.btnText;
-            document.getElementById('btn2').innerText = t.btnText;
-            document.getElementById('btn3').innerText = t.btnText;
+            document.querySelectorAll('.service-btn-action').forEach(b => b.innerText = t.btnText);
 
             document.getElementById('sec-title').innerText = t.secTitle;
             document.getElementById('sec-desc').innerText = t.secDesc;
             document.getElementById('footer-text').innerText = t.footerText;
 
-            // Refresh current horoscope text based on active tab
             const activeRashiBtn = document.querySelector('.rashi-btn.active');
             if(activeRashiBtn) {
                 const rashiKey = activeRashiBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
@@ -455,17 +556,36 @@
             document.querySelectorAll('.rashi-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
 
-            const text = horoscopes[currentLang][rashi] || "ৰাশিফল উপলব্ধ নাই।";
-            document.getElementById('horoscopeText').innerText = text;
+            const h = horoscopes[currentLang][rashi] || {};
+            const isEn = currentLang === 'en';
+            const isHi = currentLang === 'hi';
+
+            const lColorLabel = isEn ? "Lucky Color" : (isHi ? "शुभ रंग" : "শুভ ৰং");
+            const lNumlabel = isEn ? "Lucky Number" : (isHi ? "शुभ अंक" : "শুভ সংখ্যা");
+            const careerLabel = isEn ? "Career/Work" : (isHi ? "करियर/कार्यक्षेत्र" : "কৰ্মক্ষেত্ৰ");
+            const loveLabel = isEn ? "Love/Family" : (isHi ? "प्रेम/संबंध" : "প্ৰেম আৰু সম্পৰ্ক");
+            const healthLabel = isEn ? "Health" : (isHi ? "स्वास्थ्य" : "স্বাস্থ্য");
+
+            const htmlContent = `
+                <p style="margin-bottom: 12px; font-weight: 500;">${h.overview || ''}</p>
+                <div style="text-align: left; background: white; padding: 15px; border-radius: 8px; margin-top: 10px; font-size: 14px; border: 1px solid #f3e8ff;">
+                    <p style="margin-bottom: 6px;">💼 <strong>${careerLabel}:</strong> ${h.career || ''}</p>
+                    <p style="margin-bottom: 6px;">❤️ <strong>${loveLabel}:</strong> ${h.love || ''}</p>
+                    <p style="margin-bottom: 6px;">🍏 <strong>${healthLabel}:</strong> ${h.health || ''}</p>
+                    <div style="display: flex; gap: 20px; margin-top: 10px; border-top: 1px dashed #e2e8f0; padding-top: 8px;">
+                        <span>🎨 <strong>${lColorLabel}:</strong> <span style="color: #7c3aed; font-weight: bold;">${h.luckyColor || ''}</span></span>
+                        <span>🔢 <strong>${lNumlabel}:</strong> <span style="color: #db2777; font-weight: bold;">${h.luckyNumber || ''}</span></span>
+                    </div>
+                </div>
+            `;
+            document.getElementById('horoscopeText').innerHTML = htmlContent;
         }
 
-        // Set Date automatically on load
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDateText').innerText = "তাৰিখ: " + today.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'as-IN', options);
+            document.getElementById('currentDateText').innerText = "তাৰিখ / Date: " + today.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'as-IN', options);
             
-            // Show default Aries horoscope
             showHoroscope('aries', document.querySelector('.rashi-btn'));
         });
     </script>
