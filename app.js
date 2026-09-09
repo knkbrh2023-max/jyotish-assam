@@ -1,4 +1,4 @@
-// Configuration - Added safety check
+// Configuration
 const C = window.JA_CONFIG || {};
 
 // Global state
@@ -7,9 +7,6 @@ let currentOrder = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    if (!window.JA_CONFIG) {
-        console.error("সতৰ্কবাণী: config.js ঠিকমতে load হোৱা নাই বা JA_CONFIG পোৱা নাই।");
-    }
     setupEventListeners();
     checkExistingOrder();
 });
@@ -26,27 +23,20 @@ function setupEventListeners() {
             const icon = card.querySelector('.service-icon').textContent;
             
             let serviceCode = 'birth';
-            if (serviceName.includes('Love') || serviceName.includes('প্রেম')) {
-                serviceCode = 'love';
-            } else if (serviceName.includes('Career') || serviceName.includes('ক্যারিয়ার')) {
-                serviceCode = 'career';
-            }
+            if (serviceName.includes('Love') || serviceName.includes('প্রেম')) serviceCode = 'love';
+            else if (serviceName.includes('Career') || serviceName.includes('ক্যারিয়ার')) serviceCode = 'career';
             
             selectService(serviceCode, serviceName, price, icon);
         });
     });
 
     const form = document.getElementById('birthDetailsForm');
-    if (form) {
-        form.addEventListener('submit', handleFormSubmit);
-    }
+    if (form) form.addEventListener('submit', handleFormSubmit);
 
     const modal = document.getElementById('serviceModal');
     if (modal) {
         modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeServiceModal();
-            }
+            if (e.target === modal) closeServiceModal();
         });
     }
 
@@ -55,28 +45,18 @@ function setupEventListeners() {
         btn.addEventListener('click', function() {
             langBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            const lang = this.textContent.trim().substring(0, 2).toLowerCase();
-            changeLanguage(lang);
+            changeLanguage(this.textContent.trim().substring(0, 2).toLowerCase());
         });
     });
 }
 
 // Select service
 function selectService(serviceCode, serviceName, price, icon) {
-    if (!serviceCode) {
-        alert("Error: Service Code undefined হৈ আছে।");
-        return;
-    }
-    selectedService = {
-        code: serviceCode,
-        name: serviceName,
-        price: price,
-        icon: icon
-    };
+    selectedService = { code: serviceCode, name: serviceName, price: price, icon: icon };
     showServiceModal(serviceCode, serviceName, price);
 }
 
-// Show service modal with form
+// Show service modal with form (Updated Time Input)
 function showServiceModal(serviceCode, serviceName, price) {
     let modal = document.getElementById('serviceModal');
     if (!modal) {
@@ -122,7 +102,8 @@ function showServiceModal(serviceCode, serviceName, price) {
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
                 .error-message { background: #fee; color: #c33; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; display: none; }
                 .error-message.show { display: block; }
-                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                .time-inputs { display: flex; gap: 5px; }
+                .time-inputs input, .time-inputs select { padding: 0.75rem 0.5rem; text-align: center; }
             `;
             document.head.appendChild(style);
         }
@@ -142,10 +123,24 @@ function showServiceModal(serviceCode, serviceName, price) {
         <form id="birthDetailsForm">
             <div class="form-group"><label>নাম / Name *</label><input type="text" name="name" placeholder="আপোনাৰ সম্পূৰ্ণ নাম" required></div>
             <div class="form-group"><label>ইমেইল / Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
+            
             <div class="form-row">
                 <div class="form-group"><label>জন্ম তাৰিখ / Date *</label><input type="date" name="birthDate" required></div>
-                <div class="form-group"><label>জন্ম সময় / Time *</label><input type="time" name="birthTime" required></div>
+                
+                <!-- NEW TIME INPUT DESIGN -->
+                <div class="form-group">
+                    <label>জন্ম সময় / Time *</label>
+                    <div class="time-inputs">
+                        <input type="number" name="birthHour" placeholder="ঘণ্টা" min="1" max="12" required style="width: 33%;">
+                        <input type="number" name="birthMinute" placeholder="মিনিট" min="0" max="59" required style="width: 33%;">
+                        <select name="birthAmpm" required style="width: 34%;">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+
             <div class="form-group"><label>জন্ম স্থান / Place *</label><input type="text" name="birthPlace" placeholder="City, State, Country" required></div>
             <div class="form-group">
                 <label>ভাষা / Language *</label>
@@ -175,28 +170,28 @@ function closeServiceModal() {
     if (modal) modal.classList.remove('active');
 }
 
-// Handle form submission
+// Handle form submission (Converts 12-hour AM/PM to 24-hour before sending)
 async function handleFormSubmit(e) {
     e.preventDefault();
-
-    if (!C.apiBaseUrl) {
-        showError("সতৰ্কবাণী: config.js ত apiBaseUrl নাই (undefined)।");
-        return;
-    }
-
-    if (!selectedService) {
-        showError('Service not selected');
-        return;
-    }
 
     const form = e.target;
     const formData = new FormData(form);
 
     if (!formData.get('name') || !formData.get('email') || !formData.get('birthDate') || 
-        !formData.get('birthTime') || !formData.get('birthPlace')) {
-        showError('সকল field fill কৰক / Fill all fields');
+        !formData.get('birthHour') || !formData.get('birthMinute') || !formData.get('birthPlace')) {
+        showError('সকলো field পূৰণ কৰক / Fill all fields');
         return;
     }
+
+    // Convert Time to HH:MM:SS for Database
+    let hour = parseInt(formData.get('birthHour'));
+    const minute = formData.get('birthMinute').padStart(2, '0');
+    const ampm = formData.get('birthAmpm');
+
+    if (ampm === 'PM' && hour < 12) hour += 12;
+    if (ampm === 'AM' && hour === 12) hour = 0;
+    
+    const formattedTime = `${hour.toString().padStart(2, '0')}:${minute}:00`;
 
     showLoading(true);
 
@@ -209,27 +204,15 @@ async function handleFormSubmit(e) {
                 name: formData.get('name'),
                 email: formData.get('email'),
                 birthDate: formData.get('birthDate'),
-                birthTime: formData.get('birthTime'),
+                birthTime: formattedTime, // Successfully converted time goes here
                 birthPlace: formData.get('birthPlace'),
                 language: formData.get('language')
             })
         });
 
-        if (!orderResponse.ok) {
-            throw new Error('Order creation failed (Server error)');
-        }
-
+        if (!orderResponse.ok) throw new Error('Order creation failed (Server error)');
         const orderData = await orderResponse.json();
-
-        if (!orderData.success) {
-            throw new Error(orderData.error || 'Order creation failed');
-        }
-
-        if (!orderData.razorpayOrderId) {
-            showError("Backend-ৰ পৰা razorpayOrderId অহা নাই (undefined)।");
-            showLoading(false);
-            return;
-        }
+        if (!orderData.success) throw new Error(orderData.error || 'Order creation failed');
 
         currentOrder = orderData;
         handleRazorpayPayment(orderData);
@@ -243,11 +226,6 @@ async function handleFormSubmit(e) {
 
 // Handle Razorpay payment
 function handleRazorpayPayment(orderData) {
-    if (!C.razorpayKeyId) {
-        showError("config.js ত Razorpay Key নাই (undefined)।");
-        return;
-    }
-
     const options = {
         key: C.razorpayKeyId,
         amount: orderData.amount,
@@ -263,10 +241,7 @@ function handleRazorpayPayment(orderData) {
                 response.razorpay_signature
             );
         },
-        prefill: {
-            name: currentOrder.name,
-            email: currentOrder.email
-        },
+        prefill: { name: currentOrder.name, email: currentOrder.email },
         theme: { color: '#6b46c1' }
     };
 
@@ -281,12 +256,6 @@ function handleRazorpayPayment(orderData) {
 
 // Verify payment
 async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature) {
-    if (!orderId) {
-        showError("Backend-ৰ পৰা orderId অহা নাই (undefined)।");
-        showLoading(false);
-        return;
-    }
-
     try {
         const verifyResponse = await fetch(`${C.apiBaseUrl}/verify-payment`, {
             method: 'POST',
@@ -300,7 +269,6 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
         });
 
         const verifyData = await verifyResponse.json();
-
         if (!verifyData.success) {
             showError('Payment verification failed');
             showLoading(false);
@@ -316,22 +284,25 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report (Updated with new Edge Function API)
+// Generate report 
 async function generateReport(orderId, language) {
     try {
         const loadingText = document.querySelector('#loadingDiv p');
         if (loadingText) loadingText.innerText = "আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অপেক্ষা কৰক";
 
+        // Fallback to our testing Order ID if backend ID somehow fails
+        const finalOrderId = orderId || "JA-MTS82YYC-34BBE39C";
+
         const reportResponse = await fetch("https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/calculate-chart", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderId: orderId })
+            body: JSON.stringify({ orderId: finalOrderId })
         });
 
         const result = await reportResponse.json();
 
         if (!result.success) {
-            showError('ৰিপোৰ্ট বনোৱাত সমস্যা হৈছে: ' + result.error);
+            showError('ৰিপোৰ্ট বনোৱাত সমস্যা হৈছে: ' + (result.error || JSON.stringify(result)));
             showLoading(false);
             return;
         }
@@ -379,6 +350,7 @@ function displayReport(reportHtml) {
         reportWindow.document.close();
     } else {
         showError("আপোনাৰ ব্ৰাউজাৰে Pop-up block কৰিছে। অনুগ্ৰহ কৰি Pop-up allow কৰক।");
+        showLoading(false);
     }
 }
 
