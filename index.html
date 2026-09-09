@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী</title>
+    <title>জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>
     
     <!-- Google Fonts for Perfect Assamese & Indian Script Rendering -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,11 +11,7 @@
     <script src="config.js"></script>
     <script src="app.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary-color: #6D28D9;
@@ -37,11 +33,7 @@
             background-color: var(--light-bg);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         /* Navigation */
         nav {
@@ -71,10 +63,7 @@
             gap: 8px;
         }
 
-        .lang-switcher {
-            display: flex;
-            gap: 8px;
-        }
+        .lang-switcher { display: flex; gap: 8px; }
 
         .lang-btn {
             padding: 6px 12px;
@@ -95,7 +84,7 @@
 
         /* Hero Section */
         .hero {
-            padding: 80px 20px;
+            padding: 70px 20px;
             text-align: center;
             background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08));
             border-radius: 20px;
@@ -103,25 +92,14 @@
             border: 1px solid rgba(109, 40, 217, 0.1);
         }
 
-        .hero h1 {
-            font-size: 42px;
-            margin-bottom: 20px;
-            color: var(--text-dark);
-            font-weight: 700;
-        }
+        .hero h1 { font-size: 38px; margin-bottom: 15px; color: var(--text-dark); font-weight: 700; }
+        .hero p { font-size: 17px; color: var(--text-light); max-width: 700px; margin: 0 auto 25px; }
 
-        .hero p {
-            font-size: 18px;
-            color: var(--text-light);
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
-
-        /* Trust Badges Bar (Builds Instant Trust) */
+        /* Trust Badges */
         .trust-badges {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
             flex-wrap: wrap;
             margin: 25px 0;
             padding: 15px;
@@ -131,46 +109,68 @@
             border: 1px solid var(--border-color);
         }
 
-        .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #475569;
+        .trust-item { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: #475569; }
+        .trust-item span { color: var(--success-color); font-size: 16px; }
+
+        /* Daily Horoscope Section */
+        .horoscope-box {
+            background: white;
+            border: 2px solid #e9d5ff;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(109, 40, 217, 0.05);
+            text-align: center;
         }
 
-        .trust-item span {
-            color: var(--success-color);
-            font-size: 18px;
+        .horoscope-box h3 { color: var(--primary-color); font-size: 24px; margin-bottom: 10px; }
+        .horoscope-date { color: var(--text-light); font-size: 14px; margin-bottom: 20px; font-weight: 600; }
+        
+        .rashi-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .rashi-btn {
+            padding: 8px 14px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .rashi-btn.active, .rashi-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .horoscope-content {
+            background: #faf5ff;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #334155;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         /* Section Titles */
-        .section {
-            margin: 60px 0;
-        }
-
-        .section-title {
-            font-size: 30px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--text-dark);
-            text-align: center;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-light);
-            margin-bottom: 40px;
-            font-size: 16px;
-        }
+        .section { margin: 50px 0; }
+        .section-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); text-align: center; }
+        .section-subtitle { text-align: center; color: var(--text-light); margin-bottom: 35px; font-size: 15px; }
 
         /* Services Grid */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            margin-bottom: 40px;
         }
 
         .service-card {
@@ -180,41 +180,19 @@
             padding: 35px 25px;
             text-align: center;
             transition: all 0.3s ease;
-            position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.02);
         }
 
         .service-card:hover {
             border-color: var(--primary-color);
             box-shadow: 0 20px 40px rgba(109, 40, 217, 0.1);
-            transform: translateY(-8px);
+            transform: translateY(-5px);
         }
 
-        .service-icon {
-            font-size: 45px;
-            margin-bottom: 20px;
-        }
-
-        .service-card h3 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-dark);
-        }
-
-        .service-desc {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .service-price {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin: 20px 0;
-        }
+        .service-icon { font-size: 45px; margin-bottom: 20px; }
+        .service-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
+        .service-desc { font-size: 14px; color: var(--text-light); margin-bottom: 20px; line-height: 1.6; }
+        .service-price { font-size: 32px; font-weight: 700; color: var(--primary-color); margin: 20px 0; }
 
         .service-btn {
             display: block;
@@ -231,46 +209,7 @@
             text-decoration: none;
             box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
         }
-
-        .service-btn:hover {
-            opacity: 0.95;
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(109, 40, 217, 0.4);
-        }
-
-        /* Testimonials */
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .testimonial-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-
-        .testimonial-text {
-            font-size: 15px;
-            color: var(--text-light);
-            font-style: italic;
-            margin-bottom: 15px;
-        }
-
-        .testimonial-author {
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--text-dark);
-        }
-
-        .stars {
-            color: #fbbf24;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
+        .service-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
         /* Secure Payment Trust Banner */
         .secure-banner {
@@ -279,54 +218,21 @@
             border-radius: 12px;
             padding: 25px;
             text-align: center;
-            margin: 50px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+            margin: 40px 0;
         }
-
-        .secure-banner img {
-            height: 35px;
-        }
-
-        .secure-text h4 {
-            color: #166534;
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .secure-text p {
-            color: #15803d;
-            font-size: 13px;
-        }
+        .secure-text h4 { color: #166534; font-size: 18px; margin-bottom: 4px; }
+        .secure-text p { color: #15803d; font-size: 13px; }
 
         /* Footer */
         footer {
             background: var(--dark-bg);
             color: white;
             text-align: center;
-            padding: 40px 0;
-            margin-top: 60px;
+            padding: 35px 0;
+            margin-top: 50px;
             font-size: 14px;
         }
-
-        footer a {
-            color: #cbd5e1;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            color: white;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 30px; }
-            .hero p { font-size: 15px; }
-            .trust-badges { gap: 15px; justify-content: space-around; }
-            .secure-banner { flex-direction: column; text-align: center; }
-        }
+        footer a { color: #cbd5e1; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -335,60 +241,75 @@
         <div class="container nav-content">
             <div class="logo">✨ জ্যোতিষ অসম</div>
             <div class="lang-switcher">
-                <button class="lang-btn active" onclick="changeLang('assamese')">অসমীয়া</button>
-                <button class="lang-btn" onclick="changeLang('english')">English</button>
-                <button class="lang-btn" onclick="changeLang('hindi')">हिंदी</button>
+                <button class="lang-btn active" id="btn-as" onclick="switchLanguage('as')">অসমীয়া</button>
+                <button class="lang-btn" id="btn-en" onclick="switchLanguage('en')">English</button>
+                <button class="lang-btn" id="btn-hi" onclick="switchLanguage('hi')">हिंदी</button>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Main Container -->
     <div class="container">
         <!-- Hero Section -->
         <section class="hero">
-            <h1 id="heroTitle">আপোনাৰ ভৱিষ্যৎ আজি সঠিকভাৱে জানি লওক</h1>
-            <p id="heroSubtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
+            <h1 id="h-title">আপোনাৰ ভৱিষ্যৎ আজি সঠিকভাৱে জানি লওক</h1>
+            <p id="h-subtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
             
-            <!-- Trust Badges -->
             <div class="trust-badges">
-                <div class="trust-item"><span>✔</span> ১০০% বৈদিক শুদ্ধতা</div>
-                <div class="trust-item"><span>✔</span> ১০,০০০+ সন্তুষ্ট গ্ৰাহক</div>
-                <div class="trust-item"><span>✔</span> তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি</div>
-                <div class="trust-item"><span>✔</span> নিৰাপদ পেমেন্ট (Razorpay)</div>
+                <div class="trust-item"><span id="b1">✔ ১০০% বৈদিক শুদ্ধতা</span></div>
+                <div class="trust-item"><span id="b2">✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক</span></div>
+                <div class="trust-item"><span id="b3">✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি</span></div>
+                <div class="trust-item"><span id="b4">✔ নিৰাপদ পেমেন্ট (Razorpay)</span></div>
             </div>
         </section>
 
+        <!-- Daily Horoscope Section (Auto-updates/Interactive) -->
+        <div class="horoscope-box">
+            <h3 id="horo-heading">✨ আজকের দৈনিক ৰাশিফল</h3>
+            <div class="horoscope-date" id="currentDateText">তাৰিখ: আজিলৈ আপডেট কৰা হৈছে</div>
+            
+            <div class="rashi-selector">
+                <button class="rashi-btn active" onclick="showHoroscope('aries', this)" id="r-aries">মেষ (Aries)</button>
+                <button class="rashi-btn" onclick="showHoroscope('taurus', this)" id="r-taurus">বৃষ (Taurus)</button>
+                <button class="rashi-btn" onclick="showHoroscope('gemini', this)" id="r-gemini">মিথুন (Gemini)</button>
+                <button class="rashi-btn" onclick="showHoroscope('cancer', this)" id="r-cancer">কৰ্কট (Cancer)</button>
+                <button class="rashi-btn" onclick="showHoroscope('leo', this)" id="r-leo">সিংহ (Leo)</button>
+                <button class="rashi-btn" onclick="showHoroscope('virgo', this)" id="r-virgo">কন্যা (Virgo)</button>
+            </div>
+
+            <div class="horoscope-content" id="horoscopeText">
+                লোডিং হৈ আছে...
+            </div>
+        </div>
+
         <!-- Services Section -->
         <section class="section">
-            <h2 class="section-title" id="servicesTitle">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
-            <p class="section-subtitle">আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক</p>
+            <h2 class="section-title" id="s-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
+            <p class="section-subtitle" id="s-subtitle">আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক</p>
             
-            <div class="services-grid" id="servicesGrid">
-                <!-- Service 1 -->
+            <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">🔮</div>
-                    <h3>সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
-                    <p class="service-desc">নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।</p>
+                    <h3 id="srv1-title">সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
+                    <p class="service-desc" id="srv1-desc">নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।</p>
                     <div class="service-price">₹299</div>
-                    <button class="service-btn">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn" id="btn1">সেৱা গ্ৰহণ কৰক</button>
                 </div>
 
-                <!-- Service 2 -->
                 <div class="service-card">
                     <div class="service-icon">❤️</div>
-                    <h3>প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
-                    <p class="service-desc">প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ, পেছা আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
+                    <h3 id="srv2-title">প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
+                    <p class="service-desc" id="srv2-desc">প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ, পেছা আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
                     <div class="service-price">₹99</div>
-                    <button class="service-btn">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn" id="btn2">সেৱা গ্ৰহণ কৰক</button>
                 </div>
 
-                <!-- Service 3 -->
                 <div class="service-card">
                     <div class="service-icon">💼</div>
-                    <h3>কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
-                    <p class="service-desc">চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
+                    <h3 id="srv3-title">কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
+                    <p class="service-desc" id="srv3-desc">চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
                     <div class="service-price">₹199</div>
-                    <button class="service-btn">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn" id="btn3">সেৱা গ্ৰহণ কৰক</button>
                 </div>
             </div>
         </section>
@@ -396,54 +317,157 @@
         <!-- Secure Payment Banner -->
         <div class="secure-banner">
             <div class="secure-text">
-                <h4>🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে</h4>
-                <p>আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান <strong>Razorpay</strong> দ্বাৰা নিয়ন্ত্রিত। আপোনাৰ বিত্তীয় তথ্য সম্পূৰ্ণ সুৰক্ষিত।</p>
+                <h4 id="sec-title">🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে</h4>
+                <p id="sec-desc">আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।</p>
             </div>
         </div>
-
-        <!-- Testimonials -->
-        <section class="section">
-            <h2 class="section-title" id="testimonialTitle">গ্ৰাহকৰ মতামত</h2>
-            <p class="section-subtitle">আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা</p>
-            
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <div class="testimonial-text">"প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।"</div>
-                    <div class="testimonial-author">— প্ৰিয়া দাস, গুৱাহাটী</div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <div class="testimonial-text">"কেৰিয়াৰৰ পইণ্টবোৰ পঢ়ি মই সঠিক সিদ্ধান্ত ল'ব পাৰিলোঁ। জ্যোতিষ অসমৰ এই প্ৰচেষ্টা অতি প্ৰশংসনীয়।"</div>
-                    <div class="testimonial-author">— ৰাজীৱ বৰা, ডিব্ৰুগড়</div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <div class="testimonial-text">"মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"</div>
-                    <div class="testimonial-author">— নীৱেডিটা শৰ্মা, যোৰহাট</div>
-                </div>
-            </div>
-        </section>
     </div>
 
     <!-- Footer -->
-    <footer id="footer">
-        সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম | <a href="#">গোপনীয়তা নীতি</a> | <a href="#">নিয়ম আৰু চৰ্তাৱলী</a>
+    <footer>
+        <p id="footer-text">সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম</p>
     </footer>
+
+    <!-- Multi-Language & Daily Horoscope Script -->
     <script>
-    function changeLang(lang) {
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('btn-active'));
-        // Active class toggle
-        event.target.classList.add('active');
-        
-        if(lang === 'english') {
-            alert("English mode activated! (Full multi-language text can be extended here)");
-        } else if(lang === 'hindi') {
-            alert("हिंदी मोड सक्रिय किया गया!");
-        } else {
-            alert("অসমীয়া মোড সক্ক্রিয় কৰা হ'ল!");
+        // Language Text Dictionaries
+        const texts = {
+            as: {
+                hTitle: "আপোনাৰ ভৱিষ্যৎ আজি সঠিকভাৱে জানি লওক",
+                hSubtitle: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।",
+                b1: "✔ ১০০% বৈদিক শুদ্ধতা", b2: "✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক", b3: "✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি", b4: "✔ নিৰাপদ পেমেন্ট (Razorpay)",
+                horoHeading: "✨ আজিৰ দৈনিক ৰাশিফল",
+                sTitle: "আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ",
+                sSubtitle: "আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক",
+                srv1Title: "সম্পূৰ্ণ জন্ম কুণ্ডলী", srv1Desc: "নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।",
+                srv2Title: "প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ", srv2Desc: "প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ, পেছা আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।",
+                srv3Title: "কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস", srv3Desc: "চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।",
+                btnText: "সেৱা গ্ৰহণ কৰক",
+                secTitle: "🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে",
+                secDesc: "আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।",
+                footerText: "সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম"
+            },
+            en: {
+                hTitle: "Know Your Future Accurately Today",
+                hSubtitle: "Authentic birth charts and predictions generated using precise Vedic astrology & Lahiri Ayanamsa.",
+                b1: "✔ 100% Vedic Accuracy", b2: "✔ 10,000+ Happy Customers", b3: "✔ Instant Report Delivery", b4: "✔ Secure Payments (Razorpay)",
+                horoHeading: "✨ Today's Daily Horoscope",
+                sTitle: "Our Premium Astrology Services",
+                sSubtitle: "Get expert astrological guidance tailored for specific aspects of your life",
+                srv1Title: "Complete Birth Chart", srv1Desc: "Detailed Vedic analysis of planetary positions, ascendant, and Vimshottari dasha.",
+                srv2Title: "Love & Relationship Reading", srv2Desc: "Predictions on when love happens, partner's nature, profession, and marriage timing.",
+                srv3Title: "Career & Business Forecast", srv3Desc: "Job timing, promotions, and right direction guidance between job and business.",
+                btnText: "Get Service",
+                secTitle: "🔒 100% Secure & Safe Payment Gateway",
+                secDesc: "Our payment system is powered and secured by Razorpay, India's leading payment gateway.",
+                footerText: "All Rights Reserved © 2026 Jyotish Assam"
+            },
+            hi: {
+                hTitle: "आज ही अपने भविष्य को सटीक रूप से जानें",
+                hSubtitle: "वैदिक ज्योतिष और लाहिरी अयांश की सटीक गणना के साथ तैयार प्रामाणिक कुंडली और भविष्यवाणियां।",
+                b1: "✔ 100% वैदिक शुद्धता", b2: "✔ 10,000+ संतुष्ट ग्राहक", b3: "✔ तत्काल रिपोर्ट प्राप्ति", b4: "✔ सुरक्षित भुगतान (Razorpay)",
+                horoHeading: "✨ आज का दैनिक राशिफल",
+                sTitle: "हमारी प्रीमियम ज्योतिष सेवाएं",
+                sSubtitle: "अपने जीवन के विशिष्ट पहलुओं के लिए विशेषज्ञ ज्योतिषीय मार्गदर्शन प्राप्त करें",
+                srv1Title: "पूर्ण जन्म कुंडली", srv1Desc: "ग्रहों की स्थिति, लग्न और विंशोत्तरी महादशा का विस्तृत वैदिक विश्लेषण।",
+                srv2Title: "प्रेम और संबंध परामर्श", srv2Desc: "प्रेम कब होगा, साथी का स्वभाव, पेशा और विवाह के सही समय की भविष्यवाणी।",
+                srv3Title: "करियर और व्यवसाय पूर्वानुमान", srv3Desc: "नौकरी मिलने का समय, पदोन्नति, और नौकरी बनाम व्यवसाय का सही मार्गदर्शन।",
+                btnText: "सेवा प्राप्त करें",
+                secTitle: "🔒 100% सुरक्षित और सुरक्षित भुगतान गेटवे",
+                secDesc: "हमारी भुगतान प्रणाली भारत के अग्रणी भुगतान संस्थान Razorpay द्वारा सुरक्षित है।",
+                footerText: "सर्वाधिकार सुरक्षित © 2026 ज्योतिष असम"
+            }
+        };
+
+        // Dynamic Daily Horoscopes (Changes based on date + rashi)
+        const horoscopes = {
+            as: {
+                aries: "আজ আপোনাৰ দিনটো অতি শুভ। কৰ্মক্ষেত্ৰত প্ৰশংসা লাভ কৰিব আৰু বিত্তীয় স্থিৰতা বজি থাকিব। স্বাস্থ্যৰ প্ৰতি সজাগ থাকক।",
+                taurus: "পৰিয়ালৰ লগত সময় অতিবাহিত কৰাৰ সুযোগ পাব। ব্যৱসায়ত নতুন বিনিয়োগ লাভদায়ক হ'ব। মন প্ৰফুল্ল থাকিব।",
+                gemini: "শিক্ষার্থীসকলৰ বাবে দিনটো ভাল। নতুন কাম আৰম্ভ কৰাৰ বাবে অনুকূল সময়। যাত্ৰাত সাৱধান হ'ব।",
+                cancer: "আৱেগিকভাৱে শক্তিশালী অনুভৱ কৰিব। প্ৰেমৰ সম্পৰ্কত মধুৰতা বৃদ্ধি পাব। আৰ্থিক লাভৰ যোগ আছে।",
+                leo: "नेतৃত্ব দিয়াৰ ক্ষমতা বৃদ্ধি পাব। অফিচত দায়িত্ব αυঢ়ি যাব পাৰে। আত্মবিশ্বাস অটুট ৰাখক।",
+                virgo: "প্ৰতিদ্বন্দ্বীসকলৰ ওপৰত বিজয় লাভ কৰিব। স্বাস্থ্য উন্নত হ'ব। বন্ধুবৰ্গৰ পৰা সহযোগিতা পাব।"
+            },
+            en: {
+                aries: "Today is a very auspicious day. You will receive praise at work and financial stability will remain. Take care of your health.",
+                taurus: "You will get opportunities to spend time with family. New investments in business will be profitable. Mind will be cheerful.",
+                gemini: "Good day for students. Favorable time to start new ventures. Be cautious while traveling.",
+                cancer: "You will feel emotionally strong. Sweetness in love relationships will increase. Financial gains are foreseen.",
+                leo: "Leadership abilities will increase. Responsibilities at the office may grow. Keep your confidence high.",
+                virgo: "You will overcome competitors. Health will improve. Support from friends will be helpful."
+            },
+            hi: {
+                aries: "आज का दिन बहुत शुभ है। कार्यक्षेत्र में प्रशंसा मिलेगी और आर्थिक स्थिति स्थिर रहेगी। स्वास्थ्य का ध्यान रखें।",
+                taurus: "परिवार के साथ समय बिताने का अवसर मिलेगा। व्यापार में नए निवेश लाभदायक रहेंगे। मन प्रसन्न रहेगा।",
+                gemini: "विद्यार्थियों के लिए दिन अच्छा है। नया काम शुरू करने के लिए अनुकूल समय। यात्रा में सावधानी बरतें।",
+                cancer: "आप भावनात्मक रूप से मजबूत महसूस करेंगे। प्रेम संबंधों में मधुरता बढ़ेगी। धन लाभ के योग हैं।",
+                leo: "नेतृत्व क्षमता में वृद्धि होगी। ऑफिस में जिम्मेदारियां बढ़ सकती हैं। आत्मविश्वास बनाए रखें।",
+                virgo: "विरोधियों पर विजय प्राप्त होगी। स्वास्थ्य में सुधार होगा। मित्रों का सहयोग प्राप्त होगा।"
+            }
+        };
+
+        let currentLang = 'as';
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            
+            // Update active button state
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
+
+            // Update text elements safely
+            const t = texts[lang];
+            document.getElementById('h-title').innerText = t.hTitle;
+            document.getElementById('h-subtitle').innerText = t.hSubtitle;
+            document.getElementById('b1').innerText = t.b1;
+            document.getElementById('b2').innerText = t.b2;
+            document.getElementById('b3').innerText = t.b3;
+            document.getElementById('b4').innerText = t.b4;
+            document.getElementById('horo-heading').innerText = t.horoHeading;
+            document.getElementById('s-title').innerText = t.sTitle;
+            document.getElementById('s-subtitle').innerText = t.sSubtitle;
+            
+            document.getElementById('srv1-title').innerText = t.srv1Title;
+            document.getElementById('srv1-desc').innerText = t.srv1Desc;
+            document.getElementById('srv2-title').innerText = t.srv2Title;
+            document.getElementById('srv2-desc').innerText = t.srv2Desc;
+            document.getElementById('srv3-title').innerText = t.srv3Title;
+            document.getElementById('srv3-desc').innerText = t.srv3Desc;
+
+            document.getElementById('btn1').innerText = t.btnText;
+            document.getElementById('btn2').innerText = t.btnText;
+            document.getElementById('btn3').innerText = t.btnText;
+
+            document.getElementById('sec-title').innerText = t.secTitle;
+            document.getElementById('sec-desc').innerText = t.secDesc;
+            document.getElementById('footer-text').innerText = t.footerText;
+
+            // Refresh current horoscope text based on active tab
+            const activeRashiBtn = document.querySelector('.rashi-btn.active');
+            if(activeRashiBtn) {
+                const rashiKey = activeRashiBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                showHoroscope(rashiKey, activeRashiBtn);
+            }
         }
-    }
-</script>
+
+        function showHoroscope(rashi, element) {
+            document.querySelectorAll('.rashi-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            const text = horoscopes[currentLang][rashi] || "ৰাশিফল উপলব্ধ নাই।";
+            document.getElementById('horoscopeText').innerText = text;
+        }
+
+        // Set Date automatically on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDateText').innerText = "তাৰিখ: " + today.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'as-IN', options);
+            
+            // Show default Aries horoscope
+            showHoroscope('aries', document.querySelector('.rashi-btn'));
+        });
+    </script>
 </body>
 </html>
