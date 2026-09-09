@@ -178,7 +178,6 @@ async function handleFormSubmit(e) {
         return;
     }
 
-    // Convert Time to 24-hour format
     let hour = parseInt(formData.get('birthHour'));
     const minute = formData.get('birthMinute').padStart(2, '0');
     const ampm = formData.get('birthAmpm');
@@ -279,7 +278,7 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report with Beautiful Assamese UI
+// Generate report with Detailed Assamese Explanations
 async function generateReport(orderId, language) {
     try {
         const loadingText = document.querySelector('#loadingDiv p');
@@ -306,14 +305,26 @@ async function generateReport(orderId, language) {
         const pName = { Sun: 'সূৰ্য', Moon: 'চন্দ্ৰ', Mars: 'মংগল', Mercury: 'বুধ', Jupiter: 'বৃহস্পতি', Venus: 'শুক্ৰ', Saturn: 'শনি', Rahu: 'ৰাহু', Ketu: 'কেতু' };
         const rName = { Aries: 'মেষ', Taurus: 'বৃষ', Gemini: 'মিথুন', Cancer: 'কৰ্কট', Leo: 'সিংহ', Virgo: 'কন্যা', Libra: 'তুলা', Scorpio: 'বৃশ্চিক', Sagittarius: 'ধনু', Capricorn: 'মকৰ', Aquarius: 'কুম্ভ', Pisces: 'মীন' };
 
+        // গ্ৰহৰ ফলবোৰ সহজকৈ বুজাবলৈ সৰু বৰ্ণনা
+        const pDesc = {
+            Sun: 'আত্মা, নেতৃত্ব, আৰু আত্মবিশ্বাসৰ কাৰক।',
+            Moon: 'মন, আৱেগ, আৰু মানসিক শান্তিৰ প্ৰতীক।',
+            Mars: 'সাহস, শক্তি, পৰাক্ৰম আৰু ভাই-ভনীৰ কাৰক।',
+            Mercury: 'বুদ্ধিমত্তা, বাকশক্তি, শিক্ষা আৰু ব্যৱসায়ৰ কাৰক।',
+            Jupiter: 'জ্ঞান, ভাগ্য়, ধৰ্মীয় চিন্তা আৰু ধন-সম্পত্তিৰ কাৰক।',
+            Venus: 'প্ৰেম, সৌন্দৰ্য, আনন্দ আৰু বৈভৱৰ কাৰক।',
+            Saturn: 'কৰ্মফলদাতা, অনুশাসন, ধৈৰ্য আৰু ন্যায়ৰ দেৱতা।',
+            Rahu: 'মায়া, উচ্চাকাংক্ষা, আকস্মিক পৰিৱৰ্তন আৰু উদ্ভাৱনী শক্তি।',
+            Ketu: 'আধ্যাত্মিকতা, মোক্ষ, অন্তৰ্দৃষ্টি আৰু বৈৰাগ্যৰ কাৰক।'
+        };
+
         let planetsHtml = '';
         for (const [planet, data] of Object.entries(c.planets)) {
             planetsHtml += `
                 <tr>
-                    <td><strong>${pName[planet] || planet}</strong></td>
+                    <td><strong>${pName[planet] || planet}</strong><br><small style="color:#64748b;">${pDesc[planet] || ''}</small></td>
                     <td>${rName[data.rashi] || data.rashi}</td>
-                    <td>${data.nakshatra}</td>
-                    <td>${data.pada}</td>
+                    <td>${data.nakshatra} (পদ ${data.pada})</td>
                     <td>${data.longitude.toFixed(2)}°</td>
                 </tr>
             `;
@@ -323,7 +334,7 @@ async function generateReport(orderId, language) {
         c.dashas.forEach(d => {
             dashasHtml += `
                 <tr>
-                    <td><strong>${pName[d.lord] || d.lord}</strong></td>
+                    <td><strong>${pName[d.lord] || d.lord} মহা দশা</strong></td>
                     <td>${d.start_date}</td>
                     <td>${d.end_date}</td>
                     <td>${d.duration_years} বছৰ</td>
@@ -337,88 +348,101 @@ async function generateReport(orderId, language) {
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>জ্যোতিষ ৰিপোৰ্ট - Jyotish Assam</title>
+                <title>সম্পূৰ্ণ জ্যোতিষ ৰিপোৰ্ট - Jyotish Assam</title>
                 <style>
                     :root {
-                        --primary: #8B5CF6;
-                        --secondary: #EC4899;
-                        --dark: #1e293b;
+                        --primary: #6D28D9;
+                        --secondary: #DB2777;
+                        --dark: #0f172a;
                         --light: #f8fafc;
                         --border: #e2e8f0;
+                        --card-bg: #ffffff;
                     }
                     body {
                         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        background-color: #cbd5e1;
+                        background-color: #f1f5f9;
                         color: var(--dark);
                         margin: 0;
                         padding: 20px;
-                        line-height: 1.6;
+                        line-height: 1.7;
                     }
                     .report-container {
-                        max-width: 850px;
+                        max-width: 900px;
                         margin: 0 auto;
-                        background: white;
-                        border-radius: 15px;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                        background: var(--card-bg);
+                        border-radius: 16px;
+                        box-shadow: 0 10px 35px rgba(0,0,0,0.1);
                         overflow: hidden;
                     }
                     .header {
                         background: linear-gradient(135deg, var(--primary), var(--secondary));
                         color: white;
-                        padding: 40px 20px;
+                        padding: 50px 20px;
                         text-align: center;
                     }
-                    .header h1 { margin: 0 0 10px 0; font-size: 28px; }
-                    .header p { margin: 0; opacity: 0.9; font-size: 16px; }
+                    .header h1 { margin: 0 0 10px 0; font-size: 32px; font-weight: 700; }
+                    .header p { margin: 0; opacity: 0.95; font-size: 18px; }
                     
-                    .section { padding: 30px; border-bottom: 1px solid var(--border); }
+                    .section { padding: 35px; border-bottom: 1px solid var(--border); }
                     .section:last-child { border-bottom: none; }
                     
                     .section-title {
                         color: var(--primary);
-                        font-size: 20px;
+                        font-size: 22px;
                         margin-top: 0;
                         margin-bottom: 20px;
                         display: flex;
                         align-items: center;
                         gap: 10px;
-                        border-left: 4px solid var(--secondary);
-                        padding-left: 10px;
+                        border-left: 5px solid var(--secondary);
+                        padding-left: 12px;
                     }
                     
                     .info-grid {
                         display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
                         gap: 20px;
-                        background: #f1f5f9;
+                        background: #f8fafc;
+                        padding: 20px;
+                        border-radius: 12px;
+                        border: 1px solid var(--border);
+                    }
+                    .info-box { text-align: center; background: white; padding: 18px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+                    .info-label { font-size: 13px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+                    .info-value { font-size: 17px; font-weight: 700; color: var(--dark); margin-top: 6px; }
+                    
+                    .desc-box {
+                        background: #fdf4ff;
+                        border: 1px solid #f5d0fe;
                         padding: 20px;
                         border-radius: 10px;
+                        margin-top: 20px;
+                        color: #701a75;
+                        font-size: 15px;
                     }
-                    .info-box { text-align: center; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-                    .info-label { font-size: 12px; color: #64748b; font-weight: bold; }
-                    .info-value { font-size: 16px; font-weight: bold; color: var(--dark); margin-top: 5px; }
-                    
-                    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-                    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
-                    th { background-color: var(--primary); color: white; font-weight: 600; font-size: 14px; }
+
+                    table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+                    th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); }
+                    th { background-color: var(--primary); color: white; font-weight: 600; font-size: 15px; }
                     tr:hover { background-color: #f8fafc; }
                     
                     .print-btn {
                         display: block;
-                        width: 250px;
-                        margin: 30px auto;
-                        padding: 12px;
+                        width: 280px;
+                        margin: 40px auto;
+                        padding: 14px;
                         background: var(--dark);
                         color: white;
                         text-align: center;
                         border: none;
-                        border-radius: 8px;
+                        border-radius: 10px;
                         font-size: 16px;
                         cursor: pointer;
                         font-weight: bold;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                         transition: 0.3s;
                     }
-                    .print-btn:hover { background: var(--primary); }
+                    .print-btn:hover { background: var(--primary); transform: translateY(-2px); }
                     
                     @media print {
                         .print-btn { display: none; }
@@ -430,56 +454,60 @@ async function generateReport(orderId, language) {
             <body>
                 <div class="report-container">
                     <div class="header">
-                        <h1>✨ আপোনাৰ জ্যোতিষ ৰিপোৰ্ট</h1>
-                        <p>জ্যোতিষ অসম (Jyotish Assam) ৰ দ্বাৰা প্ৰস্তুত</p>
+                        <h1>✨ জ্যোতিষ অসম - সম্পূৰ্ণ কুুণ্ডলী ৰিপোৰ্ট</h1>
+                        <p>বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশ (Lahiri Ayanamsa) পদ্ধতিত প্ৰস্তুতকৃত</p>
                     </div>
                     
                     <div class="section">
-                        <h2 class="section-title">👤 জন্মৰ বিৱৰণ (Birth Details)</h2>
+                        <h2 class="section-title">👤 ১. জন্মৰ বিৱৰণ (Birth Details)</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">আপুনি প্ৰদান কৰা জন্মৰ সঠিক সময় আৰু স্থানৰ ওপৰত ভিত্তি কৰি গ্ৰহগণনা কৰা হৈছে:</p>
                         <div class="info-grid">
                             <div class="info-box">
-                                <div class="info-label">তাৰিখ (Date)</div>
+                                <div class="info-label">জন্ম তাৰিখ</div>
                                 <div class="info-value">${c.birth.date}</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">সময় (Time)</div>
+                                <div class="info-label">জন্ম সময়</div>
                                 <div class="info-value">${c.birth.time}</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">স্থান (Place)</div>
-                                <div class="info-value">${c.birth.place}</div>
+                                <div class="info-label">জন্ম স্থান</div>
+                                <div class="info-value" style="text-transform: capitalize;">${c.birth.place}</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">🎯 লগ্ন আৰু অয়নাংশ (Ascendant)</h2>
+                        <h2 class="section-title">🎯 ২. লগ্ন আৰু ব্যক্তিত্ব বিশ্লেষণ (Ascendant Analysis)</h2>
                         <div class="info-grid">
                             <div class="info-box">
-                                <div class="info-label">লগ্ন (Ascendant)</div>
-                                <div class="info-value">${rName[c.ascendant.rashi] || c.ascendant.rashi}</div>
+                                <div class="info-label">জন্ম লগ্ন</div>
+                                <div class="info-value">${rName[c.ascendant.rashi] || c.ascendant.rashi} লগ্ন</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">নক্ষত্ৰ (Nakshatra)</div>
+                                <div class="info-label">জন্ম নক্ষত্ৰ</div>
                                 <div class="info-value">${c.ascendant.nakshatra} (পদ ${c.ascendant.pada})</div>
                             </div>
                             <div class="info-box">
-                                <div class="info-label">অয়নাংশ (Ayanamsa)</div>
-                                <div class="info-value">${c.ayanamsa_value}</div>
+                                <div class="info-label">অয়নাংশ</div>
+                                <div class="info-value">লাহিৰী (${c.ayanamsa_value.toFixed(2)}°)</div>
                             </div>
+                        </div>
+                        <div class="desc-box">
+                            <strong>লগ্নৰ গুত্বপূৰ্ণ ফল:</strong> আপোনাৰ জন্ম <strong>${rName[c.ascendant.rashi] || c.ascendant.rashi} লগ্নত</strong> হৈছে। বৈদিক জ্যোতিষত লগ্নই আপোনাৰ শৰীৰ, স্বভাৱ, আৰু সমগ্ৰ জীৱনৰ দিশ নিৰ্ধাৰণ কৰে। এই লগ্নৰ প্ৰভাৱে আপোনাক জীৱনৰ প্ৰতিটো ক্ষেত্ৰতে সঠিক সিদ্ধান্ত ল’বলৈ আৰু নিজৰ লক্ষ্যত অবিচল থাকিবলৈ সহায় কৰিব।
                         </div>
                     </div>
                     
                     <div class="section">
-                        <h2 class="section-title">🪐 গ্ৰহৰ অৱস্থান (Planetary Positions)</h2>
+                        <h2 class="section-title">🪐 ৩. নৱগ্ৰহৰ অৱস্থান আৰু ইয়াৰ প্ৰভাৱ (Planetary Positions)</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">জন্মৰ সময়ত আকাশমণ্ডলত গ্ৰহসমূহ কোনটো ৰাশি আৰু নক্ষত্ৰত অৱস্থান কৰিছিল তাৰ সম্পূৰ্ণ বিৱৰণ:</p>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>গ্ৰহ (Planet)</th>
-                                    <th>ৰাশি (Sign)</th>
-                                    <th>নক্ষত্ৰ (Nakshatra)</th>
-                                    <th>পদ (Pada)</th>
-                                    <th>ডিগ্ৰী (Degree)</th>
+                                    <th>গ্ৰহ আৰু ইয়াৰ কাৰকতা</th>
+                                    <th>ৰাশি</th>
+                                    <th>নক্ষত্ৰ আৰু পদ</th>
+                                    <th>ডিগ্ৰী</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -489,14 +517,15 @@ async function generateReport(orderId, language) {
                     </div>
 
                     <div class="section">
-                        <h2 class="section-title">⏳ বিংশোত্তৰী দশা (Vimshottari Dasha)</h2>
+                        <h2 class="section-title">⏳ ৪. বিংশোত্তৰী মহা দশা চক্ৰ (Vimshottari Dasha Cycle)</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">বৈদিক জ্যোতিষশাস্ত্ৰৰ মতে মানুহৰ জীৱনত বিভিন্ন গ্ৰহৰ মহা দশা আহে। তলত আপোনাৰ জীৱনৰ দশাৰ কালছোৱা দেখুৱाइ হ’ল:</p>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>মহা দশা (Maha Dasha)</th>
-                                    <th>আৰম্ভ (Start Date)</th>
-                                    <th>শেষ (End Date)</th>
-                                    <th>সময়কাল (Duration)</th>
+                                    <th>মহা দশা</th>
+                                    <th>আৰম্ভণি তাৰিখ</th>
+                                    <th>সমাপ্তি তাৰিখ</th>
+                                    <th>সময়কাল</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -505,7 +534,7 @@ async function generateReport(orderId, language) {
                         </table>
                     </div>
                     
-                    <button class="print-btn" onclick="window.print()">🖨️ ৰিপোৰ্ট প্ৰিণ্ট কৰক</button>
+                    <button class="print-btn" onclick="window.print()">🖨️ সম্পূৰ্ণ ৰিপোৰ্ট প্ৰিণ্ট কৰক</button>
                 </div>
             </body>
             </html>
@@ -522,7 +551,7 @@ async function generateReport(orderId, language) {
     }
 }
 
-// Display report in current page to prevent pop-up block
+// Display report in current page
 function displayReport(reportHtml) {
     document.open();
     document.write(reportHtml);
