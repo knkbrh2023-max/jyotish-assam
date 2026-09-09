@@ -803,15 +803,15 @@
 
             // Services
             const servicesGrid = document.getElementById('servicesGrid');
-            servicesGrid.innerHTML = data.services.map(s => `
-                <div class="service-card">
-                    <div class="service-icon">${s.icon}</div>
-                    <div class="service-name">${s.name}</div>
-                    <div class="service-desc">${s.desc}</div>
-                    <div class="price">${s.price}</div>
-                    <button class="btn" onclick="openModal()">${data.submitBtn}</button>
-                </div>
-            `).join('');
+            servicesGrid.innerHTML = data.services.map((s, index) => `
+    <div class="service-card">
+        <div class="service-icon">${s.icon}</div>
+        <div class="service-name">${s.name}</div>
+        <div class="service-desc">${s.desc}</div>
+        <div class="price">${s.price}</div>
+        <button class="btn" onclick="openPaidService(${index})">${data.submitBtn}</button>
+    </div>
+`).join('');
 
             // Testimonials
             const testimonialsGrid = document.getElementById('testimonialsGrid');
