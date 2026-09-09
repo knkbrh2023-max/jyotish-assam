@@ -279,7 +279,7 @@ async function verifyPayment(orderId, razorpayOrderId, razorpayPaymentId, razorp
     }
 }
 
-// Generate report (Current window to prevent Pop-up block)
+// Generate report with Beautiful Assamese UI
 async function generateReport(orderId, language) {
     try {
         const loadingText = document.querySelector('#loadingDiv p');
@@ -301,32 +301,217 @@ async function generateReport(orderId, language) {
             return;
         }
 
-        console.log("SUCCESS! Chart Data:", result.chart);
-        
-        const debugHtml = `
+        const c = result.chart;
+
+        const pName = { Sun: 'সূৰ্য', Moon: 'চন্দ্ৰ', Mars: 'মংগল', Mercury: 'বুধ', Jupiter: 'বৃহস্পতি', Venus: 'শুক্ৰ', Saturn: 'শনি', Rahu: 'ৰাহু', Ketu: 'কেতু' };
+        const rName = { Aries: 'মেষ', Taurus: 'বৃষ', Gemini: 'মিথুন', Cancer: 'কৰ্কট', Leo: 'সিংহ', Virgo: 'কন্যা', Libra: 'তুলা', Scorpio: 'বৃশ্চিক', Sagittarius: 'ধনু', Capricorn: 'মকৰ', Aquarius: 'কুম্ভ', Pisces: 'মীন' };
+
+        let planetsHtml = '';
+        for (const [planet, data] of Object.entries(c.planets)) {
+            planetsHtml += `
+                <tr>
+                    <td><strong>${pName[planet] || planet}</strong></td>
+                    <td>${rName[data.rashi] || data.rashi}</td>
+                    <td>${data.nakshatra}</td>
+                    <td>${data.pada}</td>
+                    <td>${data.longitude.toFixed(2)}°</td>
+                </tr>
+            `;
+        }
+
+        let dashasHtml = '';
+        c.dashas.forEach(d => {
+            dashasHtml += `
+                <tr>
+                    <td><strong>${pName[d.lord] || d.lord}</strong></td>
+                    <td>${d.start_date}</td>
+                    <td>${d.end_date}</td>
+                    <td>${d.duration_years} বছৰ</td>
+                </tr>
+            `;
+        });
+
+        const finalHtml = `
             <!DOCTYPE html>
-            <html>
+            <html lang="as">
             <head>
                 <meta charset="UTF-8">
-                <title>আপোনাৰ জ্যোতিষ ৰিপোৰ্ট</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>জ্যোতিষ ৰিপোৰ্ট - Jyotish Assam</title>
                 <style>
-                    body { font-family: sans-serif; padding: 20px; background: #f8fafc; }
-                    .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-                    pre { background: #1e293b; color: #00ff00; padding: 15px; border-radius: 8px; overflow-x: auto; }
+                    :root {
+                        --primary: #8B5CF6;
+                        --secondary: #EC4899;
+                        --dark: #1e293b;
+                        --light: #f8fafc;
+                        --border: #e2e8f0;
+                    }
+                    body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        background-color: #cbd5e1;
+                        color: var(--dark);
+                        margin: 0;
+                        padding: 20px;
+                        line-height: 1.6;
+                    }
+                    .report-container {
+                        max-width: 850px;
+                        margin: 0 auto;
+                        background: white;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                        overflow: hidden;
+                    }
+                    .header {
+                        background: linear-gradient(135deg, var(--primary), var(--secondary));
+                        color: white;
+                        padding: 40px 20px;
+                        text-align: center;
+                    }
+                    .header h1 { margin: 0 0 10px 0; font-size: 28px; }
+                    .header p { margin: 0; opacity: 0.9; font-size: 16px; }
+                    
+                    .section { padding: 30px; border-bottom: 1px solid var(--border); }
+                    .section:last-child { border-bottom: none; }
+                    
+                    .section-title {
+                        color: var(--primary);
+                        font-size: 20px;
+                        margin-top: 0;
+                        margin-bottom: 20px;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        border-left: 4px solid var(--secondary);
+                        padding-left: 10px;
+                    }
+                    
+                    .info-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        gap: 20px;
+                        background: #f1f5f9;
+                        padding: 20px;
+                        border-radius: 10px;
+                    }
+                    .info-box { text-align: center; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+                    .info-label { font-size: 12px; color: #64748b; font-weight: bold; }
+                    .info-value { font-size: 16px; font-weight: bold; color: var(--dark); margin-top: 5px; }
+                    
+                    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+                    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
+                    th { background-color: var(--primary); color: white; font-weight: 600; font-size: 14px; }
+                    tr:hover { background-color: #f8fafc; }
+                    
+                    .print-btn {
+                        display: block;
+                        width: 250px;
+                        margin: 30px auto;
+                        padding: 12px;
+                        background: var(--dark);
+                        color: white;
+                        text-align: center;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        transition: 0.3s;
+                    }
+                    .print-btn:hover { background: var(--primary); }
+                    
+                    @media print {
+                        .print-btn { display: none; }
+                        body { background: white; padding: 0; }
+                        .report-container { box-shadow: none; max-width: 100%; border-radius: 0; }
+                    }
                 </style>
             </head>
             <body>
-                <div class="container">
-                    <h2 style="color: #8B5CF6;">✨ ৰিপোৰ্ট সফলতাৰে বনোৱা হৈছে!</h2>
-                    <p>আপোনাৰ গ্ৰহ, ৰাশি, লগ্ন আৰু দশাৰ সকলো হিচাপ সম্পূৰ্ণ হৈছে। বৰ্তমান Raw Data তলত দিয়া হৈছে:</p>
-                    <pre>${JSON.stringify(result.chart, null, 2)}</pre>
-                    <p style="color: #64748b; margin-top: 20px;">(পৰৱৰ্তী Step-ত আমি এই ডাটাখিনি ধুনীয়া ডিজাইনত দেখুৱাম)</p>
+                <div class="report-container">
+                    <div class="header">
+                        <h1>✨ আপোনাৰ জ্যোতিষ ৰিপোৰ্ট</h1>
+                        <p>জ্যোতিষ অসম (Jyotish Assam) ৰ দ্বাৰা প্ৰস্তুত</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">👤 জন্মৰ বিৱৰণ (Birth Details)</h2>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="info-label">তাৰিখ (Date)</div>
+                                <div class="info-value">${c.birth.date}</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-label">সময় (Time)</div>
+                                <div class="info-value">${c.birth.time}</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-label">স্থান (Place)</div>
+                                <div class="info-value">${c.birth.place}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">🎯 লগ্ন আৰু অয়নাংশ (Ascendant)</h2>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="info-label">লগ্ন (Ascendant)</div>
+                                <div class="info-value">${rName[c.ascendant.rashi] || c.ascendant.rashi}</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-label">নক্ষত্ৰ (Nakshatra)</div>
+                                <div class="info-value">${c.ascendant.nakshatra} (পদ ${c.ascendant.pada})</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-label">অয়নাংশ (Ayanamsa)</div>
+                                <div class="info-value">${c.ayanamsa_value}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">🪐 গ্ৰহৰ অৱস্থান (Planetary Positions)</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>গ্ৰহ (Planet)</th>
+                                    <th>ৰাশি (Sign)</th>
+                                    <th>নক্ষত্ৰ (Nakshatra)</th>
+                                    <th>পদ (Pada)</th>
+                                    <th>ডিগ্ৰী (Degree)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${planetsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">⏳ বিংশোত্তৰী দশা (Vimshottari Dasha)</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>মহা দশা (Maha Dasha)</th>
+                                    <th>আৰম্ভ (Start Date)</th>
+                                    <th>শেষ (End Date)</th>
+                                    <th>সময়কাল (Duration)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${dashasHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="print-btn" onclick="window.print()">🖨️ ৰিপোৰ্ট প্ৰিণ্ট কৰক</button>
                 </div>
             </body>
             </html>
         `;
 
-        displayReport(debugHtml);
+        displayReport(finalHtml);
         showLoading(false);
         closeServiceModal();
 
@@ -337,7 +522,7 @@ async function generateReport(orderId, language) {
     }
 }
 
-// Pop-up block নহ'বলৈ একেখন পেজতেই ৰিপোৰ্টটো দেখুৱাম
+// Display report in current page to prevent pop-up block
 function displayReport(reportHtml) {
     document.open();
     document.write(reportHtml);
