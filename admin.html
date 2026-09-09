@@ -1,17 +1,112 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | Jyotish Assam</title><link rel="stylesheet" href="style.css"></head>
-<body class="admin-body">
-<header class="topbar"><div class="wrap nav"><a class="brand" href="index.html">🔮 Jyotish Assam Admin</a><a class="small-btn" href="index.html">View Site</a></div></header>
-<main class="wrap admin">
-<div class="admin-card">
-<h1>Production Admin</h1>
-<p>This page is a frontend shell. Real authentication, customer data, payment status and reports must be served by your backend/Supabase with Row Level Security.</p>
-<label>Backend URL<input id="api" placeholder="https://your-backend.example.com"></label>
-<button class="btn gold" onclick="save()">Save locally</button>
-<p id="msg"></p>
-</div>
-</main>
-<script>
-api.value=localStorage.getItem("ja_api")||"";
-function save(){localStorage.setItem("ja_api",api.value.trim());msg.textContent="Saved locally. Configure the same URL in config.js for all visitors."}
-</script></body></html>
+<!DOCTYPE html>
+<html lang="as">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - জ্যোতিষ অসম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', 'Noto Sans Assamese', sans-serif; background: #f1f5f9; color: #1e293b; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { background: linear-gradient(135deg, #6D28D9, #DB2777); color: white; padding: 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-size: 24px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { background: #6D28D9; color: white; }
+        tr:hover { background: #f8fafc; }
+        .badge-paid { background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-unpaid { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .refresh-btn { background: white; color: #6D28D9; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ জ্যোতিষ অসম - Admin Dashboard</h1>
+            <button class="refresh-btn" onclick="loadOrders()">🔄 Refresh Data</button>
+        </header>
+
+        <div class="card">
+            <h2>সকলো অৰ্ডাৰৰ তালিকা (All Orders)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>नाम (Name)</th>
+                        <th>সেৱা (Service)</th>
+                        <th>জন্ম তাৰিখ & সময়</th>
+                        <th>স্থান</th>
+                        <th>অৱস্থা (Status)</th>
+                    </tr>
+                كنولوجிகள்
+                <tbody id="ordersTableBody">
+                    <tr><td colspan="6" style="text-align: center;">ডাটা লোড হৈ আছে... (Loading...)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration (আপোনাৰ Supabase Credentials ইয়ত দিব)
+        const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
+        // টোকা: সুৰক্ষাৰ বাবে public anon key বা appropriate service key ব্যৱহাৰ কৰিব
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // আপোনাৰ config.js ৰ key ইয়াত দিব পাৰে
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloYmRydG5rZml0eXRrbG9ubmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNDQ4MDB9.EXAMPLE_KEY"); // কনফিগারেশন
+
+        async function loadOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">লোড হৈ আছে...</td></tr>`;
+
+            try {
+                // Supabase ৰ পৰা orders table fetch কৰা
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*`, {
+                    headers: {
+                        "apikey": C ? C.supabaseAnonKey : "PUBLIC_ANON_KEY",
+                        "Authorization": "Bearer " + (C ? C.supabaseAnonKey : "PUBLIC_ANON_KEY")
+                    }
+                });
+                
+                // যদি পোনপটীয়াকৈ supabase client ব্যৱহাৰ কৰিব বিচাৰে:
+                // const { data: orders, error } = await supabaseClient.from('orders').select('*');
+
+                // বৰ্তমান সিম্পল fetch ব্যৱহাৰ কৰা হৈছে:
+                const res = await fetch("https://ihbdrtnkfitytklonnel.supabase.co/rest/v1/orders?select=*", {
+                    headers: {
+                        "apikey": window.JA_CONFIG ? window.JA_CONFIG.supabaseAnonKey : ""
+                    }
+                });
+                
+                const orders = await res.json();
+
+                if (!orders || orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা নগ'ল।</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = orders.map(o => `
+                    <tr>
+                        <td><strong>${o.public_order_id || o.id}</strong></td>
+                        <td>${o.name || 'N/A'}</td>
+                        <td>${o.service || 'Birth Chart'}</td>
+                        <td>${o.birth_date} (${o.birth_time})</td>
+                        <td>${o.birth_place}</td>
+                        <td><span class="${o.payment_status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${o.payment_status}</span></td>
+                    </tr>
+                `).join('');
+
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">ডাটা লোড কৰাত সমস্যা হৈছে।</td></tr>`;
+            }
+        }
+
+        // Page load হোৱাৰ লগে লগে অৰ্ডাৰসমূহ দেখুৱাব
+        window.addEventListener('DOMContentLoaded', loadOrders);
+    </script>
+</body>
+</html>
