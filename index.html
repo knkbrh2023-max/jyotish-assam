@@ -205,25 +205,18 @@
     <!-- JavaScript Logic -->
     <script>
         // ==========================================
-        // ১. API KEYS (আপোনাৰ আচল Keys ইয়াত বহুৱাব)
-        // ==========================================
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // উদাহৰণ: 'https://xyz.supabase.co'
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const RAZORPAY_KEY = 'YOUR_RAZORPAY_TEST_KEY'; // উদাহৰণ: 'rzp_test_123456'
-
-        let supabaseClient;
-        if(SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        }
-
-        // ==========================================
-        // ২. Order & Payment Functions
+        // ১. Order & Payment Functions (Secure Backend Flow)
         // ==========================================
         let selectedService = '';
         let selectedPrice = 0;
+        let currentLang = 'as';
 
         function openOrderModal(service, price) {
-            selectedService = service;
+            // আমাৰ backend-ৰ সৈতে মিলাকৈ service name চেট কৰা
+            if(price === 299) selectedService = 'birth';
+            else if(price === 99) selectedService = 'love';
+            else if(price === 199) selectedService = 'career';
+
             selectedPrice = price;
             document.getElementById('orderTitle').innerText = service + " - ₹" + price;
             document.getElementById('orderModal').classList.add('active');
@@ -240,43 +233,76 @@
             btn.innerText = "Processing...";
             btn.disabled = true;
 
-            // ফৰ্মৰ ডাটা সংগ্ৰহ
+            // ১. ফৰ্মৰ ডাটা সংগ্ৰহ
             const orderData = {
+                service: selectedService,
                 name: document.getElementById('custName').value,
+                email: "test@example.com", // পিছলৈ ইয়াত email input field লগাব পাৰে
                 phone: document.getElementById('custPhone').value,
-                dob_time: document.getElementById('custDob').value,
-                birth_place: document.getElementById('custPlace').value,
-                service_name: selectedService,
-                amount: selectedPrice,
-                payment_status: 'Pending'
-            };
-
-            // Razorpay অপচনসমূহ
-            var options = {
-                "key": RAZORPAY_KEY,
-                "amount": selectedPrice * 100, // পইচাত (Paise)
-                "currency": "INR",
-                "name": "Jyotish Assam",
-                "description": selectedService,
-                "theme": { "color": "#6D28D9" },
-                "handler": async function (response) {
-                    orderData.payment_status = 'Success';
-                    orderData.payment_id = response.razorpay_payment_id;
-
-                    // Supabase ত ছেভ কৰক
-                    if(supabaseClient) {
-                         const { error } = await supabaseClient.from('astrology_orders').insert([orderData]);
-                         if(error) alert("Database Error: Payment done, but data save failed.");
-                    }
-                    
-                    alert("পেমেন্ট সফল হৈছে! (Payment Successful) \nPayment ID: " + response.razorpay_payment_id);
-                    closeOrderModal();
-                    btn.innerText = "পেমেন্ট কৰক (Pay Now)";
-                    btn.disabled = false;
-                }
+                birthDate: document.getElementById('custDob').value,
+                birthTime: "00:00 AM", // Date input ৰ পৰা ভাঙি ল'ব পাৰিব পিছত
+                birthPlace: document.getElementById('custPlace').value,
+                language: currentLang
             };
 
             try {
+                // ২. Supabase create-order function call কৰক
+                const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                
+                const responseData = await createRes.json();
+
+                if (!responseData.success) {
+                    throw new Error(responseData.error || "Order creation failed on server");
+                }
+
+                // ৩. Razorpay Checkout খোলক (backend-ৰ পৰা অহা order_id ব্যৱহাৰ কৰি)
+                var options = {
+                    "key": window.JA_CONFIG.razorpayKeyId,
+                    "amount": responseData.amount,
+                    "currency": responseData.currency,
+                    "name": window.JA_CONFIG.brand,
+                    "description": responseData.serviceName,
+                    "order_id": responseData.razorpayOrderId, // DYNAMIC ORDER ID FROM BACKEND
+                    "theme": { "color": "#6D28D9" },
+                    "handler": async function (response) {
+                        
+                        btn.innerText = "Verifying Payment...";
+
+                        // ৪. Payment Successful হোৱাৰ পিছত verify-payment call কৰক
+                        try {
+                            const verifyRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    orderId: responseData.orderId,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature
+                                })
+                            });
+
+                            const verifyData = await verifyRes.json();
+
+                            if (verifyData.success) {
+                                alert("পেমেন্ট সফল হৈছে! (Payment Successful)\nআপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে।");
+                                closeOrderModal();
+                                // ইয়াত পিছলৈ generate-report ৰ logic লগাম
+                            } else {
+                                alert("Payment verification failed! অনুগ্ৰহ কৰি যোগাযোগ কৰক।");
+                            }
+                        } catch (verifyErr) {
+                            alert("Server error during verification.");
+                        } finally {
+                            btn.innerText = "পেমেন্ট কৰক (Pay Now)";
+                            btn.disabled = false;
+                        }
+                    }
+                };
+
                 var rzp1 = new Razorpay(options);
                 rzp1.on('payment.failed', function (response){
                     alert("Payment Failed. Reason: " + response.error.description);
@@ -284,19 +310,19 @@
                     btn.disabled = false;
                 });
                 rzp1.open();
+
             } catch(err) {
-                alert("Razorpay Key সঠিক নহয় বা সংযোগ হোৱা নাই।");
+                alert("Error: " + err.message);
                 btn.innerText = "পেমেন্ট কৰক (Pay Now)";
                 btn.disabled = false;
             }
         }
 
         // ==========================================
-        // ৩. Rashi & Language Logic (যেনে আগতে আছিল)
+        // ২. Rashi & Language Logic
         // ==========================================
-        const texts = { /* আপোনাৰ আগৰ ডাটা */ as: { hHighlight: "আপোনাৰ ভৱিষ্যৎ", hRest: " আজি সঠিকভাৱে জানি লওক" } };
-        const rashiData = { as: [ { id: "aries", name: "মেষ (Aries)", symbol: "♈", short: "আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব।", love: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব।", health: "স্বাস্থ্য সুন্দৰ থাকিব।", color: "বগলীয়া", num: "৯" } ] };
-        let currentLang = 'as';
+        const texts = { as: { hHighlight: "আপোনাৰ ভৱিষ্যৎ", hRest: " আজি সঠিকভাৱে জানি লওক" } };
+        const rashiData = { as: [ { id: "aries", name: "মেষ (Aries)", symbol: "♈", short: "আজি আপোনাৰ ভাগ্য অতি ইতিবাচক থাকিব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব।", love: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব।", health: "স্বাস্থ্য সুন্দৰ থাকিব।", color: "বগলীয়া", num: "৯" } ] };
 
         function updateDate() {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -305,7 +331,6 @@
 
         function renderRashiGrid() {
             const container = document.getElementById('rashiGridContainer');
-            // Sample load for Assamese
             container.innerHTML = rashiData.as.map(r => `
                 <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
                     <div class="rashi-icon">${r.symbol}</div>
@@ -326,6 +351,7 @@
         function switchLanguage(lang) {
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
+            currentLang = lang;
             // Language logic here
         }
 
