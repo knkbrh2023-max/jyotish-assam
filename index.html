@@ -74,12 +74,12 @@
         .p-value { font-size: 16px; color: var(--text-dark); font-weight: 700; }
         .p-item.danger .p-label, .p-item.danger .p-value { color: var(--warning-color); }
 
-        /* Free Astrology Tools Section (DOB & Couple) */
+        /* Free Astrology Tools Section */
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
-        .tool-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center; }
-        .tool-card h3 { font-size: 18px; color: var(--primary-color); margin-bottom: 10px; }
-        .tool-card p { font-size: 13px; color: var(--text-light); margin-bottom: 15px; }
-        .tool-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 15px; outline: none; }
+        .tool-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .tool-card h3 { font-size: 18px; color: var(--primary-color); margin-bottom: 10px; text-align: center;}
+        .tool-card p { font-size: 13px; color: var(--text-light); margin-bottom: 15px; text-align: center;}
+        .tool-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; background: #f8fafc;}
         .tool-input:focus { border-color: var(--primary-color); }
         .tool-btn { background: var(--text-dark); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; }
         .tool-btn:hover { background: var(--primary-color); }
@@ -112,7 +112,6 @@
         .service-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
         .service-desc { font-size: 14px; color: var(--text-light); margin-bottom: 20px; line-height: 1.6; }
         .service-price { font-size: 32px; font-weight: 700; color: var(--primary-color); margin: 20px 0; }
-
         .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s; text-decoration: none; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
         .service-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
@@ -138,8 +137,6 @@
         .secure-text p { color: #15803d; font-size: 13px; }
 
         footer { background: var(--dark-bg); color: white; text-align: center; padding: 35px 0; margin-top: 50px; font-size: 14px; }
-        
-        /* Animation */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -202,29 +199,66 @@
             </div>
         </section>
 
-        <!-- Free Astrology Tools (Personal DOB & Couple DOB) -->
+        <!-- Free Astrology Tools (Personal DOB+Rashi & Couple DOB+Rashi) -->
         <section class="section">
             <h2 class="section-title" id="toolsTitle">🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
-            <p class="section-subtitle" id="toolsSub">জন্ম তাৰিখৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ আজিৰ দিনটোৰ ভৱিষ্যদ্বাণী চাওক</p>
+            <p class="section-subtitle" id="toolsSub">জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক</p>
             
             <div class="tools-grid">
-                <!-- Personal Horoscope by DOB -->
+                <!-- Personal Horoscope -->
                 <div class="tool-card">
                     <h3 id="dobHoroTitle">আপোনাৰ দৈনিক ৰাশিফল চাওক</h3>
-                    <p id="dobHoroDesc">আপোনাৰ জন্ম তাৰিখ প্ৰৱেশ কৰক আৰু আজিৰ বিশদ ৰাশিফল পঢ়ক।</p>
-                    <input type="date" id="personalDobInput" class="tool-input">
+                    <p id="dobHoroDesc">আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।</p>
+                    
+                    <input type="date" id="personalDobInput" class="tool-input" title="জন্ম তাৰিখ">
+                    
+                    <select id="personalRashiInput" class="tool-input">
+                        <option value="">-- ৰাশি বাছক (Select Rashi) --</option>
+                        <option value="aries">মেষ (Aries)</option>
+                        <option value="taurus">বৃষ (Taurus)</option>
+                        <option value="gemini">মিথুন (Gemini)</option>
+                        <option value="cancer">কৰ্কট (Cancer)</option>
+                        <option value="leo">সিংহ (Leo)</option>
+                        <option value="virgo">কন্যা (Virgo)</option>
+                        <option value="libra">তুলা (Libra)</option>
+                        <option value="scorpio">বৃশ্চিক (Scorpio)</option>
+                        <option value="sagittarius">ধনু (Sagittarius)</option>
+                        <option value="capricorn">মকৰ (Capricorn)</option>
+                        <option value="aquarius">কুম্ভ (Aquarius)</option>
+                        <option value="pisces">মীন (Pisces)</option>
+                    </select>
+                    
                     <button class="tool-btn" id="btnDobHoro" onclick="checkPersonalHoroscope()">ৰাশিফল চাওক</button>
                 </div>
 
-                <!-- Couple Compatibility by DOB -->
+                <!-- Couple Compatibility -->
                 <div class="tool-card" style="border-top: 4px solid var(--secondary-color);">
-                    <h3 id="coupleTitle">যুগল ৰাশিফল (Couple Horoscope)</h3>
-                    <p id="coupleDesc">দুয়োৰে জন্ম তাৰিখ দি আজিৰ প্ৰেমৰ সামঞ্জস্য (Love Score) পৰীক্ষা কৰক।</p>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="date" id="coupleDob1" class="tool-input" title="ল'ৰাৰ জন্ম তাৰিখ">
-                        <input type="date" id="coupleDob2" class="tool-input" title="ছোৱালীৰ জন্ম তাৰিখ">
+                    <h3 id="coupleTitle">যুটীয়া ৰাশিফল (Joint Horoscope)</h3>
+                    <p id="coupleDesc">দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।</p>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="date" id="coupleDob1" class="tool-input" style="margin-bottom: 0;" title="ল'ৰাৰ জন্ম তাৰিখ (Boy's DOB)">
+                        <select id="coupleRashi1" class="tool-input" style="margin-bottom: 0;">
+                            <option value="">ল'ৰাৰ ৰাশি</option>
+                            <option value="aries">মেষ (Aries)</option><option value="taurus">বৃষ (Taurus)</option><option value="gemini">মিথুন (Gemini)</option>
+                            <option value="cancer">কৰ্কট (Cancer)</option><option value="leo">সিংহ (Leo)</option><option value="virgo">কন্যা (Virgo)</option>
+                            <option value="libra">তুলা (Libra)</option><option value="scorpio">বৃশ্চিক (Scorpio)</option><option value="sagittarius">ধনু (Sagittarius)</option>
+                            <option value="capricorn">মকৰ (Capricorn)</option><option value="aquarius">কুম্ভ (Aquarius)</option><option value="pisces">মীন (Pisces)</option>
+                        </select>
                     </div>
-                    <button class="tool-btn" style="background: var(--secondary-color);" id="btnCouple" onclick="checkCoupleHoroscope()">প্ৰেমৰ ৰাশিফল চাওক</button>
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="date" id="coupleDob2" class="tool-input" style="margin-bottom: 0;" title="ছোৱালীৰ জন্ম তাৰিখ (Girl's DOB)">
+                        <select id="coupleRashi2" class="tool-input" style="margin-bottom: 0;">
+                            <option value="">ছোৱালীৰ ৰাশি</option>
+                            <option value="aries">মেষ (Aries)</option><option value="taurus">বৃষ (Taurus)</option><option value="gemini">মিথুন (Gemini)</option>
+                            <option value="cancer">কৰ্কট (Cancer)</option><option value="leo">সিংহ (Leo)</option><option value="virgo">কন্যা (Virgo)</option>
+                            <option value="libra">তুলা (Libra)</option><option value="scorpio">বৃশ্চিক (Scorpio)</option><option value="sagittarius">ধনু (Sagittarius)</option>
+                            <option value="capricorn">মকৰ (Capricorn)</option><option value="aquarius">কুম্ভ (Aquarius)</option><option value="pisces">মীন (Pisces)</option>
+                        </select>
+                    </div>
+
+                    <button class="tool-btn" style="background: var(--secondary-color);" id="btnCouple" onclick="checkCoupleHoroscope()">যুটীয়া ৰাশিফল চাওক</button>
                 </div>
             </div>
         </section>
@@ -343,9 +377,9 @@
                 b1: "✔ ১০০% বৈদিক শুদ্ধতা", b2: "✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক", b3: "✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি", b4: "✔ নিৰাপদ পেমেন্ট (Razorpay)",
                 pTitle: "📅 আজিৰ পঞ্জিকা", plSunrise: "🌅 সূৰ্যোদয়", plSunset: "🌇 সূৰ্যাস্ত", plTithi: "🌙 আজিৰ তিথি", plNakshatra: "⭐ নক্ষত্ৰ", plRahu: "⚠️ ৰাহু কাল (অশুভ সময়)",
                 
-                toolsTitle: "🎁 বিনামূলীয়া দৈনিক সঁজুলি", toolsSub: "জন্ম তাৰিখৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ আজিৰ দিনটোৰ ভৱিষ্যদ্বাণী চাওক",
-                dobHoroTitle: "আপোনাৰ দৈনিক ৰাশিফল চাওক", dobHoroDesc: "আপোনাৰ জন্ম তাৰিখ প্ৰৱেশ কৰক আৰু আজিৰ বিশদ ৰাশিফল পঢ়ক।",
-                coupleTitle: "যুগল ৰাশিফল (Couple Horoscope)", coupleDesc: "দুয়োৰে জন্ম তাৰিখ দি আজিৰ প্ৰেমৰ সামঞ্জস্য (Love Score) পৰীক্ষা কৰক।",
+                toolsTitle: "🎁 বিনামূলীয়া দৈনিক সঁজুলি", toolsSub: "জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক",
+                dobHoroTitle: "আপোনাৰ দৈনিক ৰাশিফল চাওক", dobHoroDesc: "আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।",
+                coupleTitle: "যুটীয়া ৰাশিফল (Joint Horoscope)", coupleDesc: "দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।",
                 checkBtn: "ৰাশিফল চাওক",
                 
                 rashiMainTitle: "🌟 আজিৰ ১২ টা ৰাশিফল", rashiSubTitle: "আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক",
@@ -374,9 +408,9 @@
                 b1: "✔ 100% Vedic Accuracy", b2: "✔ 10,000+ Happy Customers", b3: "✔ Instant Report Delivery", b4: "✔ Secure Payments (Razorpay)",
                 pTitle: "📅 Today's Panchang", plSunrise: "🌅 Sunrise", plSunset: "🌇 Sunset", plTithi: "🌙 Tithi", plNakshatra: "⭐ Nakshatra", plRahu: "⚠️ Rahu Kaal (Inauspicious)",
                 
-                toolsTitle: "🎁 Free Daily Tools", toolsSub: "Check your and your partner's daily predictions based on DOB",
-                dobHoroTitle: "Check Your Daily Horoscope", dobHoroDesc: "Enter your Date of Birth and read your detailed horoscope today.",
-                coupleTitle: "Couple Horoscope", coupleDesc: "Check today's Love Compatibility Score by entering both dates of birth.",
+                toolsTitle: "🎁 Free Daily Tools", toolsSub: "Check joint predictions using DOB and Zodiac Signs",
+                dobHoroTitle: "Check Your Daily Horoscope", dobHoroDesc: "Enter your Date of Birth and select your Zodiac Sign.",
+                coupleTitle: "Joint Couple Horoscope", coupleDesc: "Enter DOB and Sign for both to check compatibility.",
                 checkBtn: "Check Now",
 
                 rashiMainTitle: "🌟 Today's 12 Zodiac Horoscopes", rashiSubTitle: "Click on your zodiac sign to read detailed daily predictions",
@@ -404,9 +438,9 @@
                 b1: "✔ 100% वैदिक शुद्धता", b2: "✔ 10,000+ संतुष्ट ग्राहक", b3: "✔ तत्काल रिपोर्ट प्राप्ति", b4: "✔ सुरक्षित भुगतान (Razorpay)",
                 pTitle: "📅 आज का पंचांग", plSunrise: "🌅 सूर्योदय", plSunset: "🌇 सूर्यास्त", plTithi: "🌙 तिथि", plNakshatra: "⭐ नक्षत्र", plRahu: "⚠️ राहु काल (अशुभ समय)",
                 
-                toolsTitle: "🎁 मुफ्त दैनिक उपकरण", toolsSub: "जन्म तिथि के आधार पर अपनी और अपने साथी की दैनिक भविष्यवाणी जांचें",
-                dobHoroTitle: "अपना दैनिक राशिफल देखें", dobHoroDesc: "अपनी जन्म तिथि दर्ज करें और आज का विस्तृत राशिफल पढ़ें।",
-                coupleTitle: "युगल राशिफल (Couple Horoscope)", coupleDesc: "दोनों की जन्म तिथि दर्ज करके आज का लव स्कोर जांचें।",
+                toolsTitle: "🎁 मुफ्त दैनिक उपकरण", toolsSub: "जन्म तिथि और राशि के आधार पर अपनी और साथी की भविष्यवाणी जांचें",
+                dobHoroTitle: "अपना दैनिक राशिफल देखें", dobHoroDesc: "अपनी जन्म तिथि और राशि दर्ज करें।",
+                coupleTitle: "युगल राशिफल (Joint Horoscope)", coupleDesc: "दोनों की जन्म तिथि और राशि दर्ज करके आज का लव स्कोर जांचें।",
                 checkBtn: "अभी जांचें",
 
                 rashiMainTitle: "🌟 आज का 12 राशियों का राशिफल", rashiSubTitle: "विस्तृत दैनिक भविष्यवाणियां पढ़ने के लिए अपनी राशि पर क्लिक करें",
@@ -550,57 +584,56 @@
             `).join('');
         }
 
-        function getZodiac(dateString) {
-            if (!dateString) return null;
-            const d = new Date(dateString);
-            const day = d.getDate(), month = d.getMonth() + 1;
-            if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return 'aries';
-            if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return 'taurus';
-            if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return 'gemini';
-            if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return 'cancer';
-            if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return 'leo';
-            if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return 'virgo';
-            if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return 'libra';
-            if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return 'scorpio';
-            if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return 'sagittarius';
-            if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return 'capricorn';
-            if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return 'aquarius';
-            if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return 'pisces';
-            return null;
-        }
-
         function checkPersonalHoroscope() {
-            const date = document.getElementById('personalDobInput').value;
-            const z = getZodiac(date);
-            if(z) openRashiDetail(z);
-            else alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ দিয়ক।" : "Please enter your Date of Birth.");
+            const r1 = document.getElementById('personalRashiInput').value;
+            const d1 = document.getElementById('personalDobInput').value;
+            
+            if(!r1 || !d1) {
+                alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছক।" : "Please enter DOB and select your Rashi.");
+                return;
+            }
+            openRashiDetail(r1);
         }
 
         function checkCoupleHoroscope() {
+            const r1 = document.getElementById('coupleRashi1').value;
+            const r2 = document.getElementById('coupleRashi2').value;
             const d1 = document.getElementById('coupleDob1').value;
             const d2 = document.getElementById('coupleDob2').value;
-            const z1 = getZodiac(d1); const z2 = getZodiac(d2);
             
-            if(z1 && z2) {
-                const today = new Date().getDate();
-                const score = (z1.charCodeAt(0) + z2.charCodeAt(0) + today) % 21 + 75; // Gen 75 to 95%
-                const rData1 = rashiData[currentLang].find(r => r.id === z1);
-                const rData2 = rashiData[currentLang].find(r => r.id === z2);
-                
-                const msg = currentLang === 'as' ? `আজি আপোনালোকৰ প্ৰেমৰ সামঞ্জস্য (Compatibility) <strong>${score}%</strong>। দুয়োৰে দিনটো ভাল যাব!` : `Today's Love Compatibility is <strong>${score}%</strong>.`;
-                
-                document.getElementById('modalRashiTitle').innerText = currentLang === 'as' ? "যুগল ৰাশিফল" : "Couple Horoscope";
-                document.getElementById('modalRashiBody').innerHTML = `
-                    <h3 style="text-align:center; color:#e11d48; margin-bottom:15px; font-size:24px;">${rData1.symbol} + ${rData2.symbol}</h3>
-                    <div style="background: #fff1f2; padding: 20px; border-radius: 12px; text-align:center; border: 1px solid #ffe4e6;">
-                        <div style="font-size: 38px; font-weight: bold; color: #be123c; margin-bottom: 10px;">${score}%</div>
-                        <p style="font-size: 15px; color: #4c0519;">${msg}</p>
-                    </div>
-                `;
-                document.getElementById('rashiModal').classList.add('active');
-            } else {
-                 alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ দিয়ক।" : "Please enter both Dates of Birth.");
+            if(!r1 || !r2 || !d1 || !d2) {
+                alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি বাছক।" : "Please enter both DOBs and select Rashis.");
+                return;
             }
+
+            const today = new Date().getDate();
+            const score = (r1.charCodeAt(0) + r2.charCodeAt(1) + today) % 25 + 70; // Generate 70% to 94%
+
+            const rData1 = rashiData[currentLang].find(r => r.id === r1);
+            const rData2 = rashiData[currentLang].find(r => r.id === r2);
+
+            let desc = "";
+            if (score >= 85) {
+                 desc = currentLang === 'as' ? "আপোনালোকৰ যুটি অত্যন্ত উত্তম! দুয়োৰে মাজত গভীৰ বুজাবুজি আৰু প্ৰেম সদায় অটুট থাকিব।" : (currentLang === 'hi' ? "आपकी जोड़ी बहुत उत्तम है! दोनों के बीच गहरी समझ और प्यार हमेशा बना रहेगा।" : "Your pairing is excellent! Deep understanding and love will always remain between you two.");
+            } else if (score >= 75) {
+                 desc = currentLang === 'as' ? "আপোনালোকৰ সম্পৰ্ক বহুত ভাল। সৰু-সুৰা মতানৈক্য থাকিলেও পাৰস্পৰিক বিশ্বাসে সম্পৰ্ক দৃঢ় কৰিব।" : (currentLang === 'hi' ? "आपका रिश्ता बहुत अच्छा है। आपसी विश्वास आपके रिश्ते को मजबूत करेगा।" : "Your relationship is very good. Mutual trust will strengthen your bond despite minor differences.");
+            } else {
+                 desc = currentLang === 'as' ? "সম্পৰ্কত ধৈৰ্য আৰু বুজাবুজিৰ প্ৰয়োজন। ইজনে সিজনক সময় দিলে প্ৰেম গভীৰ হ'ব।" : (currentLang === 'hi' ? "रिश्ते में धैर्य और समझ की जरूरत है। एक-दूसरे को समय दें।" : "Patience and understanding are needed. Giving time to each other will deepen your love.");
+            }
+            
+            document.getElementById('modalRashiTitle').innerText = currentLang === 'as' ? "যুটীয়া ৰাশিফল" : (currentLang === 'hi' ? "युगल राशिफल" : "Joint Horoscope");
+            
+            document.getElementById('modalRashiBody').innerHTML = `
+                <div style="text-align:center; margin-bottom: 20px;">
+                    <h3 style="color:#e11d48; font-size:22px;">${rData1.name} <span style="color:#333;">+</span> ${rData2.name}</h3>
+                </div>
+                <div style="background: #fff1f2; padding: 20px; border-radius: 12px; text-align:center; border: 1px solid #ffe4e6;">
+                    <div style="font-size: 14px; color: #881337; font-weight: 600; margin-bottom: 5px;">Love Compatibility Score</div>
+                    <div style="font-size: 42px; font-weight: bold; color: #be123c; margin-bottom: 15px;">${score}%</div>
+                    <p style="font-size: 15px; color: #4c0519; line-height: 1.6; border-top: 1px dashed #fda4af; padding-top: 15px;">${desc}</p>
+                </div>
+            `;
+            document.getElementById('rashiModal').classList.add('active');
         }
 
         function openRashiDetail(rashiId) {
