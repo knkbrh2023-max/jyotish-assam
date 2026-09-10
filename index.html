@@ -247,7 +247,26 @@
             btn.innerText = "Processing...";
             btn.disabled = true;
 
-            processPayment
+            // ১. ফৰ্মৰ ডাটা সংগ্ৰহ আৰু Time Format (AM/PM to 24hr for Database)
+            let h = parseInt(document.getElementById('custHour').value);
+            let m = document.getElementById('custMin').value.padStart(2, '0');
+            let ampm = document.getElementById('custAmPm').value;
+            
+            if (ampm === 'PM' && h < 12) h += 12;
+            if (ampm === 'AM' && h === 12) h = 0;
+            
+            let dbTime = h.toString().padStart(2, '0') + ":" + m + ":00";
+
+            const orderData = {
+                service: selectedService,
+                name: document.getElementById('custName').value,
+                email: "test@example.com", 
+                phone: document.getElementById('custPhone').value,
+                birthDate: document.getElementById('custDate').value,
+                birthTime: dbTime,
+                birthPlace: document.getElementById('custPlace').value,
+                language: currentLang
+            };
 
             try {
                 // ২. Supabase create-order function call কৰক
@@ -270,7 +289,7 @@
                     "currency": responseData.currency,
                     "name": window.JA_CONFIG.brand,
                     "description": responseData.serviceName,
-                    "order_id": responseData.razorpayOrderId, // DYNAMIC ORDER ID FROM BACKEND
+                    "order_id": responseData.razorpayOrderId,
                     "theme": { "color": "#6D28D9" },
                     "handler": async function (response) {
                         
@@ -294,7 +313,6 @@
                             if (verifyData.success) {
                                 alert("পেমেন্ট সফল হৈছে! (Payment Successful)\nআপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে।");
                                 closeOrderModal();
-                                // ইয়াত পিছলৈ generate-report ৰ logic লগাম
                             } else {
                                 alert("Payment verification failed! অনুগ্ৰহ কৰি যোগাযোগ কৰক।");
                             }
