@@ -115,11 +115,9 @@
             border-radius: 24px; 
             width: 100%; max-width: 600px; 
             position: relative; 
-            /* 3D Shadows & Borders */
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.8) inset, 0 -8px 0px rgba(109, 40, 217, 0.1) inset;
             border: 1px solid rgba(255,255,255,0.5);
             max-height: 90vh; overflow-y: auto;
-            /* 3D Pop Animation */
             transform: scale(0.7) translateY(50px) perspective(1000px) rotateX(10deg);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -129,7 +127,6 @@
             opacity: 1;
         }
         
-        /* Floating 3D Close Button */
         .close-modal { 
             position: absolute; right: -10px; top: -10px; 
             background: white; color: #e11d48; width: 40px; height: 40px; 
@@ -140,11 +137,9 @@
         }
         .close-modal:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 -3px 0 rgba(0,0,0,0.1) inset; color: #9f1239;}
 
-        /* 3D Detail Box inside Modal */
         .detail-box { 
             background: #fdf2f8; padding: 25px; border-radius: 16px; margin-bottom: 15px; 
             border: 1px solid #fce7f3; 
-            /* 3D Inner Box */
             box-shadow: 0 8px 0 #fbcfe8, 0 15px 20px rgba(0,0,0,0.05);
             margin-top: 15px;
         }
@@ -198,9 +193,9 @@
                 <a href="#aboutSection" id="navAbout">About Us</a>
             </div>
             <div class="lang-switcher">
-                <button class="lang-btn active" id="btn-as" onclick="switchLanguage('as')">অসমীয়া</button>
-                <button class="lang-btn" id="btn-en" onclick="switchLanguage('en')">English</button>
-                <button class="lang-btn" id="btn-hi" onclick="switchLanguage('hi')">हिंदी</button>
+                <button class="lang-btn active" id="btn-as" onclick="jaSwitchLanguage('as')">অসমীয়া</button>
+                <button class="lang-btn" id="btn-en" onclick="jaSwitchLanguage('en')">English</button>
+                <button class="lang-btn" id="btn-hi" onclick="jaSwitchLanguage('hi')">हिंदी</button>
             </div>
         </div>
     </nav>
@@ -259,7 +254,7 @@
                         </select>
                     </div>
                     
-                    <button class="tool-btn" id="btnDobHoro" onclick="checkPersonalHoroscope()">ৰাশিফল চাওক</button>
+                    <button class="tool-btn" id="btnDobHoro" onclick="jaCheckPersonal()">ৰাশিফল চাওক</button>
                 </div>
 
                 <!-- Couple Tool -->
@@ -286,7 +281,7 @@
                             </select>
                         </div>
                     </div>
-                    <button class="tool-btn" id="btnCouple" onclick="checkCoupleHoroscope()">যুটীয়া ৰাশিফল চাওক</button>
+                    <button class="tool-btn" style="background: var(--secondary-color);" id="btnCouple" onclick="jaCheckCouple()">যুটীয়া ৰাশিফল চাওক</button>
                 </div>
             </div>
         </section>
@@ -298,7 +293,7 @@
             <div class="rashi-grid" id="rashiGridContainer"></div>
             
             <div style="text-align: center; margin-top: 30px;">
-                <button class="whatsapp-share-btn" onclick="shareOnWhatsApp()">
+                <button class="whatsapp-share-btn" onclick="jaShare()">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" height="22" alt="WhatsApp"> 
                     <span id="wa-share-text">আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক</span>
                 </button>
@@ -346,7 +341,7 @@
 
             <div class="review-form-box">
                 <h3 id="rfTitle">আপোনাৰ মতামত দিয়ক</h3>
-                <form id="reviewForm" onsubmit="submitReview(event)">
+                <form id="reviewForm" onsubmit="jaSubmitReview(event)">
                     <input type="text" id="reviewerName" class="review-input" placeholder="আপোনাৰ নাম (Your Name)" required>
                     <select id="reviewStars" class="review-select" required>
                         <option value="5">⭐⭐⭐⭐⭐ অতি উত্তম (5 Stars)</option>
@@ -371,7 +366,7 @@
     <!-- 3D POPUP MODAL -->
     <div class="modal" id="rashiModal">
         <div class="modal-content">
-            <div class="close-modal" onclick="closeRashiModal()">&times;</div>
+            <div class="close-modal" onclick="jaCloseModal()">&times;</div>
             <h2 id="modalRashiTitle" style="color: var(--primary-color); margin-bottom: 15px; font-size: 24px; text-align: center; border-bottom: 2px solid #f3e8ff; padding-bottom: 10px;">ৰাশিফল</h2>
             <div id="modalRashiBody"></div>
         </div>
@@ -392,9 +387,7 @@
     </footer>
 
     <script>
-    // To protect against crashes from external config.js or app.js
-    (function() {
-        const appTexts = {
+        const jaTexts = {
             as: {
                 navHome: "Home", navServices: "Services", navAbout: "About Us",
                 hHighlight: "আপোনাৰ ভৱিষ্যৎ", hRest: " আজি সঠিকভাৱে জানি লওক",
@@ -523,7 +516,7 @@
             }
         };
 
-        const appZodiacData = {
+        const jaRashiData = {
             as: [
                 { id: "aries", name: "মেষ", symbol: "♈", short: "আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব। দিনটোৰ দ্বিতীয়াৰ্ধত কিছু গুৰুত্বপূৰ্ণ সিদ্ধান্ত ল'বলগীয়া হ'ব পাৰে। ব্যৱসায়িক লেনদেনত লাভৰ সম্ভাৱনা।", love: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব। পৰিয়ালৰ লোকৰ সৈতে সময় কটালে মানসিক শান্তি পাব। অবিবাহিতসকলৰ বাবে নতুন প্ৰস্তাৱ অহাৰ যোগ আছে।", health: "স্বাস্থ্য সুন্দৰ থাকিব। পুৱাৰ ভাগত যোগ বা ব্যায়াম কৰিলে দিনটো সতেজ অনুভৱ কৰিব। বাহিৰৰ খাদ্যৰ পৰা বিৰত থাকক।", advice: "খং নিয়ন্ত্ৰণ কৰক আৰু আনৰ কথাত সোনকালে প্ৰতিক্ৰিয়া নিদিব।", color: "বগলীয়া", num: "৯" },
                 { id: "taurus", name: "বৃষ", symbol: "♉", short: "কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে।", career: "ব্যৱসায়ত লাভৰ যোগ আছে। সহকৰ্মীৰ পৰা পূৰ্ণ সহযোগিতা লাভ কৰিব। দীৰ্ঘদিনীয়া কোনো অসম্পূৰ্ণ কাম আজি পূৰ্ণ হ'ব পাৰে।", love: "পৰিয়ালৰ সমৰ্থন পাব। প্ৰিয়জনৰ সৈতে সময় কটাবলৈ চেষ্টা কৰক। সৰু-সুৰা কথাত তৰ্ক কৰাৰ পৰা বিৰত থাকক।", health: "পেটৰ সামান্য সমস্যা হ'ব পাৰে। সতেজ ফল-মূল বেছিকৈ খাওক।", advice: "খৰচৰ ক্ষেত্ৰত সাৱধানতা অৱলম্বন কৰাটো বাঞ্ছনীয়।", color: "সেউজীয়া", num: "৬" },
@@ -536,7 +529,7 @@
                 { id: "sagittarius", name: "ধনু", symbol: "♐", short: "নতুন সুযোগৰ দুৱাৰ মুকলি হ'ব।", career: "উচ্চ শিক্ষাৰ বাবে যাত্ৰা হ'ব পাৰে। কৰ্মস্থানত আপোনাৰ সততা আৰু নিষ্ঠাৰ মূল্য পাব।", love: "সংগীৰ সহযোগিতা পাব। অবিবাহিতসকলৰ বাবে আজি দিনটো অতি শুভ।", health: "উচ্চ শক্তি স্তৰ থাকিব। খেল-ধেমালি বা ব্যায়ামত অংশ ল'ব পাৰে।", advice: "অত্যাধিক আশাবাদী হৈ অসাৱধানতা অৱলম্বন নকৰিব।", color: "বেঙুনীয়া", num: "৩" },
                 { id: "capricorn", name: "মকৰ", symbol: "♑", short: "পৰিশ্ৰমৰ ফল পাবলৈ লাগিছে।", career: "কৰ্মত স্থিৰতা আহিব। দীৰ্ঘম্যাদী বিনিয়োগৰ বাবে আজি দিনটো ভাল।", love: "দায়িত্ববোধ বৃদ্ধি পাব। পৰিয়ালৰ প্ৰতি আপোনাৰ সমৰ্পণে সকলোকে আনন্দিত কৰিব।", health: "যোৰত সামান্য বিষ অনুভৱ হ'ব পাৰে। গধুৰ বস্তু উঠোৱাৰ পৰা বিৰত থাকক।", advice: "কৰ্ম আৰু ব্যক্তিগত জীৱনৰ মাজত ভাৰসাম্য বজাই ৰাখক।", color: "ধূসৰ", num: "৮" },
                 { id: "aquarius", name: "কুম্ভ", symbol: "♒", short: "মিত্ৰতা আৰু সম্পৰ্ক শক্তিশালী হ'ব।", career: "দলগত কামত সফলতা। আপোনাৰ উদ্ভাৱনী চিন্তাধাৰাই কৰ্মক্ষেত্ৰত নতুন পৰিৱৰ্তন আনিব।", love: "বন্ধুৰ সহায়ত প্ৰেমত অগ্ৰগতি। পুৰণি বন্ধুৰ সৈতে হঠাতে দেখা হ'ব পাৰে।", health: "মানসিক উল্লাস থাকিব। স্নায়ৱিক চাপৰ পৰা মুক্ত থাকিবলৈ জিৰণি লওক।", advice: "নিজৰ স্বভাৱত কিছু নমনীয়তা অনাৰ চেষ্টা কৰক।", color: "আকাশী নীলা", num: "৪" },
-                { id: "pisces", name: "মীন", symbol: "♓", short: "সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।", career: "নতুন চিন্তাৰ দ্বাৰা লাভান্বিত হ'ব। কলা বা লিখা-মেলাৰ সৈতে জড়িত লোকসকলৰ বাবে দিনটো শুভ।", love: "আধ্যাত্মিক চিন্তাত দিন পাৰ হ'ব। সংগীৰ আৱেগক সন্মান কৰক।", health: "শান্ত অনুভৱ কৰিব। ভৰিৰ বিষ হ'ব পাৰে, সাৱধান হ'ব।", advice: "বাস্তৱৰ পৰা আঁতৰি নাযাব, সপোনৰ লগতে কৰ্মতো গুৰুত্ব দিয়ক।", color: "হালধীয়া-সোনালী", num: "৩" }
+                { id: "pisces", name: "মীন", symbol: "♓", short: "সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।", career: "নতুন চিন্তাৰ দ্বাৰা লাভান্বিত হ'ব। কলা বা লিখা-মেলাৰ সৈতে জড়িত লোকসকলৰ বাবে দিনটো শুভ।", love: "আধ্যাত্মিক চিন্তাত দিন পাৰদ্দিৱত দিন পাৰ হ'ব। সংগীৰ আৱেগক সন্মান কৰক।", health: "শান্ত অনুভৱ কৰিব। ভৰিৰ বিষ হ'ব পাৰে, সাৱধান হ'ব।", advice: "বাস্তৱৰ পৰা আঁতৰি নাযাব, সপোনৰ লগতে কৰ্মতো গুৰুত্ব দিয়ক।", color: "হালধীয়া-সোনালী", num: "৩" }
             ],
             en: [
                 { id: "aries", name: "Aries", symbol: "♈", short: "Your luck will be very positive today.", career: "New responsibilities at work. You may have to take important decisions in the second half of the day. Profitable business transactions are likely.", love: "Sweet moments with partner. Spending time with family will bring mental peace. Good proposals for singles.", health: "Good health. Morning yoga or exercise will keep you fresh all day. Avoid outside food.", advice: "Control your anger and do not react quickly to others' words.", color: "White", num: "9" },
@@ -568,113 +561,94 @@
             ]
         };
 
-        let currentLang = 'as';
+        let jaCurrentLang = 'as';
 
-        // Safe Text Updater
-        function setText(id, text) {
+        function safeSetText(id, text) {
             const el = document.getElementById(id);
-            if (el && text !== undefined) {
-                el.innerText = text;
-            }
+            if (el && text !== undefined) el.innerText = text;
         }
 
-        window.switchLanguage = function(lang) {
-            currentLang = lang;
+        window.jaSwitchLanguage = function(lang) {
+            jaCurrentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById('btn-' + lang);
-            if(activeBtn) activeBtn.classList.add('active');
+            if (activeBtn) activeBtn.classList.add('active');
 
-            const t = texts[lang];
+            const t = jaTexts[lang];
             
-            setText('navHome', t.navHome);
-            setText('navServices', t.navServices);
-            setText('navAbout', t.navAbout);
+            safeSetText('navHome', t.navHome); safeSetText('navServices', t.navServices); safeSetText('navAbout', t.navAbout);
             
-            setText('h-title-highlight', t.hHighlight);
-            setText('h-title-rest', t.hRest);
-            setText('h-subtitle', t.hSubtitle);
-            setText('b1', t.b1); setText('b2', t.b2);
-            setText('b3', t.b3); setText('b4', t.b4);
+            safeSetText('h-title-highlight', t.hHighlight); safeSetText('h-title-rest', t.hRest);
+            safeSetText('h-subtitle', t.hSubtitle);
+            safeSetText('b1', t.b1); safeSetText('b2', t.b2); safeSetText('b3', t.b3); safeSetText('b4', t.b4);
             
-            setText('p-title', t.pTitle);
-            setText('pl-sunrise', t.plSunrise); setText('pl-sunset', t.plSunset);
-            setText('pl-tithi', t.plTithi); setText('pl-nakshatra', t.plNakshatra);
-            setText('pl-rahu', t.plRahu);
+            safeSetText('p-title', t.pTitle);
+            safeSetText('pl-sunrise', t.plSunrise); safeSetText('pl-sunset', t.plSunset);
+            safeSetText('pl-tithi', t.plTithi); safeSetText('pl-nakshatra', t.plNakshatra); safeSetText('pl-rahu', t.plRahu);
             
-            setText('toolsTitle', t.toolsTitle);
-            setText('toolsSub', t.toolsSub);
-            setText('dobHoroTitle', t.dobHoroTitle);
-            setText('dobHoroDesc', t.dobHoroDesc);
-            setText('coupleTitle', t.coupleTitle);
-            setText('coupleDesc', t.coupleDesc);
-            setText('btnDobHoro', t.checkBtn);
-            setText('btnCouple', t.checkBtn);
-            setText('boyLbl', t.boyLbl);
-            setText('girlLbl', t.girlLbl);
-            setText('lblPersonalDob', t.lblPersonalDob);
-            setText('lblPersonalRashi', t.lblPersonalRashi);
+            safeSetText('toolsTitle', t.toolsTitle); safeSetText('toolsSub', t.toolsSub);
+            safeSetText('dobHoroTitle', t.dobHoroTitle); safeSetText('dobHoroDesc', t.dobHoroDesc);
+            safeSetText('coupleTitle', t.coupleTitle); safeSetText('coupleDesc', t.coupleDesc);
+            safeSetText('btnDobHoro', t.checkBtn); safeSetText('btnCouple', t.checkBtn);
+            safeSetText('boyLbl', t.boyLbl); safeSetText('girlLbl', t.girlLbl);
+            safeSetText('lblPersonalDob', t.lblPersonalDob); safeSetText('lblPersonalRashi', t.lblPersonalRashi);
 
-            setText('rashi-main-title', t.rashiMainTitle);
-            setText('rashi-sub-title', t.rashiSubTitle);
-            setText('wa-share-text', t.waShareText);
+            safeSetText('rashi-main-title', t.rashiMainTitle); safeSetText('rashi-sub-title', t.rashiSubTitle);
+            safeSetText('wa-share-text', t.waShareText);
 
-            setText('aboutTitle', t.aboutTitle);
-            setText('aboutDesc', t.aboutDesc);
+            safeSetText('aboutTitle', t.aboutTitle); safeSetText('aboutDesc', t.aboutDesc);
 
-            setText('s-title', t.sTitle); setText('s-subtitle', t.sSubtitle);
-            setText('srv1-title', t.srv1Title); setText('srv1-desc', t.srv1Desc);
-            setText('srv2-title', t.srv2Title); setText('srv2-desc', t.srv2Desc);
-            setText('srv3-title', t.srv3Title); setText('srv3-desc', t.srv3Desc);
+            safeSetText('s-title', t.sTitle); safeSetText('s-subtitle', t.sSubtitle);
+            safeSetText('srv1-title', t.srv1Title); safeSetText('srv1-desc', t.srv1Desc);
+            safeSetText('srv2-title', t.srv2Title); safeSetText('srv2-desc', t.srv2Desc);
+            safeSetText('srv3-title', t.srv3Title); safeSetText('srv3-desc', t.srv3Desc);
             document.querySelectorAll('.service-btn-action').forEach(b => b.innerText = t.btnText);
 
-            setText('testimonialTitle', t.testTitle);
-            setText('testimonialSubtitle', t.testSub || "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা");
-            setText('test1-text', t.t1text); setText('test1-author', t.t1auth);
-            setText('test2-text', t.t2text); setText('test2-author', t.t2auth);
-            setText('test3-text', t.t3text || "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"); 
-            setText('test3-author', t.t3auth || "— নিবেদিতা শৰ্মা, যোৰহাট");
+            safeSetText('testimonialTitle', t.testTitle);
+            safeSetText('testimonialSubtitle', t.testSub || "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা");
+            safeSetText('test1-text', t.t1text); safeSetText('test1-author', t.t1auth);
+            safeSetText('test2-text', t.t2text); safeSetText('test2-author', t.t2auth);
+            safeSetText('test3-text', t.t3text || "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"); 
+            safeSetText('test3-author', t.t3auth || "— নিবেদিতা শৰ্মা, যোৰহাট");
             
-            setText('rfTitle', t.rfTitle || "আপোনাৰ মতামত দিয়ক"); 
-            setText('btnSubmitReview', t.btnSubmitReview || "মতামত প্ৰেৰণ কৰক");
+            safeSetText('rfTitle', t.rfTitle || "আপোনাৰ মতামত দিয়ক"); 
+            safeSetText('btnSubmitReview', t.btnSubmitReview || "মতামত প্ৰেৰণ কৰক");
 
-            setText('sec-title', t.secTitle); setText('sec-desc', t.secDesc);
+            safeSetText('sec-title', t.secTitle); safeSetText('sec-desc', t.secDesc);
             
-            setText('ft-home', t.navHome);
-            setText('ft-privacy', t.ftPrivacy);
-            setText('ft-terms', t.ftTerms);
-            setText('ft-contact', t.ftContact);
-            setText('footer-text', t.footerText);
-            setText('ft-disclaimer', t.ftDisclaimer);
+            safeSetText('ft-home', t.navHome); safeSetText('ft-privacy', t.ftPrivacy);
+            safeSetText('ft-terms', t.ftTerms); safeSetText('ft-contact', t.ftContact);
+            safeSetText('footer-text', t.footerText); safeSetText('ft-disclaimer', t.ftDisclaimer);
 
-            updateDate();
-            renderRashiDropdowns();
-            renderRashiGrid();
+            jaUpdateDate();
+            jaRenderDropdowns();
+            jaRenderGrid();
         };
 
-        function updateDate() {
+        function jaUpdateDate() {
             const today = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const langCode = currentLang === 'en' ? 'en-US' : (currentLang === 'hi' ? 'hi-IN' : 'as-IN');
-            setText('p-date', texts[currentLang].datePrefix + today.toLocaleDateString(langCode, options));
+            const langCode = jaCurrentLang === 'en' ? 'en-US' : (jaCurrentLang === 'hi' ? 'hi-IN' : 'as-IN');
+            safeSetText('p-date', jaTexts[jaCurrentLang].datePrefix + today.toLocaleDateString(langCode, options));
         }
 
-        function renderRashiDropdowns() {
-            const defText = texts[currentLang].selectRashiText || "-- Select --";
+        function jaRenderDropdowns() {
+            const defText = jaTexts[jaCurrentLang].selectRashiText || "-- Select --";
             let optionsHtml = `<option value="">${defText}</option>`;
-            appZodiacData[currentLang].forEach(r => {
+            jaRashiData[jaCurrentLang].forEach(r => {
                 optionsHtml += `<option value="${r.id}">${r.symbol} ${r.name}</option>`;
             });
 
-            document.getElementById('personalRashiInput').innerHTML = optionsHtml;
-            document.getElementById('coupleRashi1').innerHTML = optionsHtml;
-            document.getElementById('coupleRashi2').innerHTML = optionsHtml;
+            const pDrop = document.getElementById('personalRashiInput'); if(pDrop) pDrop.innerHTML = optionsHtml;
+            const c1Drop = document.getElementById('coupleRashi1'); if(c1Drop) c1Drop.innerHTML = optionsHtml;
+            const c2Drop = document.getElementById('coupleRashi2'); if(c2Drop) c2Drop.innerHTML = optionsHtml;
         }
 
-        function renderRashiGrid() {
+        function jaRenderGrid() {
             const gridContainer = document.getElementById('rashiGridContainer');
             if (gridContainer) {
-                gridContainer.innerHTML = appZodiacData[currentLang].map(r => `
-                    <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
+                gridContainer.innerHTML = jaRashiData[jaCurrentLang].map(r => `
+                    <div class="rashi-card" onclick="jaOpenRashiDetail('${r.id}')">
                         <div class="rashi-icon">${r.symbol}</div>
                         <h3>${r.name}</h3><p>${r.short}</p>
                     </div>
@@ -682,22 +656,22 @@
             }
         }
 
-        window.checkPersonalHoroscope = function() {
+        window.jaCheckPersonal = function() {
             const r1 = document.getElementById('personalRashiInput').value;
             const d1 = document.getElementById('personalDobInput').value;
             if(!r1 || !d1) {
-                alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছক।" : (currentLang === 'hi' ? "कृपया जन्म तिथि और राशि चुनें।" : "Please enter DOB and select your Rashi."));
+                alert(jaCurrentLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছক।" : (jaCurrentLang === 'hi' ? "कृपया जन्म तिथि और राशि चुनें।" : "Please enter DOB and select your Rashi."));
                 return;
             }
-            window.openRashiDetail(r1, d1);
+            window.jaOpenRashiDetail(r1, d1);
         };
 
-        window.openRashiDetail = function(rashiId, dob = null) {
-            const r = appZodiacData[currentLang].find(item => item.id === rashiId);
-            const t = texts[currentLang];
+        window.jaOpenRashiDetail = function(rashiId, dob = null) {
+            const r = jaRashiData[jaCurrentLang].find(item => item.id === rashiId);
+            const t = jaTexts[jaCurrentLang];
             if(!r) return;
 
-            setText('modalRashiTitle', t.modalSingleTitle);
+            safeSetText('modalRashiTitle', t.modalSingleTitle);
             
             let headerBox = '';
             if (dob) {
@@ -747,20 +721,20 @@
             document.getElementById('rashiModal').classList.add('active');
         };
 
-        window.checkCoupleHoroscope = function() {
+        window.jaCheckCouple = function() {
             const r1 = document.getElementById('coupleRashi1').value;
             const r2 = document.getElementById('coupleRashi2').value;
             const d1 = document.getElementById('coupleDob1').value;
             const d2 = document.getElementById('coupleDob2').value;
             
             if(!r1 || !r2 || !d1 || !d2) {
-                alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি বাছক।" : (currentLang === 'hi' ? "कृपया दोनों की जन्म तिथि और राशि चुनें।" : "Please enter both DOBs and select Rashis."));
+                alert(jaCurrentLang === 'as' ? "অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি বাছক।" : (jaCurrentLang === 'hi' ? "कृपया दोनों की जन्म तिथि और राशि चुनें।" : "Please enter both DOBs and select Rashis."));
                 return;
             }
 
-            const t = texts[currentLang];
-            const rData1 = appZodiacData[currentLang].find(r => r.id === r1);
-            const rData2 = appZodiacData[currentLang].find(r => r.id === r2);
+            const t = jaTexts[jaCurrentLang];
+            const rData1 = jaRashiData[jaCurrentLang].find(r => r.id === r1);
+            const rData2 = jaRashiData[jaCurrentLang].find(r => r.id === r2);
 
             const today = new Date().getDate();
             const rawScore = (r1.charCodeAt(0) + r2.charCodeAt(1) + today) % 25 + 70; // 70 to 94 
@@ -772,9 +746,9 @@
             const conflictScore = 4.5;
             const moneyScore = ((rawScore - 8) / 10).toFixed(1);
 
-            let commAdvice = currentLang === 'as' ? `দুয়োৰে চিন্তা কৰাৰ ধৰণ বেলেগ হ'ব পাৰে। ${rData1.name} ৰাশিয়ে কথা পাতি সমস্যা সমাধান কৰিব বিচাৰিব, আনহাতে ${rData2.name} ৰাশিয়ে অলপ সময় লৈ কথা পতা ভাল পাব।` : (currentLang === 'hi' ? `बातचीत का तरीका अलग हो सकता है। ${rData1.name} तुरंत बात करना चाहेंगे, जबकि ${rData2.name} समय लेना पसंद करेंगे।` : `Communication styles may differ. Understanding each other's perspective is key today.`);
+            let commAdvice = jaCurrentLang === 'as' ? `দুয়োৰে চিন্তা কৰাৰ ধৰণ বেলেগ হ'ব পাৰে। ${rData1.name} ৰাশিয়ে কথা পাতি সমস্যা সমাধান কৰিব বিচাৰিব, আনহাতে ${rData2.name} ৰাশিয়ে অলপ সময় লৈ কথা পতা ভাল পাব।` : (jaCurrentLang === 'hi' ? `बातचीत का तरीका अलग हो सकता है। ${rData1.name} तुरंत बात करना चाहेंगे, जबकि ${rData2.name} समय लेना पसंद करेंगे।` : `Communication styles may differ. Understanding each other's perspective is key today.`);
 
-            setText('modalRashiTitle', t.modalCoupleTitle);
+            safeSetText('modalRashiTitle', t.modalCoupleTitle);
             document.getElementById('modalRashiBody').innerHTML = `
                 <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fce7f3; text-align: center;">
                     <p style="font-weight: 600; color: #831843; font-size: 15px;">👨 <strong>Boy:</strong> DOB: ${d1} | ${rData1.symbol} ${rData1.name}</p>
@@ -785,7 +759,7 @@
                 <div class="detail-box">
                     <div class="detail-item">
                         <h4>💕 ${t.lblLove}: ${loveScore}/10</h4>
-                        <p>${currentLang === 'as' ? 'আজি দুয়োৰে মাজত emotional connection ভাল থাকিব। সৰু কথাই misunderstanding সৃষ্টি কৰিব পাৰে, সেয়ে কথাৰ tone কোমল ৰখা ভাল।' : (currentLang === 'hi' ? 'आज दोनों के बीच भावनात्मक जुड़ाव अच्छा रहेगा। छोटी बातें गलतफहमी पैदा कर सकती हैं, इसलिए स्वर नरम रखें।' : 'Emotional connection will be good today. Keep your tone soft to avoid minor misunderstandings.')}</p>
+                        <p>${jaCurrentLang === 'as' ? 'আজি দুয়োৰে মাজত emotional connection ভাল থাকিব। সৰু কথাই misunderstanding সৃষ্টি কৰিব পাৰে, সেয়ে কথাৰ tone কোমল ৰখা ভাল।' : (jaCurrentLang === 'hi' ? 'आज दोनों के बीच भावनात्मक जुड़ाव अच्छा रहेगा। छोटी बातें गलतफहमी पैदा कर सकती हैं, इसलिए स्वर नरम रखें।' : 'Emotional connection will be good today. Keep your tone soft to avoid minor misunderstandings.')}</p>
                     </div>
 
                     <div class="detail-item">
@@ -795,27 +769,27 @@
 
                     <div class="detail-item">
                         <h4>💞 Attraction: ${attrScore}/10</h4>
-                        <p>${currentLang === 'as' ? 'এজন আনজনৰ প্ৰতি interest আৰু টান বৃদ্ধি হোৱাৰ প্ৰবল সম্ভাৱনা আছে। একেলগে সময় কটালে relationship-টো অধিক দৃঢ় হ'ব।' : (currentLang === 'hi' ? 'एक-दूसरे के प्रति आकर्षण बढ़ने की प्रबल संभावना है। साथ समय बिताने से रिश्ता और मजबूत होगा।' : 'Strong chances of increased mutual attraction. Spending time together will strengthen the relationship.')}</p>
+                        <p>${jaCurrentLang === 'as' ? 'এজন আনজনৰ প্ৰতি interest আৰু টান বৃদ্ধি হোৱাৰ প্ৰবল সম্ভাৱনা আছে। একেলগে সময় কটালে relationship-টো অধিক দৃঢ় হ'ব।' : (jaCurrentLang === 'hi' ? 'एक-दूसरे के प्रति आकर्षण बढ़ने की प्रबल संभावना है। साथ समय बिताने से रिश्ता और मजबूत होगा।' : 'Strong chances of increased mutual attraction. Spending time together will strengthen the relationship.')}</p>
                     </div>
 
                     <div class="detail-item">
                         <h4>⚠️ Conflict Potential: ${conflictScore}/10</h4>
                         <ul style="font-size: 14px; color: #475569; margin-left: 20px;">
-                            <li>${currentLang === 'as' ? 'অত্যাধিক চিন্তা কৰা (Overthinking)' : (currentLang === 'hi' ? 'अत्यधिक सोचना (Overthinking)' : 'Overthinking small issues')}</li>
-                            <li>${currentLang === 'as' ? 'সৰু কথাত ভুল বুজাবুজি' : (currentLang === 'hi' ? 'छोटी बातों पर गलतफहमी' : 'Misunderstandings over trivial matters')}</li>
+                            <li>${jaCurrentLang === 'as' ? 'অত্যাধিক চিন্তা কৰা (Overthinking)' : (jaCurrentLang === 'hi' ? 'अत्यधिक सोचना (Overthinking)' : 'Overthinking small issues')}</li>
+                            <li>${jaCurrentLang === 'as' ? 'সৰু কথাত ভুল বুজাবুজি' : (jaCurrentLang === 'hi' ? 'छोटी बातों पर गलतफहमी' : 'Misunderstandings over trivial matters')}</li>
                         </ul>
                     </div>
 
                     <div class="detail-item">
                         <h4>💰 Money & Finance: ${moneyScore}/10</h4>
-                        <p>${currentLang === 'as' ? 'আজিৰ দিনটোত relationship-ৰ মাজত টকা-পইচাৰ বিষয় লৈ তৰ্ক নকৰাই ভাল।' : (currentLang === 'hi' ? 'आज के दिन पैसे के मामले को लेकर बहस न करना ही बेहतर है।' : 'It is best to avoid arguments over money matters today.')}</p>
+                        <p>${jaCurrentLang === 'as' ? 'আজিৰ দিনটোত relationship-ৰ মাজত টকা-পইচাৰ বিষয় লৈ তৰ্ক নকৰাই ভাল।' : (jaCurrentLang === 'hi' ? 'आज के दिन पैसे के मामले को लेकर बहस न करना ही बेहतर है।' : 'It is best to avoid arguments over money matters today.')}</p>
                     </div>
 
                     <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 15px;">
                         <strong>🔮 ${t.lblAdvice}:</strong><br>
                         <span style="font-size: 14px; color: #166534;">
-                        • <strong>Boy (${rData1.name}):</strong> ${currentLang === 'as' ? 'কথা বেছি explain কৰাৰ সলনি প্ৰথমে শুনাৰ অভ্যাস কৰক।' : (currentLang === 'hi' ? 'बात ज्यादा समझाने के बजाय पहले सुनने की आदत डालें।' : 'Practice listening first instead of explaining too much.')}<br>
-                        • <strong>Girl (${rData2.name}):</strong> ${currentLang === 'as' ? 'negative অৰ্থ বিচৰাৰ সলনি পোনে পোনে সুধি লোৱা ভাল।' : (currentLang === 'hi' ? 'नकारात्मक अर्थ खोजने के बजाय सीधे पूछ लेना बेहतर है।' : 'Ask directly instead of looking for negative meanings.')}
+                        • <strong>Boy (${rData1.name}):</strong> ${jaCurrentLang === 'as' ? 'কথা বেছি explain কৰাৰ সলনি প্ৰথমে শুনাৰ অভ্যাস কৰক।' : (jaCurrentLang === 'hi' ? 'बात ज्यादा समझाने के बजाय पहले सुनने की आदत डालें।' : 'Practice listening first instead of explaining too much.')}<br>
+                        • <strong>Girl (${rData2.name}):</strong> ${jaCurrentLang === 'as' ? 'negative অৰ্থ বিচৰাৰ সলনি পোনে পোনে সুধি লোৱা ভাল।' : (jaCurrentLang === 'hi' ? 'नकारात्मक अर्थ खोजने के बजाय सीधे पूछ लेना बेहतर है।' : 'Ask directly instead of looking for negative meanings.')}
                         </span>
                     </div>
 
@@ -827,9 +801,12 @@
             document.getElementById('rashiModal').classList.add('active');
         };
 
-        window.closeRashiModal = function() { document.getElementById('rashiModal').classList.remove('active'); };
+        window.jaCloseModal = function() { 
+            const modal = document.getElementById('rashiModal');
+            if (modal) modal.classList.remove('active'); 
+        };
 
-        window.submitReview = function(e) {
+        window.jaSubmitReview = function(e) {
             e.preventDefault();
             const name = document.getElementById('reviewerName').value;
             const stars = document.getElementById('reviewStars').value;
@@ -845,21 +822,18 @@
             
             document.getElementById('testimonialsList').insertAdjacentHTML('afterbegin', newReview);
             document.getElementById('reviewForm').reset();
-            alert(currentLang === 'as' ? "আপোনাৰ মতামতৰ বাবে ধন্যবাদ!" : "Thank you for your review!");
+            alert(jaCurrentLang === 'as' ? "আপোনাৰ মতামতৰ বাবে ধন্যবাদ!" : "Thank you for your review!");
         };
 
-        window.shareOnWhatsApp = function() {
+        window.jaShare = function() {
             const text = encodeURIComponent("✨ জ্যোতিষ অসমত আজিৰ ৰাশিফল আৰু নিখুঁত বৈদিক কুণ্ডলী চাওক! \nলিংক: " + window.location.href);
             window.open(`https://wa.me/?text=${text}`, '_blank');
         };
 
-        // Initialize safely
         window.addEventListener('DOMContentLoaded', () => { 
-            try { window.switchLanguage('as'); } 
-            catch(err) { console.error("Initialization Error:", err); }
+            window.jaSwitchLanguage('as'); 
         });
 
-    })();
     </script>
 </body>
 </html>
