@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
     <title>জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>
+    <meta name="description" content="জ্যোতিষ অসম (Jyotish Assam) - 100% নিখুঁত বৈদিক জ্যোতিষ, জন্ম কুণ্ডলী, প্ৰেমৰ পৰামৰ্শ, কেৰিয়াৰ ভৱিষ্যদ্বাণী আৰু দৈনিক ৰাশিফল। আজি আপোনাৰ ভৱিষ্যৎ জানি লওক।">
+    <meta name="keywords" content="Jyotish Assam, Astrology Assam, Assamese Horoscope, Assamese Astrology, Daily Rashi Phal, Online Jyotish, Kundali in Assamese, Best Astrologer in Assam">
+    <meta name="author" content="Jyotish Assam">
+    <meta property="og:title" content="জ্যোতিষ অসম - 100% নিখুঁত বৈদিক জ্যোতিষ">
+    <meta property="og:description" content="বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল।">
+    <meta property="og:type" content="website">
     
     <!-- Google Fonts for Perfect Assamese & Indian Script Rendering -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,166 +44,32 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         /* Navigation */
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
         .lang-switcher { display: flex; gap: 8px; }
-
-        .lang-btn {
-            padding: 6px 12px;
-            border: 1px solid var(--border-color);
-            background: white;
-            cursor: pointer;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-size: 13px;
-        }
-
-        .lang-btn.active, .lang-btn:hover {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
+        .lang-btn { padding: 6px 12px; border: 1px solid var(--border-color); background: white; cursor: pointer; border-radius: 6px; font-weight: 600; transition: all 0.3s; font-size: 13px; }
+        .lang-btn.active, .lang-btn:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); }
 
         /* Hero Section */
-        .hero {
-            padding: 60px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08));
-            border-radius: 20px;
-            margin: 30px 0;
-            border: 1px solid rgba(109, 40, 217, 0.1);
-        }
-
-        .hero-title-styled {
-            font-size: 38px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 20px;
-            line-height: 1.3;
-            position: relative;
-            display: inline-block;
-        }
-
-        .hero-title-styled span {
-            background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 5px 15px rgba(109, 40, 217, 0.15);
-        }
-
-        .hero-title-styled::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -10px;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, #6D28D9, #DB2777);
-            border-radius: 2px;
-            box-shadow: 0 0 10px rgba(219, 39, 119, 0.5);
-        }
-
+        .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
+        .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; position: relative; display: inline-block; }
+        .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 5px 15px rgba(109, 40, 217, 0.15); }
+        .hero-title-styled::after { content: ''; position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); width: 100px; height: 4px; background: linear-gradient(90deg, #6D28D9, #DB2777); border-radius: 2px; box-shadow: 0 0 10px rgba(219, 39, 119, 0.5); }
         .hero p { font-size: 16px; color: var(--text-light); max-width: 700px; margin: 20px auto 20px; }
 
-        .trust-badges {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            padding: 12px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            border: 1px solid var(--border-color);
-        }
-
+        .trust-badges { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin: 20px 0; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
         .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #475569; }
         .trust-item span { color: var(--success-color); font-size: 15px; }
 
-        /* Panchang Section (NEW) */
-        .panchang-box {
-            background: linear-gradient(135deg, #fffbeb, #fef3c7);
-            border: 1px solid #fde68a;
-            border-radius: 16px;
-            padding: 25px;
-            margin: 30px 0;
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.1);
-        }
-        
-        .panchang-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .panchang-header h3 {
-            color: #b45309;
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .panchang-date {
-            font-weight: 600;
-            color: #92400e;
-            font-size: 15px;
-            margin-top: 5px;
-        }
-
-        .panchang-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-        }
-
-        .p-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            background: #fdf8f6;
-            border: 1px solid #ffedd5;
-        }
-
-        .p-item.danger {
-            background: #fff1f2;
-            border-color: #ffe4e6;
-        }
-
+        /* Panchang Section */
+        .panchang-box { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; border-radius: 16px; padding: 25px; margin: 30px 0; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.1); }
+        .panchang-header { text-align: center; margin-bottom: 20px; }
+        .panchang-header h3 { color: #b45309; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .panchang-date { font-weight: 600; color: #92400e; font-size: 15px; margin-top: 5px; }
+        .panchang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: white; padding: 20px; border-radius: 12px; }
+        .p-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px; border-radius: 8px; background: #fdf8f6; border: 1px solid #ffedd5; }
+        .p-item.danger { background: #fff1f2; border-color: #ffe4e6; }
         .p-label { font-size: 13px; color: var(--text-light); font-weight: 600; margin-bottom: 5px; }
         .p-value { font-size: 16px; color: var(--text-dark); font-weight: 700; }
         .p-item.danger .p-label, .p-item.danger .p-value { color: var(--warning-color); }
@@ -232,10 +106,25 @@
         .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s; text-decoration: none; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
         .service-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
+        /* Testimonials (Customer Ratings) */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .testimonial-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .testimonial-text { font-size: 15px; color: var(--text-light); font-style: italic; margin-bottom: 15px; }
+        .testimonial-author { font-weight: 700; font-size: 14px; color: var(--text-dark); }
+        .stars { color: #fbbf24; font-size: 14px; margin-bottom: 8px; }
+
         /* Secure Payment Trust Banner */
         .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
         .secure-text h4 { color: #166534; font-size: 18px; margin-bottom: 4px; }
         .secure-text p { color: #15803d; font-size: 13px; }
+
+        /* WhatsApp Share Button */
+        .whatsapp-share-btn {
+            background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; 
+            font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; 
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px;
+        }
+        .whatsapp-share-btn:hover { background: #1da851; transform: translateY(-2px); }
 
         footer { background: var(--dark-bg); color: white; text-align: center; padding: 35px 0; margin-top: 50px; font-size: 14px; }
     </style>
@@ -269,7 +158,7 @@
             </div>
         </section>
 
-        <!-- Daily Panchang Section (NEW) -->
+        <!-- Daily Panchang Section -->
         <section class="panchang-box">
             <div class="panchang-header">
                 <h3 id="p-title">📅 আজিৰ পঞ্জিকা</h3>
@@ -304,6 +193,12 @@
             <h2 class="section-title" id="rashi-main-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
             <p class="section-subtitle" id="rashi-sub-title">আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক</p>
             <div class="rashi-grid" id="rashiGridContainer"></div>
+            
+            <!-- WhatsApp Share Button -->
+            <button class="whatsapp-share-btn" onclick="shareOnWhatsApp()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" height="22" alt="WhatsApp"> 
+                <span id="wa-share-text">আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক</span>
+            </button>
         </section>
 
         <!-- Services Section -->
@@ -338,6 +233,30 @@
             </div>
         </section>
 
+        <!-- Testimonials (Customer Ratings) -->
+        <section class="section">
+            <h2 class="section-title" id="testimonialTitle">গ্ৰাহকৰ মতামত</h2>
+            <p class="section-subtitle" id="testimonialSubtitle">আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা</p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text" id="test1-text">"প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।"</div>
+                    <div class="testimonial-author" id="test1-author">— প্ৰিয়া দাস, গুৱাহাটী</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text" id="test2-text">"কেৰিয়াৰৰ পইণ্টবোৰ পঢ়ি মই সঠিক সিদ্ধান্ত ল'ব পাৰিলোঁ। জ্যোতিষ অসমৰ এই প্ৰচেষ্টা অতি প্ৰশংসনীয়।"</div>
+                    <div class="testimonial-author" id="test2-author">— ৰাজীৱ বৰা, ডিব্ৰুগড়</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text" id="test3-text">"মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"</div>
+                    <div class="testimonial-author" id="test3-author">— নিবেদিতা শৰ্মা, যোৰহাট</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Secure Payment Banner -->
         <div class="secure-banner">
             <div class="secure-text">
@@ -367,16 +286,23 @@
                 hSubtitle: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।",
                 b1: "✔ ১০০% বৈদিক শুদ্ধতা", b2: "✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক", b3: "✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি", b4: "✔ নিৰাপদ পেমেন্ট (Razorpay)",
                 
-                // Panchang
                 pTitle: "📅 আজিৰ পঞ্জিকা",
                 plSunrise: "🌅 সূৰ্যোদয়", plSunset: "🌇 সূৰ্যাস্ত", plTithi: "🌙 আজিৰ তিথি", plNakshatra: "⭐ নক্ষত্ৰ", plRahu: "⚠️ ৰাহু কাল (অশুভ সময়)",
                 
                 rashiMainTitle: "🌟 আজিৰ ১২ টা ৰাশিফল", rashiSubTitle: "আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক",
+                waShareText: "আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক",
+                
                 sTitle: "আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ", sSubtitle: "আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক",
                 srv1Title: "সম্পূৰ্ণ জন্ম কুণ্ডলী", srv1Desc: "নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।",
                 srv2Title: "প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ", srv2Desc: "প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ, পেছা আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।",
                 srv3Title: "কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস", srv3Desc: "চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।",
                 btnText: "সেৱা গ্ৰহণ কৰক",
+                
+                testTitle: "গ্ৰাহকৰ মতামত", testSub: "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা",
+                t1text: "প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।", t1auth: "— প্ৰিয়া দাস, গুৱাহাটী",
+                t2text: "কেৰিয়াৰৰ পইণ্টবোৰ পঢ়ি মই সঠিক সিদ্ধান্ত ল'ব পাৰিলোঁ। জ্যোতিষ অসমৰ এই প্ৰচেষ্টা অতি প্ৰশংসনীয়।", t2auth: "— ৰাজীৱ বৰা, ডিব্ৰুগড়",
+                t3text: "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!", t3auth: "— নিবেদিতা শৰ্মা, যোৰহাট",
+
                 secTitle: "🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে", secDesc: "আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।",
                 footerText: "সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম",
                 career: "কৰ্মক্ষেত্ৰ", love: "প্ৰেম আৰু সম্পৰ্ক", health: "স্বাস্থ্য", luckyColor: "শুভ ৰং", luckyNumber: "শুভ সংখ্যা",
@@ -391,11 +317,19 @@
                 plSunrise: "🌅 Sunrise", plSunset: "🌇 Sunset", plTithi: "🌙 Tithi", plNakshatra: "⭐ Nakshatra", plRahu: "⚠️ Rahu Kaal (Inauspicious)",
                 
                 rashiMainTitle: "🌟 Today's 12 Zodiac Horoscopes", rashiSubTitle: "Click on your zodiac sign to read detailed daily predictions",
+                waShareText: "Share with your friends",
+
                 sTitle: "Our Premium Astrology Services", sSubtitle: "Get expert astrological guidance tailored for specific aspects of your life",
                 srv1Title: "Complete Birth Chart", srv1Desc: "Detailed Vedic analysis of planetary positions, ascendant, and Vimshottari dasha.",
                 srv2Title: "Love & Relationship Reading", srv2Desc: "Predictions on when love happens, partner's nature, profession, and marriage timing.",
                 srv3Title: "Career & Business Forecast", srv3Desc: "Job timing, promotions, and right direction guidance between job and business.",
                 btnText: "Get Service",
+
+                testTitle: "Customer Testimonials", testSub: "Experiences of people who have benefited from our services",
+                t1text: "I was amazed reading the love & relationship report! Never found such accurate predictions.", t1auth: "— Priya Das, Guwahati",
+                t2text: "The career insights helped me take the right decision. Highly appreciated.", t2auth: "— Rajiv Bora, Dibrugarh",
+                t3text: "Unbelievable to get such a detailed birth chart report at just ₹299. Thank you!", t3auth: "— Nivedita Sharma, Jorhat",
+
                 secTitle: "🔒 100% Secure & Safe Payment Gateway", secDesc: "Our payment system is powered and secured by Razorpay, India's leading payment gateway.",
                 footerText: "All Rights Reserved © 2026 Jyotish Assam",
                 career: "Career", love: "Love & Family", health: "Health", luckyColor: "Lucky Color", luckyNumber: "Lucky Number",
@@ -410,11 +344,19 @@
                 plSunrise: "🌅 सूर्योदय", plSunset: "🌇 सूर्यास्त", plTithi: "🌙 तिथि", plNakshatra: "⭐ नक्षत्र", plRahu: "⚠️ राहु काल (अशुभ समय)",
 
                 rashiMainTitle: "🌟 आज का 12 राशियों का राशिफल", rashiSubTitle: "विस्तृत दैनिक भविष्यवाणियां पढ़ने के लिए अपनी राशि पर क्लिक करें",
+                waShareText: "अपने दोस्तों के साथ शेयर करें",
+
                 sTitle: "हमारी प्रीमियम ज्योतिष सेवाएं", sSubtitle: "अपने जीवन के विशिष्ट पहलुओं के लिए विशेषज्ञ ज्योतिषीय मार्गदर्शन प्राप्त करें",
                 srv1Title: "पूर्ण जन्म कुंडली", srv1Desc: "ग्रहों की स्थिति, लग्न और विंशोत्तरी महादशा का विस्तृत वैदिक विश्लेषण।",
                 srv2Title: "प्रेम और संबंध परामर्श", srv2Desc: "प्रेम कब होगा, साथी का स्वभाव, पेशा और विवाह के सही समय की भविष्यवाणी।",
                 srv3Title: "करियर और व्यवसाय पूर्वानुमान", srv3Desc: "नौकरी मिलने का समय, पदोन्नति, और नौकरी बनाम व्यवसाय का सही मार्गदर्शन।",
                 btnText: "सेवा प्राप्त करें",
+
+                testTitle: "ग्राहक समीक्षाएं", testSub: "हमारी सेवाओं से लाभान्वित लोगों के अनुभव",
+                t1text: "प्रेम-संबंध की रिपोर्ट पढ़कर हैरान रह गई! इतनी सटीक भविष्यवाणी मैंने कहीं नहीं पाई।", t1auth: "— प्रिया दास, गुवाहाटी",
+                t2text: "करियर रिपोर्ट ने मुझे सही निर्णय लेने में मदद की। ज्योतिष असम का प्रयास सराहनीय है।", t2auth: "— राजीव बोरा, डिब्रूगढ़",
+                t3text: "मात्र ₹299 में इतनी विस्तृत और सटीक कुंडली रिपोर्ट मिलना अविश्वसनीय है। धन्यवाद!", t3auth: "— निवेदिता शर्मा, जोरहाट",
+
                 secTitle: "🔒 100% सुरक्षित और सुरक्षित भुगतान गेटवे", secDesc: "हमारी भुगतान प्रणाली भारत के अग्रणी भुगतान संस्थान Razorpay द्वारा सुरक्षित है।",
                 footerText: "सर्वाधिकार सुरक्षित © 2026 ज्योतिष असम",
                 career: "कार्यक्षेत्र", love: "प्रेम/संबंध", health: "स्वास्थ्य", luckyColor: "शुभ रंग", luckyNumber: "शुभ अंक",
@@ -461,7 +403,7 @@
                 { id: "libra", name: "तुला (Libra)", symbol: "♎", short: "प्यार और स्नेह की वर्षा होगी।", career: "कला और मीडिया से जुड़े लोगों को लाभ।", love: "प्रेम जीवन प्रफुल्लित रहेगा।", health: "स्वास्थ्य उत्तम रहेगा।", color: "गुलाबी", num: "7" },
                 { id: "scorpio", name: "वृश्चिक (Scorpio)", symbol: "♏", short: "छुपी हुई प्रतिभा दिखाने का समय।", career: "कड़ी मेहनत का फल मिलेगा।", love: "गलतफहमियां दूर होंगी।", health: "ब्लड प्रेशर नियंत्रित रखें।", color: "मरून", num: "8" },
                 { id: "sagittarius", name: "धनु (Sagittarius)", symbol: "♐", short: "नए अवसरों के दरवाजे खुलेंगे।", career: "उच्च शिक्षा के लिए यात्रा।", love: "साथी का भरपूर सहयोग।", health: "ऊर्जा का स्तर ऊंचा रहेगा।", color: "बैंगनी", num: "3" },
-                { id: "capricorn", name: "मकर (Capricorn)", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी।", love: "पारिवारिक जिम्मेदारी बढ़ेगी।", health: "जोड़ों का ध्यान रखें।", color: "ग्रे", num: "8" },
+                { id: "capricorn", name: "मकर (Capricorn)", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी।", love: "पारिवारिक जिम्मेदारी बढ़ेगी।", health: 'जोड़ों का ध्यान रखें।', color: "ग्रे", num: "8" },
                 { id: "aquarius", name: "कुंभ (Aquarius)", symbol: "♒", short: "मित्रता और संबंध शक्तिशाली होंगे।", career: "टीम वर्क में सफलता।", love: "मित्र की मदद से प्रेम में प्रगति।", health: "मानसिक उल्लास रहेगा।", color: "आसमानी नीला", num: "4" },
                 { id: "pisces", name: "मीन (Pisces)", symbol: "♓", short: "सृजनात्मकता दिखाने का दिन है।", career: "नए विचारों से लाभ होगा।", love: "आध्यात्मिक गतिविधियों में मन लगेगा।", health: "शांत महसूस करेंगे।", color: "सुनहरा पीला", num: "3" }
             ]
@@ -494,9 +436,12 @@
             document.getElementById('pl-nakshatra').innerText = t.plNakshatra;
             document.getElementById('pl-rahu').innerText = t.plRahu;
             
+            // Rashi & WhatsApp
             document.getElementById('rashi-main-title').innerText = t.rashiMainTitle;
             document.getElementById('rashi-sub-title').innerText = t.rashiSubTitle;
+            document.getElementById('wa-share-text').innerText = t.waShareText;
 
+            // Services
             document.getElementById('s-title').innerText = t.sTitle;
             document.getElementById('s-subtitle').innerText = t.sSubtitle;
             
@@ -506,9 +451,19 @@
             document.getElementById('srv2-desc').innerText = t.srv2Desc;
             document.getElementById('srv3-title').innerText = t.srv3Title;
             document.getElementById('srv3-desc').innerText = t.srv3Desc;
-
             document.querySelectorAll('.service-btn-action').forEach(b => b.innerText = t.btnText);
 
+            // Testimonials
+            document.getElementById('testimonialTitle').innerText = t.testTitle;
+            document.getElementById('testimonialSubtitle').innerText = t.testSub;
+            document.getElementById('test1-text').innerText = t.t1text;
+            document.getElementById('test1-author').innerText = t.t1auth;
+            document.getElementById('test2-text').innerText = t.t2text;
+            document.getElementById('test2-author').innerText = t.t2auth;
+            document.getElementById('test3-text').innerText = t.t3text;
+            document.getElementById('test3-author').innerText = t.t3auth;
+
+            // Footer & Security
             document.getElementById('sec-title').innerText = t.secTitle;
             document.getElementById('sec-desc').innerText = t.secDesc;
             document.getElementById('footer-text').innerText = t.footerText;
@@ -563,6 +518,11 @@
 
         function closeRashiModal() {
             document.getElementById('rashiModal').classList.remove('active');
+        }
+
+        function shareOnWhatsApp() {
+            const text = encodeURIComponent("✨ জ্যোতিষ অসমত আজিৰ ৰাশিফল আৰু নিখুঁত বৈদিক কুণ্ডলী চাওক! \nলিংক: " + window.location.href);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
