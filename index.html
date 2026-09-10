@@ -74,6 +74,16 @@
         .p-value { font-size: 16px; color: var(--text-dark); font-weight: 700; }
         .p-item.danger .p-label, .p-item.danger .p-value { color: var(--warning-color); }
 
+        /* Free Astrology Tools Section (DOB & Couple) */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
+        .tool-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center; }
+        .tool-card h3 { font-size: 18px; color: var(--primary-color); margin-bottom: 10px; }
+        .tool-card p { font-size: 13px; color: var(--text-light); margin-bottom: 15px; }
+        .tool-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 15px; outline: none; }
+        .tool-input:focus { border-color: var(--primary-color); }
+        .tool-btn { background: var(--text-dark); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; }
+        .tool-btn:hover { background: var(--primary-color); }
+
         /* 12 Rashi Grid Section */
         .rashi-section { margin: 50px 0; text-align: center; }
         .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 25px; }
@@ -106,27 +116,31 @@
         .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s; text-decoration: none; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
         .service-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
-        /* Testimonials (Customer Ratings) */
+        /* Testimonials & Review Form */
         .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .testimonial-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .testimonial-text { font-size: 15px; color: var(--text-light); font-style: italic; margin-bottom: 15px; }
         .testimonial-author { font-weight: 700; font-size: 14px; color: var(--text-dark); }
         .stars { color: #fbbf24; font-size: 14px; margin-bottom: 8px; }
 
+        .review-form-box { background: #fdf4ff; border: 1px solid #fae8ff; border-radius: 16px; padding: 30px; margin-top: 40px; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.05); }
+        .review-form-box h3 { color: var(--secondary-color); margin-bottom: 15px; text-align: center; }
+        .review-input, .review-select, .review-textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; }
+        .review-input:focus, .review-textarea:focus { border-color: var(--secondary-color); }
+
+        /* WhatsApp Share Button */
+        .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px; }
+        .whatsapp-share-btn:hover { background: #1da851; transform: translateY(-2px); }
+
         /* Secure Payment Trust Banner */
         .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
         .secure-text h4 { color: #166534; font-size: 18px; margin-bottom: 4px; }
         .secure-text p { color: #15803d; font-size: 13px; }
 
-        /* WhatsApp Share Button */
-        .whatsapp-share-btn {
-            background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; 
-            font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; 
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px;
-        }
-        .whatsapp-share-btn:hover { background: #1da851; transform: translateY(-2px); }
-
         footer { background: var(--dark-bg); color: white; text-align: center; padding: 35px 0; margin-top: 50px; font-size: 14px; }
+        
+        /* Animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -188,6 +202,33 @@
             </div>
         </section>
 
+        <!-- Free Astrology Tools (Personal DOB & Couple DOB) -->
+        <section class="section">
+            <h2 class="section-title" id="toolsTitle">🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
+            <p class="section-subtitle" id="toolsSub">জন্ম তাৰিখৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ আজিৰ দিনটোৰ ভৱিষ্যদ্বাণী চাওক</p>
+            
+            <div class="tools-grid">
+                <!-- Personal Horoscope by DOB -->
+                <div class="tool-card">
+                    <h3 id="dobHoroTitle">আপোনাৰ দৈনিক ৰাশিফল চাওক</h3>
+                    <p id="dobHoroDesc">আপোনাৰ জন্ম তাৰিখ প্ৰৱেশ কৰক আৰু আজিৰ বিশদ ৰাশিফল পঢ়ক।</p>
+                    <input type="date" id="personalDobInput" class="tool-input">
+                    <button class="tool-btn" id="btnDobHoro" onclick="checkPersonalHoroscope()">ৰাশিফল চাওক</button>
+                </div>
+
+                <!-- Couple Compatibility by DOB -->
+                <div class="tool-card" style="border-top: 4px solid var(--secondary-color);">
+                    <h3 id="coupleTitle">যুগল ৰাশিফল (Couple Horoscope)</h3>
+                    <p id="coupleDesc">দুয়োৰে জন্ম তাৰিখ দি আজিৰ প্ৰেমৰ সামঞ্জস্য (Love Score) পৰীক্ষা কৰক।</p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="date" id="coupleDob1" class="tool-input" title="ল'ৰাৰ জন্ম তাৰিখ">
+                        <input type="date" id="coupleDob2" class="tool-input" title="ছোৱালীৰ জন্ম তাৰিখ">
+                    </div>
+                    <button class="tool-btn" style="background: var(--secondary-color);" id="btnCouple" onclick="checkCoupleHoroscope()">প্ৰেমৰ ৰাশিফল চাওক</button>
+                </div>
+            </div>
+        </section>
+
         <!-- 12 Rashi Grid Section -->
         <section class="rashi-section">
             <h2 class="section-title" id="rashi-main-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
@@ -233,12 +274,12 @@
             </div>
         </section>
 
-        <!-- Testimonials (Customer Ratings) -->
+        <!-- Testimonials & Customer Reviews -->
         <section class="section">
             <h2 class="section-title" id="testimonialTitle">গ্ৰাহকৰ মতামত</h2>
             <p class="section-subtitle" id="testimonialSubtitle">আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা</p>
             
-            <div class="testimonials-grid">
+            <div class="testimonials-grid" id="testimonialsList">
                 <div class="testimonial-card">
                     <div class="stars">⭐⭐⭐⭐⭐</div>
                     <div class="testimonial-text" id="test1-text">"প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।"</div>
@@ -254,6 +295,21 @@
                     <div class="testimonial-text" id="test3-text">"মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"</div>
                     <div class="testimonial-author" id="test3-author">— নিবেদিতা শৰ্মা, যোৰহাট</div>
                 </div>
+            </div>
+
+            <!-- New Review Submission Form -->
+            <div class="review-form-box">
+                <h3 id="rfTitle">আপোনাৰ মতামত দিয়ক</h3>
+                <form id="reviewForm" onsubmit="submitReview(event)">
+                    <input type="text" id="reviewerName" class="review-input" placeholder="আপোনাৰ নাম (Your Name)" required>
+                    <select id="reviewStars" class="review-select" required>
+                        <option value="5">⭐⭐⭐⭐⭐ অতি উত্তম (5 Stars)</option>
+                        <option value="4">⭐⭐⭐⭐ ভাল (4 Stars)</option>
+                        <option value="3">⭐⭐⭐ মজলীয়া (3 Stars)</option>
+                    </select>
+                    <textarea id="reviewText" class="review-textarea" rows="3" placeholder="আপোনাৰ অভিজ্ঞতা ইয়াত লিখক..." required></textarea>
+                    <button type="submit" class="tool-btn" id="btnSubmitReview" style="background: var(--primary-color);">মতামত প্ৰেৰণ কৰক</button>
+                </form>
             </div>
         </section>
 
@@ -285,9 +341,12 @@
                 hHighlight: "আপোনাৰ ভৱিষ্যৎ", hRest: " আজি সঠিকভাৱে জানি লওক",
                 hSubtitle: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।",
                 b1: "✔ ১০০% বৈদিক শুদ্ধতা", b2: "✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক", b3: "✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি", b4: "✔ নিৰাপদ পেমেন্ট (Razorpay)",
+                pTitle: "📅 আজিৰ পঞ্জিকা", plSunrise: "🌅 সূৰ্যোদয়", plSunset: "🌇 সূৰ্যাস্ত", plTithi: "🌙 আজিৰ তিথি", plNakshatra: "⭐ নক্ষত্ৰ", plRahu: "⚠️ ৰাহু কাল (অশুভ সময়)",
                 
-                pTitle: "📅 আজিৰ পঞ্জিকা",
-                plSunrise: "🌅 সূৰ্যোদয়", plSunset: "🌇 সূৰ্যাস্ত", plTithi: "🌙 আজিৰ তিথি", plNakshatra: "⭐ নক্ষত্ৰ", plRahu: "⚠️ ৰাহু কাল (অশুভ সময়)",
+                toolsTitle: "🎁 বিনামূলীয়া দৈনিক সঁজুলি", toolsSub: "জন্ম তাৰিখৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ আজিৰ দিনটোৰ ভৱিষ্যদ্বাণী চাওক",
+                dobHoroTitle: "আপোনাৰ দৈনিক ৰাশিফল চাওক", dobHoroDesc: "আপোনাৰ জন্ম তাৰিখ প্ৰৱেশ কৰক আৰু আজিৰ বিশদ ৰাশিফল পঢ়ক।",
+                coupleTitle: "যুগল ৰাশিফল (Couple Horoscope)", coupleDesc: "দুয়োৰে জন্ম তাৰিখ দি আজিৰ প্ৰেমৰ সামঞ্জস্য (Love Score) পৰীক্ষা কৰক।",
+                checkBtn: "ৰাশিফল চাওক",
                 
                 rashiMainTitle: "🌟 আজিৰ ১২ টা ৰাশিফল", rashiSubTitle: "আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক",
                 waShareText: "আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক",
@@ -302,65 +361,72 @@
                 t1text: "প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।", t1auth: "— প্ৰিয়া দাস, গুৱাহাটী",
                 t2text: "কেৰিয়াৰৰ পইণ্টবোৰ পঢ়ি মই সঠিক সিদ্ধান্ত ল'ব পাৰিলোঁ। জ্যোতিষ অসমৰ এই প্ৰচেষ্টা অতি প্ৰশংসনীয়।", t2auth: "— ৰাজীৱ বৰা, ডিব্ৰুগড়",
                 t3text: "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!", t3auth: "— নিবেদিতা শৰ্মা, যোৰহাট",
+                
+                rfTitle: "আপোনাৰ মতামত দিয়ক", btnSubmitReview: "মতামত প্ৰেৰণ কৰক",
 
                 secTitle: "🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে", secDesc: "আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।",
                 footerText: "সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম",
-                career: "কৰ্মক্ষেত্ৰ", love: "প্ৰেম আৰু সম্পৰ্ক", health: "স্বাস্থ্য", luckyColor: "শুভ ৰং", luckyNumber: "শুভ সংখ্যা",
-                datePrefix: "তাৰিখ: "
+                career: "কৰ্মক্ষেত্ৰ", love: "প্ৰেম আৰু সম্পৰ্ক", health: "স্বাস্থ্য", luckyColor: "শুভ ৰং", luckyNumber: "শুভ সংখ্যা", datePrefix: "তাৰিখ: "
             },
             en: {
                 hHighlight: "Know Your Future", hRest: " Accurately Today",
                 hSubtitle: "Authentic birth charts and predictions generated using precise Vedic astrology & Lahiri Ayanamsa.",
                 b1: "✔ 100% Vedic Accuracy", b2: "✔ 10,000+ Happy Customers", b3: "✔ Instant Report Delivery", b4: "✔ Secure Payments (Razorpay)",
+                pTitle: "📅 Today's Panchang", plSunrise: "🌅 Sunrise", plSunset: "🌇 Sunset", plTithi: "🌙 Tithi", plNakshatra: "⭐ Nakshatra", plRahu: "⚠️ Rahu Kaal (Inauspicious)",
                 
-                pTitle: "📅 Today's Panchang",
-                plSunrise: "🌅 Sunrise", plSunset: "🌇 Sunset", plTithi: "🌙 Tithi", plNakshatra: "⭐ Nakshatra", plRahu: "⚠️ Rahu Kaal (Inauspicious)",
-                
+                toolsTitle: "🎁 Free Daily Tools", toolsSub: "Check your and your partner's daily predictions based on DOB",
+                dobHoroTitle: "Check Your Daily Horoscope", dobHoroDesc: "Enter your Date of Birth and read your detailed horoscope today.",
+                coupleTitle: "Couple Horoscope", coupleDesc: "Check today's Love Compatibility Score by entering both dates of birth.",
+                checkBtn: "Check Now",
+
                 rashiMainTitle: "🌟 Today's 12 Zodiac Horoscopes", rashiSubTitle: "Click on your zodiac sign to read detailed daily predictions",
                 waShareText: "Share with your friends",
-
                 sTitle: "Our Premium Astrology Services", sSubtitle: "Get expert astrological guidance tailored for specific aspects of your life",
                 srv1Title: "Complete Birth Chart", srv1Desc: "Detailed Vedic analysis of planetary positions, ascendant, and Vimshottari dasha.",
                 srv2Title: "Love & Relationship Reading", srv2Desc: "Predictions on when love happens, partner's nature, profession, and marriage timing.",
                 srv3Title: "Career & Business Forecast", srv3Desc: "Job timing, promotions, and right direction guidance between job and business.",
                 btnText: "Get Service",
-
+                
                 testTitle: "Customer Testimonials", testSub: "Experiences of people who have benefited from our services",
                 t1text: "I was amazed reading the love & relationship report! Never found such accurate predictions.", t1auth: "— Priya Das, Guwahati",
                 t2text: "The career insights helped me take the right decision. Highly appreciated.", t2auth: "— Rajiv Bora, Dibrugarh",
                 t3text: "Unbelievable to get such a detailed birth chart report at just ₹299. Thank you!", t3auth: "— Nivedita Sharma, Jorhat",
+                
+                rfTitle: "Leave a Review", btnSubmitReview: "Submit Review",
 
                 secTitle: "🔒 100% Secure & Safe Payment Gateway", secDesc: "Our payment system is powered and secured by Razorpay, India's leading payment gateway.",
                 footerText: "All Rights Reserved © 2026 Jyotish Assam",
-                career: "Career", love: "Love & Family", health: "Health", luckyColor: "Lucky Color", luckyNumber: "Lucky Number",
-                datePrefix: "Date: "
+                career: "Career", love: "Love & Family", health: "Health", luckyColor: "Lucky Color", luckyNumber: "Lucky Number", datePrefix: "Date: "
             },
             hi: {
                 hHighlight: "अपने भविष्य को", hRest: " आज ही सटीक रूप से जानें",
                 hSubtitle: "वैदिक ज्योतिष और लाहिरी अयांश की सटीक गणना के साथ तैयार प्रामाणिक कुंडली और भविष्यवाणियां।",
                 b1: "✔ 100% वैदिक शुद्धता", b2: "✔ 10,000+ संतुष्ट ग्राहक", b3: "✔ तत्काल रिपोर्ट प्राप्ति", b4: "✔ सुरक्षित भुगतान (Razorpay)",
+                pTitle: "📅 आज का पंचांग", plSunrise: "🌅 सूर्योदय", plSunset: "🌇 सूर्यास्त", plTithi: "🌙 तिथि", plNakshatra: "⭐ नक्षत्र", plRahu: "⚠️ राहु काल (अशुभ समय)",
                 
-                pTitle: "📅 आज का पंचांग",
-                plSunrise: "🌅 सूर्योदय", plSunset: "🌇 सूर्यास्त", plTithi: "🌙 तिथि", plNakshatra: "⭐ नक्षत्र", plRahu: "⚠️ राहु काल (अशुभ समय)",
+                toolsTitle: "🎁 मुफ्त दैनिक उपकरण", toolsSub: "जन्म तिथि के आधार पर अपनी और अपने साथी की दैनिक भविष्यवाणी जांचें",
+                dobHoroTitle: "अपना दैनिक राशिफल देखें", dobHoroDesc: "अपनी जन्म तिथि दर्ज करें और आज का विस्तृत राशिफल पढ़ें।",
+                coupleTitle: "युगल राशिफल (Couple Horoscope)", coupleDesc: "दोनों की जन्म तिथि दर्ज करके आज का लव स्कोर जांचें।",
+                checkBtn: "अभी जांचें",
 
                 rashiMainTitle: "🌟 आज का 12 राशियों का राशिफल", rashiSubTitle: "विस्तृत दैनिक भविष्यवाणियां पढ़ने के लिए अपनी राशि पर क्लिक करें",
                 waShareText: "अपने दोस्तों के साथ शेयर करें",
-
                 sTitle: "हमारी प्रीमियम ज्योतिष सेवाएं", sSubtitle: "अपने जीवन के विशिष्ट पहलुओं के लिए विशेषज्ञ ज्योतिषीय मार्गदर्शन प्राप्त करें",
                 srv1Title: "पूर्ण जन्म कुंडली", srv1Desc: "ग्रहों की स्थिति, लग्न और विंशोत्तरी महादशा का विस्तृत वैदिक विश्लेषण।",
                 srv2Title: "प्रेम और संबंध परामर्श", srv2Desc: "प्रेम कब होगा, साथी का स्वभाव, पेशा और विवाह के सही समय की भविष्यवाणी।",
                 srv3Title: "करियर और व्यवसाय पूर्वानुमान", srv3Desc: "नौकरी मिलने का समय, पदोन्नति, और नौकरी बनाम व्यवसाय का सही मार्गदर्शन।",
                 btnText: "सेवा प्राप्त करें",
-
+                
                 testTitle: "ग्राहक समीक्षाएं", testSub: "हमारी सेवाओं से लाभान्वित लोगों के अनुभव",
                 t1text: "प्रेम-संबंध की रिपोर्ट पढ़कर हैरान रह गई! इतनी सटीक भविष्यवाणी मैंने कहीं नहीं पाई।", t1auth: "— प्रिया दास, गुवाहाटी",
                 t2text: "करियर रिपोर्ट ने मुझे सही निर्णय लेने में मदद की। ज्योतिष असम का प्रयास सराहनीय है।", t2auth: "— राजीव बोरा, डिब्रूगढ़",
                 t3text: "मात्र ₹299 में इतनी विस्तृत और सटीक कुंडली रिपोर्ट मिलना अविश्वसनीय है। धन्यवाद!", t3auth: "— निवेदिता शर्मा, जोरहाट",
+                
+                rfTitle: "अपनी समीक्षा दें", btnSubmitReview: "समीक्षा सबमिट करें",
 
                 secTitle: "🔒 100% सुरक्षित और सुरक्षित भुगतान गेटवे", secDesc: "हमारी भुगतान प्रणाली भारत के अग्रणी भुगतान संस्थान Razorpay द्वारा सुरक्षित है।",
                 footerText: "सर्वाधिकार सुरक्षित © 2026 ज्योतिष असम",
-                career: "कार्यक्षेत्र", love: "प्रेम/संबंध", health: "स्वास्थ्य", luckyColor: "शुभ रंग", luckyNumber: "शुभ अंक",
-                datePrefix: "दिनांक: "
+                career: "कार्यक्षेत्र", love: "प्रेम/संबंध", health: "स्वास्थ्य", luckyColor: "शुभ रंग", luckyNumber: "शुभ अंक", datePrefix: "दिनांक: "
             }
         };
 
@@ -380,32 +446,32 @@
                 { id: "pisces", name: "মীন (Pisces)", symbol: "♓", short: "সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।", career: "নতুন চিন্তাৰ দ্বাৰা লাভান্বিত হ'ব।", love: "আধ্যাত্মিক চিন্তাত দিন পাৰ হ'ব।", health: "শান্ত অনুভৱ কৰিব।", color: "হালধীয়া-সোনালী", num: "৩" }
             ],
             en: [
-                { id: "aries", name: "Aries (মেষ)", symbol: "♈", short: "Your luck will be very positive today.", career: "New responsibilities at work.", love: "Sweet moments with partner.", health: "Good health.", color: "White", num: "9" },
-                { id: "taurus", name: "Taurus (বৃষ)", symbol: "♉", short: "Chances of career advancement.", career: "Profits in business.", love: "Family support.", health: "Watch your diet.", color: "Green", num: "6" },
-                { id: "gemini", name: "Gemini (মিথুন)", symbol: "♊", short: "Good news regarding love/relations.", career: "Great day for students.", love: "Open up your heart.", health: "Mental peace.", color: "Yellow", num: "3" },
-                { id: "cancer", name: "Cancer (কৰ্কট)", symbol: "♋", short: "Spend quality time with family.", career: "Maintain patience at work.", love: "Control emotions.", health: "Stay hydrated.", color: "Silver", num: "2" },
-                { id: "leo", name: "Leo (সিংহ)", symbol: "♌", short: "Financial gains are foreseen.", career: "Promotion or new opportunities.", love: "Romantic day.", health: "High energy.", color: "Orange", num: "1" },
-                { id: "virgo", name: "Virgo (কন্যা)", symbol: "♍", short: "Pay attention to your health.", career: "Success in planned tasks.", love: "Peaceful home atmosphere.", health: "Need rest.", color: "Blue", num: "5" },
-                { id: "libra", name: "Libra (তুলা)", symbol: "♎", short: "Shower of love and affection.", career: "Good for creative fields.", love: "Joyful love life.", health: "Excellent health.", color: "Pink", num: "7" },
-                { id: "scorpio", name: "Scorpio (বৃশ্চিক)", symbol: "♏", short: "Time to showcase hidden talent.", career: "Hard work pays off.", love: "Doubts will clear.", health: "Keep blood pressure in check.", color: "Maroon", num: "8" },
-                { id: "sagittarius", name: "Sagittarius (ধনু)", symbol: "♐", short: "New doors of opportunity open.", career: "Travel for higher education.", love: "Partner’s support.", health: "High vitality.", color: "Purple", num: "3" },
-                { id: "capricorn", name: "Capricorn (মকৰ)", symbol: "♑", short: "Rewards of hard work approaching.", career: "Stability in profession.", love: "Sense of responsibility.", health: "Joint care needed.", color: "Grey", num: "8" },
-                { id: "aquarius", name: "Aquarius (কুম্ভ)", symbol: "♒", short: "Friendships and bonds strengthen.", career: "Success in teamwork.", love: "Progress in love via friends.", health: "Mental cheerfulness.", color: "Sky Blue", num: "4" },
-                { id: "pisces", name: "Pisces (মীন)", symbol: "♓", short: "A day to express creativity.", career: "Benefit from new ideas.", love: "Spiritual day.", health: "Calm and relaxed.", color: "Golden Yellow", num: "3" }
+                { id: "aries", name: "Aries", symbol: "♈", short: "Your luck will be very positive today.", career: "New responsibilities at work.", love: "Sweet moments with partner.", health: "Good health.", color: "White", num: "9" },
+                { id: "taurus", name: "Taurus", symbol: "♉", short: "Chances of career advancement.", career: "Profits in business.", love: "Family support.", health: "Watch your diet.", color: "Green", num: "6" },
+                { id: "gemini", name: "Gemini", symbol: "♊", short: "Good news regarding love/relations.", career: "Great day for students.", love: "Open up your heart.", health: "Mental peace.", color: "Yellow", num: "3" },
+                { id: "cancer", name: "Cancer", symbol: "♋", short: "Spend quality time with family.", career: "Maintain patience at work.", love: "Control emotions.", health: "Stay hydrated.", color: "Silver", num: "2" },
+                { id: "leo", name: "Leo", symbol: "♌", short: "Financial gains are foreseen.", career: "Promotion or new opportunities.", love: "Romantic day.", health: "High energy.", color: "Orange", num: "1" },
+                { id: "virgo", name: "Virgo", symbol: "♍", short: "Pay attention to your health.", career: "Success in planned tasks.", love: "Peaceful home atmosphere.", health: "Need rest.", color: "Blue", num: "5" },
+                { id: "libra", name: "Libra", symbol: "♎", short: "Shower of love and affection.", career: "Good for creative fields.", love: "Joyful love life.", health: "Excellent health.", color: "Pink", num: "7" },
+                { id: "scorpio", name: "Scorpio", symbol: "♏", short: "Time to showcase hidden talent.", career: "Hard work pays off.", love: "Doubts will clear.", health: "Keep blood pressure in check.", color: "Maroon", num: "8" },
+                { id: "sagittarius", name: "Sagittarius", symbol: "♐", short: "New doors of opportunity open.", career: "Travel for higher education.", love: "Partner’s support.", health: "High vitality.", color: "Purple", num: "3" },
+                { id: "capricorn", name: "Capricorn", symbol: "♑", short: "Rewards of hard work approaching.", career: "Stability in profession.", love: "Sense of responsibility.", health: "Joint care needed.", color: "Grey", num: "8" },
+                { id: "aquarius", name: "Aquarius", symbol: "♒", short: "Friendships and bonds strengthen.", career: "Success in teamwork.", love: "Progress in love via friends.", health: "Mental cheerfulness.", color: "Sky Blue", num: "4" },
+                { id: "pisces", name: "Pisces", symbol: "♓", short: "A day to express creativity.", career: "Benefit from new ideas.", love: "Spiritual day.", health: "Calm and relaxed.", color: "Golden Yellow", num: "3" }
             ],
             hi: [
-                { id: "aries", name: "मेष (Aries)", symbol: "♈", short: "आज आपका भाग्य अत्यंत सकारात्मक रहेगा।", career: "कार्यक्षेत्र में नई जिम्मेदारी।", love: "साथी के साथ मधुर पल।", health: "स्वास्थ्य उत्तम रहेगा।", color: "सफेद", num: "9" },
-                { id: "taurus", name: "वृषभ (Taurus)", symbol: "♉", short: "कर्मक्षेत्र में उन्नति की संभावना है।", career: "व्यापार में लाभ के योग।", love: "परिवार का सहयोग मिलेगा।", health: "खानपान का ध्यान रखें।", color: "हरा", num: "6" },
-                { id: "gemini", name: "मिथुन (Gemini)", symbol: "♊", short: "प्रेम-प्रसंग में शुभ समाचार मिलेगा।", career: "विद्यार्थियों के लिए उत्तम दिन।", love: "दिल की बात कहें।", health: "मानसिक शांति बनी रहेगी।", color: "पीला", num: "3" },
-                { id: "cancer", name: "कर्क (Cancer)", symbol: "♋", short: "परिवार के साथ समय बिताएं।", career: "कार्यस्थल पर धैर्य रखें।", love: "भावनाओं पर नियंत्रण रखें।", health: "पर्याप्त पानी पिएं।", color: "चांदी जैसा", num: "2" },
-                { id: "leo", name: "सिंह (Leo)", symbol: "♌", short: "आर्थिक लाभ के योग हैं।", career: "पदोन्नति या नए अवसर।", love: "रोमांटिक दिन।", health: "ऊर्जा भरपूर रहेगी।", color: "नारंगी", num: "1" },
-                { id: "virgo", name: "कन्या (Virgo)", symbol: "♍", short: "स्वास्थ्य के प्रति सजग रहें।", career: "योजनाबद्ध कार्यों में सफलता।", love: "पारिवारिक माहौल शांत रहेगा।", health: "आराम की आवश्यकता है।", color: "नीला", num: "5" },
-                { id: "libra", name: "तुला (Libra)", symbol: "♎", short: "प्यार और स्नेह की वर्षा होगी।", career: "कला और मीडिया से जुड़े लोगों को लाभ।", love: "प्रेम जीवन प्रफुल्लित रहेगा।", health: "स्वास्थ्य उत्तम रहेगा।", color: "गुलाबी", num: "7" },
-                { id: "scorpio", name: "वृश्चिक (Scorpio)", symbol: "♏", short: "छुपी हुई प्रतिभा दिखाने का समय।", career: "कड़ी मेहनत का फल मिलेगा।", love: "गलतफहमियां दूर होंगी।", health: "ब्लड प्रेशर नियंत्रित रखें।", color: "मरून", num: "8" },
-                { id: "sagittarius", name: "धनु (Sagittarius)", symbol: "♐", short: "नए अवसरों के दरवाजे खुलेंगे।", career: "उच्च शिक्षा के लिए यात्रा।", love: "साथी का भरपूर सहयोग।", health: "ऊर्जा का स्तर ऊंचा रहेगा।", color: "बैंगनी", num: "3" },
-                { id: "capricorn", name: "मकर (Capricorn)", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी।", love: "पारिवारिक जिम्मेदारी बढ़ेगी।", health: 'जोड़ों का ध्यान रखें।', color: "ग्रे", num: "8" },
-                { id: "aquarius", name: "कुंभ (Aquarius)", symbol: "♒", short: "मित्रता और संबंध शक्तिशाली होंगे।", career: "टीम वर्क में सफलता।", love: "मित्र की मदद से प्रेम में प्रगति।", health: "मानसिक उल्लास रहेगा।", color: "आसमानी नीला", num: "4" },
-                { id: "pisces", name: "मीन (Pisces)", symbol: "♓", short: "सृजनात्मकता दिखाने का दिन है।", career: "नए विचारों से लाभ होगा।", love: "आध्यात्मिक गतिविधियों में मन लगेगा।", health: "शांत महसूस करेंगे।", color: "सुनहरा पीला", num: "3" }
+                { id: "aries", name: "मेष", symbol: "♈", short: "आज आपका भाग्य अत्यंत सकारात्मक रहेगा।", career: "कार्यक्षेत्र में नई जिम्मेदारी।", love: "साथी के साथ मधुर पल।", health: "स्वास्थ्य उत्तम रहेगा।", color: "सफेद", num: "9" },
+                { id: "taurus", name: "वृषभ", symbol: "♉", short: "कर्मक्षेत्र में उन्नति की संभावना है।", career: "व्यापार में लाभ के योग।", love: "परिवार का सहयोग मिलेगा।", health: "खानपान का ध्यान रखें।", color: "हरा", num: "6" },
+                { id: "gemini", name: "मिथुन", symbol: "♊", short: "प्रेम-प्रसंग में शुभ समाचार मिलेगा।", career: "विद्यार्थियों के लिए उत्तम दिन।", love: "दिल की बात कहें।", health: "मानसिक शांति बनी रहेगी।", color: "पीला", num: "3" },
+                { id: "cancer", name: "कर्क", symbol: "♋", short: "परिवार के साथ समय बिताएं।", career: "कार्यस्थल पर धैर्य रखें।", love: "भावनाओं पर नियंत्रण रखें।", health: "पर्याप्त पानी पिएं।", color: "चांदी जैसा", num: "2" },
+                { id: "leo", name: "सिंह", symbol: "♌", short: "आर्थिक लाभ के योग हैं।", career: "पदोन्नति या नए अवसर।", love: "रोमांटिक दिन।", health: "ऊर्जा भरपूर रहेगी।", color: "नारंगी", num: "1" },
+                { id: "virgo", name: "कन्या", symbol: "♍", short: "स्वास्थ्य के प्रति सजग रहें।", career: "योजनाबद्ध कार्यों में सफलता।", love: "पारिवारिक माहौल शांत रहेगा।", health: "आराम की आवश्यकता है।", color: "नीला", num: "5" },
+                { id: "libra", name: "तुला", symbol: "♎", short: "प्यार और स्नेह की वर्षा होगी।", career: "कला और मीडिया से जुड़े लोगों को लाभ।", love: "प्रेम जीवन प्रफुल्लित रहेगा।", health: "स्वास्थ्य उत्तम रहेगा।", color: "गुलाबी", num: "7" },
+                { id: "scorpio", name: "वृश्चिक", symbol: "♏", short: "छुपी हुई प्रतिभा दिखाने का समय।", career: "कड़ी मेहनत का फल मिलेगा।", love: "गलतफहमियां दूर होंगी।", health: "ब्लड प्रेशर नियंत्रित रखें।", color: "मरून", num: "8" },
+                { id: "sagittarius", name: "धनु", symbol: "♐", short: "नए अवसरों के दरवाजे खुलेंगे।", career: "उच्च शिक्षा के लिए यात्रा।", love: "साथी का भरपूर सहयोग।", health: "ऊर्जा का स्तर ऊंचा रहेगा।", color: "बैंगनी", num: "3" },
+                { id: "capricorn", name: "मकर", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी।", love: "पारिवारिक जिम्मेदारी बढ़ेगी।", health: 'जोड़ों का ध्यान रखें।', color: "ग्रे", num: "8" },
+                { id: "aquarius", name: "कुंभ", symbol: "♒", short: "मित्रता और संबंध शक्तिशाली होंगे।", career: "टीम वर्क में सफलता।", love: "मित्र की मदद से प्रेम में प्रगति।", health: "मानसिक उल्लास रहेगा।", color: "आसमानी नीला", num: "4" },
+                { id: "pisces", name: "मीन", symbol: "♓", short: "सृजनात्मकता दिखाने का दिन है।", career: "नए विचारों से लाभ होगा।", love: "आध्यात्मिक गतिविधियों में मन लगेगा।", health: "शांत महसूस करेंगे।", color: "सुनहरा पीला", num: "3" }
             ]
         };
 
@@ -413,59 +479,54 @@
 
         function switchLanguage(lang) {
             currentLang = lang;
-            
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
 
             const t = texts[lang];
             
-            // Update Texts
+            // Header & Panchang
             document.getElementById('h-title-highlight').innerText = t.hHighlight;
             document.getElementById('h-title-rest').innerText = t.hRest;
             document.getElementById('h-subtitle').innerText = t.hSubtitle;
-            document.getElementById('b1').innerText = t.b1;
-            document.getElementById('b2').innerText = t.b2;
-            document.getElementById('b3').innerText = t.b3;
-            document.getElementById('b4').innerText = t.b4;
+            document.getElementById('b1').innerText = t.b1; document.getElementById('b2').innerText = t.b2;
+            document.getElementById('b3').innerText = t.b3; document.getElementById('b4').innerText = t.b4;
             
-            // Panchang Update
             document.getElementById('p-title').innerText = t.pTitle;
-            document.getElementById('pl-sunrise').innerText = t.plSunrise;
-            document.getElementById('pl-sunset').innerText = t.plSunset;
-            document.getElementById('pl-tithi').innerText = t.plTithi;
-            document.getElementById('pl-nakshatra').innerText = t.plNakshatra;
+            document.getElementById('pl-sunrise').innerText = t.plSunrise; document.getElementById('pl-sunset').innerText = t.plSunset;
+            document.getElementById('pl-tithi').innerText = t.plTithi; document.getElementById('pl-nakshatra').innerText = t.plNakshatra;
             document.getElementById('pl-rahu').innerText = t.plRahu;
             
+            // Free Tools
+            document.getElementById('toolsTitle').innerText = t.toolsTitle;
+            document.getElementById('toolsSub').innerText = t.toolsSub;
+            document.getElementById('dobHoroTitle').innerText = t.dobHoroTitle;
+            document.getElementById('dobHoroDesc').innerText = t.dobHoroDesc;
+            document.getElementById('coupleTitle').innerText = t.coupleTitle;
+            document.getElementById('coupleDesc').innerText = t.coupleDesc;
+            document.getElementById('btnDobHoro').innerText = t.checkBtn;
+            document.getElementById('btnCouple').innerText = t.checkBtn;
+
             // Rashi & WhatsApp
             document.getElementById('rashi-main-title').innerText = t.rashiMainTitle;
             document.getElementById('rashi-sub-title').innerText = t.rashiSubTitle;
             document.getElementById('wa-share-text').innerText = t.waShareText;
 
             // Services
-            document.getElementById('s-title').innerText = t.sTitle;
-            document.getElementById('s-subtitle').innerText = t.sSubtitle;
-            
-            document.getElementById('srv1-title').innerText = t.srv1Title;
-            document.getElementById('srv1-desc').innerText = t.srv1Desc;
-            document.getElementById('srv2-title').innerText = t.srv2Title;
-            document.getElementById('srv2-desc').innerText = t.srv2Desc;
-            document.getElementById('srv3-title').innerText = t.srv3Title;
-            document.getElementById('srv3-desc').innerText = t.srv3Desc;
+            document.getElementById('s-title').innerText = t.sTitle; document.getElementById('s-subtitle').innerText = t.sSubtitle;
+            document.getElementById('srv1-title').innerText = t.srv1Title; document.getElementById('srv1-desc').innerText = t.srv1Desc;
+            document.getElementById('srv2-title').innerText = t.srv2Title; document.getElementById('srv2-desc').innerText = t.srv2Desc;
+            document.getElementById('srv3-title').innerText = t.srv3Title; document.getElementById('srv3-desc').innerText = t.srv3Desc;
             document.querySelectorAll('.service-btn-action').forEach(b => b.innerText = t.btnText);
 
-            // Testimonials
-            document.getElementById('testimonialTitle').innerText = t.testTitle;
-            document.getElementById('testimonialSubtitle').innerText = t.testSub;
-            document.getElementById('test1-text').innerText = t.t1text;
-            document.getElementById('test1-author').innerText = t.t1auth;
-            document.getElementById('test2-text').innerText = t.t2text;
-            document.getElementById('test2-author').innerText = t.t2auth;
-            document.getElementById('test3-text').innerText = t.t3text;
-            document.getElementById('test3-author').innerText = t.t3auth;
+            // Testimonials & Form
+            document.getElementById('testimonialTitle').innerText = t.testTitle; document.getElementById('testimonialSubtitle').innerText = t.testSub;
+            document.getElementById('test1-text').innerText = t.t1text; document.getElementById('test1-author').innerText = t.t1auth;
+            document.getElementById('test2-text').innerText = t.t2text; document.getElementById('test2-author').innerText = t.t2auth;
+            document.getElementById('test3-text').innerText = t.t3text; document.getElementById('test3-author').innerText = t.t3auth;
+            document.getElementById('rfTitle').innerText = t.rfTitle; document.getElementById('btnSubmitReview').innerText = t.btnSubmitReview;
 
-            // Footer & Security
-            document.getElementById('sec-title').innerText = t.secTitle;
-            document.getElementById('sec-desc').innerText = t.secDesc;
+            // Footer
+            document.getElementById('sec-title').innerText = t.secTitle; document.getElementById('sec-desc').innerText = t.secDesc;
             document.getElementById('footer-text').innerText = t.footerText;
 
             updateDate();
@@ -476,28 +537,75 @@
             const today = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const langCode = currentLang === 'en' ? 'en-US' : (currentLang === 'hi' ? 'hi-IN' : 'as-IN');
-            const dateString = today.toLocaleDateString(langCode, options);
-            document.getElementById('p-date').innerText = texts[currentLang].datePrefix + dateString;
+            document.getElementById('p-date').innerText = texts[currentLang].datePrefix + today.toLocaleDateString(langCode, options);
         }
 
         function renderRashiGrid() {
             const gridContainer = document.getElementById('rashiGridContainer');
-            const rashis = rashiData[currentLang];
-            
-            gridContainer.innerHTML = rashis.map(r => `
+            gridContainer.innerHTML = rashiData[currentLang].map(r => `
                 <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
                     <div class="rashi-icon">${r.symbol}</div>
-                    <h3>${r.name}</h3>
-                    <p>${r.short}</p>
+                    <h3>${r.name}</h3><p>${r.short}</p>
                 </div>
             `).join('');
         }
 
-        function openRashiDetail(rashiId) {
-            const rashis = rashiData[currentLang];
-            const r = rashis.find(item => item.id === rashiId);
-            const t = texts[currentLang];
+        function getZodiac(dateString) {
+            if (!dateString) return null;
+            const d = new Date(dateString);
+            const day = d.getDate(), month = d.getMonth() + 1;
+            if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return 'aries';
+            if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return 'taurus';
+            if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return 'gemini';
+            if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return 'cancer';
+            if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return 'leo';
+            if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return 'virgo';
+            if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return 'libra';
+            if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return 'scorpio';
+            if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return 'sagittarius';
+            if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return 'capricorn';
+            if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return 'aquarius';
+            if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return 'pisces';
+            return null;
+        }
 
+        function checkPersonalHoroscope() {
+            const date = document.getElementById('personalDobInput').value;
+            const z = getZodiac(date);
+            if(z) openRashiDetail(z);
+            else alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ দিয়ক।" : "Please enter your Date of Birth.");
+        }
+
+        function checkCoupleHoroscope() {
+            const d1 = document.getElementById('coupleDob1').value;
+            const d2 = document.getElementById('coupleDob2').value;
+            const z1 = getZodiac(d1); const z2 = getZodiac(d2);
+            
+            if(z1 && z2) {
+                const today = new Date().getDate();
+                const score = (z1.charCodeAt(0) + z2.charCodeAt(0) + today) % 21 + 75; // Gen 75 to 95%
+                const rData1 = rashiData[currentLang].find(r => r.id === z1);
+                const rData2 = rashiData[currentLang].find(r => r.id === z2);
+                
+                const msg = currentLang === 'as' ? `আজি আপোনালোকৰ প্ৰেমৰ সামঞ্জস্য (Compatibility) <strong>${score}%</strong>। দুয়োৰে দিনটো ভাল যাব!` : `Today's Love Compatibility is <strong>${score}%</strong>.`;
+                
+                document.getElementById('modalRashiTitle').innerText = currentLang === 'as' ? "যুগল ৰাশিফল" : "Couple Horoscope";
+                document.getElementById('modalRashiBody').innerHTML = `
+                    <h3 style="text-align:center; color:#e11d48; margin-bottom:15px; font-size:24px;">${rData1.symbol} + ${rData2.symbol}</h3>
+                    <div style="background: #fff1f2; padding: 20px; border-radius: 12px; text-align:center; border: 1px solid #ffe4e6;">
+                        <div style="font-size: 38px; font-weight: bold; color: #be123c; margin-bottom: 10px;">${score}%</div>
+                        <p style="font-size: 15px; color: #4c0519;">${msg}</p>
+                    </div>
+                `;
+                document.getElementById('rashiModal').classList.add('active');
+            } else {
+                 alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ দিয়ক।" : "Please enter both Dates of Birth.");
+            }
+        }
+
+        function openRashiDetail(rashiId) {
+            const r = rashiData[currentLang].find(item => item.id === rashiId);
+            const t = texts[currentLang];
             if(!r) return;
 
             document.getElementById('modalRashiTitle').innerText = r.name;
@@ -516,8 +624,25 @@
             document.getElementById('rashiModal').classList.add('active');
         }
 
-        function closeRashiModal() {
-            document.getElementById('rashiModal').classList.remove('active');
+        function closeRashiModal() { document.getElementById('rashiModal').classList.remove('active'); }
+
+        function submitReview(e) {
+            e.preventDefault();
+            const name = document.getElementById('reviewerName').value;
+            const stars = document.getElementById('reviewStars').value;
+            const text = document.getElementById('reviewText').value;
+            
+            const starsHtml = '⭐'.repeat(stars);
+            const newReview = `
+                <div class="testimonial-card" style="animation: fadeIn 0.5s;">
+                    <div class="stars">${starsHtml}</div>
+                    <div class="testimonial-text">"${text}"</div>
+                    <div class="testimonial-author">— ${name}</div>
+                </div>`;
+            
+            document.getElementById('testimonialsList').insertAdjacentHTML('afterbegin', newReview);
+            document.getElementById('reviewForm').reset();
+            alert(currentLang === 'as' ? "আপোনাৰ মতামতৰ বাবে ধন্যবাদ!" : "Thank you for your review!");
         }
 
         function shareOnWhatsApp() {
@@ -525,10 +650,7 @@
             window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            updateDate();
-            renderRashiGrid();
-        });
+        window.addEventListener('DOMContentLoaded', () => { updateDate(); renderRashiGrid(); });
     </script>
 </body>
 </html>
