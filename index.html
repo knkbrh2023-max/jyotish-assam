@@ -185,9 +185,15 @@
                     <label style="font-size: 14px; font-weight: 600;">হোৱাটছএপ নম্বৰ:</label>
                     <input type="tel" id="custPhone" class="tool-input" placeholder="10 Digit WhatsApp No" pattern="[0-9]{10}" required>
                 </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ আৰু সময়:</label>
-                    <input type="text" id="custDob" class="tool-input" placeholder="DOB & Time (e.g., 15 May 1995, 10:30 AM)" required>
+               <div style="margin-bottom: 15px; display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
+                        <input type="date" id="custDate" class="tool-input" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 14px; font-weight: 600;">জন্মৰ সময়:</label>
+                        <input type="time" id="custTime" class="tool-input" required>
+                    </div>
                 </div>
                 <div style="margin-bottom: 15px;">
                     <label style="font-size: 14px; font-weight: 600;">জন্মৰ স্থান (জিলা/চহৰ):</label>
@@ -233,17 +239,7 @@
             btn.innerText = "Processing...";
             btn.disabled = true;
 
-            // ১. ফৰ্মৰ ডাটা সংগ্ৰহ
-            const orderData = {
-                service: selectedService,
-                name: document.getElementById('custName').value,
-                email: "test@example.com", // পিছলৈ ইয়াত email input field লগাব পাৰে
-                phone: document.getElementById('custPhone').value,
-                birthDate: document.getElementById('custDob').value,
-                birthTime: "00:00 AM", // Date input ৰ পৰা ভাঙি ল'ব পাৰিব পিছত
-                birthPlace: document.getElementById('custPlace').value,
-                language: currentLang
-            };
+            processPayment
 
             try {
                 // ২. Supabase create-order function call কৰক
