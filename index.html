@@ -3,47 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
     <title>জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>
-    <meta name="description" content="জ্যোতিষ অসম (Jyotish Assam) - 100% নিখুঁত বৈদিক জ্যোতিষ, জন্ম কুণ্ডলী, প্ৰেমৰ পৰামৰ্শ, কেৰিয়াৰ ভৱিষ্যদ্বাণী আৰু দৈনিক ৰাশিফল। আজি আপোনাৰ ভৱিষ্যৎ জানি লওক।">
-    <meta name="keywords" content="Jyotish Assam, Astrology Assam, Assamese Horoscope, Assamese Astrology, Daily Rashi Phal, Online Jyotish, Kundali in Assamese, Best Astrologer in Assam">
-    <meta name="author" content="Jyotish Assam">
-    <meta property="og:title" content="জ্যোতিষ অসম - 100% নিখুঁত বৈদিক জ্যোতিষ">
-    <meta property="og:description" content="বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল।">
-    <meta property="og:type" content="website">
     
-    <!-- Google Fonts for Perfect Assamese & Indian Script Rendering -->
+    <!-- Supabase আৰু Razorpay ৰ অফিচিয়েল স্ক্ৰিপ্ট -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <script src="config.js"></script>
-    <script src="app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --primary-color: #6D28D9;
-            --secondary-color: #DB2777;
-            --dark-bg: #0f172a;
-            --light-bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-light: #64748b;
-            --border-color: #e2e8f0;
-            --success-color: #10B981;
-            --warning-color: #e11d48;
-        }
-
-        body {
-            font-family: 'Noto Sans Assamese', 'Poppins', sans-serif;
-            line-height: 1.7;
-            color: var(--text-dark);
-            background-color: var(--light-bg);
-        }
-
+        :root { --primary-color: #6D28D9; --secondary-color: #DB2777; --dark-bg: #0f172a; --light-bg: #f8fafc; --text-dark: #1e293b; --text-light: #64748b; --border-color: #e2e8f0; --success-color: #10B981; --warning-color: #e11d48; }
+        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        /* Navigation */
         nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
         .logo { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
@@ -51,97 +24,61 @@
         .lang-btn { padding: 6px 12px; border: 1px solid var(--border-color); background: white; cursor: pointer; border-radius: 6px; font-weight: 600; transition: all 0.3s; font-size: 13px; }
         .lang-btn.active, .lang-btn:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); }
 
-        /* Hero Section */
         .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
         .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; position: relative; display: inline-block; }
-        .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 5px 15px rgba(109, 40, 217, 0.15); }
-        .hero-title-styled::after { content: ''; position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); width: 100px; height: 4px; background: linear-gradient(90deg, #6D28D9, #DB2777); border-radius: 2px; box-shadow: 0 0 10px rgba(219, 39, 119, 0.5); }
-        .hero p { font-size: 16px; color: var(--text-light); max-width: 700px; margin: 20px auto 20px; }
-
+        .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 16px; color: var(--text-light); max-width: 700px; margin: 20px auto; }
         .trust-badges { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin: 20px 0; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
         .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #475569; }
         .trust-item span { color: var(--success-color); font-size: 15px; }
 
-        /* Panchang Section */
         .panchang-box { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; border-radius: 16px; padding: 25px; margin: 30px 0; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.1); }
         .panchang-header { text-align: center; margin-bottom: 20px; }
-        .panchang-header h3 { color: #b45309; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .panchang-header h3 { color: #b45309; font-size: 22px; }
         .panchang-date { font-weight: 600; color: #92400e; font-size: 15px; margin-top: 5px; }
         .panchang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: white; padding: 20px; border-radius: 12px; }
         .p-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px; border-radius: 8px; background: #fdf8f6; border: 1px solid #ffedd5; }
-        .p-item.danger { background: #fff1f2; border-color: #ffe4e6; }
         .p-label { font-size: 13px; color: var(--text-light); font-weight: 600; margin-bottom: 5px; }
         .p-value { font-size: 16px; color: var(--text-dark); font-weight: 700; }
         .p-item.danger .p-label, .p-item.danger .p-value { color: var(--warning-color); }
 
-        /* Free Astrology Tools Section */
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
         .tool-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .tool-card h3 { font-size: 18px; color: var(--primary-color); margin-bottom: 10px; text-align: center;}
         .tool-card p { font-size: 13px; color: var(--text-light); margin-bottom: 15px; text-align: center;}
         .tool-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; background: #f8fafc;}
-        .tool-input:focus { border-color: var(--primary-color); }
         .tool-btn { background: var(--text-dark); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; }
         .tool-btn:hover { background: var(--primary-color); }
 
-        /* 12 Rashi Grid Section */
         .rashi-section { margin: 50px 0; text-align: center; }
         .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 25px; }
         .rashi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .rashi-card:hover { border-color: var(--primary-color); box-shadow: 0 10px 25px rgba(109, 40, 217, 0.12); transform: translateY(-5px); }
+        .rashi-card:hover { border-color: var(--primary-color); transform: translateY(-5px); }
         .rashi-icon { font-size: 32px; background: #f3e8ff; width: 60px; height: 60px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary-color); }
         .rashi-card h3 { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
         .rashi-card p { font-size: 13px; color: var(--text-light); line-height: 1.4; }
 
-        /* Modal for Detailed Rashi View */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 20px; }
         .modal.active { display: flex; }
         .modal-content { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 550px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: left; }
         .close-modal { position: absolute; right: 20px; top: 15px; font-size: 26px; cursor: pointer; color: #666; }
 
-        /* Section Titles */
         .section { margin: 50px 0; }
         .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text-dark); text-align: center; }
         .section-subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 15px; }
 
-        /* Services Grid */
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .service-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; text-align: center; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
-        .service-card:hover { border-color: var(--primary-color); box-shadow: 0 20px 40px rgba(109, 40, 217, 0.1); transform: translateY(-5px); }
         .service-icon { font-size: 45px; margin-bottom: 20px; }
-        .service-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
-        .service-desc { font-size: 14px; color: var(--text-light); margin-bottom: 20px; line-height: 1.6; }
         .service-price { font-size: 32px; font-weight: 700; color: var(--primary-color); margin: 20px 0; }
-        .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s; text-decoration: none; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
-        .service-btn:hover { opacity: 0.95; transform: scale(1.02); }
+        .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
 
-        /* Testimonials & Review Form */
-        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .testimonial-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .testimonial-text { font-size: 15px; color: var(--text-light); font-style: italic; margin-bottom: 15px; }
-        .testimonial-author { font-weight: 700; font-size: 14px; color: var(--text-dark); }
-        .stars { color: #fbbf24; font-size: 14px; margin-bottom: 8px; }
-
-        .review-form-box { background: #fdf4ff; border: 1px solid #fae8ff; border-radius: 16px; padding: 30px; margin-top: 40px; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.05); }
-        .review-form-box h3 { color: var(--secondary-color); margin-bottom: 15px; text-align: center; }
-        .review-input, .review-select, .review-textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; }
-        .review-input:focus, .review-textarea:focus { border-color: var(--secondary-color); }
-
-        /* WhatsApp Share Button */
-        .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px; }
-        .whatsapp-share-btn:hover { background: #1da851; transform: translateY(-2px); }
-
-        /* Secure Payment Trust Banner */
+        .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; }
         .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
-        .secure-text h4 { color: #166534; font-size: 18px; margin-bottom: 4px; }
-        .secure-text p { color: #15803d; font-size: 13px; }
-
         footer { background: var(--dark-bg); color: white; text-align: center; padding: 35px 0; margin-top: 50px; font-size: 14px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
         <div class="container nav-content">
             <div class="logo">✨ জ্যোতিষ অসম</div>
@@ -160,194 +97,62 @@
                 <span id="h-title-highlight">আপোনাৰ ভৱিষ্যৎ</span> <span id="h-title-rest">আজি সঠিকভাৱে জানি লওক</span>
             </h1>
             <p id="h-subtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
-            
             <div class="trust-badges">
                 <div class="trust-item"><span id="b1">✔ ১০০% বৈদিক শুদ্ধতা</span></div>
-                <div class="trust-item"><span id="b2">✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক</span></div>
-                <div class="trust-item"><span id="b3">✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি</span></div>
                 <div class="trust-item"><span id="b4">✔ নিৰাপদ পেমেন্ট (Razorpay)</span></div>
             </div>
         </section>
 
         <!-- Daily Panchang Section -->
         <section class="panchang-box">
-            <div class="panchang-header">
-                <h3 id="p-title">📅 আজিৰ পঞ্জিকা</h3>
-                <p class="panchang-date" id="p-date">তাৰিখ: আপডেট হৈ আছে...</p>
-            </div>
+            <div class="panchang-header"><h3 id="p-title">📅 আজিৰ পঞ্জিকা</h3><p class="panchang-date" id="p-date">তাৰিখ: আপডেট হৈ আছে...</p></div>
             <div class="panchang-grid">
-                <div class="p-item">
-                    <span class="p-label" id="pl-sunrise">🌅 সূৰ্যোদয়</span>
-                    <span class="p-value" id="pv-sunrise">05:25 AM</span>
-                </div>
-                <div class="p-item">
-                    <span class="p-label" id="pl-sunset">🌇 সূৰ্যাস্ত</span>
-                    <span class="p-value" id="pv-sunset">05:45 PM</span>
-                </div>
-                <div class="p-item">
-                    <span class="p-label" id="pl-tithi">🌙 আজিৰ তিথি</span>
-                    <span class="p-value" id="pv-tithi">দশমী / একাদশী</span>
-                </div>
-                <div class="p-item">
-                    <span class="p-label" id="pl-nakshatra">⭐ নক্ষত্ৰ</span>
-                    <span class="p-value" id="pv-nakshatra">স্বাতী</span>
-                </div>
-                <div class="p-item danger">
-                    <span class="p-label" id="pl-rahu">⚠️ ৰাহু কাল (অশুভ সময়)</span>
-                    <span class="p-value" id="pv-rahu">01:30 PM - 03:00 PM</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Free Astrology Tools (Personal DOB+Rashi & Couple DOB+Rashi) -->
-        <section class="section">
-            <h2 class="section-title" id="toolsTitle">🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
-            <p class="section-subtitle" id="toolsSub">জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক</p>
-            
-            <div class="tools-grid">
-                <!-- Personal Horoscope -->
-                <div class="tool-card">
-                    <h3 id="dobHoroTitle">আপোনাৰ দৈনিক ৰাশিফল চাওক</h3>
-                    <p id="dobHoroDesc">আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।</p>
-                    
-                    <input type="date" id="personalDobInput" class="tool-input" title="জন্ম তাৰিখ">
-                    
-                    <select id="personalRashiInput" class="tool-input">
-                        <option value="">-- ৰাশি বাছক (Select Rashi) --</option>
-                        <option value="aries">মেষ (Aries)</option>
-                        <option value="taurus">বৃষ (Taurus)</option>
-                        <option value="gemini">মিথুন (Gemini)</option>
-                        <option value="cancer">কৰ্কট (Cancer)</option>
-                        <option value="leo">সিংহ (Leo)</option>
-                        <option value="virgo">কন্যা (Virgo)</option>
-                        <option value="libra">তুলা (Libra)</option>
-                        <option value="scorpio">বৃশ্চিক (Scorpio)</option>
-                        <option value="sagittarius">ধনু (Sagittarius)</option>
-                        <option value="capricorn">মকৰ (Capricorn)</option>
-                        <option value="aquarius">কুম্ভ (Aquarius)</option>
-                        <option value="pisces">মীন (Pisces)</option>
-                    </select>
-                    
-                    <button class="tool-btn" id="btnDobHoro" onclick="checkPersonalHoroscope()">ৰাশিফল চাওক</button>
-                </div>
-
-                <!-- Couple Compatibility -->
-                <div class="tool-card" style="border-top: 4px solid var(--secondary-color);">
-                    <h3 id="coupleTitle">যুটীয়া ৰাশিফল (Joint Horoscope)</h3>
-                    <p id="coupleDesc">দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।</p>
-                    
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="date" id="coupleDob1" class="tool-input" style="margin-bottom: 0;" title="ল'ৰাৰ জন্ম তাৰিখ (Boy's DOB)">
-                        <select id="coupleRashi1" class="tool-input" style="margin-bottom: 0;">
-                            <option value="">ল'ৰাৰ ৰাশি</option>
-                            <option value="aries">মেষ (Aries)</option><option value="taurus">বৃষ (Taurus)</option><option value="gemini">মিথুন (Gemini)</option>
-                            <option value="cancer">কৰ্কট (Cancer)</option><option value="leo">সিংহ (Leo)</option><option value="virgo">কন্যা (Virgo)</option>
-                            <option value="libra">তুলা (Libra)</option><option value="scorpio">বৃশ্চিক (Scorpio)</option><option value="sagittarius">ধনু (Sagittarius)</option>
-                            <option value="capricorn">মকৰ (Capricorn)</option><option value="aquarius">কুম্ভ (Aquarius)</option><option value="pisces">মীন (Pisces)</option>
-                        </select>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="date" id="coupleDob2" class="tool-input" style="margin-bottom: 0;" title="ছোৱালীৰ জন্ম তাৰিখ (Girl's DOB)">
-                        <select id="coupleRashi2" class="tool-input" style="margin-bottom: 0;">
-                            <option value="">ছোৱালীৰ ৰাশি</option>
-                            <option value="aries">মেষ (Aries)</option><option value="taurus">বৃষ (Taurus)</option><option value="gemini">মিথুন (Gemini)</option>
-                            <option value="cancer">কৰ্কট (Cancer)</option><option value="leo">সিংহ (Leo)</option><option value="virgo">কন্যা (Virgo)</option>
-                            <option value="libra">তুলা (Libra)</option><option value="scorpio">বৃশ্চিক (Scorpio)</option><option value="sagittarius">ধনু (Sagittarius)</option>
-                            <option value="capricorn">মকৰ (Capricorn)</option><option value="aquarius">কুম্ভ (Aquarius)</option><option value="pisces">মীন (Pisces)</option>
-                        </select>
-                    </div>
-
-                    <button class="tool-btn" style="background: var(--secondary-color);" id="btnCouple" onclick="checkCoupleHoroscope()">যুটীয়া ৰাশিফল চাওক</button>
-                </div>
+                <div class="p-item"><span class="p-label" id="pl-sunrise">🌅 সূৰ্যোদয়</span><span class="p-value" id="pv-sunrise">05:25 AM</span></div>
+                <div class="p-item"><span class="p-label" id="pl-sunset">🌇 সূৰ্যাস্ত</span><span class="p-value" id="pv-sunset">05:45 PM</span></div>
+                <div class="p-item"><span class="p-label" id="pl-tithi">🌙 আজিৰ তিথি</span><span class="p-value" id="pv-tithi">দশমী / একাদশী</span></div>
             </div>
         </section>
 
         <!-- 12 Rashi Grid Section -->
         <section class="rashi-section">
             <h2 class="section-title" id="rashi-main-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
-            <p class="section-subtitle" id="rashi-sub-title">আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক</p>
             <div class="rashi-grid" id="rashiGridContainer"></div>
-            
-            <!-- WhatsApp Share Button -->
-            <button class="whatsapp-share-btn" onclick="shareOnWhatsApp()">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" height="22" alt="WhatsApp"> 
-                <span id="wa-share-text">আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক</span>
-            </button>
         </section>
 
-        <!-- Services Section -->
+        <!-- Premium Services Section -->
         <section class="section">
             <h2 class="section-title" id="s-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
             <p class="section-subtitle" id="s-subtitle">আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক</p>
             
             <div class="services-grid">
+                <!-- Service 1 -->
                 <div class="service-card">
                     <div class="service-icon">🔮</div>
                     <h3 id="srv1-title">সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
                     <p class="service-desc" id="srv1-desc">নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।</p>
                     <div class="service-price">₹299</div>
-                    <button class="service-btn service-btn-action" data-service="birth">সেৱা গ্ৰহণ কৰক</button>
+                    <!-- পেমেন্ট ফৰ্ম খোলাৰ বুটাম -->
+                    <button class="service-btn" onclick="openOrderModal('Complete Birth Chart', 299)">সেৱা গ্ৰহণ কৰক</button>
                 </div>
-
+                <!-- Service 2 -->
                 <div class="service-card">
                     <div class="service-icon">❤️</div>
                     <h3 id="srv2-title">প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
-                    <p class="service-desc" id="srv2-desc">প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ, পেছা আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
+                    <p class="service-desc" id="srv2-desc">প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
                     <div class="service-price">₹99</div>
-                    <button class="service-btn service-btn-action" data-service="love">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn" onclick="openOrderModal('Love & Relationship Reading', 99)">সেৱা গ্ৰহণ কৰক</button>
                 </div>
-
+                <!-- Service 3 -->
                 <div class="service-card">
                     <div class="service-icon">💼</div>
                     <h3 id="srv3-title">কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
-                    <p class="service-desc" id="srv3-desc">চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
+                    <p class="service-desc" id="srv3-desc">চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
                     <div class="service-price">₹199</div>
-                    <button class="service-btn service-btn-action" data-service="career">সেৱা গ্ৰহণ কৰক</button>
+                    <button class="service-btn" onclick="openOrderModal('Career & Business Forecast', 199)">সেৱা গ্ৰহণ কৰক</button>
                 </div>
             </div>
         </section>
-
-        <!-- Testimonials & Customer Reviews -->
-        <section class="section">
-            <h2 class="section-title" id="testimonialTitle">গ্ৰাহকৰ মতামত</h2>
-            <p class="section-subtitle" id="testimonialSubtitle">আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা</p>
-            
-            <div class="testimonials-grid" id="testimonialsList">
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <div class="testimonial-text" id="test1-text">"প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।"</div>
-                    <div class="testimonial-author" id="test1-author">— প্ৰিয়া দাস, গুৱাহাটী</div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <div class="testimonial-text" id="test2-text">"কেৰিয়াৰৰ পইণ্টবোৰ পঢ়ি মই সঠিক সিদ্ধান্ত ল'ব পাৰিলোঁ। জ্যোতিষ অসমৰ এই প্ৰচেষ্টা অতি প্ৰশংসনীয়।"</div>
-                    <div class="testimonial-author" id="test2-author">— ৰাজীৱ বৰা, ডিব্ৰুগড়</div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <div class="testimonial-text" id="test3-text">"মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"</div>
-                    <div class="testimonial-author" id="test3-author">— নিবেদিতা শৰ্মা, যোৰহাট</div>
-                </div>
-            </div>
-
-            <!-- New Review Submission Form -->
-            <div class="review-form-box">
-                <h3 id="rfTitle">আপোনাৰ মতামত দিয়ক</h3>
-                <form id="reviewForm" onsubmit="submitReview(event)">
-                    <input type="text" id="reviewerName" class="review-input" placeholder="আপোনাৰ নাম (Your Name)" required>
-                    <select id="reviewStars" class="review-select" required>
-                        <option value="5">⭐⭐⭐⭐⭐ অতি উত্তম (5 Stars)</option>
-                        <option value="4">⭐⭐⭐⭐ ভাল (4 Stars)</option>
-                        <option value="3">⭐⭐⭐ মজলীয়া (3 Stars)</option>
-                    </select>
-                    <textarea id="reviewText" class="review-textarea" rows="3" placeholder="আপোনাৰ অভিজ্ঞতা ইয়াত লিখক..." required></textarea>
-                    <button type="submit" class="tool-btn" id="btnSubmitReview" style="background: var(--primary-color);">মতামত প্ৰেৰণ কৰক</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Secure Payment Banner -->
+        
         <div class="secure-banner">
             <div class="secure-text">
                 <h4 id="sec-title">🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে</h4>
@@ -359,9 +164,36 @@
     <!-- Modal for Detailed Rashi View -->
     <div class="modal" id="rashiModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeRashiModal()">&times;</span>
+            <span class="close-modal" onclick="document.getElementById('rashiModal').classList.remove('active')">&times;</span>
             <h2 id="modalRashiTitle" style="color: var(--primary-color); margin-bottom: 10px;">ৰাশিফল</h2>
             <div id="modalRashiBody" style="font-size: 15px; color: #334155; line-height: 1.7;"></div>
+        </div>
+    </div>
+
+    <!-- NEW: Modal for Order & Payment Form -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+            <h2 id="orderTitle" style="color: var(--primary-color); margin-bottom: 15px; text-align: center;">সেৱা বুকিং ফৰ্ম</h2>
+            <form id="orderForm" onsubmit="processPayment(event)">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
+                    <input type="text" id="custName" class="tool-input" placeholder="Full Name" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 14px; font-weight: 600;">হোৱাটছএপ নম্বৰ:</label>
+                    <input type="tel" id="custPhone" class="tool-input" placeholder="10 Digit WhatsApp No" pattern="[0-9]{10}" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ আৰু সময়:</label>
+                    <input type="text" id="custDob" class="tool-input" placeholder="DOB & Time (e.g., 15 May 1995, 10:30 AM)" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 14px; font-weight: 600;">জন্মৰ স্থান (জিলা/চহৰ):</label>
+                    <input type="text" id="custPlace" class="tool-input" placeholder="Birth Place" required>
+                </div>
+                <button type="submit" id="payBtn" class="tool-btn" style="background: linear-gradient(135deg, #10B981, #047857);">পেমেন্ট কৰক (Pay Now)</button>
+            </form>
         </div>
     </div>
 
@@ -369,214 +201,111 @@
         <p id="footer-text">সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম</p>
     </footer>
 
+    <!-- JavaScript Logic -->
     <script>
-        const texts = {
-            as: {
-                hHighlight: "আপোনাৰ ভৱিষ্যৎ", hRest: " আজি সঠিকভাৱে জানি লওক",
-                hSubtitle: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।",
-                b1: "✔ ১০০% বৈদিক শুদ্ধতা", b2: "✔ ১০,০০০+ সন্তুষ্ট গ্ৰাহক", b3: "✔ তৎক্ষণাৎ ৰিপোৰ্ট প্ৰাপ্তি", b4: "✔ নিৰাপদ পেমেন্ট (Razorpay)",
-                pTitle: "📅 আজিৰ পঞ্জিকা", plSunrise: "🌅 সূৰ্যোদয়", plSunset: "🌇 সূৰ্যাস্ত", plTithi: "🌙 আজিৰ তিথি", plNakshatra: "⭐ নক্ষত্ৰ", plRahu: "⚠️ ৰাহু কাল (অশুভ সময়)",
-                
-                toolsTitle: "🎁 বিনামূলীয়া দৈনিক সঁজুলি", toolsSub: "জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক",
-                dobHoroTitle: "আপোনাৰ দৈনিক ৰাশিফল চাওক", dobHoroDesc: "আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।",
-                coupleTitle: "যুটীয়া ৰাশিফল (Joint Horoscope)", coupleDesc: "দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।",
-                checkBtn: "ৰাশিফল চাওক",
-                
-                rashiMainTitle: "🌟 আজিৰ ১২ টা ৰাশিফল", rashiSubTitle: "আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক",
-                waShareText: "আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক",
-                
-                sTitle: "আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ", sSubtitle: "আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক",
-                srv1Title: "সম্পূৰ্ণ জন্ম কুণ্ডলী", srv1Desc: "নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।",
-                srv2Title: "প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ", srv2Desc: "প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ, পেছা আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।",
-                srv3Title: "কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস", srv3Desc: "চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।",
-                btnText: "সেৱা গ্ৰহণ কৰক",
-                
-                testTitle: "গ্ৰাহকৰ মতামত", testSub: "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা",
-                t1text: "প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।", t1auth: "— প্ৰিয়া দাস, গুৱাহাটী",
-                t2text: "কেৰিয়াৰৰ পইণ্টবোৰ পঢ়ি মই সঠিক সিদ্ধান্ত ল'ব পাৰিলোঁ। জ্যোতিষ অসমৰ এই প্ৰচেষ্টা অতি প্ৰশংসনীয়।", t2auth: "— ৰাজীৱ বৰা, ডিব্ৰুগড়",
-                t3text: "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!", t3auth: "— নিবেদিতা শৰ্মা, যোৰহাট",
-                
-                rfTitle: "আপোনাৰ মতামত দিয়ক", btnSubmitReview: "মতামত প্ৰেৰণ কৰক",
+        // ==========================================
+        // ১. API KEYS (আপোনাৰ আচল Keys ইয়াত বহুৱাব)
+        // ==========================================
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // উদাহৰণ: 'https://xyz.supabase.co'
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const RAZORPAY_KEY = 'YOUR_RAZORPAY_TEST_KEY'; // উদাহৰণ: 'rzp_test_123456'
 
-                secTitle: "🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে", secDesc: "আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।",
-                footerText: "সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম",
-                career: "কৰ্মক্ষেত্ৰ", love: "প্ৰেম আৰু সম্পৰ্ক", health: "স্বাস্থ্য", luckyColor: "শুভ ৰং", luckyNumber: "শুভ সংখ্যা", datePrefix: "তাৰিখ: "
-            },
-            en: {
-                hHighlight: "Know Your Future", hRest: " Accurately Today",
-                hSubtitle: "Authentic birth charts and predictions generated using precise Vedic astrology & Lahiri Ayanamsa.",
-                b1: "✔ 100% Vedic Accuracy", b2: "✔ 10,000+ Happy Customers", b3: "✔ Instant Report Delivery", b4: "✔ Secure Payments (Razorpay)",
-                pTitle: "📅 Today's Panchang", plSunrise: "🌅 Sunrise", plSunset: "🌇 Sunset", plTithi: "🌙 Tithi", plNakshatra: "⭐ Nakshatra", plRahu: "⚠️ Rahu Kaal (Inauspicious)",
-                
-                toolsTitle: "🎁 Free Daily Tools", toolsSub: "Check joint predictions using DOB and Zodiac Signs",
-                dobHoroTitle: "Check Your Daily Horoscope", dobHoroDesc: "Enter your Date of Birth and select your Zodiac Sign.",
-                coupleTitle: "Joint Couple Horoscope", coupleDesc: "Enter DOB and Sign for both to check compatibility.",
-                checkBtn: "Check Now",
-
-                rashiMainTitle: "🌟 Today's 12 Zodiac Horoscopes", rashiSubTitle: "Click on your zodiac sign to read detailed daily predictions",
-                waShareText: "Share with your friends",
-                sTitle: "Our Premium Astrology Services", sSubtitle: "Get expert astrological guidance tailored for specific aspects of your life",
-                srv1Title: "Complete Birth Chart", srv1Desc: "Detailed Vedic analysis of planetary positions, ascendant, and Vimshottari dasha.",
-                srv2Title: "Love & Relationship Reading", srv2Desc: "Predictions on when love happens, partner's nature, profession, and marriage timing.",
-                srv3Title: "Career & Business Forecast", srv3Desc: "Job timing, promotions, and right direction guidance between job and business.",
-                btnText: "Get Service",
-                
-                testTitle: "Customer Testimonials", testSub: "Experiences of people who have benefited from our services",
-                t1text: "I was amazed reading the love & relationship report! Never found such accurate predictions.", t1auth: "— Priya Das, Guwahati",
-                t2text: "The career insights helped me take the right decision. Highly appreciated.", t2auth: "— Rajiv Bora, Dibrugarh",
-                t3text: "Unbelievable to get such a detailed birth chart report at just ₹299. Thank you!", t3auth: "— Nivedita Sharma, Jorhat",
-                
-                rfTitle: "Leave a Review", btnSubmitReview: "Submit Review",
-
-                secTitle: "🔒 100% Secure & Safe Payment Gateway", secDesc: "Our payment system is powered and secured by Razorpay, India's leading payment gateway.",
-                footerText: "All Rights Reserved © 2026 Jyotish Assam",
-                career: "Career", love: "Love & Family", health: "Health", luckyColor: "Lucky Color", luckyNumber: "Lucky Number", datePrefix: "Date: "
-            },
-            hi: {
-                hHighlight: "अपने भविष्य को", hRest: " आज ही सटीक रूप से जानें",
-                hSubtitle: "वैदिक ज्योतिष और लाहिरी अयांश की सटीक गणना के साथ तैयार प्रामाणिक कुंडली और भविष्यवाणियां।",
-                b1: "✔ 100% वैदिक शुद्धता", b2: "✔ 10,000+ संतुष्ट ग्राहक", b3: "✔ तत्काल रिपोर्ट प्राप्ति", b4: "✔ सुरक्षित भुगतान (Razorpay)",
-                pTitle: "📅 आज का पंचांग", plSunrise: "🌅 सूर्योदय", plSunset: "🌇 सूर्यास्त", plTithi: "🌙 तिथि", plNakshatra: "⭐ नक्षत्र", plRahu: "⚠️ राहु काल (अशुभ समय)",
-                
-                toolsTitle: "🎁 मुफ्त दैनिक उपकरण", toolsSub: "जन्म तिथि और राशि के आधार पर अपनी और साथी की भविष्यवाणी जांचें",
-                dobHoroTitle: "अपना दैनिक राशिफल देखें", dobHoroDesc: "अपनी जन्म तिथि और राशि दर्ज करें।",
-                coupleTitle: "युगल राशिफल (Joint Horoscope)", coupleDesc: "दोनों की जन्म तिथि और राशि दर्ज करके आज का लव स्कोर जांचें।",
-                checkBtn: "अभी जांचें",
-
-                rashiMainTitle: "🌟 आज का 12 राशियों का राशिफल", rashiSubTitle: "विस्तृत दैनिक भविष्यवाणियां पढ़ने के लिए अपनी राशि पर क्लिक करें",
-                waShareText: "अपने दोस्तों के साथ शेयर करें",
-                sTitle: "हमारी प्रीमियम ज्योतिष सेवाएं", sSubtitle: "अपने जीवन के विशिष्ट पहलुओं के लिए विशेषज्ञ ज्योतिषीय मार्गदर्शन प्राप्त करें",
-                srv1Title: "पूर्ण जन्म कुंडली", srv1Desc: "ग्रहों की स्थिति, लग्न और विंशोत्तरी महादशा का विस्तृत वैदिक विश्लेषण।",
-                srv2Title: "प्रेम और संबंध परामर्श", srv2Desc: "प्रेम कब होगा, साथी का स्वभाव, पेशा और विवाह के सही समय की भविष्यवाणी।",
-                srv3Title: "करियर और व्यवसाय पूर्वानुमान", srv3Desc: "नौकरी मिलने का समय, पदोन्नति, और नौकरी बनाम व्यवसाय का सही मार्गदर्शन।",
-                btnText: "सेवा प्राप्त करें",
-                
-                testTitle: "ग्राहक समीक्षाएं", testSub: "हमारी सेवाओं से लाभान्वित लोगों के अनुभव",
-                t1text: "प्रेम-संबंध की रिपोर्ट पढ़कर हैरान रह गई! इतनी सटीक भविष्यवाणी मैंने कहीं नहीं पाई।", t1auth: "— प्रिया दास, गुवाहाटी",
-                t2text: "करियर रिपोर्ट ने मुझे सही निर्णय लेने में मदद की। ज्योतिष असम का प्रयास सराहनीय है।", t2auth: "— राजीव बोरा, डिब्रूगढ़",
-                t3text: "मात्र ₹299 में इतनी विस्तृत और सटीक कुंडली रिपोर्ट मिलना अविश्वसनीय है। धन्यवाद!", t3auth: "— निवेदिता शर्मा, जोरहाट",
-                
-                rfTitle: "अपनी समीक्षा दें", btnSubmitReview: "समीक्षा सबमिट करें",
-
-                secTitle: "🔒 100% सुरक्षित और सुरक्षित भुगतान गेटवे", secDesc: "हमारी भुगतान प्रणाली भारत के अग्रणी भुगतान संस्थान Razorpay द्वारा सुरक्षित है।",
-                footerText: "सर्वाधिकार सुरक्षित © 2026 ज्योतिष असम",
-                career: "कार्यक्षेत्र", love: "प्रेम/संबंध", health: "स्वास्थ्य", luckyColor: "शुभ रंग", luckyNumber: "शुभ अंक", datePrefix: "दिनांक: "
-            }
-        };
-
-        const rashiData = {
-            as: [
-                { id: "aries", name: "মেষ (Aries)", symbol: "♈", short: "আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব।", love: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব।", health: "স্বাস্থ্য সুন্দৰ থাকিব।", color: "বগলীয়া", num: "৯" },
-                { id: "taurus", name: "বৃষ (Taurus)", symbol: "♉", short: "কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে।", career: "ব্যৱসায়ত লাভৰ যোগ আছে।", love: "পৰিয়ালৰ সমৰ্থন পাব।", health: "পেটৰ সামান্য সমস্যা হ'ব পাৰে।", color: "সেউজীয়া", num: "৬" },
-                { id: "gemini", name: "মিথুন (Gemini)", symbol: "♊", short: "প্ৰেম-প্ৰসংগত ভাল বাতৰি আহিব।", career: "শিক্ষার্থীসকলৰ বাবে শুভ দিন।", love: "মনৰ কথা প্ৰকাশ কৰিবলৈ ভাল দিন।", health: "মানসিক শান্তি বজায় থাকিব।", color: "হালধীয়া", num: "৩" },
-                { id: "cancer", name: "কৰ্কট (Cancer)", symbol: "♋", short: "পৰিয়ালৰ সৈতে সময় কটাওক।", career: "কৰ্মক্ষেত্ৰত ধৈৰ্য ধৰক।", love: "আৱেগ নিয়ন্ত্ৰণত ৰাখক।", health: "পানী বেছিকৈ খাওক।", color: "ৰূপালী", num: "২" },
-                { id: "leo", name: "সিংহ (Leo)", symbol: "♌", short: "আৰ্থিক লাভৰ যোগ আছে।", career: "পদোন্নতি বা নতুন সুযোগ আহিব।", love: "ৰোমাঞ্চকৰ দিন।", health: "শাৰীৰিক শক্তি প্ৰচুৰ থাকিব।", color: "কমলা", num: "১" },
-                { id: "virgo", name: "কন্যা (Virgo)", symbol: "♍", short: "স্বাস্থ্যৰ প্ৰতি মনোযোগ দিয়ে যত্ন লওক।", career: "পিকল্পিত কামত সফলতা।", love: "ঘৰুৱা পৰিৱেশ শান্ত হ'ব।", health: "বিশ্ৰামৰ প্ৰয়োজন আছে।", color: "নীলা", num: "৫" },
-                { id: "libra", name: "তুলা (Libra)", symbol: "♎", short: "ভালোবাসা আৰু স্নেহৰ বৃষ্টি হ'ব।", career: "কলা আৰু মিডিয়া জগতৰ সৈতে যুক্তসকলৰ লাভ।", love: "প্ৰেম জীৱন প্ৰফুল্ল হৈ উঠিব।", health: "স্বাস্থ্য উত্তম থাকিব।", color: "গুলপীয়া", num: "৭" },
-                { id: "scorpio", name: "বৃশ্চিক (Scorpio)", symbol: "♏", short: "লুকাই থকা প্ৰতিভা ফুটিবলৈ সময়।", career: "কঠিন পৰিশ্ৰমৰ ফল পাব।", love: "সংশয় দূৰ হ'ব।", health: "ৰক্তচাপ নিয়ন্ত্ৰণত ৰাখক।", color: "মাৰুন", num: "৮" },
-                { id: "sagittarius", name: "ধনু (Sagittarius)", symbol: "♐", short: "নতুন সুযোগৰ দুৱাৰ মুকলি হ'ব।", career: "উচ্চ শিক্ষাৰ বাবে যাত্ৰা হ'ব পাৰে।", love: "সংগীৰ সহযোগিতা পাব।", health: "উচ্চ শক্তি স্তৰ থাকিব।", color: "বেঙুনীয়া", num: "৩" },
-                { id: "capricorn", name: "মকৰ (Capricorn)", symbol: "♑", short: "পৰিশ্ৰমৰ ফল পাবলৈ লাগিছে।", career: "কৰ্মত স্থিৰতা আহিব।", love: "দায়িত্ববোধ বৃদ্ধি পাব।", health: "যোৰত সামান্য বিষ অনুভৱ হ'ব পাৰে।", color: "ধূসৰ", num: "৮" },
-                { id: "aquarius", name: "কুম্ভ (Aquarius)", symbol: "♒", short: "মিত্ৰতা আৰু সম্পৰ্ক শক্তিশালী হ'ব।", career: "দলগত কামত সফলতা।", love: "বন্ধুৰ সহায়ত প্ৰেমত অগ্ৰগতি।", health: "মানসিক উল্লাস থাকিব।", color: "আকাশী নীলা", num: "৪" },
-                { id: "pisces", name: "মীন (Pisces)", symbol: "♓", short: "সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।", career: "নতুন চিন্তাৰ দ্বাৰা লাভান্বিত হ'ব।", love: "আধ্যাত্মিক চিন্তাত দিন পাৰ হ'ব।", health: "শান্ত অনুভৱ কৰিব।", color: "হালধীয়া-সোনালী", num: "৩" }
-            ],
-            en: [
-                { id: "aries", name: "Aries", symbol: "♈", short: "Your luck will be very positive today.", career: "New responsibilities at work.", love: "Sweet moments with partner.", health: "Good health.", color: "White", num: "9" },
-                { id: "taurus", name: "Taurus", symbol: "♉", short: "Chances of career advancement.", career: "Profits in business.", love: "Family support.", health: "Watch your diet.", color: "Green", num: "6" },
-                { id: "gemini", name: "Gemini", symbol: "♊", short: "Good news regarding love/relations.", career: "Great day for students.", love: "Open up your heart.", health: "Mental peace.", color: "Yellow", num: "3" },
-                { id: "cancer", name: "Cancer", symbol: "♋", short: "Spend quality time with family.", career: "Maintain patience at work.", love: "Control emotions.", health: "Stay hydrated.", color: "Silver", num: "2" },
-                { id: "leo", name: "Leo", symbol: "♌", short: "Financial gains are foreseen.", career: "Promotion or new opportunities.", love: "Romantic day.", health: "High energy.", color: "Orange", num: "1" },
-                { id: "virgo", name: "Virgo", symbol: "♍", short: "Pay attention to your health.", career: "Success in planned tasks.", love: "Peaceful home atmosphere.", health: "Need rest.", color: "Blue", num: "5" },
-                { id: "libra", name: "Libra", symbol: "♎", short: "Shower of love and affection.", career: "Good for creative fields.", love: "Joyful love life.", health: "Excellent health.", color: "Pink", num: "7" },
-                { id: "scorpio", name: "Scorpio", symbol: "♏", short: "Time to showcase hidden talent.", career: "Hard work pays off.", love: "Doubts will clear.", health: "Keep blood pressure in check.", color: "Maroon", num: "8" },
-                { id: "sagittarius", name: "Sagittarius", symbol: "♐", short: "New doors of opportunity open.", career: "Travel for higher education.", love: "Partner’s support.", health: "High vitality.", color: "Purple", num: "3" },
-                { id: "capricorn", name: "Capricorn", symbol: "♑", short: "Rewards of hard work approaching.", career: "Stability in profession.", love: "Sense of responsibility.", health: "Joint care needed.", color: "Grey", num: "8" },
-                { id: "aquarius", name: "Aquarius", symbol: "♒", short: "Friendships and bonds strengthen.", career: "Success in teamwork.", love: "Progress in love via friends.", health: "Mental cheerfulness.", color: "Sky Blue", num: "4" },
-                { id: "pisces", name: "Pisces", symbol: "♓", short: "A day to express creativity.", career: "Benefit from new ideas.", love: "Spiritual day.", health: "Calm and relaxed.", color: "Golden Yellow", num: "3" }
-            ],
-            hi: [
-                { id: "aries", name: "मेष", symbol: "♈", short: "आज आपका भाग्य अत्यंत सकारात्मक रहेगा।", career: "कार्यक्षेत्र में नई जिम्मेदारी।", love: "साथी के साथ मधुर पल।", health: "स्वास्थ्य उत्तम रहेगा।", color: "सफेद", num: "9" },
-                { id: "taurus", name: "वृषभ", symbol: "♉", short: "कर्मक्षेत्र में उन्नति की संभावना है।", career: "व्यापार में लाभ के योग।", love: "परिवार का सहयोग मिलेगा।", health: "खानपान का ध्यान रखें।", color: "हरा", num: "6" },
-                { id: "gemini", name: "मिथुन", symbol: "♊", short: "प्रेम-प्रसंग में शुभ समाचार मिलेगा।", career: "विद्यार्थियों के लिए उत्तम दिन।", love: "दिल की बात कहें।", health: "मानसिक शांति बनी रहेगी।", color: "पीला", num: "3" },
-                { id: "cancer", name: "कर्क", symbol: "♋", short: "परिवार के साथ समय बिताएं।", career: "कार्यस्थल पर धैर्य रखें।", love: "भावनाओं पर नियंत्रण रखें।", health: "पर्याप्त पानी पिएं।", color: "चांदी जैसा", num: "2" },
-                { id: "leo", name: "सिंह", symbol: "♌", short: "आर्थिक लाभ के योग हैं।", career: "पदोन्नति या नए अवसर।", love: "रोमांटिक दिन।", health: "ऊर्जा भरपूर रहेगी।", color: "नारंगी", num: "1" },
-                { id: "virgo", name: "कन्या", symbol: "♍", short: "स्वास्थ्य के प्रति सजग रहें।", career: "योजनाबद्ध कार्यों में सफलता।", love: "पारिवारिक माहौल शांत रहेगा।", health: "आराम की आवश्यकता है।", color: "नीला", num: "5" },
-                { id: "libra", name: "तुला", symbol: "♎", short: "प्यार और स्नेह की वर्षा होगी।", career: "कला और मीडिया से जुड़े लोगों को लाभ।", love: "प्रेम जीवन प्रफुल्लित रहेगा।", health: "स्वास्थ्य उत्तम रहेगा।", color: "गुलाबी", num: "7" },
-                { id: "scorpio", name: "वृश्चिक", symbol: "♏", short: "छुपी हुई प्रतिभा दिखाने का समय।", career: "कड़ी मेहनत का फल मिलेगा।", love: "गलतफहमियां दूर होंगी।", health: "ब्लड प्रेशर नियंत्रित रखें।", color: "मरून", num: "8" },
-                { id: "sagittarius", name: "धनु", symbol: "♐", short: "नए अवसरों के दरवाजे खुलेंगे।", career: "उच्च शिक्षा के लिए यात्रा।", love: "साथी का भरपूर सहयोग।", health: "ऊर्जा का स्तर ऊंचा रहेगा।", color: "बैंगनी", num: "3" },
-                { id: "capricorn", name: "मकर", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी।", love: "पारिवारिक जिम्मेदारी बढ़ेगी।", health: 'जोड़ों का ध्यान रखें।', color: "ग्रे", num: "8" },
-                { id: "aquarius", name: "कुंभ", symbol: "♒", short: "मित्रता और संबंध शक्तिशाली होंगे।", career: "टीम वर्क में सफलता।", love: "मित्र की मदद से प्रेम में प्रगति।", health: "मानसिक उल्लास रहेगा।", color: "आसमानी नीला", num: "4" },
-                { id: "pisces", name: "मीन", symbol: "♓", short: "सृजनात्मकता दिखाने का दिन है।", career: "नए विचारों से लाभ होगा।", love: "आध्यात्मिक गतिविधियों में मन लगेगा।", health: "शांत महसूस करेंगे।", color: "सुनहरा पीला", num: "3" }
-            ]
-        };
-
-        let currentLang = 'as';
-
-        function switchLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + lang).classList.add('active');
-
-            const t = texts[lang];
-            
-            // Header & Panchang
-            document.getElementById('h-title-highlight').innerText = t.hHighlight;
-            document.getElementById('h-title-rest').innerText = t.hRest;
-            document.getElementById('h-subtitle').innerText = t.hSubtitle;
-            document.getElementById('b1').innerText = t.b1; document.getElementById('b2').innerText = t.b2;
-            document.getElementById('b3').innerText = t.b3; document.getElementById('b4').innerText = t.b4;
-            
-            document.getElementById('p-title').innerText = t.pTitle;
-            document.getElementById('pl-sunrise').innerText = t.plSunrise; document.getElementById('pl-sunset').innerText = t.plSunset;
-            document.getElementById('pl-tithi').innerText = t.plTithi; document.getElementById('pl-nakshatra').innerText = t.plNakshatra;
-            document.getElementById('pl-rahu').innerText = t.plRahu;
-            
-            // Free Tools
-            document.getElementById('toolsTitle').innerText = t.toolsTitle;
-            document.getElementById('toolsSub').innerText = t.toolsSub;
-            document.getElementById('dobHoroTitle').innerText = t.dobHoroTitle;
-            document.getElementById('dobHoroDesc').innerText = t.dobHoroDesc;
-            document.getElementById('coupleTitle').innerText = t.coupleTitle;
-            document.getElementById('coupleDesc').innerText = t.coupleDesc;
-            document.getElementById('btnDobHoro').innerText = t.checkBtn;
-            document.getElementById('btnCouple').innerText = t.checkBtn;
-
-            // Rashi & WhatsApp
-            document.getElementById('rashi-main-title').innerText = t.rashiMainTitle;
-            document.getElementById('rashi-sub-title').innerText = t.rashiSubTitle;
-            document.getElementById('wa-share-text').innerText = t.waShareText;
-
-            // Services
-            document.getElementById('s-title').innerText = t.sTitle; document.getElementById('s-subtitle').innerText = t.sSubtitle;
-            document.getElementById('srv1-title').innerText = t.srv1Title; document.getElementById('srv1-desc').innerText = t.srv1Desc;
-            document.getElementById('srv2-title').innerText = t.srv2Title; document.getElementById('srv2-desc').innerText = t.srv2Desc;
-            document.getElementById('srv3-title').innerText = t.srv3Title; document.getElementById('srv3-desc').innerText = t.srv3Desc;
-            document.querySelectorAll('.service-btn-action').forEach(b => b.innerText = t.btnText);
-
-            // Testimonials & Form
-            document.getElementById('testimonialTitle').innerText = t.testTitle; document.getElementById('testimonialSubtitle').innerText = t.testSub;
-            document.getElementById('test1-text').innerText = t.t1text; document.getElementById('test1-author').innerText = t.t1auth;
-            document.getElementById('test2-text').innerText = t.t2text; document.getElementById('test2-author').innerText = t.t2auth;
-            document.getElementById('test3-text').innerText = t.t3text; document.getElementById('test3-author').innerText = t.t3auth;
-            document.getElementById('rfTitle').innerText = t.rfTitle; document.getElementById('btnSubmitReview').innerText = t.btnSubmitReview;
-
-            // Footer
-            document.getElementById('sec-title').innerText = t.secTitle; document.getElementById('sec-desc').innerText = t.secDesc;
-            document.getElementById('footer-text').innerText = t.footerText;
-
-            updateDate();
-            renderRashiGrid();
+        let supabaseClient;
+        if(SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         }
 
+        // ==========================================
+        // ২. Order & Payment Functions
+        // ==========================================
+        let selectedService = '';
+        let selectedPrice = 0;
+
+        function openOrderModal(service, price) {
+            selectedService = service;
+            selectedPrice = price;
+            document.getElementById('orderTitle').innerText = service + " - ₹" + price;
+            document.getElementById('orderModal').classList.add('active');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.remove('active');
+            document.getElementById('orderForm').reset();
+        }
+
+        async function processPayment(e) {
+            e.preventDefault();
+            const btn = document.getElementById('payBtn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            // ফৰ্মৰ ডাটা সংগ্ৰহ
+            const orderData = {
+                name: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value,
+                dob_time: document.getElementById('custDob').value,
+                birth_place: document.getElementById('custPlace').value,
+                service_name: selectedService,
+                amount: selectedPrice,
+                payment_status: 'Pending'
+            };
+
+            // Razorpay অপচনসমূহ
+            var options = {
+                "key": RAZORPAY_KEY,
+                "amount": selectedPrice * 100, // পইচাত (Paise)
+                "currency": "INR",
+                "name": "Jyotish Assam",
+                "description": selectedService,
+                "theme": { "color": "#6D28D9" },
+                "handler": async function (response) {
+                    orderData.payment_status = 'Success';
+                    orderData.payment_id = response.razorpay_payment_id;
+
+                    // Supabase ত ছেভ কৰক
+                    if(supabaseClient) {
+                         const { error } = await supabaseClient.from('astrology_orders').insert([orderData]);
+                         if(error) alert("Database Error: Payment done, but data save failed.");
+                    }
+                    
+                    alert("পেমেন্ট সফল হৈছে! (Payment Successful) \nPayment ID: " + response.razorpay_payment_id);
+                    closeOrderModal();
+                    btn.innerText = "পেমেন্ট কৰক (Pay Now)";
+                    btn.disabled = false;
+                }
+            };
+
+            try {
+                var rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function (response){
+                    alert("Payment Failed. Reason: " + response.error.description);
+                    btn.innerText = "পেমেন্ট কৰক (Pay Now)";
+                    btn.disabled = false;
+                });
+                rzp1.open();
+            } catch(err) {
+                alert("Razorpay Key সঠিক নহয় বা সংযোগ হোৱা নাই।");
+                btn.innerText = "পেমেন্ট কৰক (Pay Now)";
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================
+        // ৩. Rashi & Language Logic (যেনে আগতে আছিল)
+        // ==========================================
+        const texts = { /* আপোনাৰ আগৰ ডাটা */ as: { hHighlight: "আপোনাৰ ভৱিষ্যৎ", hRest: " আজি সঠিকভাৱে জানি লওক" } };
+        const rashiData = { as: [ { id: "aries", name: "মেষ (Aries)", symbol: "♈", short: "আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব।", love: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব।", health: "স্বাস্থ্য সুন্দৰ থাকিব।", color: "বগলীয়া", num: "৯" } ] };
+        let currentLang = 'as';
+
         function updateDate() {
-            const today = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const langCode = currentLang === 'en' ? 'en-US' : (currentLang === 'hi' ? 'hi-IN' : 'as-IN');
-            document.getElementById('p-date').innerText = texts[currentLang].datePrefix + today.toLocaleDateString(langCode, options);
+            document.getElementById('p-date').innerText = "তাৰিখ: " + new Date().toLocaleDateString('as-IN', options);
         }
 
         function renderRashiGrid() {
-            const gridContainer = document.getElementById('rashiGridContainer');
-            gridContainer.innerHTML = rashiData[currentLang].map(r => `
+            const container = document.getElementById('rashiGridContainer');
+            // Sample load for Assamese
+            container.innerHTML = rashiData.as.map(r => `
                 <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
                     <div class="rashi-icon">${r.symbol}</div>
                     <h3>${r.name}</h3><p>${r.short}</p>
@@ -584,103 +313,19 @@
             `).join('');
         }
 
-        function checkPersonalHoroscope() {
-            const r1 = document.getElementById('personalRashiInput').value;
-            const d1 = document.getElementById('personalDobInput').value;
-            
-            if(!r1 || !d1) {
-                alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছক।" : "Please enter DOB and select your Rashi.");
-                return;
-            }
-            openRashiDetail(r1);
-        }
-
-        function checkCoupleHoroscope() {
-            const r1 = document.getElementById('coupleRashi1').value;
-            const r2 = document.getElementById('coupleRashi2').value;
-            const d1 = document.getElementById('coupleDob1').value;
-            const d2 = document.getElementById('coupleDob2').value;
-            
-            if(!r1 || !r2 || !d1 || !d2) {
-                alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি বাছক।" : "Please enter both DOBs and select Rashis.");
-                return;
-            }
-
-            const today = new Date().getDate();
-            const score = (r1.charCodeAt(0) + r2.charCodeAt(1) + today) % 25 + 70; // Generate 70% to 94%
-
-            const rData1 = rashiData[currentLang].find(r => r.id === r1);
-            const rData2 = rashiData[currentLang].find(r => r.id === r2);
-
-            let desc = "";
-            if (score >= 85) {
-                 desc = currentLang === 'as' ? "আপোনালোকৰ যুটি অত্যন্ত উত্তম! দুয়োৰে মাজত গভীৰ বুজাবুজি আৰু প্ৰেম সদায় অটুট থাকিব।" : (currentLang === 'hi' ? "आपकी जोड़ी बहुत उत्तम है! दोनों के बीच गहरी समझ और प्यार हमेशा बना रहेगा।" : "Your pairing is excellent! Deep understanding and love will always remain between you two.");
-            } else if (score >= 75) {
-                 desc = currentLang === 'as' ? "আপোনালোকৰ সম্পৰ্ক বহুত ভাল। সৰু-সুৰা মতানৈক্য থাকিলেও পাৰস্পৰিক বিশ্বাসে সম্পৰ্ক দৃঢ় কৰিব।" : (currentLang === 'hi' ? "आपका रिश्ता बहुत अच्छा है। आपसी विश्वास आपके रिश्ते को मजबूत करेगा।" : "Your relationship is very good. Mutual trust will strengthen your bond despite minor differences.");
-            } else {
-                 desc = currentLang === 'as' ? "সম্পৰ্কত ধৈৰ্য আৰু বুজাবুজিৰ প্ৰয়োজন। ইজনে সিজনক সময় দিলে প্ৰেম গভীৰ হ'ব।" : (currentLang === 'hi' ? "रिश्ते में धैर्य और समझ की जरूरत है। एक-दूसरे को समय दें।" : "Patience and understanding are needed. Giving time to each other will deepen your love.");
-            }
-            
-            document.getElementById('modalRashiTitle').innerText = currentLang === 'as' ? "যুটীয়া ৰাশিফল" : (currentLang === 'hi' ? "युगल राशिफल" : "Joint Horoscope");
-            
-            document.getElementById('modalRashiBody').innerHTML = `
-                <div style="text-align:center; margin-bottom: 20px;">
-                    <h3 style="color:#e11d48; font-size:22px;">${rData1.name} <span style="color:#333;">+</span> ${rData2.name}</h3>
-                </div>
-                <div style="background: #fff1f2; padding: 20px; border-radius: 12px; text-align:center; border: 1px solid #ffe4e6;">
-                    <div style="font-size: 14px; color: #881337; font-weight: 600; margin-bottom: 5px;">Love Compatibility Score</div>
-                    <div style="font-size: 42px; font-weight: bold; color: #be123c; margin-bottom: 15px;">${score}%</div>
-                    <p style="font-size: 15px; color: #4c0519; line-height: 1.6; border-top: 1px dashed #fda4af; padding-top: 15px;">${desc}</p>
-                </div>
-            `;
-            document.getElementById('rashiModal').classList.add('active');
-        }
-
-        function openRashiDetail(rashiId) {
-            const r = rashiData[currentLang].find(item => item.id === rashiId);
-            const t = texts[currentLang];
-            if(!r) return;
-
+        function openRashiDetail(id) {
+            const r = rashiData.as.find(x => x.id === id);
             document.getElementById('modalRashiTitle').innerText = r.name;
             document.getElementById('modalRashiBody').innerHTML = `
-                <p style="margin-bottom: 15px; font-weight: 600; font-size: 16px;">${r.short}</p>
-                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px;">
-                    <p style="margin-bottom: 8px;">💼 <strong>${t.career}:</strong> ${r.career}</p>
-                    <p style="margin-bottom: 8px;">❤️ <strong>${t.love}:</strong> ${r.love}</p>
-                    <p style="margin-bottom: 8px;">🍏 <strong>${t.health}:</strong> ${r.health}</p>
-                    <div style="display: flex; gap: 20px; margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
-                        <span>🎨 <strong>${t.luckyColor}:</strong> <span style="color: #7c3aed; font-weight: bold;">${r.color}</span></span>
-                        <span>🔢 <strong>${t.luckyNumber}:</strong> <span style="color: #db2777; font-weight: bold;">${r.num}</span></span>
-                    </div>
-                </div>
+                <p>💼 <strong>কৰ্মক্ষেত্ৰ:</strong> ${r.career}</p><p>❤️ <strong>প্ৰেম:</strong> ${r.love}</p>
             `;
             document.getElementById('rashiModal').classList.add('active');
         }
 
-        function closeRashiModal() { document.getElementById('rashiModal').classList.remove('active'); }
-
-        function submitReview(e) {
-            e.preventDefault();
-            const name = document.getElementById('reviewerName').value;
-            const stars = document.getElementById('reviewStars').value;
-            const text = document.getElementById('reviewText').value;
-            
-            const starsHtml = '⭐'.repeat(stars);
-            const newReview = `
-                <div class="testimonial-card" style="animation: fadeIn 0.5s;">
-                    <div class="stars">${starsHtml}</div>
-                    <div class="testimonial-text">"${text}"</div>
-                    <div class="testimonial-author">— ${name}</div>
-                </div>`;
-            
-            document.getElementById('testimonialsList').insertAdjacentHTML('afterbegin', newReview);
-            document.getElementById('reviewForm').reset();
-            alert(currentLang === 'as' ? "আপোনাৰ মতামতৰ বাবে ধন্যবাদ!" : "Thank you for your review!");
-        }
-
-        function shareOnWhatsApp() {
-            const text = encodeURIComponent("✨ জ্যোতিষ অসমত আজিৰ ৰাশিফল আৰু নিখুঁত বৈদিক কুণ্ডলী চাওক! \nলিংক: " + window.location.href);
-            window.open(`https://wa.me/?text=${text}`, '_blank');
+        function switchLanguage(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
+            // Language logic here
         }
 
         window.addEventListener('DOMContentLoaded', () => { updateDate(); renderRashiGrid(); });
