@@ -177,26 +177,32 @@
     <!-- Database & Payment Logic -->
     <script>
         // ---------------------------------------------------------
-        // ১. SUPABASE CONFIGURATION (ইয়াত আপোনাৰ API Keys দিব)
+        // API Keys (আপোনাৰ আচল Keys ইয়াত দিব)
         // ---------------------------------------------------------
         const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL'; 
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // ---------------------------------------------------------
-        // ২. RAZORPAY CONFIGURATION (ইয়াত আপোনাৰ Razorpay Key দিব)
-        // ---------------------------------------------------------
         const RAZORPAY_KEY_ID = 'YOUR_RAZORPAY_TEST_OR_LIVE_KEY';
 
+        // URL ভুল হ'লেও যাতে ৱেবছাইট ফাটি নাযায় তাৰ বাবে সুৰক্ষা (Error Handling)
+        let supabase;
+        try {
+            if(SUPABASE_URL.startsWith('http')) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch(error) {
+            console.log("Supabase setup error:", error);
+        }
+
         // Auto-update Panjika Date
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('as-IN', options);
+        try {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').innerText = new Date().toLocaleDateString('as-IN', options);
+        } catch(e) {}
 
         let selectedService = '';
         let selectedPrice = 0;
 
-        // Modal Functions
+        // Modal Functions (এতিয়া ১০০% ক্লিক হ'ব)
         function openOrderModal(serviceName, price) {
             selectedService = serviceName;
             selectedPrice = price;
@@ -209,7 +215,7 @@
             document.getElementById('astrology-form').reset();
         }
 
-        // ৩. MAIN LOGIC: Form Submit -> Razorpay -> Supabase
+        // MAIN LOGIC: Form Submit -> Razorpay -> Supabase
         async function processOrder(e) {
             e.preventDefault();
             
@@ -217,7 +223,6 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> প্ৰচেছিং...';
 
-            // ফৰ্মৰ ডাটা সংগ্ৰহ
             const customerData = {
                 name: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value,
@@ -237,20 +242,22 @@
                 "description": selectedService,
                 "theme": { "color": "#4a0e17" },
                 "handler": async function (response) {
-                    // পেমেন্ট সফল হ'লে Payment ID টো ডাটাবেছত সংযোগ কৰা হ'ব
                     customerData.payment_status = 'Success';
                     customerData.payment_id = response.razorpay_payment_id;
 
-                    // Supabase ত ডাটা ছেভ কৰা (Table ৰ নাম: astrology_orders)
-                    const { data, error } = await supabase
-                        .from('astrology_orders')
-                        .insert([customerData]);
+                    if(supabase) {
+                        const { data, error } = await supabase
+                            .from('astrology_orders')
+                            .insert([customerData]);
 
-                    if (error) {
-                        console.error("Supabase Error:", error);
-                        alert("পেমেন্ট সফল হৈছে, কিন্তু ডাটা ছেভ কৰাত সমস্যা হৈছে। অনুগ্ৰহ কৰি WhatsApp ত যোগাযোগ কৰক। Payment ID: " + response.razorpay_payment_id);
+                        if (error) {
+                            alert("পেমেন্ট সফল হৈছে, কিন্তু ডাটা ছেভ কৰাত সমস্যা হৈছে। Payment ID: " + response.razorpay_payment_id);
+                        } else {
+                            alert("ধন্যবাদ! আপোনাৰ পেমেন্ট আৰু অৰ্ডাৰ সফলভাৱে গ্ৰহণ কৰা হৈছে। আমি সোনকালেই যোগাযোগ কৰিম।");
+                            closeOrderModal();
+                        }
                     } else {
-                        alert("ধন্যবাদ! আপোনাৰ পেমেন্ট আৰু অৰ্ডাৰ সফলভাৱে গ্ৰহণ কৰা হৈছে। আমি সোনকালেই আপোনাৰ লগত যোগাযোগ কৰিম।");
+                        alert("পেমেন্ট সফল হৈছে! (Database Link বনোৱা হোৱা নাই)। Payment ID: " + response.razorpay_payment_id);
                         closeOrderModal();
                     }
                     submitBtn.disabled = false;
@@ -258,15 +265,19 @@
                 }
             };
 
-            var rzp = new Razorpay(rzpOptions);
-            
-            rzp.on('payment.failed', function (response){
-                alert("পেমেন্ট বিফল হৈছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক। কাৰণ: " + response.error.description);
+            try {
+                var rzp = new Razorpay(rzpOptions);
+                rzp.on('payment.failed', function (response){
+                    alert("পেমেন্ট বিফল হৈছে। কাৰণ: " + response.error.description);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'পেমেন্ট কৰক (Razorpay)';
+                });
+                rzp.open();
+            } catch(error) {
+                alert("Razorpay Key সঠিক নহয়। অনুগ্ৰহ কৰি Key টো পৰীক্ষা কৰক।");
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'পেমেন্ট কৰক (Razorpay)';
-            });
-
-            rzp.open();
+            }
         }
     </script>
 </body>
