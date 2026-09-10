@@ -115,10 +115,12 @@
             border-radius: 24px; 
             width: 100%; max-width: 600px; 
             position: relative; 
+            /* 3D Shadows & Borders */
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.8) inset, 0 -8px 0px rgba(109, 40, 217, 0.1) inset;
             border: 1px solid rgba(255,255,255,0.5);
             max-height: 90vh; overflow-y: auto;
-            transform: scale(0.8) translateY(30px) perspective(1000px) rotateX(5deg);
+            /* 3D Pop Animation */
+            transform: scale(0.7) translateY(50px) perspective(1000px) rotateX(10deg);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -127,6 +129,7 @@
             opacity: 1;
         }
         
+        /* Floating 3D Close Button */
         .close-modal { 
             position: absolute; right: -10px; top: -10px; 
             background: white; color: #e11d48; width: 40px; height: 40px; 
@@ -135,11 +138,13 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 -3px 0 rgba(0,0,0,0.1) inset;
             transition: 0.3s;
         }
-        .close-modal:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 -3px 0 rgba(0,0,0,0.1) inset; }
+        .close-modal:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 -3px 0 rgba(0,0,0,0.1) inset; color: #9f1239;}
 
+        /* 3D Detail Box inside Modal */
         .detail-box { 
             background: #fdf2f8; padding: 25px; border-radius: 16px; margin-bottom: 15px; 
             border: 1px solid #fce7f3; 
+            /* 3D Inner Box */
             box-shadow: 0 8px 0 #fbcfe8, 0 15px 20px rgba(0,0,0,0.05);
             margin-top: 15px;
         }
@@ -147,7 +152,7 @@
         .detail-item h4 { font-size: 16px; color: #831843; margin-bottom: 6px; }
         .detail-item p { font-size: 14px; color: #475569; line-height: 1.6; }
 
-        /* Other Elements */
+        /* Other UI Elements */
         .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px; }
         .whatsapp-share-btn:hover { background: #1da851; transform: translateY(-2px); }
         .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
@@ -179,7 +184,7 @@
         .footer-links a { color: #cbd5e1; text-decoration: none; font-size: 14px; transition: 0.3s; }
         .footer-links a:hover { color: white; text-decoration: underline; }
         .disclaimer-text { font-size: 11px; color: #64748b; max-width: 900px; margin: 20px auto 0; line-height: 1.6; border-top: 1px solid #1e293b; padding-top: 20px; }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 768px) { .nav-content { flex-direction: column; } .main-menu { margin-top: 10px; } }
     </style>
 </head>
@@ -387,7 +392,9 @@
     </footer>
 
     <script>
-        const texts = {
+    // To protect against crashes from external config.js or app.js
+    (function() {
+        const appTexts = {
             as: {
                 navHome: "Home", navServices: "Services", navAbout: "About Us",
                 hHighlight: "আপোনাৰ ভৱিষ্যৎ", hRest: " আজি সঠিকভাৱে জানি লওক",
@@ -516,7 +523,7 @@
             }
         };
 
-        const rashiData = {
+        const appZodiacData = {
             as: [
                 { id: "aries", name: "মেষ", symbol: "♈", short: "আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব। দিনটোৰ দ্বিতীয়াৰ্ধত কিছু গুৰুত্বপূৰ্ণ সিদ্ধান্ত ল'বলগীয়া হ'ব পাৰে। ব্যৱসায়িক লেনদেনত লাভৰ সম্ভাৱনা।", love: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব। পৰিয়ালৰ লোকৰ সৈতে সময় কটালে মানসিক শান্তি পাব। অবিবাহিতসকলৰ বাবে নতুন প্ৰস্তাৱ অহাৰ যোগ আছে।", health: "স্বাস্থ্য সুন্দৰ থাকিব। পুৱাৰ ভাগত যোগ বা ব্যায়াম কৰিলে দিনটো সতেজ অনুভৱ কৰিব। বাহিৰৰ খাদ্যৰ পৰা বিৰত থাকক।", advice: "খং নিয়ন্ত্ৰণ কৰক আৰু আনৰ কথাত সোনকালে প্ৰতিক্ৰিয়া নিদিব।", color: "বগলীয়া", num: "৯" },
                 { id: "taurus", name: "বৃষ", symbol: "♉", short: "কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে।", career: "ব্যৱসায়ত লাভৰ যোগ আছে। সহকৰ্মীৰ পৰা পূৰ্ণ সহযোগিতা লাভ কৰিব। দীৰ্ঘদিনীয়া কোনো অসম্পূৰ্ণ কাম আজি পূৰ্ণ হ'ব পাৰে।", love: "পৰিয়ালৰ সমৰ্থন পাব। প্ৰিয়জনৰ সৈতে সময় কটাবলৈ চেষ্টা কৰক। সৰু-সুৰা কথাত তৰ্ক কৰাৰ পৰা বিৰত থাকক।", health: "পেটৰ সামান্য সমস্যা হ'ব পাৰে। সতেজ ফল-মূল বেছিকৈ খাওক।", advice: "খৰচৰ ক্ষেত্ৰত সাৱধানতা অৱলম্বন কৰাটো বাঞ্ছনীয়।", color: "সেউজীয়া", num: "৬" },
@@ -563,91 +570,98 @@
 
         let currentLang = 'as';
 
-        function switchLanguage(lang) {
+        // Safe Text Updater
+        function setText(id, text) {
+            const el = document.getElementById(id);
+            if (el && text !== undefined) {
+                el.innerText = text;
+            }
+        }
+
+        window.switchLanguage = function(lang) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + lang).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + lang);
+            if(activeBtn) activeBtn.classList.add('active');
 
             const t = texts[lang];
             
-            document.getElementById('navHome').innerText = t.navHome;
-            document.getElementById('navServices').innerText = t.navServices;
-            document.getElementById('navAbout').innerText = t.navAbout;
+            setText('navHome', t.navHome);
+            setText('navServices', t.navServices);
+            setText('navAbout', t.navAbout);
             
-            document.getElementById('h-title-highlight').innerText = t.hHighlight;
-            document.getElementById('h-title-rest').innerText = t.hRest;
-            document.getElementById('h-subtitle').innerText = t.hSubtitle;
-            document.getElementById('b1').innerText = t.b1; document.getElementById('b2').innerText = t.b2;
-            document.getElementById('b3').innerText = t.b3; document.getElementById('b4').innerText = t.b4;
+            setText('h-title-highlight', t.hHighlight);
+            setText('h-title-rest', t.hRest);
+            setText('h-subtitle', t.hSubtitle);
+            setText('b1', t.b1); setText('b2', t.b2);
+            setText('b3', t.b3); setText('b4', t.b4);
             
-            document.getElementById('p-title').innerText = t.pTitle;
-            document.getElementById('pl-sunrise').innerText = t.plSunrise; document.getElementById('pl-sunset').innerText = t.plSunset;
-            document.getElementById('pl-tithi').innerText = t.plTithi; document.getElementById('pl-nakshatra').innerText = t.plNakshatra;
-            document.getElementById('pl-rahu').innerText = t.plRahu;
+            setText('p-title', t.pTitle);
+            setText('pl-sunrise', t.plSunrise); setText('pl-sunset', t.plSunset);
+            setText('pl-tithi', t.plTithi); setText('pl-nakshatra', t.plNakshatra);
+            setText('pl-rahu', t.plRahu);
             
-            document.getElementById('toolsTitle').innerText = t.toolsTitle;
-            document.getElementById('toolsSub').innerText = t.toolsSub;
-            document.getElementById('dobHoroTitle').innerText = t.dobHoroTitle;
-            document.getElementById('dobHoroDesc').innerText = t.dobHoroDesc;
-            document.getElementById('coupleTitle').innerText = t.coupleTitle;
-            document.getElementById('coupleDesc').innerText = t.coupleDesc;
-            document.getElementById('btnDobHoro').innerText = t.checkBtn;
-            document.getElementById('btnCouple').innerText = t.checkBtn;
-            document.getElementById('boyLbl').innerText = t.boyLbl;
-            document.getElementById('girlLbl').innerText = t.girlLbl;
-            document.getElementById('lblPersonalDob').innerText = t.lblPersonalDob;
-            document.getElementById('lblPersonalRashi').innerText = t.lblPersonalRashi;
+            setText('toolsTitle', t.toolsTitle);
+            setText('toolsSub', t.toolsSub);
+            setText('dobHoroTitle', t.dobHoroTitle);
+            setText('dobHoroDesc', t.dobHoroDesc);
+            setText('coupleTitle', t.coupleTitle);
+            setText('coupleDesc', t.coupleDesc);
+            setText('btnDobHoro', t.checkBtn);
+            setText('btnCouple', t.checkBtn);
+            setText('boyLbl', t.boyLbl);
+            setText('girlLbl', t.girlLbl);
+            setText('lblPersonalDob', t.lblPersonalDob);
+            setText('lblPersonalRashi', t.lblPersonalRashi);
 
-            document.getElementById('rashi-main-title').innerText = t.rashiMainTitle;
-            document.getElementById('rashi-sub-title').innerText = t.rashiSubTitle;
-            document.getElementById('wa-share-text').innerText = t.waShareText;
+            setText('rashi-main-title', t.rashiMainTitle);
+            setText('rashi-sub-title', t.rashiSubTitle);
+            setText('wa-share-text', t.waShareText);
 
-            document.getElementById('aboutTitle').innerText = t.aboutTitle;
-            document.getElementById('aboutDesc').innerText = t.aboutDesc;
+            setText('aboutTitle', t.aboutTitle);
+            setText('aboutDesc', t.aboutDesc);
 
-            document.getElementById('s-title').innerText = t.sTitle; document.getElementById('s-subtitle').innerText = t.sSubtitle;
-            document.getElementById('srv1-title').innerText = t.srv1Title; document.getElementById('srv1-desc').innerText = t.srv1Desc;
-            document.getElementById('srv2-title').innerText = t.srv2Title; document.getElementById('srv2-desc').innerText = t.srv2Desc;
-            document.getElementById('srv3-title').innerText = t.srv3Title; document.getElementById('srv3-desc').innerText = t.srv3Desc;
+            setText('s-title', t.sTitle); setText('s-subtitle', t.sSubtitle);
+            setText('srv1-title', t.srv1Title); setText('srv1-desc', t.srv1Desc);
+            setText('srv2-title', t.srv2Title); setText('srv2-desc', t.srv2Desc);
+            setText('srv3-title', t.srv3Title); setText('srv3-desc', t.srv3Desc);
             document.querySelectorAll('.service-btn-action').forEach(b => b.innerText = t.btnText);
 
-            document.getElementById('testimonialTitle').innerText = t.testTitle;
-            document.getElementById('testimonialSubtitle').innerText = t.testSub || "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা";
-            document.getElementById('test1-text').innerText = t.t1text; document.getElementById('test1-author').innerText = t.t1auth;
-            document.getElementById('test2-text').innerText = t.t2text; document.getElementById('test2-author').innerText = t.t2auth;
-            document.getElementById('test3-text').innerText = t.t3text || "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"; document.getElementById('test3-author').innerText = t.t3auth || "— নিবেদিতা শৰ্মা, যোৰহাট";
+            setText('testimonialTitle', t.testTitle);
+            setText('testimonialSubtitle', t.testSub || "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা");
+            setText('test1-text', t.t1text); setText('test1-author', t.t1auth);
+            setText('test2-text', t.t2text); setText('test2-author', t.t2auth);
+            setText('test3-text', t.t3text || "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"); 
+            setText('test3-author', t.t3auth || "— নিবেদিতা শৰ্মা, যোৰহাট");
             
-            document.getElementById('rfTitle').innerText = t.rfTitle || "আপোনাৰ মতামত দিয়ক"; 
-            document.getElementById('btnSubmitReview').innerText = t.btnSubmitReview || "মতামত প্ৰেৰণ কৰক";
+            setText('rfTitle', t.rfTitle || "আপোনাৰ মতামত দিয়ক"); 
+            setText('btnSubmitReview', t.btnSubmitReview || "মতামত প্ৰেৰণ কৰক");
 
-            document.getElementById('sec-title').innerText = t.secTitle; document.getElementById('sec-desc').innerText = t.secDesc;
+            setText('sec-title', t.secTitle); setText('sec-desc', t.secDesc);
             
-            document.getElementById('ft-home').innerText = t.navHome;
-            document.getElementById('ft-privacy').innerText = t.ftPrivacy;
-            document.getElementById('ft-terms').innerText = t.ftTerms;
-            document.getElementById('ft-contact').innerText = t.ftContact;
-            document.getElementById('footer-text').innerText = t.footerText;
-            document.getElementById('ft-disclaimer').innerText = t.ftDisclaimer;
+            setText('ft-home', t.navHome);
+            setText('ft-privacy', t.ftPrivacy);
+            setText('ft-terms', t.ftTerms);
+            setText('ft-contact', t.ftContact);
+            setText('footer-text', t.footerText);
+            setText('ft-disclaimer', t.ftDisclaimer);
 
             updateDate();
-            
-            // Re-added the missing dropdown render function call
             renderRashiDropdowns();
             renderRashiGrid();
-        }
+        };
 
         function updateDate() {
             const today = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const langCode = currentLang === 'en' ? 'en-US' : (currentLang === 'hi' ? 'hi-IN' : 'as-IN');
-            document.getElementById('p-date').innerText = texts[currentLang].datePrefix + today.toLocaleDateString(langCode, options);
+            setText('p-date', texts[currentLang].datePrefix + today.toLocaleDateString(langCode, options));
         }
 
-        // ADDED BACK: Dynamic Dropdown Options based on language
         function renderRashiDropdowns() {
             const defText = texts[currentLang].selectRashiText || "-- Select --";
             let optionsHtml = `<option value="">${defText}</option>`;
-            rashiData[currentLang].forEach(r => {
+            appZodiacData[currentLang].forEach(r => {
                 optionsHtml += `<option value="${r.id}">${r.symbol} ${r.name}</option>`;
             });
 
@@ -658,30 +672,32 @@
 
         function renderRashiGrid() {
             const gridContainer = document.getElementById('rashiGridContainer');
-            gridContainer.innerHTML = rashiData[currentLang].map(r => `
-                <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
-                    <div class="rashi-icon">${r.symbol}</div>
-                    <h3>${r.name}</h3><p>${r.short}</p>
-                </div>
-            `).join('');
+            if (gridContainer) {
+                gridContainer.innerHTML = appZodiacData[currentLang].map(r => `
+                    <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
+                        <div class="rashi-icon">${r.symbol}</div>
+                        <h3>${r.name}</h3><p>${r.short}</p>
+                    </div>
+                `).join('');
+            }
         }
 
-        function checkPersonalHoroscope() {
+        window.checkPersonalHoroscope = function() {
             const r1 = document.getElementById('personalRashiInput').value;
             const d1 = document.getElementById('personalDobInput').value;
             if(!r1 || !d1) {
                 alert(currentLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছক।" : (currentLang === 'hi' ? "कृपया जन्म तिथि और राशि चुनें।" : "Please enter DOB and select your Rashi."));
                 return;
             }
-            openRashiDetail(r1, d1);
-        }
+            window.openRashiDetail(r1, d1);
+        };
 
-        function openRashiDetail(rashiId, dob = null) {
-            const r = rashiData[currentLang].find(item => item.id === rashiId);
+        window.openRashiDetail = function(rashiId, dob = null) {
+            const r = appZodiacData[currentLang].find(item => item.id === rashiId);
             const t = texts[currentLang];
             if(!r) return;
 
-            document.getElementById('modalRashiTitle').innerText = t.modalSingleTitle;
+            setText('modalRashiTitle', t.modalSingleTitle);
             
             let headerBox = '';
             if (dob) {
@@ -729,9 +745,9 @@
                 </div>
             `;
             document.getElementById('rashiModal').classList.add('active');
-        }
+        };
 
-        function checkCoupleHoroscope() {
+        window.checkCoupleHoroscope = function() {
             const r1 = document.getElementById('coupleRashi1').value;
             const r2 = document.getElementById('coupleRashi2').value;
             const d1 = document.getElementById('coupleDob1').value;
@@ -743,8 +759,8 @@
             }
 
             const t = texts[currentLang];
-            const rData1 = rashiData[currentLang].find(r => r.id === r1);
-            const rData2 = rashiData[currentLang].find(r => r.id === r2);
+            const rData1 = appZodiacData[currentLang].find(r => r.id === r1);
+            const rData2 = appZodiacData[currentLang].find(r => r.id === r2);
 
             const today = new Date().getDate();
             const rawScore = (r1.charCodeAt(0) + r2.charCodeAt(1) + today) % 25 + 70; // 70 to 94 
@@ -758,7 +774,7 @@
 
             let commAdvice = currentLang === 'as' ? `দুয়োৰে চিন্তা কৰাৰ ধৰণ বেলেগ হ'ব পাৰে। ${rData1.name} ৰাশিয়ে কথা পাতি সমস্যা সমাধান কৰিব বিচাৰিব, আনহাতে ${rData2.name} ৰাশিয়ে অলপ সময় লৈ কথা পতা ভাল পাব।` : (currentLang === 'hi' ? `बातचीत का तरीका अलग हो सकता है। ${rData1.name} तुरंत बात करना चाहेंगे, जबकि ${rData2.name} समय लेना पसंद करेंगे।` : `Communication styles may differ. Understanding each other's perspective is key today.`);
 
-            document.getElementById('modalRashiTitle').innerText = t.modalCoupleTitle;
+            setText('modalRashiTitle', t.modalCoupleTitle);
             document.getElementById('modalRashiBody').innerHTML = `
                 <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fce7f3; text-align: center;">
                     <p style="font-weight: 600; color: #831843; font-size: 15px;">👨 <strong>Boy:</strong> DOB: ${d1} | ${rData1.symbol} ${rData1.name}</p>
@@ -809,11 +825,11 @@
                 </div>
             `;
             document.getElementById('rashiModal').classList.add('active');
-        }
+        };
 
-        function closeRashiModal() { document.getElementById('rashiModal').classList.remove('active'); }
+        window.closeRashiModal = function() { document.getElementById('rashiModal').classList.remove('active'); };
 
-        function submitReview(e) {
+        window.submitReview = function(e) {
             e.preventDefault();
             const name = document.getElementById('reviewerName').value;
             const stars = document.getElementById('reviewStars').value;
@@ -830,14 +846,20 @@
             document.getElementById('testimonialsList').insertAdjacentHTML('afterbegin', newReview);
             document.getElementById('reviewForm').reset();
             alert(currentLang === 'as' ? "আপোনাৰ মতামতৰ বাবে ধন্যবাদ!" : "Thank you for your review!");
-        }
+        };
 
-        function shareOnWhatsApp() {
+        window.shareOnWhatsApp = function() {
             const text = encodeURIComponent("✨ জ্যোতিষ অসমত আজিৰ ৰাশিফল আৰু নিখুঁত বৈদিক কুণ্ডলী চাওক! \nলিংক: " + window.location.href);
             window.open(`https://wa.me/?text=${text}`, '_blank');
-        }
+        };
 
-        window.addEventListener('DOMContentLoaded', () => { switchLanguage('as'); });
+        // Initialize safely
+        window.addEventListener('DOMContentLoaded', () => { 
+            try { window.switchLanguage('as'); } 
+            catch(err) { console.error("Initialization Error:", err); }
+        });
+
+    })();
     </script>
 </body>
 </html>
