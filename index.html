@@ -84,11 +84,10 @@
         .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .gender-badge { display: inline-flex; align-items: center; gap: 5px; background: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #334155; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 10px; border: 1px solid #e2e8f0; }
 
-        /* 12 Rashi & Services */
+        /* 12 Rashi Grid */
         .section { margin: 50px 0; scroll-margin-top: 100px; }
         .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text-dark); text-align: center; }
         .section-subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 15px; }
-        
         .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 25px; }
         .rashi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .rashi-card:hover { border-color: var(--primary-color); box-shadow: 0 10px 25px rgba(109, 40, 217, 0.12); transform: translateY(-5px); }
@@ -116,11 +115,9 @@
             border-radius: 24px; 
             width: 100%; max-width: 600px; 
             position: relative; 
-            /* 3D Shadows & Borders */
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.8) inset, 0 -8px 0px rgba(109, 40, 217, 0.1) inset;
             border: 1px solid rgba(255,255,255,0.5);
             max-height: 90vh; overflow-y: auto;
-            /* 3D Pop Animation */
             transform: scale(0.8) translateY(30px) perspective(1000px) rotateX(5deg);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -130,7 +127,6 @@
             opacity: 1;
         }
         
-        /* Floating 3D Close Button */
         .close-modal { 
             position: absolute; right: -10px; top: -10px; 
             background: white; color: #e11d48; width: 40px; height: 40px; 
@@ -141,11 +137,9 @@
         }
         .close-modal:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 -3px 0 rgba(0,0,0,0.1) inset; }
 
-        /* 3D Detail Box inside Modal */
         .detail-box { 
             background: #fdf2f8; padding: 25px; border-radius: 16px; margin-bottom: 15px; 
             border: 1px solid #fce7f3; 
-            /* 3D Inner Box */
             box-shadow: 0 8px 0 #fbcfe8, 0 15px 20px rgba(0,0,0,0.05);
             margin-top: 15px;
         }
@@ -153,7 +147,7 @@
         .detail-item h4 { font-size: 16px; color: #831843; margin-bottom: 6px; }
         .detail-item p { font-size: 14px; color: #475569; line-height: 1.6; }
 
-        /* Other UI */
+        /* Other Elements */
         .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px; }
         .whatsapp-share-btn:hover { background: #1da851; transform: translateY(-2px); }
         .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
@@ -161,13 +155,6 @@
         .about-box h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 24px; }
         .about-box p { color: var(--text-light); font-size: 15px; line-height: 1.8; max-width: 800px; margin: 0 auto; }
         
-        footer { background: var(--dark-bg); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; }
-        .footer-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
-        .footer-links a { color: #cbd5e1; text-decoration: none; font-size: 14px; transition: 0.3s; }
-        .footer-links a:hover { color: white; text-decoration: underline; }
-        .disclaimer-text { font-size: 11px; color: #64748b; max-width: 900px; margin: 20px auto 0; line-height: 1.6; border-top: 1px solid #1e293b; padding-top: 20px; }
-
-        /* Services & Testimonials styling collapsed for brevity but fully intact */
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .service-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; text-align: center; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .service-card:hover { border-color: var(--primary-color); box-shadow: 0 20px 40px rgba(109, 40, 217, 0.1); transform: translateY(-5px); }
@@ -186,6 +173,14 @@
         .review-form-box { background: #fdf4ff; border: 1px solid #fae8ff; border-radius: 16px; padding: 30px; margin-top: 40px; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.05); }
         .review-form-box h3 { color: var(--secondary-color); margin-bottom: 15px; text-align: center; }
         .review-input, .review-select, .review-textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; }
+
+        footer { background: var(--dark-bg); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; }
+        .footer-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .footer-links a:hover { color: white; text-decoration: underline; }
+        .disclaimer-text { font-size: 11px; color: #64748b; max-width: 900px; margin: 20px auto 0; line-height: 1.6; border-top: 1px solid #1e293b; padding-top: 20px; }
+
+        @media (max-width: 768px) { .nav-content { flex-direction: column; } .main-menu { margin-top: 10px; } }
     </style>
 </head>
 <body>
@@ -560,7 +555,7 @@
                 { id: "libra", name: "तुला", symbol: "♎", short: "प्यार और स्नेह की वर्षा होगी।", career: "कला और मीडिया से जुड़े लोगों को लाभ। व्यापार में नई साझेदारी के समझौते पर हस्ताक्षर कर सकते हैं।", love: "प्रेम जीवन प्रफुल्लित रहेगा। आपसी समझ सामान्य दिनों की तुलना में बहुत अधिक होगी।", health: "स्वास्थ्य उत्तम रहेगा। फिर भी, बाहर की गर्मी से खुद को बचाएं।", advice: "अपने लक्ष्यों पर केंद्रित रहें और आलस्य से बचें।", color: "गुलाबी", num: "7" },
                 { id: "scorpio", name: "वृश्चिक", symbol: "♏", short: "छुपी हुई प्रतिभा दिखाने का समय।", career: "कड़ी मेहनत का फल मिलेगा। आर्थिक मामलों में अचानक कोई शुभ समाचार मिल सकता है।", love: "गलतफहमियां दूर होंगी। अपने प्रियजन के प्रति आपका विश्वास और स्नेह बढ़ेगा।", health: "ब्लड प्रेशर नियंत्रित रखें। सुबह की सैर आपके लिए फायदेमंद रहेगी।", advice: "गुप्त व्यवहार से बचें और खुलकर बात करें।", color: "मरून", num: "8" },
                 { id: "sagittarius", name: "धनु", symbol: "♐", short: "नए अवसरों के दरवाजे खुलेंगे।", career: "उच्च शिक्षा के लिए यात्रा हो सकती है। कार्यस्थल पर आपकी ईमानदारी और समर्पण को महत्व दिया जाएगा।", love: "साथी का भरपूर सहयोग मिलेगा। अविवाहितों के लिए आज का दिन बहुत शुभ है।", health: "ऊर्जा का स्तर ऊंचा रहेगा। आप खेलकूद या व्यायाम में भाग ले सकते हैं।", advice: "अत्यधिक आशावादी होकर लापरवाह न बनें।", color: "बैंगनी", num: "3" },
-                { id: "capricorn", name: "मकर", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी। लंबी अवधि के निवेश के लिए आज का दिन अच्छा है।", love: "पारिवारिक जिम्मेदारी बढ़ेगी। परिवार के प्रति आपका समर्पण सभी को खुश करेगा।", health: "जोड़ों का ध्यान रखें। भारी वजन उठाने से बचें।", advice: "अपने काम और निजी जीवन के बीच संतुलन बनाए रखें।", color: "ग्रे", num: "8" },
+                { id: "capricorn", name: "मकर", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी। लंबी अवधि के निवेश के लिए आज का दिन अच्छा है।", love: "पारिवारिक जिम्मेदारी बढ़ेगी। परिवार के प्रति आपका समर्पण सभी को खुश करेगा।", health: 'जोड़ों का ध्यान रखें। भारी वजन उठाने से बचें।', advice: "अपने काम और निजी जीवन के बीच संतुलन बनाए रखें।", color: "ग्रे", num: "8" },
                 { id: "aquarius", name: "कुंभ", symbol: "♒", short: "मित्रता और संबंध शक्तिशाली होंगे।", career: "टीम वर्क में सफलता। आपके नवीन विचार कार्यस्थल पर नए बदलाव लाएंगे।", love: "मित्र की मदद से प्रेम में प्रगति। किसी पुराने मित्र से अचानक मुलाकात हो सकती है।", health: "मानसिक उल्लास रहेगा। तंत्रिका तनाव से मुक्त रहने के लिए आराम करें।", advice: "अपने स्वभाव में थोड़ा लचीलापन लाने की कोशिश करें।", color: "आसमानी नीला", num: "4" },
                 { id: "pisces", name: "मीन", symbol: "♓", short: "सृजनात्मकता दिखाने का दिन है।", career: "नए विचारों से लाभ होगा। कला या लेखन से जुड़े लोगों के लिए दिन शुभ है।", love: "आध्यात्मिक गतिविधियों में मन लगेगा। अपने साथी की भावनाओं का सम्मान करें।", health: "शांत महसूस करेंगे। पैरों में दर्द की संभावना है, सावधान रहें।", advice: "वास्तविकता से न भागें; सपनों के साथ-साथ कर्म को भी महत्व दें।", color: "सुनहरा पीला", num: "3" }
             ]
@@ -635,6 +630,8 @@
             document.getElementById('ft-disclaimer').innerText = t.ftDisclaimer;
 
             updateDate();
+            
+            // Re-added the missing dropdown render function call
             renderRashiDropdowns();
             renderRashiGrid();
         }
@@ -646,7 +643,7 @@
             document.getElementById('p-date').innerText = texts[currentLang].datePrefix + today.toLocaleDateString(langCode, options);
         }
 
-        // Fix: Added the missing function for Dynamic Dropdowns
+        // ADDED BACK: Dynamic Dropdown Options based on language
         function renderRashiDropdowns() {
             const defText = texts[currentLang].selectRashiText || "-- Select --";
             let optionsHtml = `<option value="">${defText}</option>`;
@@ -806,7 +803,7 @@
                         </span>
                     </div>
 
-                    <div style="text-align: center; font-weight: bold; color: #be123c; font-size: 18px; margin-top: 15px; border-top: 2px solid #fce7f3; padding-top: 15px;">
+                    <div style="text-align: center; font-weight: bold; color: #be123c; font-size: 20px; margin-top: 15px; border-top: 2px solid #fce7f3; padding-top: 15px;">
                         ⭐ Overall Couple Score: ${overallScore}/10
                     </div>
                 </div>
