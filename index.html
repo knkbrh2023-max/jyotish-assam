@@ -5,28 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>
-    <meta name="description" content="জ্যোতিষ অসম (Jyotish Assam) - 100% নিখুঁত বৈদিক জ্যোতিষ, জন্ম কুণ্ডলী, প্ৰেমৰ পৰামৰ্শ, কেৰিয়াৰ ভৱিষ্যদ্বাণী আৰু দৈনিক ৰাশিফল।">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- আপোনাৰ পুৰণি ফাইলসমূহ -->
-    <script src="config.js"></script>
-    <script src="app.js"></script>
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary-color: #6D28D9;
-            --secondary-color: #DB2777;
-            --dark-bg: #0f172a;
-            --light-bg: #f8fafc;
-            --text-dark: #1e293b;
-            --text-light: #64748b;
-            --border-color: #e2e8f0;
-        }
-
-        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); overflow-x: hidden;}
+        :root { --primary-color: #6D28D9; --secondary-color: #DB2777; --dark-bg: #0f172a; --light-bg: #f8fafc; --text-dark: #1e293b; --text-light: #64748b; --border-color: #e2e8f0; --success-color: #10B981; }
+        
+        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         /* Navigation */
@@ -34,85 +21,67 @@
         .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; flex-wrap: wrap; gap: 15px;}
         .logo { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .main-menu { display: flex; gap: 20px; }
-        .main-menu a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 14px; transition: 0.3s; }
+        .main-menu a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 14px; }
         .lang-switcher { display: flex; gap: 8px; }
-        .lang-btn { padding: 6px 12px; border: 1px solid var(--border-color); background: white; cursor: pointer; border-radius: 6px; font-weight: 600; transition: all 0.3s; font-size: 13px; }
+        .lang-btn { padding: 6px 12px; border: 1px solid var(--border-color); background: white; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 13px; }
         .lang-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
 
         /* Hero */
         .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
         .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; }
-        .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 16px; color: var(--text-light); max-width: 700px; margin: 0 auto 20px; }
+        .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Tools */
-        .section { margin: 50px 0; scroll-margin-top: 100px; }
+        /* Free Tools Section */
+        .section { margin: 50px 0; }
         .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text-dark); text-align: center; }
         .section-subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 15px; }
         
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
         .tool-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .tool-card.personal-card { background: linear-gradient(145deg, #ffffff, #f5f3ff); border-color: #ede9fe; }
+        .tool-card.couple-card { background: linear-gradient(145deg, #ffffff, #fdf2f8); border-color: #fce7f3; }
         .tool-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: center; color: var(--primary-color); }
-        .tool-card p { font-size: 13px; color: var(--text-light); margin-bottom: 25px; text-align: center; }
+        .tool-card.couple-card h3 { color: var(--secondary-color); }
+        .tool-card > p { font-size: 13px; color: var(--text-light); margin-bottom: 25px; text-align: center; }
+        
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 5px; }
         .tool-input { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; background: white; }
-        .tool-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1); }
-        .tool-btn { color: white; border: none; padding: 14px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; font-size: 16px; margin-top: 10px; background: linear-gradient(135deg, var(--primary-color), #8b5cf6); box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
-        .tool-btn:hover { transform: translateY(-2px); }
-        .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .gender-badge { display: inline-flex; background: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 10px; border: 1px solid #e2e8f0; }
+        
+        .tool-btn { color: white; border: none; padding: 14px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; font-size: 16px; background: linear-gradient(135deg, var(--primary-color), #8b5cf6); box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
+        .tool-card.couple-card .tool-btn { background: linear-gradient(135deg, var(--secondary-color), #f43f5e); box-shadow: 0 4px 15px rgba(219, 39, 119, 0.3); }
 
-        /* Rashi Grid */
-        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .gender-badge { display: inline-flex; align-items: center; background: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 10px; border: 1px solid #e2e8f0; }
+
+        /* 12 Rashi Grid */
+        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 25px; }
         .rashi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .rashi-card:hover { border-color: var(--primary-color); box-shadow: 0 10px 25px rgba(109, 40, 217, 0.12); transform: translateY(-5px); }
         .rashi-icon { font-size: 32px; background: #f3e8ff; width: 60px; height: 60px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary-color); }
         .rashi-card h3 { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+        .rashi-card p { font-size: 13px; color: var(--text-light); }
 
-        /* =========================================
-           TRUE 3D POPUP MODAL STYLES (EXTREME DESIGN)
-           ========================================= */
-        .modal { 
-            display: flex; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);
-            justify-content: center; align-items: center; padding: 20px;
-            visibility: hidden; opacity: 0; transition: all 0.4s ease;
-            perspective: 1200px; /* Crucial for 3D */
-        }
+        /* 3D POPUP MODAL */
+        .modal { display: flex; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 20px; visibility: hidden; opacity: 0; transition: all 0.3s ease; }
         .modal.active { visibility: visible; opacity: 1; }
         
         .modal-content { 
-            background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
-            padding: 30px; border-radius: 20px; 
-            width: 100%; max-width: 600px; position: relative; 
-            /* Realistic 3D Shadow and Border */
-            box-shadow: 0 20px 0px -10px #d8b4fe, 0 40px 50px rgba(109, 40, 217, 0.4), inset 0 2px 10px rgba(255,255,255,0.9);
-            border: 2px solid #e9d5ff; max-height: 90vh; overflow-y: auto;
-            /* 3D Pop Animation */
-            transform: rotateX(25deg) translateY(100px) scale(0.8); opacity: 0; transform-style: preserve-3d;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(to bottom, #ffffff, #fdfbfe); padding: 35px 30px; border-radius: 24px; 
+            width: 100%; max-width: 650px; position: relative; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.8) inset, 0 -8px 0px rgba(109, 40, 217, 0.1) inset;
+            border: 1px solid rgba(255,255,255,0.5); max-height: 90vh; overflow-y: auto;
+            transform: scale(0.7) translateY(50px) perspective(1000px) rotateX(10deg); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .modal.active .modal-content { transform: rotateX(0deg) translateY(0) scale(1); opacity: 1; }
+        .modal.active .modal-content { transform: scale(1) translateY(0) perspective(1000px) rotateX(0deg); opacity: 1; }
         
-        .close-modal { 
-            position: absolute; right: -15px; top: -15px; background: white; color: #e11d48; width: 45px; height: 45px; 
-            border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 26px; font-weight: bold; cursor: pointer; z-index: 10;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2), 0 -4px 0 rgba(0,0,0,0.1) inset; transition: 0.3s;
-        }
-        .close-modal:hover { transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.3), 0 -4px 0 rgba(0,0,0,0.1) inset; }
+        .close-modal { position: absolute; right: -10px; top: -10px; background: white; color: #e11d48; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; cursor: pointer; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 -3px 0 rgba(0,0,0,0.1) inset; }
+        
+        .detail-box { background: #fdf2f8; padding: 25px; border-radius: 16px; margin-bottom: 15px; border: 1px solid #fce7f3; box-shadow: 0 8px 0 #fbcfe8, 0 15px 20px rgba(0,0,0,0.05); margin-top: 15px; }
+        .detail-item { margin-bottom: 18px; }
+        .detail-item h4 { font-size: 16px; color: #831843; margin-bottom: 6px; }
+        .detail-item p { font-size: 14px; color: #475569; line-height: 1.6; }
 
-        .detail-box { 
-            background: #ffffff; padding: 25px; border-radius: 16px; margin-bottom: 15px; border: 1px solid #fce7f3; 
-            /* 3D Inner Box */
-            box-shadow: 0 8px 0 #fbcfe8, 0 15px 20px rgba(0,0,0,0.08); margin-top: 20px;
-        }
-        .detail-item { margin-bottom: 20px; }
-        .detail-item h4 { font-size: 17px; color: #831843; margin-bottom: 8px; border-bottom: 1px dashed #fbcfe8; padding-bottom: 5px;}
-        .detail-item p { font-size: 15px; color: #334155; line-height: 1.8; text-align: justify; }
-
-        /* Other UI */
-        .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px; }
         footer { background: var(--dark-bg); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; font-size: 14px; }
     </style>
 </head>
@@ -120,15 +89,9 @@
     <nav>
         <div class="container nav-content">
             <div class="logo">✨ জ্যোতিষ অসম</div>
-            <div class="main-menu">
-                <a href="#" id="id-nav-home">Home</a>
-                <a href="#aboutSection" id="id-nav-about">About Us</a>
-            </div>
             <div class="lang-switcher">
-                <!-- Direct Function Calls - No Objects -->
-                <button class="lang-btn active" id="btn-as" onclick="jyoChangeLanguage('as')">অসমীয়া</button>
-                <button class="lang-btn" id="btn-en" onclick="jyoChangeLanguage('en')">English</button>
-                <button class="lang-btn" id="btn-hi" onclick="jyoChangeLanguage('hi')">हिंदी</button>
+                <!-- ভাষা সলনি বুটাম -->
+                <button class="lang-btn active" onclick="alert('বৰ্তমান অসমীয়া ভাষা বাছনি কৰা আছে।')">অসমীয়া</button>
             </div>
         </div>
     </nav>
@@ -136,393 +99,263 @@
     <div class="container">
         <!-- Hero Section -->
         <section class="hero">
-            <h1 class="hero-title-styled" id="h-title-main">
-                <span id="id-title-hl">আপোনাৰ ভৱিষ্যৎ</span> <span id="id-title-rest">আজি সঠিকভাৱে জানি লওক</span>
+            <h1 class="hero-title-styled">
+                <span>আপোনাৰ ভৱিষ্যৎ</span> আজি সঠিকভাৱে জানি লওক
             </h1>
-            <p id="id-subtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
+            <p>বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
         </section>
 
-        <!-- Tools Section -->
+        <!-- Free Astrology Tools Section (পোনপটীয়াকৈ HTML ত ড্ৰপডাউন দিয়া হৈছে) -->
         <section class="section">
-            <h2 class="section-title" id="id-tools-title">🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
-            <p class="section-subtitle" id="id-tools-sub">জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক</p>
+            <h2 class="section-title">🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
+            <p class="section-subtitle">জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক</p>
             
             <div class="tools-grid">
                 <!-- Personal Tool -->
-                <div class="tool-card">
-                    <h3 id="id-per-title">আপোনাৰ বিশদ দৈনিক ৰাশিফল চাওক</h3>
-                    <p id="id-per-desc">আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।</p>
+                <div class="tool-card personal-card">
+                    <h3>আপোনাৰ বিশদ দৈনিক ৰাশিফল চাওক</h3>
+                    <p>আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।</p>
+                    
                     <div class="input-group">
-                        <label id="id-lbl-dob">🎂 জন্ম তাৰিখ (DOB):</label>
-                        <input type="date" id="personalDobInput" class="tool-input">
+                        <label>🎂 জন্ম তাৰিখ (DOB):</label>
+                        <input type="date" id="perDob" class="tool-input">
                     </div>
+                    
                     <div class="input-group">
-                        <label id="id-lbl-rashi">🌟 আপোনাৰ ৰাশি:</label>
-                        <select id="personalRashiInput" class="tool-input"></select>
+                        <label>🌟 আপোনাৰ ৰাশি:</label>
+                        <select id="perRashi" class="tool-input">
+                            <option value="">-- ৰাশি বাছক --</option>
+                            <option value="aries">♈ মেষ (Aries)</option>
+                            <option value="taurus">♉ বৃষ (Taurus)</option>
+                            <option value="gemini">♊ মিথুন (Gemini)</option>
+                            <option value="cancer">♋ কৰ্কট (Cancer)</option>
+                            <option value="leo">♌ সিংহ (Leo)</option>
+                            <option value="virgo">♍ কন্যা (Virgo)</option>
+                            <option value="libra">♎ তুলা (Libra)</option>
+                            <option value="scorpio">♏ বৃশ্চিক (Scorpio)</option>
+                            <option value="sagittarius">♐ ধনু (Sagittarius)</option>
+                            <option value="capricorn">♑ মকৰ (Capricorn)</option>
+                            <option value="aquarius">♒ কুম্ভ (Aquarius)</option>
+                            <option value="pisces">♓ মীন (Pisces)</option>
+                        </select>
                     </div>
-                    <button class="tool-btn" id="id-btn-per" onclick="jyoCheckPersonal()">ৰাশিফল চাওক</button>
+                    
+                    <button class="tool-btn" onclick="showPersonalHoro()">ৰাশিফল চাওক</button>
                 </div>
 
                 <!-- Couple Tool -->
-                <div class="tool-card" style="border-top: 4px solid #DB2777;">
-                    <h3 id="id-couple-title" style="color: #DB2777;">যুটীয়া ৰাশিফল (Couple Horoscope)</h3>
-                    <p id="id-couple-desc">দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।</p>
+                <div class="tool-card couple-card">
+                    <h3>যুটীয়া ৰাশিফল (Couple Horoscope)</h3>
+                    <p>দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।</p>
+                    
                     <div>
-                        <div class="gender-badge" id="id-lbl-boy">👨 ল'ৰাৰ বিৱৰণ:</div>
+                        <div class="gender-badge">👨 ল'ৰাৰ বিৱৰণ:</div>
                         <div class="couple-grid">
-                            <input type="date" id="coupleDob1" class="tool-input">
-                            <select id="coupleRashi1" class="tool-input"></select>
+                            <input type="date" id="cDobBoy" class="tool-input">
+                            <select id="cRashiBoy" class="tool-input">
+                                <option value="">-- ৰাশি --</option>
+                                <option value="aries">♈ মেষ</option><option value="taurus">♉ বৃষ</option>
+                                <option value="gemini">♊ মিথুন</option><option value="cancer">♋ কৰ্কট</option>
+                                <option value="leo">♌ সিংহ</option><option value="virgo">♍ কন্যা</option>
+                                <option value="libra">♎ তুলা</option><option value="scorpio">♏ বৃশ্চিক</option>
+                                <option value="sagittarius">♐ ধনু</option><option value="capricorn">♑ মকৰ</option>
+                                <option value="aquarius">♒ কুম্ভ</option><option value="pisces">♓ মীন</option>
+                            </select>
                         </div>
                     </div>
+
                     <div>
-                        <div class="gender-badge" id="id-lbl-girl">👩 ছোৱালীৰ বিৱৰণ:</div>
+                        <div class="gender-badge">👩 ছোৱালীৰ বিৱৰণ:</div>
                         <div class="couple-grid">
-                            <input type="date" id="coupleDob2" class="tool-input">
-                            <select id="coupleRashi2" class="tool-input"></select>
+                            <input type="date" id="cDobGirl" class="tool-input">
+                            <select id="cRashiGirl" class="tool-input">
+                                <option value="">-- ৰাশি --</option>
+                                <option value="aries">♈ মেষ</option><option value="taurus">♉ বৃষ</option>
+                                <option value="gemini">♊ মিথুন</option><option value="cancer">♋ কৰ্কট</option>
+                                <option value="leo">♌ সিংহ</option><option value="virgo">♍ কন্যা</option>
+                                <option value="libra">♎ তুলা</option><option value="scorpio">♏ বৃশ্চিক</option>
+                                <option value="sagittarius">♐ ধনু</option><option value="capricorn">♑ মকৰ</option>
+                                <option value="aquarius">♒ কুম্ভ</option><option value="pisces">♓ মীন</option>
+                            </select>
                         </div>
                     </div>
-                    <button class="tool-btn" style="background: linear-gradient(135deg, #DB2777, #f43f5e);" id="id-btn-couple" onclick="jyoCheckCouple()">যুটীয়া ৰাশিফল চাওক</button>
+                    <button class="tool-btn" style="background: linear-gradient(135deg, var(--secondary-color), #f43f5e);" onclick="showCoupleHoro()">যুটীয়া ৰাশিফল চাওক</button>
                 </div>
             </div>
         </section>
 
-        <!-- 12 Rashi Grid -->
+        <!-- 12 Rashi Grid Section (পোনপটীয়াকৈ HTML ত দিয়া হৈছে যাতে কেতিয়াও খালী নহয়) -->
         <section class="section">
-            <h2 class="section-title" id="id-grid-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
-            <p class="section-subtitle" id="id-grid-sub">আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক</p>
-            <div class="rashi-grid" id="rashiGridContainer"></div>
+            <h2 class="section-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
+            <p class="section-subtitle">আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক</p>
             
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="whatsapp-share-btn" onclick="jyoShareWa()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" height="22" alt="WhatsApp"> 
-                    <span id="id-wa-text">আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক</span>
-                </button>
+            <div class="rashi-grid">
+                <div class="rashi-card" onclick="openHoroModal('aries')"><div class="rashi-icon">♈</div><h3>মেষ</h3><p>আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('taurus')"><div class="rashi-icon">♉</div><h3>বৃষ</h3><p>কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('gemini')"><div class="rashi-icon">♊</div><h3>মিথুন</h3><p>প্ৰেম-প্ৰসংগত ভাল বাতৰি আহিব।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('cancer')"><div class="rashi-icon">♋</div><h3>কৰ্কট</h3><p>পৰিয়ালৰ সৈতে সময় কটাওক।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('leo')"><div class="rashi-icon">♌</div><h3>সিংহ</h3><p>আৰ্থিক লাভৰ যোগ আছে।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('virgo')"><div class="rashi-icon">♍</div><h3>কন্যা</h3><p>স্বাস্থ্যৰ প্ৰতি মনোযোগ দিয়ে যত্ন লওক।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('libra')"><div class="rashi-icon">♎</div><h3>তুলা</h3><p>ভালোবাসা আৰু স্নেহৰ বৃষ্টি হ'ব।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('scorpio')"><div class="rashi-icon">♏</div><h3>বৃশ্চিক</h3><p>লুকাই থকা প্ৰতিভা ফুটিবলৈ সময়।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('sagittarius')"><div class="rashi-icon">♐</div><h3>ধনু</h3><p>নতুন সুযোগৰ দুৱাৰ মুকলি হ'ব।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('capricorn')"><div class="rashi-icon">♑</div><h3>মকৰ</h3><p>পৰিশ্ৰমৰ ফল পাবলৈ লাগিছে।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('aquarius')"><div class="rashi-icon">♒</div><h3>কুম্ভ</h3><p>মিত্ৰতা আৰু সম্পৰ্ক শক্তিশালী হ'ব।</p></div>
+                <div class="rashi-card" onclick="openHoroModal('pisces')"><div class="rashi-icon">♓</div><h3>মীন</h3><p>সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।</p></div>
             </div>
         </section>
     </div>
 
-    <!-- EXTREME 3D POPUP MODAL -->
-    <div class="modal" id="jyoMasterModal">
+    <!-- 3D POPUP MODAL -->
+    <div class="modal" id="masterModal">
         <div class="modal-content">
-            <div class="close-modal" onclick="jyoCloseModal()">&times;</div>
-            <h2 id="modalTitle" style="color: var(--primary-color); margin-bottom: 5px; font-size: 26px; text-align: center; font-weight: 800;">ৰাশিফল</h2>
+            <div class="close-modal" onclick="document.getElementById('masterModal').classList.remove('active')">&times;</div>
+            <h2 id="modalTitle" style="color: var(--primary-color); margin-bottom: 15px; font-size: 24px; text-align: center; border-bottom: 2px solid #f3e8ff; padding-bottom: 10px;">ৰাশিফল</h2>
             <div id="modalBody"></div>
         </div>
     </div>
 
     <footer>
-        <p id="id-footer">সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম</p>
+        <p>সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম</p>
     </footer>
 
-    <!-- 100% PURE, CONFLICT-FREE JAVASCRIPT -->
+    <!-- সুৰক্ষিত জাভাস্ক্ৰিপ্ট -->
     <script>
-        var jyoCurLang = 'as';
+        // ৰাশিৰ সম্পূৰ্ণ ডিটেইলছ ডাটাবেছ
+        const db = {
+            aries: { n: "মেষ", s: "♈", msg: "আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।", car: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব। ব্যৱসায়িক লেনদেনত লাভৰ সম্ভাৱনা।", lov: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব। অবিবাহিতসকলৰ বাবে নতুন প্ৰস্তাৱ অহাৰ যোগ আছে।", hea: "স্বাস্থ্য সুন্দৰ থাকিব। বাহিৰৰ খাদ্যৰ পৰা বিৰত থাকক।", adv: "খং নিয়ন্ত্ৰণ কৰক আৰু আনৰ কথাত সোনকালে প্ৰতিক্ৰিয়া নিদিব।", col: "বগা", num: "৯" },
+            taurus: { n: "বৃষ", s: "♉", msg: "কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে।", car: "ব্যৱসায়ত লাভৰ যোগ আছে। সহকৰ্মীৰ পৰা পূৰ্ণ সহযোগিতা লাভ কৰিব।", lov: "পৰিয়ালৰ সমৰ্থন পাব। প্ৰিয়জনৰ সৈতে সময় কটাবলৈ চেষ্টা কৰক।", hea: "পেটৰ সামান্য সমস্যা হ'ব পাৰে। সতেজ ফল-মূল বেছিকৈ খাওক।", adv: "খৰচৰ ক্ষেত্ৰত সাৱধানতা অৱলম্বন কৰাটো বাঞ্ছনীয়।", col: "সেউজীয়া", num: "৬" },
+            gemini: { n: "মিথুন", s: "♊", msg: "প্ৰেম-প্ৰসংগত ভাল বাতৰি আহিব।", car: "শিক্ষার্থীসকলৰ বাবে শুভ দিন। আপোনাৰ বুদ্ধিমত্তা আৰু যোগাযোগৰ দক্ষতাই প্ৰশংসা বুটলিব।", lov: "মনৰ কথা প্ৰকাশ কৰিবলৈ ভাল দিন। প্ৰেমত থকাসকলৰ সম্পৰ্ক অধিক দৃঢ় হ'ব।", hea: "মানসিক শান্তি বজায় থাকিব। তথাপিও পৰ্যাপ্ত জিৰণি লোৱাটো আৱশ্যক।", adv: "অধিক চিন্তা কৰাৰ পৰা বিৰত থাকক, কামত মনোযোগ দিয়ক।", col: "হালধীয়া", num: "৩" },
+            cancer: { n: "কৰ্কট", s: "♋", msg: "পৰিয়ালৰ সৈতে সময় কটাওক।", car: "কৰ্মক্ষেত্ৰত ধৈৰ্য ধৰক। নতুন বিনিয়োগৰ বাবে আজি দিনটো সিমান অনুকূল নহয়।", lov: "আৱেগ নিয়ন্ত্ৰণত ৰাখক। সংগীৰ কথাক গুৰুত্ব দিয়ক, তেতিয়াহে ভুল বুজাবুজি দূৰ হ'ব।", hea: "পানী বেছিকৈ খাওক। মানসিক হেঁচাৰ বাবে মূৰৰ বিষ হ'ব পাৰে।", adv: "আজি যিকোনো সিদ্ধান্ত লোৱাৰ আগতে দুবাৰ ভাবিব।", col: "ৰূপালী", num: "২" },
+            leo: { n: "সিংহ", s: "♌", msg: "আৰ্থিক লাভৰ যোগ আছে।", car: "পদোন্নতি বা নতুন সুযোগ আহিব। আপোনাৰ আত্মবিশ্বাসে প্ৰতিদ্বন্দ্বীসকলক পিছ পেলাব।", lov: "ৰোমাঞ্চকৰ দিন। সংগীয়ে আপোনাক কোনো সুন্দৰ উপহাৰ দি আচৰিত কৰিব পাৰে।", hea: "শাৰীৰিক শক্তি প্ৰচুৰ থাকিব। সতেজ আৰু সক্ৰিয় অনুভৱ কৰিব।", adv: "অহংকাৰ পৰিত্যাগ কৰি সকলোৰে সৈতে মিলি কাম কৰক।", col: "কমলা", num: "১" },
+            virgo: { n: "কন্যা", s: "♍", msg: "স্বাস্থ্যৰ প্ৰতি মনোযোগ দিয়ে যত্ন লওক।", car: "পিকল্পিত কামত সফলতা। আপোনাৰ নিখুঁত কাম কৰাৰ শৈলীৰ বাবে উৰ্ধতন বিষয়া সন্তুষ্ট হ'ব।", lov: "ঘৰুৱা পৰিৱেশ শান্ত হ'ব। প্ৰিয়জনৰ সৈতে ভৱিষ্যতৰ পৰিকল্পনা কৰিব পাৰে।", hea: "বিশ্ৰামৰ প্ৰয়োজন আছে। চকুত সামান্য বিষ অনুভৱ কৰিব পাৰে।", adv: "নিজৰ লগতে আনৰো যত্ন ল'বলৈ চেষ্টা কৰক।", col: "নীলা", num: "৫" },
+            libra: { n: "তুলা", s: "♎", msg: "ভালোবাসা আৰু স্নেহৰ বৃষ্টি হ'ব।", car: "কলা আৰু মিডিয়া জগতৰ সৈতে যুক্তসকলৰ লাভ। ব্যৱসায়ত নতুন অংশীদাৰী চুক্তি হ'ব পাৰে।", lov: "প্ৰেম জীৱন প্ৰফুল্ল হৈ উঠিব। পাৰস্পৰিক বুজাবুজি আন দিনাতকৈ বহু বেছি হ'ব।", hea: "স্বাস্থ্য উত্তম থাকিব। তথাপিও বাহিৰৰ গৰমৰ পৰা নিজকে ৰক্ষা কৰিব।", adv: "নিজৰ লক্ষ্যত স্থিৰ থাকক আৰু এলাহ পৰিহাৰ কৰক।", col: "গুলপীয়া", num: "৭" },
+            scorpio: { n: "বৃশ্চিক", s: "♏", msg: "লুকাই থকা প্ৰতিভা ফুটিবলৈ সময়।", car: "কঠিন পৰিশ্ৰমৰ ফল পাব। আৰ্থিক দিশত হঠাতে কোনো ভাল খবৰ আহিব পাৰে।", lov: "সংশয় দূৰ হ'ব। প্ৰেমাস্পদৰ প্ৰতি আপোনাৰ বিশ্বাস আৰু মৰম বৃদ্ধি পাব।", hea: "ৰক্তচাপ নিয়ন্ত্ৰণত ৰাখক। পুৱাৰ খোজকঢ়া আপোনাৰ বাবে উপকাৰী হ'ব।", adv: "ৰহস্যময় আচৰণ পৰিহাৰ কৰি মুকলিমূৰীয়াকৈ কথা পাতক।", col: "মাৰুন", num: "৮" },
+            sagittarius: { n: "ধনু", s: "♐", msg: "নতুন সুযোগৰ দুৱাৰ মুকলি হ'ব।", car: "উচ্চ শিক্ষাৰ বাবে যাত্ৰা হ'ব পাৰে। কৰ্মস্থানত আপোনাৰ সততা আৰু নিষ্ঠাৰ মূল্য পাব।", lov: "সংগীৰ সহযোগিতা পাব। অবিবাহিতসকলৰ বাবে আজি দিনটো অতি শুভ।", hea: "উচ্চ শক্তি স্তৰ থাকিব। খেল-ধেমালি বা ব্যায়ামত অংশ ল'ব পাৰে।", adv: "অত্যাধিক আশাবাদী হৈ অসাৱধানতা অৱলম্বন নকৰিব।", col: "বেঙুনীয়া", num: "৩" },
+            capricorn: { n: "মকৰ", s: "♑", msg: "পৰিশ্ৰমৰ ফল পাবলৈ লাগিছে।", car: "কৰ্মত স্থিৰতা আহিব। দীৰ্ঘম্যাদী বিনিয়োগৰ বাবে আজি দিনটো ভাল।", lov: "দায়িত্ববোধ বৃদ্ধি পাব। পৰিয়ালৰ প্ৰতি আপোনাৰ সমৰ্পণে সকলোকে আনন্দিত কৰিব।", hea: "যোৰত সামান্য বিষ অনুভৱ হ'ব পাৰে। গধুৰ বস্তু উঠোৱাৰ পৰা বিৰত থাকক।", adv: "কৰ্ম আৰু ব্যক্তিগত জীৱনৰ মাজত ভাৰসাম্য বজাই ৰাখক।", col: "ধূসৰ", num: "৮" },
+            aquarius: { n: "কুম্ভ", s: "♒", msg: "মিত্ৰতা আৰু সম্পৰ্ক শক্তিশালী হ'ব।", car: "দলগত কামত সফলতা। আপোনাৰ উদ্ভাৱনী চিন্তাধাৰাই কৰ্মক্ষেত্ৰত নতুন পৰিৱৰ্তন আনিব।", lov: "বন্ধুৰ সহায়ত প্ৰেমত অগ্ৰগতি। পুৰণি বন্ধুৰ সৈতে হঠাতে দেখা হ'ব পাৰে।", hea: "মানসিক উল্লাস থাকিব। স্নায়ৱিক চাপৰ পৰা মুক্ত থাকিবলৈ জিৰণি লওক।", adv: "নিজৰ স্বভাৱত কিছু নমনীয়তা অনাৰ চেষ্টা কৰক।", col: "আকাশী নীলা", num: "৪" },
+            pisces: { n: "মীন", s: "♓", msg: "সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।", car: "নতুন চিন্তাৰ দ্বাৰা লাভান্বিত হ'ব। কলা বা লিখা-মেলাৰ সৈতে জড়িত লোকসকলৰ বাবে দিনটো শুভ।", lov: "আধ্যাত্মিক চিন্তাত দিন পাৰ হ'ব। সংগীৰ আৱেগক সন্মান কৰক।", hea: "শান্ত অনুভৱ কৰিব। ভৰিৰ বিষ হ'ব পাৰে, সাৱধান হ'ব।", adv: "বাস্তৱৰ পৰা আঁতৰি নাযাব, সপোনৰ লগতে কৰ্মতো গুৰুত্ব দিয়ক।", col: "হালধীয়া-সোনালী", num: "৩" }
+        };
 
-        // Lang Dictionary (Very Strict to avoid undefined errors)
-        var jyoLangDb = {
-            as: {
-                nHome: "Home", nAbout: "About Us",
-                tHl: "আপোনাৰ ভৱিষ্যৎ", tRest: " আজি সঠিকভাৱে জানি লওক",
-                tSub: "বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।",
-                tTools: "🎁 বিনামূলীয়া দৈনিক সঁজুলি", tToolsSub: "জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক",
-                tPerTitle: "আপোনাৰ বিশদ দৈনিক ৰাশিফল চাওক", tPerDesc: "আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।",
-                tCplTitle: "যুটীয়া ৰাশিফল (Couple Horoscope)", tCplDesc: "দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।",
-                lDob: "🎂 জন্ম তাৰিখ (DOB):", lRashi: "🌟 আপোনাৰ ৰাশি:", lBoy: "👨 ল'ৰাৰ বিৱৰণ:", lGirl: "👩 ছোৱালীৰ বিৱৰণ:",
-                bCheck: "ৰাশিফল চাওক", bSel: "-- ৰাশি বাছক --",
-                tGrid: "🌟 আজিৰ ১২ টা ৰাশিফল", tGridSub: "আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক",
-                tWa: "আপোনাৰ বন্ধুৰ সৈতে শ্বেয়াৰ কৰক", tFooter: "সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম",
-                // Modal Labels
-                mOverview: "সাৰাংশ", mCareer: "কৰ্ম আৰু বিত্ত", mLove: "প্ৰেম আৰু সম্পৰ্ক", mHealth: "স্বাস্থ্য",
-                mColor: "শুভ ৰং", mNum: "শুভ সংখ্যা", mAdvice: "আজিৰ বিশেষ পৰামৰ্শ",
-                mSingle: "✨ আপোনাৰ বিশদ ৰাশিফল", mCouple: "❤️ আজিৰ Couple ৰাশিফল"
-            },
-            en: {
-                nHome: "Home", nAbout: "About Us",
-                tHl: "Know Your Future", tRest: " Accurately Today",
-                tSub: "Authentic birth charts and predictions generated using precise Vedic astrology & Lahiri Ayanamsa.",
-                tTools: "🎁 Free Daily Tools", tToolsSub: "Check joint predictions using DOB and Zodiac Signs",
-                tPerTitle: "Check Detailed Horoscope", tPerDesc: "Enter your Date of Birth and select your Zodiac Sign.",
-                tCplTitle: "Joint Couple Horoscope", tCplDesc: "Enter DOB and Sign for both to check compatibility.",
-                lDob: "🎂 Date of Birth:", lRashi: "🌟 Zodiac Sign:", lBoy: "👨 Boy's Details:", lGirl: "👩 Girl's Details:",
-                bCheck: "Check Now", bSel: "-- Select Zodiac --",
-                tGrid: "🌟 Today's 12 Zodiac Horoscopes", tGridSub: "Click on your zodiac sign to read detailed daily predictions",
-                tWa: "Share with your friends", tFooter: "All Rights Reserved © 2026 Jyotish Assam",
-                mOverview: "Overview", mCareer: "Career & Money", mLove: "Love & Relations", mHealth: "Health",
-                mColor: "Lucky Color", mNum: "Lucky Number", mAdvice: "Special Advice",
-                mSingle: "✨ Detailed Horoscope", mCouple: "❤️ Today's Couple Horoscope"
-            },
-            hi: {
-                nHome: "होम", nAbout: "हमारे बारे में",
-                tHl: "अपने भविष्य को", tRest: " आज ही सटीक रूप से जानें",
-                tSub: "वैदिक ज्योतिष और लाहिरी अयांश की सटीक गणना के साथ तैयार प्रामाणिक कुंडली और भविष्यवाणियां।",
-                tTools: "🎁 मुफ्त दैनिक उपकरण", tToolsSub: "जन्म तिथि और राशि के आधार पर भविष्यवाणी जांचें",
-                tPerTitle: "अपना विस्तृत राशिफल देखें", tPerDesc: "अपनी जन्म तिथि और राशि दर्ज करें।",
-                tCplTitle: "युगल राशिफल (Joint Horoscope)", tCplDesc: "जन्म तिथि और राशि दर्ज करके आज का लव स्कोर जांचें।",
-                lDob: "🎂 जन्म तिथि (DOB):", lRashi: "🌟 अपनी राशि:", lBoy: "👨 लड़के का विवरण:", lGirl: "👩 लड़की का विवरण:",
-                bCheck: "अभी जांचें", bSel: "-- राशि चुनें --",
-                tGrid: "🌟 आज का 12 राशियों का राशिफल", tGridSub: "विस्तृत दैनिक भविष्यवाणियां पढ़ने के लिए अपनी राशि पर क्लिक करें",
-                tWa: "अपने दोस्तों के साथ शेयर करें", tFooter: "सर्वाधिकार सुरक्षित © 2026 ज्योतिष असम",
-                mOverview: "सारांश", mCareer: "करियर व धन", mLove: "प्रेम व संबंध", mHealth: "स्वास्थ्य",
-                mColor: "शुभ रंग", mNum: "शुभ अंक", mAdvice: "आज की विशेष सलाह",
-                mSingle: "✨ आपका विस्तृत राशिफल", mCouple: "❤️ आज का युगल राशिफल"
+        // ১. ব্যক্তিগত ৰাশিফল ফাংচন
+        function showPersonalHoro() {
+            const rId = document.getElementById('perRashi').value;
+            const dob = document.getElementById('perDob').value;
+            if(!rId || !dob) {
+                alert("অনুগ্ৰহ কৰি আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।");
+                return;
             }
-        };
-
-        // EXTREMELY DETAILED HOROSCOPE DATA FOR MAXIMUM TIME SPEND
-        var jyoData = {
-            as: [
-                { id: "aries", name: "মেষ", symbol: "♈", short: "আজি আপোনাৰ দিনটো অতি ইতিবাচক আৰু শক্তিশালী হ'ব। আপোনাৰ আত্মবিশ্বাস বৃদ্ধি পাব।", career: "কৰ্মক্ষেত্ৰত আজি আপোনাৰ দায়িত্ব বৃদ্ধি পাব পাৰে। দিনটোৰ দ্বিতীয়াৰ্ধত কিছু গুৰুত্বপূৰ্ণ সিদ্ধান্ত ল'বলগীয়া হ'ব। ব্যৱসায়ত জড়িত লোকসকলৰ বাবে আজি কোনো নতুন সুযোগ বা ডাঙৰ লেনদেন হোৱাৰ প্ৰবল সম্ভাৱনা আছে। উৰ্ধতন বিষয়াৰ পৰা প্ৰশংসা পাব।", love: "প্ৰেমৰ ক্ষেত্ৰত দিনটো আনন্দদায়ক হ'ব। সংগীৰ লগত মধুৰ সময় পাৰ কৰাৰ সুযোগ পাব। পৰিয়ালৰ লোকৰ সৈতে সময় কটালে মানসিক শান্তি পাব। অবিবাহিতসকলৰ বাবে বিবাহৰ নতুন প্ৰস্তাৱ অহাৰ যোগ আছে আৰু পুৰণি সম্পৰ্ক পুনৰুজ্জীৱিত হ'ব পাৰে।", health: "স্বাস্থ্য সুন্দৰ থাকিব আৰু আপুনি দিনটো সতেজ অনুভৱ কৰিব। পুৱাৰ ভাগত যোগ বা সামান্য ব্যায়াম কৰিলে অধিক উপকাৰ পাব। বাহিৰৰ তেলীয়া খাদ্যৰ পৰা বিৰত থকাই শ্ৰেয়, নহ'লে এচিডিটিৰ সমস্যা হ'ব পাৰে।", advice: "খং নিয়ন্ত্ৰণ কৰক আৰু আনৰ কথাত সোনকালে প্ৰতিক্ৰিয়া নিদিব। ধৈৰ্য ধৰিলে সফলতা নিশ্চিত।", color: "বগা", num: "৯" },
-                { id: "taurus", name: "বৃষ", symbol: "♉", short: "আৰ্থিক দিশত উন্নতিৰ সম্ভাৱনা আছে। পুৰণি সমস্যাবোৰ আজি লাহে লাহে সমাধান হ'ব।", career: "কৰ্মস্থানত সহকৰ্মীৰ পৰা পূৰ্ণ সহযোগিতা লাভ কৰিব। দীৰ্ঘদিনীয়া কোনো অসম্পূৰ্ণ কাম আজি পূৰ্ণ হ'ব পাৰে। ব্যৱসায়ত ডাঙৰ বিনিয়োগ কৰাৰ বাবে দিনটো অনুকূল। কাৰিকৰী দিশত জড়িত লোকসকলৰ বিশেষ উন্নতিৰ যোগ আছে।", love: "প্ৰিয়জনৰ সৈতে সময় কটাবলৈ চেষ্টা কৰক। সৰু-সুৰা কথাত তৰ্ক কৰাৰ পৰা বিৰত থাকক, অন্যথা অকাৰণতে সম্পৰ্কত ফাট মেলিব পাৰে। আপোনাৰ সংগীয়ে আজি আপোনাৰ পৰা অলপ বেছি মনোযোগ বিচাৰিব পাৰে।", health: "পেটৰ সামান্য সমস্যা হ'ব পাৰে। সতেজ ফল-মূল আৰু পানী বেছিকৈ খাওক। মানসিক চাপ কমাবলৈ সন্ধিয়া মুকলি বতাহত কিছু সময় খোজ কাঢ়ক।", advice: "খৰচৰ ক্ষেত্ৰত সাৱধানতা অৱলম্বন কৰাটো বাঞ্ছনীয়। অদৰকাৰী বস্তুত পইচা খৰচ নকৰিব।", color: "সেউজীয়া", num: "৬" },
-                { id: "gemini", name: "মিথুন", symbol: "♊", short: "শিক্ষাৰ্থী আৰু চাকৰিয়ালসকলৰ বাবে আজি দিনটো অতি শুভ। যোগাযোগৰ দক্ষতাই প্ৰশংসা বুটলিব।", career: "আপোনাৰ বুদ্ধিমত্তা আৰু কৰ্মস্পৃহাই আজি আপোনাক বহুত আগুৱাই নিব। অফিচত আপোনাৰ প্ৰেজেন্টেচন বা আইডিয়াক সকলোৱে গ্ৰহণ কৰিব। মিডিয়া, লেখা-মেলা বা শিক্ষকতাৰ সৈতে জড়িত লোকসকলে সফলতা লাভ কৰিব।", love: "মনৰ কথা প্ৰকাশ কৰিবলৈ আজিৰ দিনটো অতি সুন্দৰ। প্ৰেমত থকাসকলৰ সম্পৰ্ক অধিক দৃঢ় হ'ব। পাৰস্পৰিক বিশ্বাস আৰু মৰম বৃদ্ধি পাব। যিসকলে নতুন সম্পৰ্ক গঢ়িব বিচাৰিছে, তেওঁলোকৰ বাবে ভাল খবৰ আহিব পাৰে।", health: "মানসিক শান্তি বজায় থাকিব। তথাপিও নিৰন্তৰ কাম কৰাৰ বাবে চকু আৰু কান্ধৰ বিষ হ'ব পাৰে। সেয়েহে মাজে মাজে পৰ্যাপ্ত জিৰণি লোৱাটো নিতান্তই আৱশ্যক।", advice: "অধিক চিন্তা (Overthinking) কৰাৰ পৰা বিৰত থাকক, কেৱল কামত মনোযোগ দিয়ক।", color: "হালধীয়া", num: "৩" },
-                { id: "cancer", name: "কৰ্কট", symbol: "♋", short: "পৰিয়ালৰ সৈতে আজি সময় কটাওক। আৱেগিকভাৱে দিনটো অলপ স্পৰ্শকাতৰ হ'ব পাৰে।", career: "কৰ্মক্ষেত্ৰত ধৈৰ্য ধৰক। নতুন বিনিয়োগ বা ডাঙৰ আৰ্থিক লেনদেনৰ বাবে আজি দিনটো সিমান অনুকূল নহয়। পুৰণি আধৰুৱা কামবোৰ শেষ কৰাত গুৰুত্ব দিয়ক। অফিচৰ ৰাজনীতিত সোমাই নপৰাই শ্ৰেয়।", love: "আৱেগ নিয়ন্ত্ৰণত ৰাখক। সংগীৰ কথাক গুৰুত্ব দিয়ক আৰু তেওঁৰ মনৰ অৱস্থা বুজিবলৈ চেষ্টা কৰক, তেতিয়াহে ভুল বুজাবুজি দূৰ হ'ব। পৰিয়ালৰ সদস্যৰ মাজত পাৰস্পৰিক সহযোগিতা বৃদ্ধি পাব।", health: "মানসিক হেঁচাৰ বাবে মূৰৰ বিষ বা টোপনিৰ সমস্যা হ'ব পাৰে। পৰ্যাপ্ত পৰিমাণে পানী খাওক আৰু ধ্যান (Meditation) কৰক।", advice: "আজি যিকোনো সিদ্ধান্ত লোৱাৰ আগতে দুবাৰ ভাবিব। খৰখেদাকৈ কোনো কাম নকৰিব।", color: "ৰূপালী", num: "২" },
-                { id: "leo", name: "সিংহ", symbol: "♌", short: "আৰ্থিক দিশত ডাঙৰ লাভৰ যোগ আছে। আপোনাৰ ব্যক্তিত্বই আজি সকলোকে আকৰ্ষিত কৰিব।", career: "চাকৰিত পদোন্নতি বা দৰমহা বৃদ্ধিৰ নতুন সুযোগ আহিব পাৰে। আপোনাৰ আত্মবিশ্বাসে প্ৰতিদ্বন্দ্বীসকলক বহুত পিছ পেলাব। ব্যৱসায়ত নতুন ৰণনীতি প্ৰয়োগ কৰিলে লাভান্বিত হ'ব।", love: "ৰোমাঞ্চৰ ফালৰ পৰা দিনটো অতি সুন্দৰ। সংগীয়ে আপোনাক কোনো সুন্দৰ উপহাৰ দি আচৰিত কৰিব পাৰে বা একেলগে ক'ৰবালৈ ফুৰিবলৈ যোৱাৰ পৰিকল্পনা হ'ব পাৰে।", health: "শাৰীৰিক শক্তি প্ৰচুৰ থাকিব। আপুনি গোটেই দিনটো সতেজ আৰু সক্ৰিয় অনুভৱ কৰিব। পুৱাৰ ব্যায়াম অব্যাহত ৰাখক।", advice: "অহংকাৰ পৰিত্যাগ কৰি সকলোৰে সৈতে মিলি কাম কৰিবলৈ চেষ্টা কৰক।", color: "কমলা", num: "১" },
-                { id: "virgo", name: "কন্যা", symbol: "♍", short: "পিকল্পিত কামবোৰত আজি আপুনি নিশ্চিতভাৱে সফলতা লাভ কৰিব। দিনটো শান্তিপূৰ্ণ হ'ব।", career: "আপোনাৰ নিখুঁত কাম কৰাৰ শৈলীৰ (Perfectionism) বাবে উৰ্ধতন বিষয়া অতি সন্তুষ্ট হ'ব। বিত্তীয় দিশত স্থিৰতা আহিব। বেংকৰ ঋণ বা অন্যান্য আৰ্থিক লেনদেনৰ কাম আজি সুকলমে পাৰ হ'ব।", love: "ঘৰুৱা পৰিৱেশ শান্ত আৰু আনন্দদায়ক হ'ব। প্ৰিয়জনৰ সৈতে ভৱিষ্যতৰ গুৰুত্বপূৰ্ণ পৰিকল্পনা কৰিব পাৰে। ল'ৰা-ছোৱালীৰ পঢ়া-শুনাক লৈ থকা চিন্তা দূৰ হ'ব।", health: "পৰিশ্ৰম বেছি হোৱাৰ বাবে বিশ্ৰামৰ প্ৰয়োজন আছে। চকুত সামান্য বিষ বা কঁকালৰ বিষ অনুভৱ কৰিব পাৰে।", advice: "নিজৰ লগতে আনৰো যত্ন ল'বলৈ চেষ্টা কৰক আৰু স্বাস্থ্যক অৱহেলা নকৰিব।", color: "নীলা", num: "৫" },
-                { id: "libra", name: "তুলা", symbol: "♎", short: "ভালোবাসা আৰু স্নেহৰ বৃষ্টি হ'ব। সমাজত আপোনাৰ মান-সন্মান যথেষ্ট বৃদ্ধি পাব।", career: "কলা, ফেশ্বন আৰু মিডিয়া জগতৰ সৈতে যুক্তসকলৰ বাবে আজি দিনটো অতি লাভজনক। ব্যৱসায়ত নতুন অংশীদাৰী চুক্তিত (Partnership) চহী কৰিব পাৰে যি ভৱিষ্যতে লাভ দিব।", love: "প্ৰেম জীৱন প্ৰফুল্ল হৈ উঠিব। পাৰস্পৰিক বুজাবুজি আন দিনাতকৈ বহু বেছি হ'ব। সন্ধিয়াৰ সময়খিনি প্ৰিয়জনৰ লগত কটালে মানসিক চাপ সম্পূৰ্ণৰূপে নাইকিয়া হৈ যাব।", health: "স্বাস্থ্য সাধাৰণতে উত্তম থাকিব। তথাপিও বাহিৰৰ প্ৰখৰ ৰ'দ বা গৰমৰ পৰা নিজকে ৰক্ষা কৰিব, ছালৰ সমস্যা হ'ব পাৰে।", advice: "নিজৰ লক্ষ্যত স্থিৰ থাকক আৰু এলাহ (Laziness) পৰিহাৰ কৰক।", color: "গুলপীয়া", num: "৭" },
-                { id: "scorpio", name: "বৃশ্চিক", symbol: "♏", short: "লুকাই থকা প্ৰতিভা ফুটিবলৈ সময় আহিছে। আজি আপুনি কিছুমান ৰহস্যময় কথা জানিব পাৰিব।", career: "কঠিন পৰিশ্ৰমৰ সঠিক ফল লাভ কৰিব। আৰ্থিক দিশত হঠাতে কোনো ভাল খবৰ আহিব পাৰে, বা আবদ্ধ হৈ থকা ধন ঘূৰাই পাব পাৰে। নিজৰ গোপন পৰিকল্পনা আনৰ আগত প্ৰকাশ নকৰিব।", love: "সংশয় আৰু সন্দেহ দূৰ হ'ব। প্ৰেমাস্পদৰ প্ৰতি আপোনাৰ বিশ্বাস আৰু মৰম গভীৰ হ'ব। বিবাহিত জীৱনত নতুনত্ব আহিব।", health: "ৰক্তচাপ নিয়ন্ত্ৰণত ৰাখক। পুৱাৰ খোজকঢ়া বা যোগাভ্যাস আপোনাৰ বাবে বিশেষভাৱে উপকাৰী হ'ব।", advice: "গুপ্ত আৰু ৰহস্যময় আচৰণ পৰিহাৰ কৰি মুকলিমূৰীয়াকৈ কথা পাতক।", color: "মাৰুন", num: "৮" },
-                { id: "sagittarius", name: "ধনু", symbol: "♐", short: "নতুন সুযোগৰ দুৱাৰ মুকলি হ'ব। আপোনাৰ আশা আৰু উৎসাহে সকলো বাধা অতিক্ৰম কৰিব।", career: "উচ্চ শিক্ষা বা কামৰ বাবে দূৰ যাত্ৰা হ'ব পাৰে। কৰ্মস্থানত আপোনাৰ সততা আৰু নিষ্ঠাৰ প্ৰকৃত মূল্য পাব। নতুন চাকৰিৰ সন্ধানত থকাসকলৰ বাবে ইণ্টাৰভিউত সফলতাৰ যোগ আছে।", love: "সংগীৰ পূৰ্ণ সহযোগিতা পাব। অবিবাহিতসকলৰ বাবে আজি দিনটো অতি শুভ, বিয়াৰ কথা আগবাঢ়িব পাৰে। পুৰণি ভুলবোৰ পাহৰি নতুনকৈ আগবঢ়াৰ সময়।", health: "উচ্চ শক্তি স্তৰ থাকিব। খেল-ধেমালি বা ব্যায়ামত অংশ ল'লে শৰীৰ বেছি সুস্থ থাকিব।", advice: "অত্যাধিক আশাবাদী হৈ অসাৱধানতা অৱলম্বন নকৰিব, বাস্তৱত থাকি কাম কৰক।", color: "বেঙুনীয়া", num: "৩" },
-                { id: "capricorn", name: "মকৰ", symbol: "♑", short: "পৰিশ্ৰমৰ ফল পাবলৈ আৰম্ভ কৰিছে। আজিৰ দিনটোত কৰ্মত স্থিৰতা আৰু পৰিপক্কতা আহিব।", career: "দীৰ্ঘম্যাদী বিনিয়োগৰ বাবে আজি দিনটো সৰ্বোত্তম। কৰ্মক্ষেত্ৰত আপোনাৰ দায়িত্ব বাঢ়িব যদিও আপুনি সেয়া সুচাৰুৰূপে পালন কৰিব পাৰিব। চৰকাৰী কাম-কাজত সফলতা পাব।", love: "পৰিয়াল আৰু সংগীৰ প্ৰতি আপোনাৰ দায়িত্ববোধ বৃদ্ধি পাব। আপোনাৰ সমৰ্পণে ঘৰখনৰ সকলোকে আনন্দিত কৰিব। প্ৰেমত স্থিৰতা আহিব।", health: "যোৰত বা আঁঠুত সামান্য বিষ অনুভৱ হ'ব পাৰে। গধুৰ বস্তু উঠোৱাৰ পৰা বিৰত থাকক আৰু কেলচিয়ামযুক্ত খাদ্য খাওক।", advice: "কৰ্ম আৰু ব্যক্তিগত জীৱনৰ মাজত সঠিক ভাৰসাম্য (Balance) বজাই ৰাখক।", color: "ধূসৰ", num: "৮" },
-                { id: "aquarius", name: "কুম্ভ", symbol: "♒", short: "মিত্ৰতা আৰু সম্পৰ্ক শক্তিশালী হ'ব। সমাজত আপোনাৰ জনপ্ৰিয়তা বৃদ্ধি পাব।", career: "দলগত কামত (Teamwork) বিশেষ সফলতা লাভ কৰিব। আপোনাৰ উদ্ভাৱনী (Innovative) চিন্তাধাৰাই কৰ্মক্ষেত্ৰত নতুন পৰিৱৰ্তন আনিব আৰু বছিৰ দৃষ্টি আকৰ্ষণ কৰিব।", love: "বন্ধুৰ সহায়ত প্ৰেমত অগ্ৰগতি লাভ কৰিব। পুৰণি বন্ধুৰ সৈতে হঠাতে দেখা হ'ব পাৰে যিয়ে পুৰণি স্মৃতি সতেজ কৰিব। সংগীৰ সৈতে মুকলিকৈ কথা পাতক।", health: "মানসিক উল্লাস থাকিব। তথাপিও স্নায়ৱিক চাপ বা চিন্তাৰ পৰা মুক্ত থাকিবলৈ নিশা পৰ্যাপ্ত জিৰণি লোৱাটো প্ৰয়োজন।", advice: "নিজৰ স্বভাৱত কিছু নমনীয়তা অনাৰ চেষ্টা কৰক, একঘেয়ামী নহ'ব।", color: "আকাশী নীলা", num: "৪" },
-                { id: "pisces", name: "মীন", symbol: "♓", short: "সৃজনশীলতা প্ৰকাশৰ দিন আহিলে। আজি আপোনাৰ মন আধ্যাত্মিকতাৰ ফালে ঢাল খাব।", career: "নতুন চিন্তা আৰু ক্ৰিয়েটিভিটিৰ দ্বাৰা লাভান্বিত হ'ব। কলা, সংগীত, বা লিখা-মেলাৰ সৈতে জড়িত লোকসকলৰ বাবে দিনটো অতি শুভ আৰু আৰ্থিকভাৱে লাভজনক।", love: "সংগীৰ আৱেগক সন্মান কৰক। আজি আপোনালোকৰ মাজত গভীৰ আধ্যাত্মিক বা মানসিক সংযোগ স্থাপন হ'ব পাৰে।", health: "শান্ত আৰু শিথিল অনুভৱ কৰিব। ভৰিৰ বিষ বা পানী জমা হোৱা সমস্যা হ'ব পাৰে, সাৱধান হ'ব।", advice: "কেৱল সপোনৰ জগতত নাথাকি, বাস্তৱ জগতৰ কাম-কাজতো সমানে গুৰুত্ব দিয়ক।", color: "হালধীয়া-সোনালী", num: "৩" }
-            ],
-            en: [
-                { id: "aries", name: "Aries", symbol: "♈", short: "Your luck will be very positive today. Confidence will be your biggest strength.", career: "New responsibilities at work. You may have to take important decisions in the second half of the day. Profitable business transactions are highly likely. Superiors will praise your effort.", love: "Sweet moments with partner. Spending time with family will bring immense mental peace. Good proposals for singles and chances of reviving old connections.", health: "Good health. Morning yoga or exercise will keep you fresh all day. Avoid outside oily food to prevent acidity issues.", advice: "Control your anger and do not react quickly to others' words. Patience is key.", color: "White", num: "9" },
-                { id: "taurus", name: "Taurus", symbol: "♉", short: "Chances of financial and career advancement. Old problems will slowly fade away.", career: "Profits in business. You will get full support from colleagues. Long pending tasks might get completed today. Great day for investments and tech-related professionals.", love: "Family support is strong. Try to spend quality time with your loved one. Avoid arguments over trivial matters, otherwise it might spoil the mood.", health: "Minor stomach issues. Eat more fresh fruits and stay hydrated. A short evening walk will help reduce mental stress.", advice: "It is strictly advisable to be careful with your unnecessary expenses today.", color: "Green", num: "6" },
-                { id: "gemini", name: "Gemini", symbol: "♊", short: "Good news regarding love and relations. Your communication skills will shine.", career: "Great day for students and working professionals. Your intelligence and communication skills will earn major praise at work. People in media or teaching will see success.", love: "Open up your heart. Relationships of those in love will grow stronger with mutual trust. Singles might receive positive responses from their crush.", health: "Mental peace will be maintained. However, continuous screen time might cause eye or shoulder strain. Rest is necessary.", advice: "Avoid overthinking situations and simply focus on the task at hand.", color: "Yellow", num: "3" },
-                { id: "cancer", name: "Cancer", symbol: "♋", short: "Spend quality time with family. Emotionally, you might feel a bit sensitive today.", career: "Maintain patience at work. Today is not very favorable for new investments or big financial risks. Focus on finishing old tasks. Stay away from office politics.", love: "Control your emotions. Give importance to your partner's words to clear any potential misunderstandings. Mutual cooperation among family members will increase.", health: "Stay hydrated. Mental stress might cause mild headaches or sleep issues. Meditation will help greatly.", advice: "Think twice before taking any major life or financial decisions today.", color: "Silver", num: "2" },
-                { id: "leo", name: "Leo", symbol: "♌", short: "Big financial gains are foreseen. Your charismatic personality will attract everyone.", career: "Promotion or new opportunities regarding salary hike may arrive. Your confidence will leave competitors far behind. Applying new strategies in business will be profitable.", love: "Highly romantic day. Your partner might surprise you with a beautiful gift or plan a sudden outing together.", health: "High energy levels. You will feel extremely fresh and active throughout the day. Continue your morning routines.", advice: "Let go of ego and try to work cooperatively with everyone around you.", color: "Orange", num: "1" },
-                { id: "virgo", name: "Virgo", symbol: "♍", short: "Success is guaranteed in planned tasks. The day will pass very peacefully.", career: "Superiors will be highly satisfied with your perfectionist working style. Financial stability will be achieved. Bank loans or transactions will pass smoothly.", love: "Peaceful home atmosphere. You can plan for important future events with your loved one. Worries regarding children's education will fade.", health: "You need rest due to overworking. You might feel minor eye strain or lower back pain. Don't ignore it.", advice: "Try to take care of yourself along with taking care of others.", color: "Blue", num: "5" },
-                { id: "libra", name: "Libra", symbol: "♎", short: "Shower of love and affection. Your social respect and popularity will increase.", career: "Highly profitable day for people in creative fields, fashion, and media. You may sign a new partnership agreement in business that yields future benefits.", love: "Joyful love life. Mutual understanding will be much higher than usual days. Spending the evening with your partner will erase all stress.", health: "Excellent health. Nevertheless, protect yourself from outside heat or sun to avoid skin related issues.", advice: "Stay firmly focused on your goals and avoid any kind of laziness.", color: "Pink", num: "7" },
-                { id: "scorpio", name: "Scorpio", symbol: "♏", short: "Time to showcase hidden talent. You might discover some secretive information today.", career: "Hard work pays off perfectly. Sudden good news regarding finances may arrive, or you might recover stuck money. Keep your plans secret.", love: "Doubts and suspicions will clear. Your trust and affection towards your loved one will increase deeply. Married life will see a spark of newness.", health: "Keep blood pressure in check. Morning walks or yoga practice will be highly beneficial for you today.", advice: "Avoid secretive behavior with loved ones and communicate openly.", color: "Maroon", num: "8" },
-                { id: "sagittarius", name: "Sagittarius", symbol: "♐", short: "New doors of opportunity will open. Your enthusiasm will cross all hurdles.", career: "Travel for higher education or business purposes is likely. Your honesty and dedication at the workplace will be highly valued by management.", love: "Partner’s full support will be there. Today is very auspicious for single individuals; marriage talks might progress. Forget past mistakes.", health: "High vitality. You can participate in sports or heavy exercises which will keep you fit.", advice: "Do not become careless by being overly optimistic; stay grounded.", color: "Purple", num: "3" },
-                { id: "capricorn", name: "Capricorn", symbol: "♑", short: "Rewards of hard work are approaching. Stability and maturity will reflect in actions.", career: "Today is a great day for long-term investments. Responsibilities at work will increase but you will handle them flawlessly. Success in govt related work.", love: "Sense of responsibility towards partner and family will increase. Your dedication will make everyone happy. Love life will be stable.", health: "Joint care or knee care is needed. Avoid lifting heavy objects and consume calcium-rich foods.", advice: "Maintain a proper balance between your professional work and personal life.", color: "Grey", num: "8" },
-                { id: "aquarius", name: "Aquarius", symbol: "♒", short: "Friendships and bonds will strengthen. Your popularity in social circles will rise.", career: "Massive success in teamwork. Your innovative and out-of-the-box ideas will bring new positive changes at the workplace and attract boss's attention.", love: "Progress in love via friends' help. Sudden meeting with an old friend is possible which will refresh old memories. Talk openly with partner.", health: "Mental cheerfulness will be there. Take adequate rest at night to stay free from nervous tension or anxiety.", advice: "Try to bring some flexibility into your rigid nature.", color: "Sky Blue", num: "4" },
-                { id: "pisces", name: "Pisces", symbol: "♓", short: "A day to express creativity. Your mind will naturally tilt towards spirituality.", career: "Benefit immensely from new ideas. Highly auspicious and financially rewarding day for people associated with arts, music, or writing.", love: "Spiritual day. Respect your partner's emotions. A deep mental and spiritual connection can be established between you two today.", health: "You will feel calm and relaxed. Watch out for potential foot pain or water retention issues.", advice: "Do not escape from reality; give equal importance to practical actions along with your dreams.", color: "Golden Yellow", num: "3" }
-            ],
-            hi: [
-                { id: "aries", name: "मेष", symbol: "♈", short: "आज आपका भाग्य अत्यंत सकारात्मक रहेगा। आत्मविश्वास आपकी सबसे बड़ी ताकत होगी।", career: "कार्यक्षेत्र में नई जिम्मेदारी मिलेगी। दिन के दूसरे भाग में कुछ महत्वपूर्ण निर्णय लेने पड़ सकते हैं। व्यापारिक सौदों में लाभ की प्रबल संभावना है। वरिष्ठ अधिकारी आपके काम की सराहना करेंगे।", love: "साथी के साथ मधुर पल बिताएंगे। परिवार के साथ समय बिताने से अत्यधिक मानसिक शांति मिलेगी। अविवाहितों के लिए विवाह के नए प्रस्ताव आ सकते हैं।", health: "स्वास्थ्य उत्तम रहेगा। सुबह योग या व्यायाम करने से दिन भर तरोताजा महसूस करेंगे। बाहर के तैलीय भोजन से बचें।", advice: "क्रोध पर नियंत्रण रखें और दूसरों की बातों पर तुरंत प्रतिक्रिया न दें। धैर्य रखें।", color: "सफेद", num: "9" },
-                { id: "taurus", name: "वृषभ", symbol: "♉", short: "कर्मक्षेत्र और आर्थिक मामलों में उन्नति की संभावना है। पुरानी समस्याएं धीरे-धीरे खत्म होंगी।", career: "व्यापार में लाभ के योग हैं। सहकर्मियों से पूरा सहयोग प्राप्त होगा। लंबे समय से लंबित कार्य आज पूरे हो सकते हैं। निवेश के लिए बहुत अच्छा दिन है।", love: "परिवार का सहयोग मजबूत है। अपने प्रियजन के साथ गुणवत्तापूर्ण समय बिताने का प्रयास करें। छोटी बातों पर बहस से बचें, अन्यथा मूड खराब हो सकता है।", health: "पेट की मामूली समस्या हो सकती है। ताजे फल ज्यादा खाएं और पानी पीते रहें। शाम की सैर मानसिक तनाव कम करेगी।", advice: "आज अपने अनावश्यक खर्चों के प्रति सावधान रहना उचित रहेगा।", color: "हरा", num: "6" },
-                { id: "gemini", name: "मिथुन", symbol: "♊", short: "प्रेम-प्रसंग में शुभ समाचार मिलेगा। आपका संचार कौशल आज चमकेगा।", career: "विद्यार्थियों और नौकरीपेशा लोगों के लिए उत्तम दिन। आपकी बुद्धिमत्ता और संचार कौशल कार्यस्थल पर भारी प्रशंसा अर्जित करेंगे। मीडिया या शिक्षण से जुड़े लोग सफल होंगे।", love: "दिल की बात कहने के लिए बहुत अच्छा दिन है। प्रेम संबंधों में आपसी विश्वास से प्रगाढ़ता आएगी। सिंगल लोगों को सकारात्मक प्रतिक्रिया मिल सकती है।", health: "मानसिक शांति बनी रहेगी। हालांकि, लगातार स्क्रीन देखने से आंखों या कंधों में खिंचाव हो सकता है। आराम आवश्यक है।", advice: "अधिक सोचने (Overthinking) से बचें और केवल अपने काम पर ध्यान केंद्रित करें।", color: "पीला", num: "3" },
-                { id: "cancer", name: "कर्क", symbol: "♋", short: "परिवार के साथ समय बिताएं। भावनात्मक रूप से आज आप थोड़े संवेदनशील महसूस कर सकते हैं।", career: "कार्यस्थल पर धैर्य रखें। आज का दिन नए निवेश या बड़े वित्तीय जोखिमों के लिए बहुत अनुकूल नहीं है। पुराने कार्यों को पूरा करने पर ध्यान दें। ऑफिस की राजनीति से दूर रहें।", love: "भावनाओं पर नियंत्रण रखें। किसी भी गलतफहमी को दूर करने के लिए अपने साथी की बातों को महत्व दें। परिवार के सदस्यों के बीच आपसी सहयोग बढ़ेगा।", health: "पर्याप्त पानी पिएं। मानसिक तनाव के कारण हल्का सिरदर्द या नींद की समस्या हो सकती है। ध्यान (Meditation) बहुत मदद करेगा।", advice: "आज कोई भी बड़ा जीवन या वित्तीय निर्णय लेने से पहले दो बार सोचें। जल्दबाजी न करें।", color: "चांदी जैसा", num: "2" },
-                { id: "leo", name: "सिंह", symbol: "♌", short: "बड़े आर्थिक लाभ के योग हैं। आपका व्यक्तित्व आज सभी को आकर्षित करेगा।", career: "पदोन्नति या वेतन वृद्धि के नए अवसर मिलेंगे। आपका आत्मविश्वास प्रतिस्पर्धियों को बहुत पीछे छोड़ देगा। व्यापार में नई रणनीति लागू करना लाभदायक रहेगा।", love: "अत्यंत रोमांटिक दिन। आपका साथी आपको कोई खूबसूरत उपहार देकर आश्चर्यचकित कर सकता है या एक साथ बाहर जाने की योजना बन सकती है।", health: "ऊर्जा भरपूर रहेगी। आप पूरे दिन तरोताजा और सक्रिय महसूस करेंगे। अपनी सुबह की दिनचर्या जारी रखें।", advice: "अहंकार को छोड़ें और अपने आस-पास के सभी लोगों के साथ मिलकर काम करने का प्रयास करें।", color: "नारंगी", num: "1" },
-                { id: "virgo", name: "कन्या", symbol: "♍", short: "योजनाबद्ध कार्यों में सफलता निश्चित है। दिन बहुत ही शांतिपूर्ण बीतेगा।", career: "आपकी परफेक्शनिस्ट कार्यशैली से वरिष्ठ अधिकारी अत्यधिक संतुष्ट होंगे। वित्तीय स्थिरता प्राप्त होगी। बैंक ऋण या लेनदेन आसानी से हो जाएंगे।", love: "पारिवारिक माहौल शांत रहेगा। आप अपने प्रियजन के साथ भविष्य की महत्वपूर्ण योजना बना सकते हैं। बच्चों की शिक्षा को लेकर चिंता दूर होगी।", health: "ज्यादा काम करने के कारण आराम की आवश्यकता है। आपको आंखों में हल्का खिंचाव या पीठ के निचले हिस्से में दर्द महसूस हो सकता है।", advice: "दूसरों की देखभाल करने के साथ-साथ अपना भी ख्याल रखने की कोशिश करें।", color: "नीला", num: "5" },
-                { id: "libra", name: "तुला", symbol: "♎", short: "प्यार और स्नेह की वर्षा होगी। समाज में आपका मान-सम्मान काफी बढ़ेगा।", career: "कला, फैशन और मीडिया से जुड़े लोगों के लिए अत्यधिक लाभदायक दिन। व्यापार में नई साझेदारी के समझौते पर हस्ताक्षर कर सकते हैं जो भविष्य में लाभ देगा।", love: "प्रेम जीवन प्रफुल्लित रहेगा। आपसी समझ सामान्य दिनों की तुलना में बहुत अधिक होगी। शाम को साथी के साथ समय बिताने से सारा तनाव मिट जाएगा।", health: "स्वास्थ्य उत्तम रहेगा। फिर भी, त्वचा संबंधी समस्याओं से बचने के लिए बाहर की गर्मी या धूप से खुद को बचाएं।", advice: "अपने लक्ष्यों पर दृढ़ता से केंद्रित रहें और किसी भी तरह के आलस्य से बचें।", color: "गुलाबी", num: "7" },
-                { id: "scorpio", name: "वृश्चिक", symbol: "♏", short: "छुपी हुई प्रतिभा दिखाने का समय है। आज आपको कुछ रहस्यमय बातें पता चल सकती हैं।", career: "कड़ी मेहनत का फल पूरी तरह से मिलेगा। आर्थिक मामलों में अचानक कोई शुभ समाचार मिल सकता है, या फंसा हुआ पैसा वापस मिल सकता है। अपनी योजनाएं गुप्त रखें।", love: "संदेह और गलतफहमियां दूर होंगी। अपने प्रियजन के प्रति आपका विश्वास और स्नेह गहराई से बढ़ेगा। वैवाहिक जीवन में नयापन आएगा।", health: "ब्लड प्रेशर नियंत्रित रखें। सुबह की सैर या योगाभ्यास आज आपके लिए अत्यधिक फायदेमंद रहेगा।", advice: "प्रियजनों के साथ गुप्त व्यवहार से बचें और खुलकर बात करें।", color: "मरून", num: "8" },
-                { id: "sagittarius", name: "धनु", symbol: "♐", short: "नए अवसरों के दरवाजे खुलेंगे। आपका उत्साह सभी बाधाओं को पार कर जाएगा।", career: "उच्च शिक्षा या व्यापार के लिए यात्रा हो सकती है। कार्यस्थल पर आपकी ईमानदारी और समर्पण को प्रबंधन द्वारा अत्यधिक महत्व दिया जाएगा।", love: "साथी का भरपूर सहयोग मिलेगा। अविवाहितों के लिए आज का दिन बहुत शुभ है; विवाह की बात आगे बढ़ सकती है। पुरानी गलतियों को भूल जाएं।", health: "ऊर्जा का स्तर ऊंचा रहेगा। आप खेलकूद या व्यायाम में भाग ले सकते हैं जो आपको फिट रखेगा।", advice: "अत्यधिक आशावादी होकर लापरवाह न बनें; जमीन पर टिके रहें।", color: "बैंगनी", num: "3" },
-                { id: "capricorn", name: "मकर", symbol: "♑", short: "परिश्रम का फल मिलने लगा है। कार्यों में स्थिरता और परिपक्वता झलकेगी।", career: "लंबी अवधि के निवेश के लिए आज का दिन बहुत अच्छा है। कार्यस्थल पर जिम्मेदारियां बढ़ेंगी लेकिन आप उन्हें बखूबी संभालेंगे। सरकारी कार्यों में सफलता।", love: "साथी और परिवार के प्रति जिम्मेदारी की भावना बढ़ेगी। आपका समर्पण सभी को खुश करेगा। प्रेम जीवन स्थिर रहेगा।", health: "जोड़ों या घुटनों की देखभाल की आवश्यकता है। भारी वजन उठाने से बचें और कैल्शियम युक्त भोजन का सेवन करें।", advice: "अपने पेशेवर काम और निजी जीवन के बीच उचित संतुलन (Balance) बनाए रखें।", color: "ग्रे", num: "8" },
-                { id: "aquarius", name: "कुंभ", symbol: "♒", short: "मित्रता और संबंध शक्तिशाली होंगे। सामाजिक हलकों में आपकी लोकप्रियता बढ़ेगी।", career: "टीम वर्क में भारी सफलता। आपके नवीन (Innovative) विचार कार्यस्थल पर नए सकारात्मक बदलाव लाएंगे और बॉस का ध्यान आकर्षित करेंगे।", love: "मित्रों की मदद से प्रेम में प्रगति। किसी पुराने मित्र से अचानक मुलाकात हो सकती है जो पुरानी यादें ताजा कर देगी। साथी से खुलकर बात करें।", health: "मानसिक उल्लास रहेगा। तंत्रिका तनाव या चिंता से मुक्त रहने के लिए रात में पर्याप्त आराम करें।", advice: "अपने जिद्दी स्वभाव में थोड़ा लचीलापन लाने की कोशिश करें।", color: "आसमानी नीला", num: "4" },
-                { id: "pisces", name: "मीन", symbol: "♓", short: "सृजनात्मकता दिखाने का दिन है। आपका मन स्वाभाविक रूप से आध्यात्मिकता की ओर झुकेगा।", career: "नए विचारों से अत्यधिक लाभ होगा। कला, संगीत या लेखन से जुड़े लोगों के लिए बहुत शुभ और आर्थिक रूप से लाभदायक दिन है।", love: "आध्यात्मिक दिन। अपने साथी की भावनाओं का अत्यधिक सम्मान करें। आज आप दोनों के बीच एक गहरा मानसिक और आध्यात्मिक संबंध स्थापित हो सकता है।", health: "आप शांत महसूस करेंगे। पैरों में दर्द या पानी जमा होने की समस्या (Water retention) की संभावना है, सावधान रहें।", advice: "वास्तविकता से न भागें; अपने सपनों के साथ-साथ व्यावहारिक कर्म को भी समान महत्व दें।", color: "सुनहरा पीला", num: "3" }
-            ]
-        };
-
-        // 100% Conflict Free Safe Update Functions
-        function safeHtml(id, text) {
-            var el = document.getElementById(id);
-            if (el) el.innerHTML = text;
+            openHoroModal(rId, dob);
         }
 
-        window.jyoChangeLanguage = function(lang) {
-            jyoCurLang = lang;
+        // ২. যুটীয়া ৰাশিফল (Couple Horoscope) ফাংচন
+        function showCoupleHoro() {
+            const rBoy = document.getElementById('cRashiBoy').value;
+            const rGirl = document.getElementById('cRashiGirl').value;
+            const dBoy = document.getElementById('cDobBoy').value;
+            const dGirl = document.getElementById('cDobGirl').value;
             
-            // Buttons
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            var activeBtn = document.getElementById('btn-' + lang);
-            if(activeBtn) activeBtn.classList.add('active');
-
-            var t = jyoLangDb[lang];
-            
-            // Direct DOM Updates using strict IDs to bypass any global object conflict
-            safeHtml('id-nav-home', t.nHome);
-            safeHtml('id-nav-about', t.nAbout);
-            safeHtml('id-title-hl', t.tHl);
-            safeHtml('id-title-rest', t.tRest);
-            safeHtml('id-subtitle', t.tSub);
-            safeHtml('b1', t.b1);
-            safeHtml('b2', t.b2);
-            safeHtml('p-title', t.pTitle);
-            safeHtml('pl-sunrise', t.plSunrise);
-            safeHtml('pl-sunset', t.plSunset);
-            safeHtml('pl-tithi', t.plTithi);
-            safeHtml('id-tools-title', t.tTools);
-            safeHtml('id-tools-sub', t.tToolsSub);
-            safeHtml('id-per-title', t.tPerTitle);
-            safeHtml('id-per-desc', t.tPerDesc);
-            safeHtml('id-couple-title', t.tCplTitle);
-            safeHtml('id-couple-desc', t.tCplDesc);
-            safeHtml('id-lbl-dob', t.lDob);
-            safeHtml('id-lbl-rashi', t.lRashi);
-            safeHtml('id-lbl-boy', t.lBoy);
-            safeHtml('id-lbl-girl', t.lGirl);
-            safeHtml('id-btn-per', t.bCheck);
-            safeHtml('id-btn-couple', t.bCheck);
-            safeHtml('id-grid-title', t.tGrid);
-            safeHtml('id-grid-sub', t.tGridSub);
-            safeHtml('id-wa-text', t.tWa);
-            safeHtml('id-footer', t.tFooter);
-
-            // Update Date
-            var today = new Date();
-            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            var langCode = lang === 'en' ? 'en-US' : (lang === 'hi' ? 'hi-IN' : 'as-IN');
-            safeHtml('p-date', t.prefix + today.toLocaleDateString(langCode, options));
-
-            // Dropdowns
-            var optionsHtml = `<option value="">${t.bSel}</option>`;
-            jyoData[lang].forEach(r => {
-                optionsHtml += `<option value="${r.id}">${r.symbol} ${r.name}</option>`;
-            });
-            safeHtml('personalRashiInput', optionsHtml);
-            safeHtml('coupleRashi1', optionsHtml);
-            safeHtml('coupleRashi2', optionsHtml);
-
-            // Grid
-            var gridHtml = jyoData[lang].map(r => `
-                <div class="rashi-card" onclick="jyoShowSingle('${r.id}')">
-                    <div class="rashi-icon">${r.symbol}</div>
-                    <h3>${r.name}</h3>
-                    <p>${r.short}</p>
-                </div>
-            `).join('');
-            safeHtml('rashiGridContainer', gridHtml);
-        };
-
-        window.jyoShowSingle = function(rId) {
-            var dob = document.getElementById('personalDobInput').value;
-            var r = jyoData[jyoCurLang].find(item => item.id === rId);
-            var t = jyoLangDb[jyoCurLang];
-            if(!r) return;
-
-            safeHtml('modalTitle', t.mSingle);
-            
-            var bodyHtml = `
-                <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fce7f3; text-align: center;">
-                    <h3 style="color: #831843; font-size: 22px; margin-bottom: 5px;">${r.symbol} ${r.name}</h3>
-                    ${dob ? `<p style="font-weight: 600; color: #9d174d; font-size: 15px;">DOB: ${dob}</p>` : ''}
-                </div>
-                <div class="detail-box">
-                    <div class="detail-item"><h4>🌟 ${t.mOverview}:</h4><p>${r.short}</p></div>
-                    <div class="detail-item"><h4>💼 ${t.mCareer}:</h4><p>${r.career}</p></div>
-                    <div class="detail-item"><h4>❤️ ${t.mLove}:</h4><p>${r.love}</p></div>
-                    <div class="detail-item"><h4>🍏 ${t.mHealth}:</h4><p>${r.health}</p></div>
-                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border: 1px solid #bbf7d0; margin-top: 20px;">
-                        <strong>🔮 ${t.mAdvice}:</strong><br>
-                        <span style="font-size: 15px; color: #166534; display:inline-block; margin-top:5px;">${r.advice}</span>
-                    </div>
-                    <div style="display: flex; gap: 20px; justify-content: space-around; margin-top: 20px; border-top: 2px dashed #fbcfe8; padding-top: 15px;">
-                        <span style="font-size: 15px;">🎨 <strong>${t.mColor}:</strong> <span style="color: #7c3aed; font-weight: bold;">${r.color}</span></span>
-                        <span style="font-size: 15px;">🔢 <strong>${t.mNum}:</strong> <span style="color: #db2777; font-weight: bold;">${r.num}</span></span>
-                    </div>
-                </div>
-            `;
-            safeHtml('modalBody', bodyHtml);
-            document.getElementById('jyoMasterModal').classList.add('active');
-        };
-
-        window.jyoCheckPersonal = function() {
-            var r1 = document.getElementById('personalRashiInput').value;
-            var d1 = document.getElementById('personalDobInput').value;
-            if(!r1 || !d1) {
-                alert(jyoCurLang === 'as' ? "অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছক।" : (jyoCurLang === 'hi' ? "कृपया जन्म तिथि और राशि चुनें।" : "Please enter DOB and select your Rashi."));
-                return;
-            }
-            jyoShowSingle(r1);
-        };
-
-        window.jyoCheckCouple = function() {
-            var r1 = document.getElementById('coupleRashi1').value;
-            var r2 = document.getElementById('coupleRashi2').value;
-            var d1 = document.getElementById('coupleDob1').value;
-            var d2 = document.getElementById('coupleDob2').value;
-            
-            if(!r1 || !r2 || !d1 || !d2) {
-                alert(jyoCurLang === 'as' ? "অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি বাছক।" : (jyoCurLang === 'hi' ? "कृपया दोनों की जन्म तिथि और राशि चुनें।" : "Please enter both DOBs and select Rashis."));
+            if(!rBoy || !rGirl || !dBoy || !dGirl) {
+                alert("অনুগ্ৰহ কৰি ল'ৰা আৰু ছোৱালী দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।");
                 return;
             }
 
-            var t = jyoLangDb[jyoCurLang];
-            var rData1 = jyoData[jyoCurLang].find(r => r.id === r1);
-            var rData2 = jyoData[jyoCurLang].find(r => r.id === r2);
-
-            // Flawless Logic for strict 10 point scale
-            var today = new Date().getDate();
-            var rawScore = (r1.charCodeAt(0) + r2.charCodeAt(r2.length-1) + today) % 25 + 70; // Generate 70 to 94 mathematically
-            var base10 = rawScore / 10; // 7.0 to 9.4
+            const bData = db[rBoy];
+            const gData = db[rGirl];
             
-            var overallScore = base10.toFixed(1);
-            var loveScore = Math.min(10, base10 + 0.5).toFixed(1); 
-            var commScore = Math.max(5, base10 - 0.5).toFixed(1);
-            var attrScore = Math.min(10, base10 + 0.8).toFixed(1);
-            var conflictScore = 4.5;
-            var moneyScore = Math.max(5, base10 - 0.8).toFixed(1);
-
-            var commAdvice = jyoCurLang === 'as' ? `দুয়োৰে চিন্তা কৰাৰ ধৰণ বেলেগ হ'ব পাৰে। <b>${rData1.name}</b> ৰাশিয়ে কথা পাতি সমস্যা সমাধান কৰিব বিচাৰিব, আনহাতে <b>${rData2.name}</b> ৰাশিয়ে অলপ সময় লৈ কথা পতা ভাল পাব।` : (jyoCurLang === 'hi' ? `बातचीत का तरीका अलग हो सकता है। <b>${rData1.name}</b> तुरंत बात करना चाहेंगे, जबकि <b>${rData2.name}</b> समय लेना पसंद करेंगे।` : `Communication styles may differ. Understanding each other's perspective is key today.`);
-
-            safeHtml('modalTitle', t.mCouple);
+            // Rating Calculation
+            const rawScore = (rBoy.charCodeAt(0) + rGirl.charCodeAt(1) + new Date().getDate()) % 25 + 70; // 70 to 94 
             
-            var bodyHtml = `
+            const overallScore = (rawScore / 10).toFixed(1);
+            const loveScore = ((rawScore + 3) / 10 > 10 ? 10 : (rawScore + 3) / 10).toFixed(1); 
+            const commScore = ((rawScore - 5) / 10).toFixed(1);
+            const attrScore = ((rawScore + 5) / 10 > 10 ? 10 : (rawScore + 5) / 10).toFixed(1);
+            const conflictScore = 4.5;
+            const moneyScore = ((rawScore - 8) / 10).toFixed(1);
+
+            document.getElementById('modalTitle').innerText = "❤️ যুটীয়া ৰাশিফল (Couple Horoscope)";
+            document.getElementById('modalBody').innerHTML = `
                 <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fce7f3; text-align: center;">
-                    <p style="font-weight: 600; color: #831843; font-size: 16px;">👨 <strong>Boy:</strong> DOB: ${d1} | ${rData1.symbol} ${rData1.name}</p>
-                    <p style="font-weight: 600; color: #831843; font-size: 16px; margin-top: 5px;">👩 <strong>Girl:</strong> DOB: ${d2} | ${rData2.symbol} ${rData2.name}</p>
-                    <p style="font-size: 12px; color: #9d174d; margin-top: 8px;">*(General Astrology Prediction based on Sun Signs)*</p>
+                    <p style="font-weight: 600; color: #831843; font-size: 15px;">👨 <strong>ল'ৰা:</strong> DOB: ${dBoy} | ${bData.s} ${bData.n}</p>
+                    <p style="font-weight: 600; color: #831843; font-size: 15px; margin-top: 5px;">👩 <strong>ছোৱালী:</strong> DOB: ${dGirl} | ${gData.s} ${gData.n}</p>
+                    <p style="font-size: 12px; color: #9d174d; margin-top: 8px;">*(জন্মসময় নথকাৰ বাবে এইটো সাধাৰণ ৰাশিভিত্তিক ফল)*</p>
                 </div>
 
                 <div class="detail-box">
                     <div class="detail-item">
-                        <h4>💕 ${t.mLove}: ${loveScore}/10</h4>
-                        <p>${jyoCurLang === 'as' ? 'আজি দুয়োৰে মাজত মানসিক সংযোগ (Emotional connection) অত্যন্ত ভাল থাকিব। সৰু কথাই ভুল বুজাবুজি সৃষ্টি কৰিব পাৰে, সেয়ে কথাৰ সুৰ সদায় কোমল ৰখা ভাল।' : (jyoCurLang === 'hi' ? 'आज दोनों के बीच भावनात्मक जुड़ाव अच्छा रहेगा। छोटी बातें गलतफहमी पैदा कर सकती हैं, इसलिए स्वर नरम रखें।' : 'Emotional connection will be good today. Keep your tone soft to avoid minor misunderstandings.')}</p>
+                        <h4>💕 প্ৰেম (Love): ${loveScore}/10</h4>
+                        <p>আজি দুয়োৰে মাজত emotional connection ভাল থাকিব। সৰু কথাই misunderstanding সৃষ্টি কৰিব পাৰে, সেয়ে কথাৰ tone কোমল ৰখা ভাল।</p>
                     </div>
-
                     <div class="detail-item">
                         <h4>🗣️ Communication: ${commScore}/10</h4>
-                        <p>${commAdvice}</p>
+                        <p>দুয়োৰে চিন্তা কৰাৰ ধৰণ বেলেগ হ'ব পাৰে। ${bData.n} ৰাশিয়ে কথা পাতি সমস্যা সমাধান কৰিব বিচাৰিব, আনহাতে ${gData.n} ৰাশিয়ে অলপ সময় লৈ কথা পতা ভাল পাব।</p>
                     </div>
-
                     <div class="detail-item">
                         <h4>💞 Attraction: ${attrScore}/10</h4>
-                        <p>${jyoCurLang === 'as' ? 'এজন আনজনৰ প্ৰতি আগ্ৰহ আৰু মানসিক টান বৃদ্ধি হোৱাৰ প্ৰবল সম্ভাৱনা আছে। একেলগে সময় কটালে সম্পৰ্ক অধিক দৃঢ় হ'ব।' : (jyoCurLang === 'hi' ? 'एक-दूसरे के प्रति आकर्षण बढ़ने की प्रबल संभावना है। साथ समय बिताने से रिश्ता और मजबूत होगा।' : 'Strong chances of increased mutual attraction. Spending time together will strengthen the relationship.')}</p>
+                        <p>এজন আনজনৰ প্ৰতি interest আৰু টান বৃদ্ধি হোৱাৰ প্ৰবল সম্ভাৱনা আছে। একেলগে সময় কটালে relationship-টো অধিক দৃঢ় হ'ব।</p>
                     </div>
-
                     <div class="detail-item">
                         <h4>⚠️ Conflict Potential: ${conflictScore}/10</h4>
-                        <ul style="font-size: 15px; color: #475569; margin-left: 20px;">
-                            <li>${jyoCurLang === 'as' ? 'অত্যাধিক চিন্তা কৰা (Overthinking)' : (jyoCurLang === 'hi' ? 'अत्यधिक सोचना (Overthinking)' : 'Overthinking small issues')}</li>
-                            <li>${jyoCurLang === 'as' ? 'প্ৰয়োজনীয় মনোযোগ নোপোৱাক লৈ সন্দেহ' : (jyoCurLang === 'hi' ? 'ध्यान न मिलने पर संदेह' : 'Doubts regarding lack of attention')}</li>
+                        <ul style="font-size: 14px; color: #475569; margin-left: 20px;">
+                            <li>অত্যাধিক চিন্তা কৰা (Overthinking)</li>
+                            <li>সৰু কথাত ভুল বুজাবুজি</li>
                         </ul>
                     </div>
-
                     <div class="detail-item">
                         <h4>💰 Money & Finance: ${moneyScore}/10</h4>
-                        <p>${jyoCurLang === 'as' ? 'আজিৰ দিনটোত সম্পৰ্কৰ মাজত টকা-পইচাৰ বিষয় লৈ তৰ্ক বা আলোচনা নকৰাই মংগলজনক।' : (jyoCurLang === 'hi' ? 'आज के दिन पैसे के मामले को लेकर बहस न करना ही बेहतर है।' : 'It is best to avoid arguments over money matters today.')}</p>
+                        <p>আজিৰ দিনটোত relationship-ৰ মাজত টকা-পইচাৰ বিষয় লৈ তৰ্ক নকৰাই ভাল।</p>
                     </div>
-
-                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 15px;">
-                        <strong>🔮 ${t.mAdvice}:</strong><br>
-                        <span style="font-size: 15px; color: #166534; display:inline-block; margin-top:5px; line-height: 1.6;">
-                        • <strong>Boy (${rData1.name}):</strong> ${jyoCurLang === 'as' ? 'কথা বেছি বুজাবলৈ যোৱাৰ সলনি প্ৰথমে ছোৱালীজনীৰ কথা শুনাৰ অভ্যাস কৰক।' : (jyoCurLang === 'hi' ? 'बात ज्यादा समझाने के बजाय पहले सुनने की आदत डालें।' : 'Practice listening first instead of explaining too much.')}<br>
-                        • <strong>Girl (${rData2.name}):</strong> ${jyoCurLang === 'as' ? 'প্ৰতিটো কথাতে negative অৰ্থ বিচৰাৰ সলনি পোনে পোনে প্ৰশ্ন কৰি লোৱা ভাল।' : (jyoCurLang === 'hi' ? 'नकारात्मक अर्थ खोजने के बजाय सीधे पूछ लेना बेहतर है।' : 'Ask directly instead of looking for negative meanings.')}
+                    
+                    <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 15px;">
+                        <strong>🔮 আজিৰ বিশেষ পৰামৰ্শ (Advice):</strong><br>
+                        <span style="font-size: 14px; color: #166534;">
+                        • <strong>ল'ৰা (${bData.n}):</strong> কথা বেছি explain কৰাৰ সলনি প্ৰথমে শুনাৰ অভ্যাস কৰক।<br>
+                        • <strong>ছোৱালী (${gData.n}):</strong> negative অৰ্থ বিচৰাৰ সলনি পোনে পোনে সুধি লোৱা ভাল।
                         </span>
                     </div>
-
-                    <div style="text-align: center; font-weight: 800; color: #be123c; font-size: 22px; margin-top: 20px; border-top: 2px dashed #fbcfe8; padding-top: 20px;">
+                    <div style="text-align: center; font-weight: bold; color: #be123c; font-size: 20px; margin-top: 15px; border-top: 2px solid #fce7f3; padding-top: 15px;">
                         ⭐ Overall Couple Score: ${overallScore}/10
                     </div>
                 </div>
             `;
-            document.getElementById('jyoMasterModal').classList.add('active');
-        };
+            document.getElementById('masterModal').classList.add('active');
+        }
 
-        window.jyoCloseModal = function() { 
-            var m = document.getElementById('jyoMasterModal');
-            if(m) m.classList.remove('active'); 
-        };
+        // ৩. বিশদ ৰাশিফল দেখুওৱা ফাংচন
+        function openHoroModal(rashiId, dob = null) {
+            const r = db[rashiId];
+            if(!r) return;
 
-        window.jyoShareWa = function() {
-            var text = encodeURIComponent("✨ জ্যোতিষ অসমত আজিৰ বিশদ ৰাশিফল আৰু যুটীয়া প্ৰেমৰ ৰাশিফল চাওক! \nলিংক: " + window.location.href);
-            window.open("https://wa.me/?text=" + text, '_blank');
-        };
+            document.getElementById('modalTitle').innerText = "✨ আপোনাৰ বিশদ ৰাশিফল";
+            
+            let headerHtml = `<h3 style="color: #831843; font-size: 20px;">${r.s} ${r.n}</h3>`;
+            if(dob) {
+                headerHtml += `<p style="font-weight: 600; color: #9d174d; font-size: 14px; margin-top:5px;">DOB: ${dob}</p>`;
+            }
 
-        // Initialize immediately
-        jyoChangeLanguage('as');
+            document.getElementById('modalBody').innerHTML = `
+                <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fce7f3; text-align: center;">
+                    ${headerHtml}
+                </div>
+                <div class="detail-box">
+                    <div class="detail-item"><h4>🌟 সাৰাংশ:</h4><p>${r.msg}</p></div>
+                    <div class="detail-item"><h4>💼 কৰ্ম আৰু বিত্ত:</h4><p>${r.car}</p></div>
+                    <div class="detail-item"><h4>❤️ প্ৰেম আৰু সম্পৰ্ক:</h4><p>${r.lov}</p></div>
+                    <div class="detail-item"><h4>🍏 স্বাস্থ্য:</h4><p>${r.hea}</p></div>
+                    
+                    <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 15px;">
+                        <strong>🔮 আজিৰ বিশেষ পৰামৰ্শ:</strong><br>
+                        <span style="font-size: 14px; color: #166534;">${r.adv}</span>
+                    </div>
 
+                    <div style="display: flex; gap: 20px; justify-content: space-around; margin-top: 15px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+                        <span style="font-size: 14px;">🎨 <strong>শুভ ৰং:</strong> <span style="color: #7c3aed; font-weight: bold;">${r.col}</span></span>
+                        <span style="font-size: 14px;">🔢 <strong>শুভ সংখ্যা:</strong> <span style="color: #db2777; font-weight: bold;">${r.num}</span></span>
+                    </div>
+                </div>
+            `;
+            document.getElementById('masterModal').classList.add('active');
+        }
     </script>
 </body>
 </html>
