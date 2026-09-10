@@ -29,7 +29,7 @@
             --warning-color: #e11d48;
         }
 
-        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
+        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); overflow-x: hidden;}
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         /* Navigation */
@@ -66,62 +66,21 @@
         .p-value { font-size: 16px; color: var(--text-dark); font-weight: 700; }
         .p-item.danger .p-label, .p-item.danger .p-value { color: var(--warning-color); }
 
-        /* --- ATTRACTIVE Free Astrology Tools Section --- */
+        /* Free Astrology Tools Section */
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 30px; }
-        
-        .tool-card { 
-            background: white; 
-            border-radius: 20px; 
-            padding: 30px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-        
-        /* Specific Styles for Personal Card */
-        .tool-card.personal-card {
-            background: linear-gradient(145deg, #ffffff, #f5f3ff);
-            border-color: #ede9fe;
-        }
-        .tool-card.personal-card .tool-btn {
-            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
-            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
-        }
-        .tool-card.personal-card h3 { color: var(--primary-color); }
-
-        /* Specific Styles for Couple Card */
-        .tool-card.couple-card {
-            background: linear-gradient(145deg, #ffffff, #fdf2f8);
-            border-color: #fce7f3;
-        }
-        .tool-card.couple-card .tool-btn {
-            background: linear-gradient(135deg, var(--secondary-color), #f43f5e);
-            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.3);
-        }
+        .tool-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .tool-card.personal-card { background: linear-gradient(145deg, #ffffff, #f5f3ff); border-color: #ede9fe; }
+        .tool-card.couple-card { background: linear-gradient(145deg, #ffffff, #fdf2f8); border-color: #fce7f3; }
+        .tool-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: center; color: var(--primary-color); }
         .tool-card.couple-card h3 { color: var(--secondary-color); }
-
-        .tool-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: center; }
         .tool-card > p { font-size: 13px; color: var(--text-light); margin-bottom: 25px; text-align: center; }
-        
-        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 5px; }
-        
-        .tool-input { 
-            width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; 
-            border-radius: 10px; font-family: inherit; font-size: 14px; 
-            outline: none; background: white; transition: 0.3s;
-            color: var(--text-dark);
-        }
+        .tool-input { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; background: white; transition: 0.3s; }
         .tool-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1); }
-        
-        .tool-btn { 
-            color: white; border: none; padding: 14px 20px; 
-            border-radius: 10px; font-weight: 600; cursor: pointer; 
-            width: 100%; transition: 0.3s; font-size: 16px; margin-top: 10px;
-        }
+        .tool-btn { color: white; border: none; padding: 14px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; font-size: 16px; margin-top: 10px; background: linear-gradient(135deg, var(--primary-color), #8b5cf6); box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
+        .tool-card.couple-card .tool-btn { background: linear-gradient(135deg, var(--secondary-color), #f43f5e); box-shadow: 0 4px 15px rgba(219, 39, 119, 0.3); }
         .tool-btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
         .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .gender-badge { display: inline-flex; align-items: center; gap: 5px; background: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #334155; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 10px; border: 1px solid #e2e8f0; }
 
@@ -137,6 +96,78 @@
         .rashi-card h3 { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
         .rashi-card p { font-size: 13px; color: var(--text-light); line-height: 1.4; }
 
+        /* =========================================
+           ATTRACTIVE 3D POPUP MODAL STYLES 
+           ========================================= */
+        .modal { 
+            display: flex; 
+            position: fixed; z-index: 2000; left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(5px);
+            justify-content: center; align-items: center; padding: 20px;
+            visibility: hidden; opacity: 0; transition: all 0.3s ease;
+        }
+        .modal.active { visibility: visible; opacity: 1; }
+        
+        .modal-content { 
+            background: linear-gradient(to bottom, #ffffff, #fdfbfe); 
+            padding: 35px 30px; 
+            border-radius: 24px; 
+            width: 100%; max-width: 600px; 
+            position: relative; 
+            /* 3D Shadows & Borders */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.8) inset, 0 -8px 0px rgba(109, 40, 217, 0.1) inset;
+            border: 1px solid rgba(255,255,255,0.5);
+            max-height: 90vh; overflow-y: auto;
+            /* 3D Pop Animation */
+            transform: scale(0.8) translateY(30px) perspective(1000px) rotateX(5deg);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal.active .modal-content {
+            transform: scale(1) translateY(0) perspective(1000px) rotateX(0deg);
+            opacity: 1;
+        }
+        
+        /* Floating 3D Close Button */
+        .close-modal { 
+            position: absolute; right: -10px; top: -10px; 
+            background: white; color: #e11d48; width: 40px; height: 40px; 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-size: 24px; font-weight: bold; cursor: pointer; z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 -3px 0 rgba(0,0,0,0.1) inset;
+            transition: 0.3s;
+        }
+        .close-modal:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 -3px 0 rgba(0,0,0,0.1) inset; }
+
+        /* 3D Detail Box inside Modal */
+        .detail-box { 
+            background: #fdf2f8; padding: 25px; border-radius: 16px; margin-bottom: 15px; 
+            border: 1px solid #fce7f3; 
+            /* 3D Inner Box */
+            box-shadow: 0 8px 0 #fbcfe8, 0 15px 20px rgba(0,0,0,0.05);
+            margin-top: 15px;
+        }
+        .detail-item { margin-bottom: 18px; }
+        .detail-item h4 { font-size: 16px; color: #831843; margin-bottom: 6px; }
+        .detail-item p { font-size: 14px; color: #475569; line-height: 1.6; }
+
+        /* Other UI */
+        .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px; }
+        .whatsapp-share-btn:hover { background: #1da851; transform: translateY(-2px); }
+        .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
+        .about-box { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 40px 30px; margin: 40px 0; text-align: center; }
+        .about-box h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 24px; }
+        .about-box p { color: var(--text-light); font-size: 15px; line-height: 1.8; max-width: 800px; margin: 0 auto; }
+        
+        footer { background: var(--dark-bg); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; }
+        .footer-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .footer-links a:hover { color: white; text-decoration: underline; }
+        .disclaimer-text { font-size: 11px; color: #64748b; max-width: 900px; margin: 20px auto 0; line-height: 1.6; border-top: 1px solid #1e293b; padding-top: 20px; }
+
+        /* Services & Testimonials styling collapsed for brevity but fully intact */
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .service-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; text-align: center; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .service-card:hover { border-color: var(--primary-color); box-shadow: 0 20px 40px rgba(109, 40, 217, 0.1); transform: translateY(-5px); }
@@ -145,8 +176,7 @@
         .service-desc { font-size: 14px; color: var(--text-light); margin-bottom: 20px; line-height: 1.6; }
         .service-price { font-size: 32px; font-weight: 700; color: var(--primary-color); margin: 20px 0; }
         .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
-
-        /* Testimonials */
+        
         .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .testimonial-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .testimonial-text { font-size: 15px; color: var(--text-light); font-style: italic; margin-bottom: 15px; }
@@ -156,32 +186,6 @@
         .review-form-box { background: #fdf4ff; border: 1px solid #fae8ff; border-radius: 16px; padding: 30px; margin-top: 40px; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.05); }
         .review-form-box h3 { color: var(--secondary-color); margin-bottom: 15px; text-align: center; }
         .review-input, .review-select, .review-textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; }
-
-        /* About Us */
-        .about-box { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 40px 30px; margin: 40px 0; text-align: center; }
-        .about-box h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 24px; }
-        .about-box p { color: var(--text-light); font-size: 15px; line-height: 1.8; max-width: 800px; margin: 0 auto; }
-
-        /* Modals */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 20px; overflow-y: auto;}
-        .modal.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 650px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: left; max-height: 90vh; overflow-y: auto;}
-        .close-modal { position: absolute; right: 20px; top: 15px; font-size: 26px; cursor: pointer; color: #666; transition: 0.3s; }
-        .close-modal:hover { color: #000; }
-        .detail-box { background: #fdf2f8; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #fce7f3; }
-        .detail-item { margin-bottom: 15px; }
-        .detail-item h4 { font-size: 15px; color: #831843; margin-bottom: 5px; }
-        .detail-item p { font-size: 14px; color: #475569; line-height: 1.6; }
-
-        .whatsapp-share-btn { background: #25D366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s; margin-top: 20px; }
-        .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
-
-        /* Footer */
-        footer { background: var(--dark-bg); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; }
-        .footer-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
-        .footer-links a { color: #cbd5e1; text-decoration: none; font-size: 14px; transition: 0.3s; }
-        .footer-links a:hover { color: white; text-decoration: underline; }
-        .disclaimer-text { font-size: 11px; color: #64748b; max-width: 900px; margin: 20px auto 0; line-height: 1.6; border-top: 1px solid #1e293b; padding-top: 20px; }
     </style>
 </head>
 <body>
@@ -232,15 +236,15 @@
             </div>
         </section>
 
-        <!-- BEAUTIFUL Free Astrology Tools Section -->
+        <!-- 3D Free Astrology Tools Section -->
         <section class="section">
             <h2 class="section-title" id="toolsTitle">🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
             <p class="section-subtitle" id="toolsSub">জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক</p>
             
             <div class="tools-grid">
-                <!-- Personal Horoscope Card -->
+                <!-- Personal Tool -->
                 <div class="tool-card personal-card">
-                    <h3 id="dobHoroTitle">আপোনাৰ বিশদ ৰাশিফল চাওক</h3>
+                    <h3 id="dobHoroTitle">আপোনাৰ বিশদ দৈনিক ৰাশিফল চাওক</h3>
                     <p id="dobHoroDesc">আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।</p>
                     
                     <div class="input-group">
@@ -251,16 +255,16 @@
                     <div class="input-group">
                         <label id="lblPersonalRashi">🌟 আপোনাৰ ৰাশি:</label>
                         <select id="personalRashiInput" class="tool-input">
-                            <!-- Populated by JS dynamically -->
+                            <!-- JS will inject options here -->
                         </select>
                     </div>
                     
                     <button class="tool-btn" id="btnDobHoro" onclick="checkPersonalHoroscope()">ৰাশিফল চাওক</button>
                 </div>
 
-                <!-- Couple Compatibility Card -->
+                <!-- Couple Tool -->
                 <div class="tool-card couple-card">
-                    <h3 id="coupleTitle">যুটীয়া ৰাশিফল (Joint Horoscope)</h3>
+                    <h3 id="coupleTitle">যুটীয়া ৰাশিফল (Couple Horoscope)</h3>
                     <p id="coupleDesc">দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।</p>
                     
                     <div>
@@ -268,7 +272,7 @@
                         <div class="couple-grid">
                             <input type="date" id="coupleDob1" class="tool-input" title="DOB">
                             <select id="coupleRashi1" class="tool-input">
-                                <!-- Populated by JS dynamically -->
+                                <!-- JS will inject options here -->
                             </select>
                         </div>
                     </div>
@@ -278,7 +282,7 @@
                         <div class="couple-grid">
                             <input type="date" id="coupleDob2" class="tool-input" title="DOB">
                             <select id="coupleRashi2" class="tool-input">
-                                <!-- Populated by JS dynamically -->
+                                <!-- JS will inject options here -->
                             </select>
                         </div>
                     </div>
@@ -340,7 +344,6 @@
                 <div class="testimonial-card"><div class="stars">⭐⭐⭐⭐⭐</div><div class="testimonial-text" id="test3-text">"মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"</div><div class="testimonial-author" id="test3-author">— নিবেদিতা শৰ্মা, যোৰহাট</div></div>
             </div>
 
-            <!-- Review Form -->
             <div class="review-form-box">
                 <h3 id="rfTitle">আপোনাৰ মতামত দিয়ক</h3>
                 <form id="reviewForm" onsubmit="submitReview(event)">
@@ -365,10 +368,10 @@
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- 3D POPUP MODAL -->
     <div class="modal" id="rashiModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeRashiModal()">&times;</span>
+            <div class="close-modal" onclick="closeRashiModal()">&times;</div>
             <h2 id="modalRashiTitle" style="color: var(--primary-color); margin-bottom: 15px; font-size: 24px; text-align: center; border-bottom: 2px solid #f3e8ff; padding-bottom: 10px;">ৰাশিফল</h2>
             <div id="modalRashiBody"></div>
         </div>
@@ -399,7 +402,7 @@
                 
                 toolsTitle: "🎁 বিনামূলীয়া দৈনিক সঁজুলি", toolsSub: "জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক",
                 dobHoroTitle: "আপোনাৰ বিশদ ৰাশিফল চাওক", dobHoroDesc: "আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।",
-                coupleTitle: "যুটীয়া ৰাশিফল (Joint Horoscope)", coupleDesc: "দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।",
+                coupleTitle: "যুটীয়া ৰাশিফল (Couple Horoscope)", coupleDesc: "দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক।",
                 checkBtn: "ৰাশিফল চাওক", boyLbl: "👨 ল'ৰাৰ বিৱৰণ:", girlLbl: "👩 ছোৱালীৰ বিৱৰণ:",
                 lblPersonalDob: "🎂 জন্ম তাৰিখ (DOB):", lblPersonalRashi: "🌟 আপোনাৰ ৰাশি:", selectRashiText: "-- ৰাশি বাছক --",
                 
@@ -415,9 +418,11 @@
                 srv3Title: "কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস", srv3Desc: "চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু চাকৰি বনাম ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।",
                 btnText: "সেৱা গ্ৰহণ কৰক",
                 
-                testTitle: "গ্ৰাহকৰ মতামত",
+                testTitle: "গ্ৰাহকৰ মতামত", testSub: "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা",
                 t1text: "প্ৰেম-সম্পৰ্কৰ ৰিপোৰ্টখন পঢ়ি আচৰিত হৈ গ'লোঁ! ইমান নিখুঁত আৰু স্পষ্ট ভৱিষ্যদ্বাণী মই কতো পোৱা নাছিলোঁ।", t1auth: "— প্ৰিয়া দাস, গুৱাহাটী",
                 t2text: "কেৰিয়াৰৰ পইণ্টবোৰ পঢ়ি মই সঠিক সিদ্ধান্ত ল'ব পাৰিলোঁ। জ্যোতিষ অসমৰ এই প্ৰচেষ্টা অতি প্ৰশংসনীয়।", t2auth: "— ৰাজীৱ বৰা, ডিব্ৰুগড়",
+                t3text: "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!", t3auth: "— নিবেদিতা শৰ্মা, যোৰহাট",
+                rfTitle: "আপোনাৰ মতামত দিয়ক", btnSubmitReview: "মতামত প্ৰেৰণ কৰক",
 
                 secTitle: "🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে", secDesc: "আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।",
                 
@@ -455,10 +460,12 @@
                 srv3Title: "Career & Business Forecast", srv3Desc: "Job timing, promotions, and right direction guidance between job and business.",
                 btnText: "Get Service",
                 
-                testTitle: "Customer Testimonials",
+                testTitle: "Customer Testimonials", testSub: "Experiences of people who have benefited from our services",
                 t1text: "I was amazed reading the love & relationship report! Never found such accurate predictions.", t1auth: "— Priya Das, Guwahati",
                 t2text: "The career insights helped me take the right decision. Highly appreciated.", t2auth: "— Rajiv Bora, Dibrugarh",
-                
+                t3text: "Unbelievable to get such a detailed birth chart report at just ₹299. Thank you!", t3auth: "— Nivedita Sharma, Jorhat",
+                rfTitle: "Leave a Review", btnSubmitReview: "Submit Review",
+
                 secTitle: "🔒 100% Secure & Safe Payment Gateway", secDesc: "Our payment system is powered and secured by Razorpay, India's leading payment gateway.",
                 
                 lblOverview: "Overview", lblCareer: "Career & Money", lblLove: "Love & Relations", lblHealth: "Health", 
@@ -495,10 +502,12 @@
                 srv3Title: "करियर और व्यवसाय पूर्वानुमान", srv3Desc: "नौकरी मिलने का समय, पदोन्नति, और नौकरी बनाम व्यवसाय का सही मार्गदर्शन।",
                 btnText: "सेवा प्राप्त करें",
                 
-                testTitle: "ग्राहक समीक्षाएं",
+                testTitle: "ग्राहक समीक्षाएं", testSub: "हमारी सेवाओं से लाभान्वित लोगों के अनुभव",
                 t1text: "प्रेम-संबंध की रिपोर्ट पढ़कर हैरान रह गई! इतनी सटीक भविष्यवाणी मैंने कहीं नहीं पाई।", t1auth: "— प्रिया दास, गुवाहाटी",
                 t2text: "करियर रिपोर्ट ने मुझे सही निर्णय लेने में मदद की। ज्योतिष असम का प्रयास सराहनीय है।", t2auth: "— राजीव बोरा, डिब्रूगढ़",
-                
+                t3text: "मात्र ₹299 में इतनी विस्तृत और सटीक कुंडली रिपोर्ट मिलना अविश्वसनीय है। धन्यवाद!", t3auth: "— निवेदिता शर्मा, जोरहाट",
+                rfTitle: "अपनी समीक्षा दें", btnSubmitReview: "समीक्षा सबमिट करें",
+
                 secTitle: "🔒 100% सुरक्षित और सुरक्षित भुगतान गेटवे", secDesc: "हमारी भुगतान प्रणाली भारत के अग्रणी भुगतान संस्थान Razorpay द्वारा सुरक्षित है।",
                 
                 lblOverview: "सारांश", lblCareer: "करियर व धन", lblLove: "प्रेम व संबंध", lblHealth: "स्वास्थ्य", 
@@ -566,7 +575,6 @@
 
             const t = texts[lang];
             
-            // Nav & Header
             document.getElementById('navHome').innerText = t.navHome;
             document.getElementById('navServices').innerText = t.navServices;
             document.getElementById('navAbout').innerText = t.navAbout;
@@ -582,7 +590,6 @@
             document.getElementById('pl-tithi').innerText = t.plTithi; document.getElementById('pl-nakshatra').innerText = t.plNakshatra;
             document.getElementById('pl-rahu').innerText = t.plRahu;
             
-            // Tools Section
             document.getElementById('toolsTitle').innerText = t.toolsTitle;
             document.getElementById('toolsSub').innerText = t.toolsSub;
             document.getElementById('dobHoroTitle').innerText = t.dobHoroTitle;
@@ -596,30 +603,30 @@
             document.getElementById('lblPersonalDob').innerText = t.lblPersonalDob;
             document.getElementById('lblPersonalRashi').innerText = t.lblPersonalRashi;
 
-            // Rashi Main
             document.getElementById('rashi-main-title').innerText = t.rashiMainTitle;
             document.getElementById('rashi-sub-title').innerText = t.rashiSubTitle;
             document.getElementById('wa-share-text').innerText = t.waShareText;
 
-            // About Us
             document.getElementById('aboutTitle').innerText = t.aboutTitle;
             document.getElementById('aboutDesc').innerText = t.aboutDesc;
 
-            // Services
             document.getElementById('s-title').innerText = t.sTitle; document.getElementById('s-subtitle').innerText = t.sSubtitle;
             document.getElementById('srv1-title').innerText = t.srv1Title; document.getElementById('srv1-desc').innerText = t.srv1Desc;
             document.getElementById('srv2-title').innerText = t.srv2Title; document.getElementById('srv2-desc').innerText = t.srv2Desc;
             document.getElementById('srv3-title').innerText = t.srv3Title; document.getElementById('srv3-desc').innerText = t.srv3Desc;
             document.querySelectorAll('.service-btn-action').forEach(b => b.innerText = t.btnText);
 
-            // Testimonials
             document.getElementById('testimonialTitle').innerText = t.testTitle;
+            document.getElementById('testimonialSubtitle').innerText = t.testSub || "আমাৰ সেৱা লাভ কৰি উপকৃত হোৱা লোকসকলৰ অভিজ্ঞতা";
             document.getElementById('test1-text').innerText = t.t1text; document.getElementById('test1-author').innerText = t.t1auth;
             document.getElementById('test2-text').innerText = t.t2text; document.getElementById('test2-author').innerText = t.t2auth;
+            document.getElementById('test3-text').innerText = t.t3text || "মাত্ৰ ২৯৯ টকাত ইমান বিস্তৃত আৰু নিখুঁত কুুণ্ডলী ৰিপোৰ্ট পোৱাটো অবিশ্বাস্য। ধন্যবাদ!"; document.getElementById('test3-author').innerText = t.t3auth || "— নিবেদিতা শৰ্মা, যোৰহাট";
+            
+            document.getElementById('rfTitle').innerText = t.rfTitle || "আপোনাৰ মতামত দিয়ক"; 
+            document.getElementById('btnSubmitReview').innerText = t.btnSubmitReview || "মতামত প্ৰেৰণ কৰক";
 
             document.getElementById('sec-title').innerText = t.secTitle; document.getElementById('sec-desc').innerText = t.secDesc;
             
-            // Footer
             document.getElementById('ft-home').innerText = t.navHome;
             document.getElementById('ft-privacy').innerText = t.ftPrivacy;
             document.getElementById('ft-terms').innerText = t.ftTerms;
@@ -639,9 +646,9 @@
             document.getElementById('p-date').innerText = texts[currentLang].datePrefix + today.toLocaleDateString(langCode, options);
         }
 
-        // Dynamic Dropdown Options based on language
+        // Fix: Added the missing function for Dynamic Dropdowns
         function renderRashiDropdowns() {
-            const defText = texts[currentLang].selectRashiText;
+            const defText = texts[currentLang].selectRashiText || "-- Select --";
             let optionsHtml = `<option value="">${defText}</option>`;
             rashiData[currentLang].forEach(r => {
                 optionsHtml += `<option value="${r.id}">${r.symbol} ${r.name}</option>`;
@@ -808,6 +815,25 @@
         }
 
         function closeRashiModal() { document.getElementById('rashiModal').classList.remove('active'); }
+
+        function submitReview(e) {
+            e.preventDefault();
+            const name = document.getElementById('reviewerName').value;
+            const stars = document.getElementById('reviewStars').value;
+            const text = document.getElementById('reviewText').value;
+            
+            const starsHtml = '⭐'.repeat(stars);
+            const newReview = `
+                <div class="testimonial-card" style="animation: fadeIn 0.5s;">
+                    <div class="stars">${starsHtml}</div>
+                    <div class="testimonial-text">"${text}"</div>
+                    <div class="testimonial-author">— ${name}</div>
+                </div>`;
+            
+            document.getElementById('testimonialsList').insertAdjacentHTML('afterbegin', newReview);
+            document.getElementById('reviewForm').reset();
+            alert(currentLang === 'as' ? "আপোনাৰ মতামতৰ বাবে ধন্যবাদ!" : "Thank you for your review!");
+        }
 
         function shareOnWhatsApp() {
             const text = encodeURIComponent("✨ জ্যোতিষ অসমত আজিৰ ৰাশিফল আৰু নিখুঁত বৈদিক কুণ্ডলী চাওক! \nলিংক: " + window.location.href);
