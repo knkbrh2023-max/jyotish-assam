@@ -318,7 +318,7 @@
         <!-- Hero Section -->
         <section class="hero">
             <h1 class="hero-title-styled" id="h-title-main">
-                <span id="h-title-highlight">আপোনাৰ ভৱিষ্যৎ</span> আজি সঠিকভাৱে জানি লওক
+                <span id="h-title-highlight">আপোনাৰ ভৱিষ্যৎ</span> <span id="h-title-rest">আজি সঠিকভাৱে জানি লওক</span>
             </h1>
             <p id="h-subtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
             
@@ -333,7 +333,7 @@
         <!-- 12 Rashi Grid Section -->
         <section class="rashi-section">
             <h2 class="section-title" id="rashi-main-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
-            <p class="section-subtitle">আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক</p>
+            <p class="section-subtitle" id="rashi-sub-title">আপোনাৰ ৰাশিত ক্লিক কৰি আজিৰ সম্পূৰ্ণ ফলাদলৈ পঢ়ক</p>
             
             <div class="rashi-grid" id="rashiGridContainer">
                 <!-- Dynamically filled by JS -->
@@ -458,46 +458,46 @@
 
         const rashiData = {
             as: [
-                { id: 'aries', name: 'মেষ (Aries)', symbol: '♈', short: 'আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।', career: 'কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব।', love: 'সংগীৰ লগত মধুৰ সময় পাৰ হ'ব।', health: 'স্বাস্থ্য সুন্দৰ থাকিব।', color: 'বগলীয়া', num: '৯' },
-                { id: 'taurus', name: 'বৃষ (Taurus)', symbol: '♉', short: 'কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে।', career: 'ব্যৱসায়ত লাভৰ যোগ আছে।', love: 'পৰিয়ালৰ সমৰ্থন পাব।', health: 'পেটৰ সামান্য সমস্যা হ'ব পাৰে।', color: 'সেউজীয়া', num: '৬' },
-                { id: 'gemini', name: 'মিথুন (Gemini)', symbol: '♊', short: 'প্ৰেম-প্ৰসংগত ভাল বাতৰি আহিব।', career: 'শিক্ষার্থীসকলৰ বাবে শুভ দিন।', love: 'মনৰ কথা প্ৰকাশ কৰিবলৈ ভাল দিন।', health: 'মানসিক শান্তি বজায় থাকিব।', color: 'হালধীয়া', num: '৩' },
-                { id: 'cancer', name: 'কৰ্কট (Cancer)', symbol: '♋', short: 'পৰিয়ালৰ সৈতে সময় কটাওক।', career: 'কৰ্মক্ষেত্ৰত ধৈৰ্য ধৰক।', love: 'আৱেগ নিয়ন্ত্ৰণত ৰাখক।', health: 'পানী বেছিকৈ খাওক।', color: 'ৰূপালী', num: '২' },
-                { id: 'leo', name: 'সিংহ (Leo)', symbol: '♌', short: 'আৰ্থিক লাভৰ যোগ আছে।', career: 'পদোন্নতি বা নতুন সুযোগ আহিব।', love: 'ৰোমাঞ্চকৰ দিন।', health: 'শাৰীৰিক শক্তি প্ৰচুৰ থাকিব।', color: 'কমলা', num: '১' },
-                { id: 'virgo', name: 'কন্যা (Virgo)', symbol: '♍', short: 'স্বাস্থ্যৰ প্ৰতি মনোযোগ দিয়ে যত্ন লওক।', career: 'পিকল্পিত কামত সফলতা।', love: 'ঘৰুৱা পৰিৱেশ শান্ত হ'ব।', health: 'বিশ্ৰামৰ প্ৰয়োজন আছে।', color: 'নীলা', num: '৫' },
-                { id: 'libra', name: 'তুলা (Libra)', symbol: '♎', short: 'ভালোবাসা আৰু স্নেহৰ বৃষ্টি হব।', career: 'কলা আৰু মিডিয়া জগতৰ সৈতে যুক্তসকলৰ লাভ।', love: 'প্ৰেম জীৱন প্ৰফুল্ল হৈ উঠিব।', health: 'স্বাস্থ্য উত্তম থাকিব।', color: 'गुलाबी', num: '৭' },
-                { id: 'scorpio', name: 'বৃশ্চিক (Scorpio)', symbol: '♏', short: 'লুকাই থকা প্ৰতিভা ফুটিবলৈ সময়।', career: 'কঠিন পৰিশ্ৰমৰ ফল পাব।', love: 'সংশয় দূৰ হ'ব।', health: 'ৰক্তচাপ নিয়ন্ত্ৰণত ৰাখক।', color: 'মাৰুন', num: '৮' },
-                { id: 'sagittarius', name: 'ধনু (Sagittarius)', symbol: '♐', short: 'নতুন সুযোগৰ দুৱাৰ মুকলি হ'ব।', career: 'উচ্চ শিক্ষাৰ বাবে যাত্ৰা হ'ব পাৰে।', love: 'সংগীৰ সহযোগিতা পাব।', health: 'উচ্চ শক্তি স্তৰ থাকিব।', color: 'বেঙুনীয়া', num: '৩' },
-                { id: 'capricorn', name: 'মকৰ (Capricorn)', symbol: '♑', short: 'পৰিশ্ৰমৰ ফল পাবলৈ লাগিছে।', career: 'কৰ্মত স্থিৰতা আহিব।', love: 'দায়িত্ববোধ বৃদ্ধি পাব।', health: 'যোৰত সামান্য বিষ অনুভৱ হ'ব পাৰে।', color: 'ধূসৰ', num: '৮' },
-                { id: 'aquarius', name: 'কুম্ভ (Aquarius)', symbol: '♒', short: 'মিত্ৰতা আৰু সম্পৰ্ক শক্তিশালী হব।', career: 'দলগত কামত সফলতা।', love: 'বন্ধুৰ সহায়ত প্ৰেমত অগ্ৰগতি।', health: 'মানসিক উল্লাস থাকিব।', color: 'আকাষী নীল', num: '৪' },
-                { id: 'pisces', name: 'মীন (Pisces)', symbol: '♓', short: 'সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।', career: 'নতুন চিন্তাৰ দ্বাৰা লাভান্বিত হ'ব।', love: 'আধ্যাত্মিক চিন্তাত দিন পাৰ হ'ব।', health: 'শান্ত অনুভৱ কৰিব।', color: 'হালধীয়া-সোনালী', num: '৩' }
+                { id: "aries", name: "মেষ (Aries)", symbol: "♈", short: "আজ আপোনাৰ ভাগ্য় অতি ইতিবাচক থাকিব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব পাব।", love: "সংগীৰ লগত মধুৰ সময় পাৰ হ'ব।", health: "স্বাস্থ্য সুন্দৰ থাকিব।", color: "বগলীয়া", num: "৯" },
+                { id: "taurus", name: "বৃষ (Taurus)", symbol: "♉", short: "কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে।", career: "ব্যৱসায়ত লাভৰ যোগ আছে।", love: "পৰিয়ালৰ সমৰ্থন পাব।", health: "পেটৰ সামান্য সমস্যা হ'ব পাৰে।", color: "সেউজীয়া", num: "৬" },
+                { id: "gemini", name: "মিথুন (Gemini)", symbol: "♊", short: "প্ৰেম-প্ৰসংগত ভাল বাতৰি আহিব।", career: "শিক্ষার্থীসকলৰ বাবে শুভ দিন।", love: "মনৰ কথা প্ৰকাশ কৰিবলৈ ভাল দিন।", health: "মানসিক শান্তি বজায় থাকিব।", color: "হালধীয়া", num: "৩" },
+                { id: "cancer", name: "কৰ্কট (Cancer)", symbol: "♋", short: "পৰিয়ালৰ সৈতে সময় কটাওক।", career: "কৰ্মক্ষেত্ৰত ধৈৰ্য ধৰক।", love: "আৱেগ নিয়ন্ত্ৰণত ৰাখক।", health: "পানী বেছিকৈ খাওক।", color: "ৰূপালী", num: "২" },
+                { id: "leo", name: "সিংহ (Leo)", symbol: "♌", short: "আৰ্থিক লাভৰ যোগ আছে।", career: "পদোন্নতি বা নতুন সুযোগ আহিব।", love: "ৰোমাঞ্চকৰ দিন।", health: "শাৰীৰিক শক্তি প্ৰচুৰ থাকিব।", color: "কমলা", num: "১" },
+                { id: "virgo", name: "কন্যা (Virgo)", symbol: "♍", short: "স্বাস্থ্যৰ প্ৰতি মনোযোগ দিয়ে যত্ন লওক।", career: "পিকল্পিত কামত সফলতা।", love: "ঘৰুৱা পৰিৱেশ শান্ত হ'ব।", health: "বিশ্ৰামৰ প্ৰয়োজন আছে।", color: "নীলা", num: "৫" },
+                { id: "libra", name: "তুলা (Libra)", symbol: "♎", short: "ভালোবাসা আৰু স্নেহৰ বৃষ্টি হ'ব।", career: "কলা আৰু মিডিয়া জগতৰ সৈতে যুক্তসকলৰ লাভ।", love: "প্ৰেম জীৱন প্ৰফুল্ল হৈ উঠিব।", health: "স্বাস্থ্য উত্তম থাকিব।", color: "গুলপীয়া", num: "৭" },
+                { id: "scorpio", name: "বৃশ্চিক (Scorpio)", symbol: "♏", short: "লুকাই থকা প্ৰতিভা ফুটিবলৈ সময়।", career: "কঠিন পৰিশ্ৰমৰ ফল পাব।", love: "সংশয় দূৰ হ'ব।", health: "ৰক্তচাপ নিয়ন্ত্ৰণত ৰাখক।", color: "মাৰুন", num: "৮" },
+                { id: "sagittarius", name: "ধনু (Sagittarius)", symbol: "♐", short: "নতুন সুযোগৰ দুৱাৰ মুকলি হ'ব।", career: "উচ্চ শিক্ষাৰ বাবে যাত্ৰা হ'ব পাৰে।", love: "সংগীৰ সহযোগিতা পাব।", health: "উচ্চ শক্তি স্তৰ থাকিব।", color: "বেঙুনীয়া", num: "৩" },
+                { id: "capricorn", name: "মকৰ (Capricorn)", symbol: "♑", short: "পৰিশ্ৰমৰ ফল পাবলৈ লাগিছে।", career: "কৰ্মত স্থিৰতা আহিব।", love: "দায়িত্ববোধ বৃদ্ধি পাব।", health: "যোৰত সামান্য বিষ অনুভৱ হ'ব পাৰে।", color: "ধূসৰ", num: "৮" },
+                { id: "aquarius", name: "কুম্ভ (Aquarius)", symbol: "♒", short: "মিত্ৰতা আৰু সম্পৰ্ক শক্তিশালী হ'ব।", career: "দলগত কামত সফলতা।", love: "বন্ধুৰ সহায়ত প্ৰেমত অগ্ৰগতি।", health: "মানসিক উল্লাস থাকিব।", color: "আকাশী নীলা", num: "৪" },
+                { id: "pisces", name: "মীন (Pisces)", symbol: "♓", short: "সৃজনশীলতা প্ৰকাশৰ দিন আহিলে।", career: "নতুন চিন্তাৰ দ্বাৰা লাভান্বিত হ'ব।", love: "আধ্যাত্মিক চিন্তাত দিন পাৰ হ'ব।", health: "শান্ত অনুভৱ কৰিব।", color: "হালধীয়া-সোনালী", num: "৩" }
             ],
             en: [
-                { id: 'aries', name: 'Aries (মেষ)', symbol: '♈', short: 'Your luck will be very positive today.', career: 'New responsibilities at work.', love: 'Sweet moments with partner.', health: 'Good health.', color: 'White', num: '9' },
-                { id: 'taurus', name: 'Taurus (বৃষ)', symbol: '♉', short: 'Chances of career advancement.', career: 'Profits in business.', love: 'Family support.', health: 'Watch your diet.', color: 'Green', num: '6' },
-                { id: 'gemini', name: 'Gemini (মিথুন)', symbol: '♊', short: 'Good news regarding love/relations.', career: 'Great day for students.', love: 'Open up your heart.', health: 'Mental peace.', color: 'Yellow', num: '3' },
-                { id: 'cancer', name: 'Cancer (কৰ্কট)', symbol: '♋', short: 'Spend quality time with family.', career: 'Maintain patience at work.', love: 'Control emotions.', health: 'Stay hydrated.', color: 'Silver', num: '2' },
-                { id: 'leo', name: 'Leo (সিংহ)', symbol: '♌', short: 'Financial gains are foreseen.', career: 'Promotion or new opportunities.', love: 'Romantic day.', health: 'High energy.', color: 'Orange', num: '1' },
-                { id: 'virgo', name: 'Virgo (কন্যা)', symbol: '♍', short: 'Pay attention to your health.', career: 'Success in planned tasks.', love: 'Peaceful home atmosphere.', health: 'Need rest.', color: 'Blue', num: '5' },
-                { id: 'libra', name: 'Libra (তুলা)', symbol: '♎', short: 'Shower of love and affection.', career: 'Good for creative fields.', love: 'Joyful love life.', health: 'Excellent health.', color: 'Pink', num: '7' },
-                { id: 'scorpio', name: 'Scorpio (বৃশ্চিক)', symbol: '♏', short: 'Time to showcase hidden talent.', career: 'Hard work pays off.', love: 'Doubts will clear.', health: 'Keep blood pressure in check.', color: 'Maroon', num: '8' },
-                { id: 'sagittarius', name: 'Sagittarius (ধনু)', symbol: '♐', short: 'New doors of opportunity open.', career: 'Travel for higher education.', love: 'Partner’s support.', health: 'High vitality.', color: 'Purple', num: '3' },
-                { id: 'capricorn', name: 'Capricorn (মকৰ)', symbol: '♑', short: 'Rewards of hard work approaching.', career: 'Stability in profession.', love: 'Sense of responsibility.', health: 'Joint care needed.', color: 'Grey', num: '8' },
-                { id: 'aquarius', name: 'Aquarius (কুম্ভ)', symbol: '♒', short: 'Friendships and bonds strengthen.', career: 'Success in teamwork.', love: 'Progress in love via friends.', health: 'Mental cheerfulness.', color: 'Sky Blue', num: '4' },
-                { id: 'pisces', name: 'Pisces (মীন)', symbol: '♓', short: 'A day to express creativity.', career: 'Benefit from new ideas.', love: 'Spiritual day.', health: 'Calm and relaxed.', color: 'Golden Yellow', num: '3' }
+                { id: "aries", name: "Aries (मেষ)", symbol: "♈", short: "Your luck will be very positive today.", career: "New responsibilities at work.", love: "Sweet moments with partner.", health: "Good health.", color: "White", num: "9" },
+                { id: "taurus", name: "Taurus (বৃষ)", symbol: "♉", short: "Chances of career advancement.", career: "Profits in business.", love: "Family support.", health: "Watch your diet.", color: "Green", num: "6" },
+                { id: "gemini", name: "Gemini (মিথুন)", symbol: "♊", short: "Good news regarding love/relations.", career: "Great day for students.", love: "Open up your heart.", health: "Mental peace.", color: "Yellow", num: "3" },
+                { id: "cancer", name: "Cancer (কৰ্কট)", symbol: "♋", short: "Spend quality time with family.", career: "Maintain patience at work.", love: "Control emotions.", health: "Stay hydrated.", color: "Silver", num: "2" },
+                { id: "leo", name: "Leo (সিংহ)", symbol: "♌", short: "Financial gains are foreseen.", career: "Promotion or new opportunities.", love: "Romantic day.", health: "High energy.", color: "Orange", num: "1" },
+                { id: "virgo", name: "Virgo (কন্যা)", symbol: "♍", short: "Pay attention to your health.", career: "Success in planned tasks.", love: "Peaceful home atmosphere.", health: "Need rest.", color: "Blue", num: "5" },
+                { id: "libra", name: "Libra (তুলা)", symbol: "♎", short: "Shower of love and affection.", career: "Good for creative fields.", love: "Joyful love life.", health: "Excellent health.", color: "Pink", num: "7" },
+                { id: "scorpio", name: "Scorpio (বৃশ্চিক)", symbol: "♏", short: "Time to showcase hidden talent.", career: "Hard work pays off.", love: "Doubts will clear.", health: "Keep blood pressure in check.", color: "Maroon", num: "8" },
+                { id: "sagittarius", name: "Sagittarius (ধনু)", symbol: "♐", short: "New doors of opportunity open.", career: "Travel for higher education.", love: "Partner’s support.", health: "High vitality.", color: "Purple", num: "3" },
+                { id: "capricorn", name: "Capricorn (মকৰ)", symbol: "♑", short: "Rewards of hard work approaching.", career: "Stability in profession.", love: "Sense of responsibility.", health: "Joint care needed.", color: "Grey", num: "8" },
+                { id: "aquarius", name: "Aquarius (কুম্ভ)", symbol: "♒", short: "Friendships and bonds strengthen.", career: "Success in teamwork.", love: "Progress in love via friends.", health: "Mental cheerfulness.", color: "Sky Blue", num: "4" },
+                { id: "pisces", name: "Pisces (মীন)", symbol: "♓", short: "A day to express creativity.", career: "Benefit from new ideas.", love: "Spiritual day.", health: "Calm and relaxed.", color: "Golden Yellow", num: "3" }
             ],
             hi: [
-                { id: 'aries', name: 'मेष (Aries)', symbol: '♈', short: 'आज आपका भाग्य अत्यंत सकारात्मक रहेगा।', career: 'कार्यक्षेत्र में नई जिम्मेदारी।', love: 'साथी के साथ मधुर पल।', health: 'स्वास्थ्य उत्तम रहेगा।', color: 'सफेद', num: '9' },
-                { id: 'taurus', name: 'वृषभ (Taurus)', symbol: '♉', short: 'कर्मक्षेत्र में उन्नति की संभावना है।', career: 'व्यापार में लाभ के योग।', love: 'परिवार का सहयोग मिलेगा।', health: 'खानपान का ध्यान रखें।', color: 'हरा', num: '6' },
-                { id: 'gemini', name: 'मिथुन (Gemini)', symbol: '♊', short: 'प्रेम-प्रसंगत व शुभ समाचार मिलेगा।', career: 'विद्यार्थियों के लिए उत्तम दिन।', love: 'दिल की बात कहें।', health: 'मानसिक शांति बनी रहेगी।', color: 'पीला', num: '3' },
-                { id: 'cancer', name: 'कर्क (Cancer)', symbol: '♋', short: 'परिवार के साथ समय बिताएं।', career: 'कार्यस्थल पर धैर्य रखें।', love: 'भावनाओं पर नियंत्रण रखें।', health: 'पर्याप्त पानी पिएं।', color: 'चांदी जैसा', num: '2' },
-                { id: 'leo', name: 'सिंह (Leo)', symbol: '♌', short: 'आर्थिक लाभ के योग हैं।', career: 'पदोन्नति या नए अवसर।', love: 'रोमांटिक दिन।', health: 'ऊर्जा भरपूर रहेगी।', color: 'नारंगी', num: '1' },
-                { id: 'virgo', name: 'कन्या (Virgo)', symbol: '♍', short: 'स्वास्थ्य के प्रति सजग रहें।', career: 'योजनाबद्ध कार्यों में सफलता।', love: 'पारिवारिक माहौल शांत रहेगा।', health: 'आराम की आवश्यकता है।', color: 'नीला', num: '5' },
-                { id: 'libra', name: 'तुला (Libra)', symbol: '♎', short: 'प्यार और स्नेह की वर्षा होगी।', career: 'कला और मीडिया से जुड़े लोगों को लाभ।', love: 'प्रेम जीवन प्रफुल्लित रहेगा।', health: 'स्वास्थ्य उत्तम रहेगा।', color: 'गुलाबी', num: '7' },
-                { id: 'scorpio', name: 'वृश्चिक (Scorpio)', symbol: '♏', short: 'छुपी हुई प्रतिभा दिखाने का समय।', career: 'कड़ी मेहनत का फल मिलेगा।', love: 'गलतफहमियां दूर होंगी।', health: 'ब्लड प्रेशर नियंत्रित रखें।', color: 'मरून', num: '8' },
-                { id: 'sagittarius', name: 'धनु (Sagittarius)', symbol: '♐', short: 'नए अवसरों के दरवाजे खुलेंगे।', career: 'उच्च शिक्षा के लिए यात्रा।', love: 'साथी का भरपूर सहयोग।', health: 'ऊर्जा का स्तर ऊंचा रहेगा।', color: 'बैंगनी', num: '3' },
-                { id: 'capricorn', name: 'मकर (Capricorn)', symbol: '♑', short: 'परिश्रम का फल मिलने लगा है।', career: 'करियर में स्थिरता आएगी।', love: 'पारिवारिक जिम्मेदारी बढ़ेगी।', health: 'जोड़ों का ध्यान रखें।', color: 'ग्रे', num: '8' },
-                { id: 'aquarius', name: 'कुंभ (Aquarius)', symbol: '♒', short: 'मित्रता और संबंध शक्तिशाली होंगे।', career: 'टीम वर्क में सफलता।', love: 'मित्र की मदद से प्रेम में प्रगति।', health: 'मानसिक उल्लास रहेगा।', color: 'आसमानी नीला', num: '4' },
-                { id: 'pisces', name: 'मीन (Pisces)', symbol: '♓', short: 'सृजनात्मकता दिखाने का दिन है।', career: 'नए विचारों से लाभ होगा।', love: 'आध्यात्मिक गतिविधियों में मन लगेगा।', health: 'शांत महसूस करेंगे।', color: 'सुनहरा पीला', num: '3' }
+                { id: "aries", name: "मेष (Aries)", symbol: "♈", short: "आज आपका भाग्य अत्यंत सकारात्मक रहेगा।", career: "कार्यक्षेत्र में नई जिम्मेदारी।", love: "साथी के साथ मधुर पल।", health: "स्वास्थ्य उत्तम रहेगा।", color: "सफेद", num: "9" },
+                { id: "taurus", name: "वृषभ (Taurus)", symbol: "♉", short: "कर्मक्षेत्र में उन्नति की संभावना है।", career: "व्यापार में लाभ के योग।", love: "परिवार का सहयोग मिलेगा।", health: "खानपान का ध्यान रखें।", color: "हरा", num: "6" },
+                { id: "gemini", name: "मिथुन (Gemini)", symbol: "♊", short: "प्रेम-प्रसंग में शुभ समाचार मिलेगा।", career: "विद्यार्थियों के लिए उत्तम दिन।", love: "दिल की बात कहें।", health: "मानसिक शांति बनी रहेगी।", color: "पीला", num: "3" },
+                { id: "cancer", name: "कर्क (Cancer)", symbol: "♋", short: "परिवार के साथ समय बिताएं।", career: "कार्यस्थल पर धैर्य रखें।", love: "भावनाओं पर नियंत्रण रखें।", health: "पर्याप्त पानी पिएं।", color: "चांदी जैसा", num: "2" },
+                { id: "leo", name: "सिंह (Leo)", symbol: "♌", short: "आर्थिक लाभ के योग हैं।", career: "पदोन्नति या नए अवसर।", love: "रोमांटिक दिन।", health: "ऊर्जा भरपूर रहेगी।", color: "नारंगी", num: "1" },
+                { id: "virgo", name: "कन्या (Virgo)", symbol: "♍", short: "स्वास्थ्य के प्रति सजग रहें।", career: "योजनाबद्ध कार्यों में सफलता।", love: "पारिवारिक माहौल शांत रहेगा।", health: "आराम की आवश्यकता है।", color: "नीला", num: "5" },
+                { id: "libra", name: "तुला (Libra)", symbol: "♎", short: "प्यार और स्नेह की वर्षा होगी।", career: "कला और मीडिया से जुड़े लोगों को लाभ।", love: "प्रेम जीवन प्रफुल्लित रहेगा।", health: "स्वास्थ्य उत्तम रहेगा।", color: "गुलाबी", num: "7" },
+                { id: "scorpio", name: "वृश्चिक (Scorpio)", symbol: "♏", short: "छुपी हुई प्रतिभा दिखाने का समय।", career: "कड़ी मेहनत का फल मिलेगा।", love: "गलतफहमियां दूर होंगी।", health: "ब्लड प्रेशर नियंत्रित रखें।", color: "मरून", num: "8" },
+                { id: "sagittarius", name: "धनु (Sagittarius)", symbol: "♐", short: "नए अवसरों के दरवाजे खुलेंगे।", career: "उच्च शिक्षा के लिए यात्रा।", love: "साथी का भरपूर सहयोग।", health: "ऊर्जा का स्तर ऊंचा रहेगा।", color: "बैंगनी", num: "3" },
+                { id: "capricorn", name: "मकर (Capricorn)", symbol: "♑", short: "परिश्रम का फल मिलने लगा है।", career: "करियर में स्थिरता आएगी।", love: "पारिवारिक जिम्मेदारी बढ़ेगी।", health: 'जोड़ों का ध्यान रखें।', color: "ग्रे", num: "8" },
+                { id: "aquarius", name: "कुंभ (Aquarius)", symbol: "♒", short: "मित्रता और संबंध शक्तिशाली होंगे।", career: "टीम वर्क में सफलता।", love: "मित्र की मदद से प्रेम में प्रगति।", health: "मानसिक उल्लास रहेगा।", color: "आसमानी नीला", num: "4" },
+                { id: "pisces", name: "मीन (Pisces)", symbol: "♓", short: "सृजनात्मकता दिखाने का दिन है।", career: "नए विचारों से लाभ होगा।", love: "आध्यात्मिक गतिविधियों में मन लगेगा।", health: "शांत महसूस करेंगे।", color: "सुनहरा पीला", num: "3" }
             ]
         };
 
@@ -511,7 +511,7 @@
 
             const t = texts[lang];
             document.getElementById('h-title-highlight').innerText = t.hHighlight;
-            document.getElementById('h-title-highlight').nextSibling.nodeValue = t.hRest;
+            document.getElementById('h-title-rest').innerText = t.hRest;
             document.getElementById('h-subtitle').innerText = t.hSubtitle;
             document.getElementById('b1').innerText = t.b1;
             document.getElementById('b2').innerText = t.b2;
@@ -519,7 +519,7 @@
             document.getElementById('b4').innerText = t.b4;
             
             document.getElementById('rashi-main-title').innerText = t.rashiMainTitle;
-            document.querySelector('.rashi-section .section-subtitle').innerText = t.rashiSubTitle;
+            document.getElementById('rashi-sub-title').innerText = t.rashiSubTitle;
 
             document.getElementById('s-title').innerText = t.sTitle;
             document.getElementById('s-subtitle').innerText = t.sSubtitle;
