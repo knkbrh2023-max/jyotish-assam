@@ -10,6 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Supabase & Razorpay CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Serif Bengali', serif; }
         body { background-color: #fcf8f2; color: #333; line-height: 1.6; }
@@ -57,7 +61,8 @@
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .btn-submit { width: 100%; background: #4a0e17; color: white; border: none; padding: 12px; font-size: 1rem; border-radius: 6px; cursor: pointer; }
+        .btn-submit { width: 100%; background: #4a0e17; color: white; border: none; padding: 12px; font-size: 1rem; border-radius: 6px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;}
+        .btn-submit:disabled { background: #999; cursor: not-allowed; }
 
         /* Footer */
         footer { background: #222; color: #fff; text-align: center; padding: 20px; margin-top: 50px; }
@@ -140,24 +145,26 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeOrderModal()">&times;</span>
             <h3 style="margin-bottom: 15px; color: #4a0e17;" id="modal-title">সেৱা বুকিং ফৰ্ম</h3>
-            <form id="astrology-form" onsubmit="handleFormSubmit(event)">
+            <form id="astrology-form" onsubmit="processOrder(event)">
                 <div class="form-group">
                     <label>আপোনাৰ নাম:</label>
-                    <input type="text" required placeholder="পূৰা নাম লিখক">
+                    <input type="text" id="custName" required placeholder="পূৰা নাম লিখক">
                 </div>
                 <div class="form-group">
                     <label>ফোন নম্বৰ (WhatsApp):</label>
-                    <input type="tel" required placeholder="১০ টা অংকৰ ফোন নম্বৰ">
+                    <input type="tel" id="custPhone" required placeholder="১০ টা অংকৰ ফোন নম্বৰ" pattern="[0-9]{10}">
                 </div>
                 <div class="form-group">
                     <label>জন্ম তাৰিখ আৰু সময়:</label>
-                    <input type="datetime-local" required>
+                    <input type="datetime-local" id="custDob" required>
                 </div>
                 <div class="form-group">
                     <label>জন্মৰ স্থান (জিলা/চহৰ):</label>
-                    <input type="text" required placeholder="যেনে: গুৱাহাটী, যোৰহাট">
+                    <input type="text" id="custPlace" required placeholder="যেনে: গুৱাহাটী, যোৰহাট">
                 </div>
-                <button type="submit" class="btn-submit">পেমেন্ট কৰক (Razorpay)</button>
+                <button type="submit" id="submitBtn" class="btn-submit">
+                    <span>পেমেন্ট কৰক (Razorpay)</span>
+                </button>
             </form>
         </div>
     </div>
@@ -167,28 +174,99 @@
         <p>© ২০২৬ জ্যোতিষ অসম | সকলো অধিকাৰ সংৰক্ষিত</p>
     </footer>
 
-    <!-- JavaScript logic -->
+    <!-- Database & Payment Logic -->
     <script>
+        // ---------------------------------------------------------
+        // ১. SUPABASE CONFIGURATION (ইয়াত আপোনাৰ API Keys দিব)
+        // ---------------------------------------------------------
+        const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL'; 
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ---------------------------------------------------------
+        // ২. RAZORPAY CONFIGURATION (ইয়াত আপোনাৰ Razorpay Key দিব)
+        // ---------------------------------------------------------
+        const RAZORPAY_KEY_ID = 'YOUR_RAZORPAY_TEST_OR_LIVE_KEY';
+
         // Auto-update Panjika Date
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('as-IN', options);
 
+        let selectedService = '';
+        let selectedPrice = 0;
+
         // Modal Functions
         function openOrderModal(serviceName, price) {
+            selectedService = serviceName;
+            selectedPrice = price;
             document.getElementById('modal-title').innerText = serviceName + " - ₹" + price;
             document.getElementById('orderModal').style.display = 'flex';
         }
 
         function closeOrderModal() {
             document.getElementById('orderModal').style.display = 'none';
+            document.getElementById('astrology-form').reset();
         }
 
-        // Submit form
-        function handleFormSubmit(e) {
+        // ৩. MAIN LOGIC: Form Submit -> Razorpay -> Supabase
+        async function processOrder(e) {
             e.preventDefault();
-            alert("ধন্যবাদ! আপোনাৰ তথ্য সংগৃহীত হৈছে। এতিয়া Razorpay পেমেন্ট পেইজলৈ লৈ যোৱা হ'ব।");
-            closeOrderModal();
-            // ইয়াত আপোনাৰ Razorpay Payment Link / Integration সংযোগ কৰিব পাৰিব
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> প্ৰচেছিং...';
+
+            // ফৰ্মৰ ডাটা সংগ্ৰহ
+            const customerData = {
+                name: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value,
+                dob: document.getElementById('custDob').value,
+                place: document.getElementById('custPlace').value,
+                service_name: selectedService,
+                amount: selectedPrice,
+                payment_status: 'Pending'
+            };
+
+            // Razorpay অপচনসমূহ
+            var rzpOptions = {
+                "key": RAZORPAY_KEY_ID,
+                "amount": selectedPrice * 100, // পইচাত (Paise)
+                "currency": "INR",
+                "name": "Jyotish Assam",
+                "description": selectedService,
+                "theme": { "color": "#4a0e17" },
+                "handler": async function (response) {
+                    // পেমেন্ট সফল হ'লে Payment ID টো ডাটাবেছত সংযোগ কৰা হ'ব
+                    customerData.payment_status = 'Success';
+                    customerData.payment_id = response.razorpay_payment_id;
+
+                    // Supabase ত ডাটা ছেভ কৰা (Table ৰ নাম: astrology_orders)
+                    const { data, error } = await supabase
+                        .from('astrology_orders')
+                        .insert([customerData]);
+
+                    if (error) {
+                        console.error("Supabase Error:", error);
+                        alert("পেমেন্ট সফল হৈছে, কিন্তু ডাটা ছেভ কৰাত সমস্যা হৈছে। অনুগ্ৰহ কৰি WhatsApp ত যোগাযোগ কৰক। Payment ID: " + response.razorpay_payment_id);
+                    } else {
+                        alert("ধন্যবাদ! আপোনাৰ পেমেন্ট আৰু অৰ্ডাৰ সফলভাৱে গ্ৰহণ কৰা হৈছে। আমি সোনকালেই আপোনাৰ লগত যোগাযোগ কৰিম।");
+                        closeOrderModal();
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'পেমেন্ট কৰক (Razorpay)';
+                }
+            };
+
+            var rzp = new Razorpay(rzpOptions);
+            
+            rzp.on('payment.failed', function (response){
+                alert("পেমেন্ট বিফল হৈছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক। কাৰণ: " + response.error.description);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'পেমেন্ট কৰক (Razorpay)';
+            });
+
+            rzp.open();
         }
     </script>
 </body>
