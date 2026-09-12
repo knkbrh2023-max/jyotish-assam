@@ -155,26 +155,27 @@
         }
 
         function renderTable(orders) {
-            const tbody = document.getElementById('ordersTableBody');
-            if (orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
-                return;
-            }
+    const tbody = document.getElementById('ordersTableBody');
+    if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
+        return;
+    }
 
-            tbody.innerHTML = orders.map(o => `
-                <tr>
-                    <td>${new Date(o.created_at).toLocaleDateString('as-IN')}</td>
-                    <td><strong>${o.name || 'N/A'}</strong></td>
-                    <td>${o.phone || o.phone_number || o.mobile || 'N/A'}</td>
-                    <td>${o.service || 'N/A'}</td>
-                    <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
-                    <td><span class="badge ${o.razorpay_payment_id ? 'success' : 'pending'}">${o.razorpay_payment_id ? 'Paid' : 'Pending'}</span></td>
-                    <td>
-                        <button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+    // --- এই ঠাইখিনিত কোডটো পেষ্ট কৰিব ---
+    tbody.innerHTML = orders.map(o => `
+        <tr>
+            <td>${new Date(o.created_at).toLocaleDateString('as-IN')}</td>
+            <td><strong>${o.name || 'N/A'}</strong></td>
+            <td>${o.email || 'N/A'}</td> <!-- ইমেইল দেখুৱাব -->
+            <td>${o.service || 'N/A'}</td>
+            <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
+            <td><span class="badge ${o.razorpay_payment_id ? 'success' : 'pending'}">${o.razorpay_payment_id ? 'Paid' : 'Pending'}</span></td>
+            <td>
+                <button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button>
+            </td>
+        </tr>
+    `).join('');
+}
 
         async function generateAndShowReport(orderId) {
             alert("ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি ৰ'ব।");
