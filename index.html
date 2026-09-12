@@ -119,7 +119,278 @@
             <h2 class="section-title" id="rashi-main-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
             <div class="rashi-grid" id="rashiGridContainer"></div>
         </section>
+<!-- ==========================================
+     বিনামূলীয়া দৈনিক সঁজুলি (Free Daily Horoscope UI)
+     ========================================== -->
+<style>
+    .free-tools-section {
+        padding: 40px 20px;
+        background-color: #f8fafc;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .tools-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .tools-header h2 {
+        font-size: 28px;
+        color: #1e293b;
+        margin-bottom: 10px;
+    }
+    .tools-header p {
+        color: #64748b;
+        font-size: 15px;
+    }
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .tool-card {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+        position: relative;
+        overflow: hidden;
+    }
+    /* Personal Card Accent */
+    .tool-card.personal::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 4px;
+        background: linear-gradient(90deg, #8B5CF6, #6D28D9);
+    }
+    /* Couple Card Accent */
+    .tool-card.couple::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 4px;
+        background: linear-gradient(90deg, #F43F5E, #E11D48);
+    }
+    .tool-title {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    .tool-title h3 {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+    .tool-title.personal h3 { color: #6D28D9; }
+    .tool-title.couple h3 { color: #E11D48; }
+    .tool-title p {
+        font-size: 13px;
+        color: #64748b;
+    }
+    .input-group {
+        margin-bottom: 20px;
+    }
+    .input-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 8px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        border-color: #8B5CF6;
+    }
+    .couple-row {
+        display: flex;
+        gap: 15px;
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 14px;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-top: 10px;
+    }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-personal {
+        background: linear-gradient(90deg, #8B5CF6, #6D28D9);
+        box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
+    }
+    .btn-couple {
+        background: linear-gradient(90deg, #F43F5E, #E11D48);
+        box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3);
+    }
+    .result-box {
+        margin-top: 20px;
+    }
+</style>
 
+<div class="free-tools-section">
+    <div class="tools-header">
+        <h2>🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
+        <p>জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক</p>
+    </div>
+
+    <div class="tools-grid">
+        <!-- ১. ব্যক্তিগত ৰাশিফল ফৰ্ম -->
+        <div class="tool-card personal">
+            <div class="tool-title personal">
+                <h3>আপোনাৰ বিশদ দৈনিক ৰাশিফল চাওক</h3>
+                <p>আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক</p>
+            </div>
+            
+            <div class="input-group">
+                <label>🎂 জন্ম তাৰিখ (DOB):</label>
+                <input type="date" id="personal-dob" class="form-control">
+            </div>
+            
+            <div class="input-group">
+                <label>🌟 আপোনাৰ ৰাশি:</label>
+                <select id="personal-rashi" class="form-control">
+                    <option value="">ৰাশি বাছনি কৰক...</option>
+                    <option value="মেষ">মেষ (Aries)</option>
+                    <option value="বৃষ">বৃষ (Taurus)</option>
+                    <option value="মিথুন">মিথুন (Gemini)</option>
+                    <option value="কৰ্কট">কৰ্কট (Cancer)</option>
+                    <option value="সিংহ">সিংহ (Leo)</option>
+                    <option value="কন্যা">কন্যা (Virgo)</option>
+                    <option value="তুলা">তুলা (Libra)</option>
+                    <option value="বৃশ্চিক">বৃশ্চিক (Scorpio)</option>
+                    <option value="ধনু">ধনু (Sagittarius)</option>
+                    <option value="মকৰ">মকৰ (Capricorn)</option>
+                    <option value="কুম্ভ">কুম্ভ (Aquarius)</option>
+                    <option value="মীন">মীন (Pisces)</option>
+                </select>
+            </div>
+            
+            <button id="btn-personal" class="btn-submit btn-personal">ৰাশিফল চাওক</button>
+            <div id="personal-result" class="result-box"></div>
+        </div>
+
+        <!-- ২. যুটীয়া ৰাশিফল ফৰ্ম -->
+        <div class="tool-card couple">
+            <div class="tool-title couple">
+                <h3>যুটীয়া ৰাশিফল (Couple Horoscope)</h3>
+                <p>দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক</p>
+            </div>
+            
+            <div class="input-group">
+                <label>👦 ল'ৰাৰ বিৱৰণ:</label>
+                <div class="couple-row">
+                    <input type="date" id="boy-dob" class="form-control" style="width: 50%;">
+                    <select id="boy-rashi" class="form-control" style="width: 50%;">
+                        <option value="">ৰাশি...</option>
+                        <option value="মেষ">মেষ</option><option value="বৃষ">বৃষ</option><option value="মিথুন">মিথুন</option>
+                        <option value="কৰ্কট">কৰ্কট</option><option value="সিংহ">সিংহ</option><option value="কন্যা">কন্যা</option>
+                        <option value="তুলা">তুলা</option><option value="বৃশ্চিক">বৃশ্চিক</option><option value="ধনু">ধনু</option>
+                        <option value="মকৰ">মকৰ</option><option value="কুম্ভ">কুম্ভ</option><option value="মীন">মীন</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>👧 ছোৱালীৰ বিৱৰণ:</label>
+                <div class="couple-row">
+                    <input type="date" id="girl-dob" class="form-control" style="width: 50%;">
+                    <select id="girl-rashi" class="form-control" style="width: 50%;">
+                        <option value="">ৰাশি...</option>
+                        <option value="মেষ">মেষ</option><option value="বৃষ">বৃষ</option><option value="মিথুন">মিথুন</option>
+                        <option value="কৰ্কট">কৰ্কট</option><option value="সিংহ">সিংহ</option><option value="কন্যা">কন্যা</option>
+                        <option value="তুলা">তুলা</option><option value="বৃশ্চিক">বৃশ্চিক</option><option value="ধনু">ধনু</option>
+                        <option value="মকৰ">মকৰ</option><option value="কুম্ভ">কুম্ভ</option><option value="মীন">মীন</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button id="btn-couple" class="btn-submit btn-couple">যুটীয়া ৰাশিফল চাওক</button>
+            <div id="couple-result" class="result-box"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     JavaScript (API Call Logic)
+     ========================================== -->
+<script>
+    const API_URL = "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/free-daily-horoscope";
+
+    // ১. Personal Horoscope Button Click
+    document.getElementById('btn-personal').addEventListener('click', async function() {
+        const dob = document.getElementById('personal-dob').value;
+        const rashi = document.getElementById('personal-rashi').value;
+        const resultBox = document.getElementById('personal-result');
+        const btn = this;
+
+        if (!dob || !rashi) return alert("অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।");
+
+        btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳";
+        btn.disabled = true;
+        resultBox.innerHTML = "";
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: "personal", dob, rashi })
+            });
+            const data = await response.json();
+            
+            if (data.success) resultBox.innerHTML = data.report;
+            else resultBox.innerHTML = `<p style="color: red;">সমস্যা হৈছে: ${data.error}</p>`;
+        } catch (err) {
+            resultBox.innerHTML = `<p style="color: red;">চাৰ্ভাৰৰ সৈতে সংযোগ স্থাপন কৰিব পৰা নগ'ল।</p>`;
+        } finally {
+            btn.innerText = "ৰাশিফল চাওক";
+            btn.disabled = false;
+        }
+    });
+
+    // ২. Couple Horoscope Button Click
+    document.getElementById('btn-couple').addEventListener('click', async function() {
+        const boyDob = document.getElementById('boy-dob').value;
+        const boyRashi = document.getElementById('boy-rashi').value;
+        const girlDob = document.getElementById('girl-dob').value;
+        const girlRashi = document.getElementById('girl-rashi').value;
+        const resultBox = document.getElementById('couple-result');
+        const btn = this;
+
+        if (!boyDob || !boyRashi || !girlDob || !girlRashi) {
+            return alert("অনুগ্ৰহ কৰি দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি সম্পূৰ্ণকৈ বাছনি কৰক।");
+        }
+
+        btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳";
+        btn.disabled = true;
+        resultBox.innerHTML = "";
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: "couple", boyDob, boyRashi, girlDob, girlRashi })
+            });
+            const data = await response.json();
+            
+            if (data.success) resultBox.innerHTML = data.report;
+            else resultBox.innerHTML = `<p style="color: red;">সমস্যা হৈছে: ${data.error}</p>`;
+        } catch (err) {
+            resultBox.innerHTML = `<p style="color: red;">চাৰ্ভাৰৰ সৈতে সংযোগ স্থাপন কৰিব পৰা নগ'ল।</p>`;
+        } finally {
+            btn.innerText = "যুটীয়া ৰাশিফল চাওক";
+            btn.disabled = false;
+        }
+    });
+</script>
         <!-- Premium Services Section -->
         <section class="section">
             <h2 class="section-title" id="s-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
