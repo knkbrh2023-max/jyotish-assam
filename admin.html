@@ -130,10 +130,12 @@
 
         let allOrders = [];
 
-        async function fetchOrders() {
+       async function fetchOrders() {
             try {
-                const supabaseUrl = window.JA_CONFIG.supabaseUrl;
-                const supabaseKey = window.JA_CONFIG.supabaseAnonKey;
+                // পোনপটীয়াকৈ আপোনাৰ Supabase ৰ তথ্য ইয়া In ব বহুৱাই দিয়া হৈছে যাতে কোনো এৰৰ নাহে
+                const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co"; // আপোনাৰ Supabase URL
+                const supabaseKey = "SUPABASE_ANON_KEY_টো_ইয়াত_লিখক"; // আপোনাৰ Supabase Anon Key টো ইয়াত বহুৱাব
+                
                 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
                 const { data, error } = await client
