@@ -41,6 +41,7 @@
 </head>
 <body>
 
+    <!-- Login Overlay Screen -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2>🔒 এডমিন লগ্ন</h2>
@@ -51,6 +52,7 @@
         </div>
     </div>
 
+    <!-- Main Dashboard Container -->
     <div class="container" id="mainDashboard">
         <header>
             <h1>🛠️ জ্যোতিষ অসম - এডমিন ডেশ্ববৰ্ড</h1>
@@ -73,7 +75,7 @@
 
         <div class="table-container">
             <h2 style="margin-bottom: 15px; font-size: 18px; color: #1e293b;">গ্ৰাহকৰ অৰ্ডাৰ আৰু পেমেন্ট তালিকা</h2>
-            <input type="text" id="searchInput" class="search-box" placeholder="নাম বা ফোন নম্বৰ দি বিচাৰক..." onkeyup="filterTable()">
+            <input type="text" id="searchInput" class="search-box" placeholder="নাম বা ইমেইল দি বিচাৰক..." onkeyup="filterTable()">
             
             <table>
                 <thead>
@@ -126,9 +128,8 @@
 
         async function fetchOrders() {
             try {
-                // পোনপটীয়াকৈ Supabase URL আৰু Anon Key ইয়াত দিয়া হৈছে (কোনো অসমীয়া আখৰ নাথাকিব)
                 const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
-                const supabaseKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; 
+                const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloYmRydG5rZml0eXRrbG9ubmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyMzQ1NjcsImV4cCI6MjA1NjgxMDU2N30.PlaceholderKeyForJyotishAssamSecureAccess"; 
                 
                 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
@@ -155,57 +156,104 @@
         }
 
         function renderTable(orders) {
-    const tbody = document.getElementById('ordersTableBody');
-    if (orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
-        return;
-    }
-
-    // --- এই ঠাইখিনিত কোডটো পেষ্ট কৰিব ---
-    tbody.innerHTML = orders.map(o => `
-        <tr>
-            <td>${new Date(o.created_at).toLocaleDateString('as-IN')}</td>
-            <td><strong>${o.name || 'N/A'}</strong></td>
-            <td>${o.email || 'N/A'}</td> <!-- ইমেইল দেখুৱাব -->
-            <td>${o.service || 'N/A'}</td>
-            <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
-            <td><span class="badge ${o.razorpay_payment_id ? 'success' : 'pending'}">${o.razorpay_payment_id ? 'Paid' : 'Pending'}</span></td>
-            <td>
-                <button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-        async function generateAndShowReport(orderId) {
-            alert("ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি ৰ'ব।");
-            try {
-                const apiBaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1";
-                const res = await fetch(apiBaseUrl + '/generate-report', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json' 
-                    },
-                    body: JSON.stringify({ orderId: orderId, language: 'as' })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    const win = window.open();
-                    win.document.write(data.report);
-                    win.document.close();
-                } else {
-                    alert("ৰিপোৰ্ট বনাবলৈ সমস্যা হৈছে: " + data.error);
-                }
-            } catch (err) {
-                alert("চাৰ্ভাৰৰ সমস্যা: " + err.message);
+            const tbody = document.getElementById('ordersTableBody');
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
+                return;
             }
+
+            tbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td>${new Date(o.created_at).toLocaleDateString('as-IN')}</td>
+                    <td><strong>${o.name || 'N/A'}</strong></td>
+                    <td>${o.email || 'N/A'}</td>
+                    <td>${o.service || 'N/A'}</td>
+                    <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
+                    <td><span class="badge ${o.razorpay_payment_id ? 'success' : 'pending'}">${o.razorpay_payment_id ? 'Paid' : 'Pending'}</span></td>
+                    <td>
+                        <button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function generateAndShowReport(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) {
+                alert("অৰ্ডাৰৰ ডাটা পোৱা নগল!");
+                return;
+            }
+
+            const serviceNameMap = {
+                'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
+                'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
+                'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)'
+            };
+            const serviceTitle = serviceNameMap[order.service] || order.service || 'প্ৰিমিয়াম জ্যোতিষ সেৱা';
+
+            const reportHtml = `
+                <!DOCTYPE html>
+                <html lang="as">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>জ্যোতিষ অসম - প্ৰিমিয়াম ৰিপোৰ্ট</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Noto Sans Assamese', sans-serif; line-height: 1.8; color: #1e293b; background: #f8fafc; padding: 30px; }
+                        .report-container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid #6D28D9; }
+                        h1 { color: #6D28D9; text-align: center; margin-bottom: 5px; font-size: 26px; }
+                        .subtitle { text-align: center; color: #64748b; margin-bottom: 30px; font-size: 15px; }
+                        .info-box { background: #f3e8ff; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 5px solid #6D28D9; }
+                        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 15px; }
+                        .section-title { color: #6D28D9; font-size: 20px; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
+                        p { margin-bottom: 15px; font-size: 15.5px; color: #334155; }
+                        .print-btn { display: block; width: 200px; margin: 30px auto 0; padding: 12px; background: #6D28D9; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center; }
+                        @media print { .print-btn { display: none; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="report-container">
+                        <h1>✨ জ্যোতিষ অসম (Jyotish Assam) ✨</h1>
+                        <p class="subtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ আধাৰত প্ৰস্তুতকৃত বিশেষ ৰিপোৰ্ট</p>
+                        
+                        <div class="info-box">
+                            <div class="info-grid">
+                                <div><strong>গ্ৰাহকৰ নাম:</strong> ${order.name || 'N/A'}</div>
+                                <div><strong>ইমেইল:</strong> ${order.email || 'N/A'}</div>
+                                <div><strong>সেৱাৰ প্ৰকাৰ:</strong> ${serviceTitle}</div>
+                                <div><strong>জন্ম তাৰিখ:</strong> ${order.birth_date || 'N/A'}</div>
+                                <div><strong>জন্ম সময়:</strong> ${order.birth_time || 'N/A'}</div>
+                                <div><strong>জন্ম স্থান:</strong> ${order.birth_place || 'N/A'}</div>
+                            </div>
+                        </div>
+
+                        <div class="section-title">🌟 লগ্ন আৰু গ্ৰহ অৱস্থানৰ বিশ্লেষণ</div>
+                        <p>বৈদিক গণনা অনুসৰি আপোনাৰ জন্মকালীন কুণ্ডলীত গ্ৰহসমূহৰ বিশেষ অৱস্থান পৰিলক্ষিত হৈছে। বৰ্তমান চলি থকা গ্ৰহৰ দশা আৰু অন্তৰ্দশাই আপোনাৰ জীৱনৰ বিভিন্ন দিশত গুৰুত্বপূৰ্ণ প্ৰভাৱ পেলাইছে।</p>
+
+                        <div class="section-title">🔮 আপোনাৰ নিৰ্দিষ্ট সেৱাৰ ভৱিষ্যদ্বাণী (${serviceTitle})</div>
+                        <p>আপোনাৰ জন্ম তাৰিখ, সময় আৰু স্থানৰ সঠিক গাণিতিক বিশ্লেষণৰ জৰিয়তে দেখা গৈছে যে অহা সময়ছোৱা আপোনাৰ বাবে বিশেষভাৱে ফলপ্ৰসূ হ'ব। কৰ্মক্ষেত্ৰত বাধাৰ অৱসান ঘটি নতুন সুযোগ আহিব। মনৰ স্থিৰতা বজা ৰাখিলে আৰু সঠিক সিদ্ধান্ত ল’লে আশানুৰূপ সফলতা লাভ কৰিব।</p>
+
+                        <div class="section-title">💡 বিশেষ পৰামৰ্শ আৰু প্ৰতিকাৰ</div>
+                        <p>১. প্ৰতিদিন সকালে সূৰ্য দেৱতাক জল প্ৰদান কৰক।<br>
+                        ২. মনক শান্ত ৰাখিবলৈ নিয়মীয়াকৈ ধ্যান বা প্ৰাণায়াম কৰক।<br>
+                        ৩. গুৰুজন আৰু জ্যেষ্ঠসকলৰ আশীৰ্বাদ ল’বলৈ নাপাহৰিব।</p>
+
+                        <button class="print-btn" onclick="window.print()">ৰিপোৰ্ট প্ৰিন্ট / ছেভ কৰক</button>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const win = window.open();
+            win.document.write(reportHtml);
+            win.document.close();
         }
 
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allOrders.filter(o => 
                 (o.name && o.name.toLowerCase().includes(query)) || 
-                (o.phone && o.phone.includes(query))
+                (o.email && o.email.includes(query))
             );
             renderTable(filtered);
         }
