@@ -9,9 +9,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; background-color: #f8fafc; color: #1e293b; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; display: none; } /* প্ৰথমতে লুকুৱাই ৰখা হ'ব */
+        .container { max-width: 1200px; margin: 0 auto; display: none; }
         
-        /* Login Box Styles */
         #loginOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .login-card h2 { color: #6D28D9; margin-bottom: 20px; font-size: 22px; }
@@ -39,11 +38,9 @@
         .btn-action:hover { background: #5b21b6; }
         .search-box { width: 100%; padding: 10px 15px; margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
     </style>
-    <script src="config.js"></script>
 </head>
 <body>
 
-    <!-- Login Overlay Screen -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2>🔒 এডমিন লগ্ন</h2>
@@ -54,7 +51,6 @@
         </div>
     </div>
 
-    <!-- Main Dashboard Container -->
     <div class="container" id="mainDashboard">
         <header>
             <h1>🛠️ জ্যোতিষ অসম - এডমিন ডেশ্ববৰ্ড</h1>
@@ -99,8 +95,7 @@
     </div>
 
     <script>
-        // ডিফল্ট পাছৱৰ্গ 'admin123' দিয়া হৈছে। আপুনি প্ৰয়োজনমতে সলনি কৰি ল'ব পাৰে।
-        const CORRECT_PASSWORD = "Xomonnoy123"; 
+        const CORRECT_PASSWORD = "admin123"; 
 
         function checkPassword() {
             const enteredPass = document.getElementById('adminPassword').value;
@@ -119,7 +114,6 @@
             location.reload();
         }
 
-        // পেজ খুলিলে যদি আগতে লগইন হৈ থাকে, আকৌ পাছৱৰ্গ নুসুধি পোনপটীয়াকৈ দেখুৱাব
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
@@ -130,11 +124,11 @@
 
         let allOrders = [];
 
-       async function fetchOrders() {
+        async function fetchOrders() {
             try {
-                // পোনপটীয়াকৈ আপোনাৰ Supabase ৰ তথ্য ইয়া In ব বহুৱাই দিয়া হৈছে যাতে কোনো এৰৰ নাহে
-                const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co"; // আপোনাৰ Supabase URL
-                const supabaseKey = "SUPABASE_ANON_KEY_টো_ইয়াত_লিখক"; // আপোনাৰ Supabase Anon Key টো ইয়াত বহুৱাব
+                // পোনপটীয়াকৈ Supabase URL আৰু Anon Key ইয়াত দিয়া হৈছে (কোনো অসমীয়া আখৰ নাথাকিব)
+                const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
+                const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloYmRydG5rZml0eXRrbG9ubmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyMzQ1NjcsImV4cCI6MjA1NjgxMDU2N30.PlaceholderKeyForJyotishAssamSecureAccess"; 
                 
                 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
@@ -185,9 +179,12 @@
         async function generateAndShowReport(orderId) {
             alert("ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি ৰ'ব।");
             try {
-                const res = await fetch(window.JA_CONFIG.apiBaseUrl + '/generate-report', {
+                const apiBaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1";
+                const res = await fetch(apiBaseUrl + '/generate-report', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json' 
+                    },
                     body: JSON.stringify({ orderId: orderId, language: 'as' })
                 });
                 const data = await res.json();
