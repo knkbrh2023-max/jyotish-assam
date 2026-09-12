@@ -347,10 +347,15 @@
             });
             const data = await response.json();
             
-            if (data.success) resultBox.innerHTML = data.report;
-            else resultBox.innerHTML = `<p style="color: red;">সমস্যা হৈছে: ${data.error}</p>`;
+            if (data.success) {
+                resultBox.innerHTML = data.report;
+            } else {
+                // undefined অহাৰ সমস্যা ইয়াত সমাধান কৰা হৈছে
+                const errMsg = data.error || data.message || JSON.stringify(data);
+                resultBox.innerHTML = `<p style="color: red;">সমস্যা হৈছে: ${errMsg}</p>`;
+            }
         } catch (err) {
-            resultBox.innerHTML = `<p style="color: red;">চাৰ্ভাৰৰ সৈতে সংযোগ স্থাপন কৰিব পৰা নগ'ল।</p>`;
+            resultBox.innerHTML = `<p style="color: red;">চাৰ্ভাৰৰ সৈতে সংযোগ স্থাপন কৰিব পৰা নগ'ল। Error: ${err.message}</p>`;
         } finally {
             btn.innerText = "ৰাশিফল চাওক";
             btn.disabled = false;
@@ -381,10 +386,15 @@
             });
             const data = await response.json();
             
-            if (data.success) resultBox.innerHTML = data.report;
-            else resultBox.innerHTML = `<p style="color: red;">সমস্যা হৈছে: ${data.error}</p>`;
+            if (data.success) {
+                resultBox.innerHTML = data.report;
+            } else {
+                // undefined অহাৰ সমস্যা ইয়াত সমাধান কৰা হৈছে
+                const errMsg = data.error || data.message || JSON.stringify(data);
+                resultBox.innerHTML = `<p style="color: red;">সমস্যা হৈছে: ${errMsg}</p>`;
+            }
         } catch (err) {
-            resultBox.innerHTML = `<p style="color: red;">চাৰ্ভাৰৰ সৈতে সংযোগ স্থাপন কৰিব পৰা নগ'ল।</p>`;
+            resultBox.innerHTML = `<p style="color: red;">চাৰ্ভাৰৰ সৈতে সংযোগ স্থাপন কৰিব পৰা নগ'ল। Error: ${err.message}</p>`;
         } finally {
             btn.innerText = "যুটীয়া ৰাশিফল চাওক";
             btn.disabled = false;
