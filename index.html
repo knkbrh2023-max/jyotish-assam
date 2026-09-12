@@ -298,10 +298,10 @@
                     <label style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
                     <input type="text" id="custName" class="form-control" required>
                 </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 14px; font-weight: 600;">হোৱাটছএপ নম্বৰ:</label>
-                    <input type="tel" id="custPhone" class="form-control" pattern="[0-9]{10}" required>
-                </div>
+               <div style="margin-bottom: 15px;">
+    <label style="font-size: 14px; font-weight: 600;">ইমেইল (Email):</label>
+    <input type="email" id="custEmail" class="form-control" placeholder="example@gmail.com" required>
+</div>
                 <div style="margin-bottom: 15px; display: flex; gap: 15px;">
                     <div style="flex: 1;">
                         <label style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
@@ -363,10 +363,14 @@
             if (ampm === 'AM' && h === 12) h = 0;
             let dbTime = h.toString().padStart(2, '0') + ":" + m + ":00";
             const orderData = {
-                service: selectedService, name: document.getElementById('custName').value, email: "test@example.com", 
-                phone: document.getElementById('custPhone').value, birthDate: document.getElementById('custDate').value,
-                birthTime: dbTime, birthPlace: document.getElementById('custPlace').value, language: currentLang
-            };
+    service: selectedService,
+    name: document.getElementById('custName').value,
+    email: document.getElementById('custEmail').value, // ইমেইল ইনপুটৰ পৰਾ ল'ব,
+    birthDate: document.getElementById('custDate').value,
+    birthTime: dbTime,
+    birthPlace: document.getElementById('custPlace').value,
+    language: currentLang
+};
             try {
                 const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
                 const responseData = await createRes.json();
