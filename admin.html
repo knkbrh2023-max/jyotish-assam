@@ -165,7 +165,7 @@
                 <tr>
                     <td>${new Date(o.created_at).toLocaleDateString('as-IN')}</td>
                     <td><strong>${o.name || 'N/A'}</strong></td>
-                    <td>${o.phone || 'N/A'}</td>
+                    <td>${o.phone || o.phone_number || o.mobile || 'N/A'}</td>
                     <td>${o.service || 'N/A'}</td>
                     <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
                     <td><span class="badge ${o.razorpay_payment_id ? 'success' : 'pending'}">${o.razorpay_payment_id ? 'Paid' : 'Pending'}</span></td>
