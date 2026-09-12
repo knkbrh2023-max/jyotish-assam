@@ -3,99 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>
     
+    <!-- SEO Meta Tags -->
+    <title>জ্যোতিষ অসম - Jyotish Assam | নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>
+    <meta name="description" content="জ্যোতিষ অসম - 100% নিখুঁত বৈদিক জ্যোতিষ, জন্ম কুণ্ডলী, প্ৰেমৰ ৰিপোৰ্ট আৰু বিনামূলীয়া দৈনিক ৰাশিফল। অসমীয়া ভাষাত আপোনাৰ ভৱিষ্যৎ জানক।">
+    <meta name="keywords" content="Jyotish Assam, Assamese Astrology, Daily Horoscope Assamese, Online Kundali Assam, অসমীয়া ৰাশিফল, জন্ম কুণ্ডলী, Laluk Astrologer">
+    <meta name="author" content="Kanak Chandra Borah">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph (Facebook/WhatsApp Share Preview) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="জ্যোতিষ অসম | 100% নিখুঁত বৈদিক কুুণ্ডলী">
+    <meta property="og:description" content="অসমীয়া ভাষাত বিনামূলীয়া দৈনিক ৰাশিফল আৰু প্ৰামাণিক জ্যোতিষ সেৱা।">
+    <meta property="og:url" content="https://yourwebsite.com">
+    <meta property="og:site_name" content="জ্যোতিষ অসম">
+
+    <!-- Schema Markup (Google Search Rich Snippets) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "জ্যোতিষ অসম (Jyotish Assam)",
+      "description": "100% নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল সেৱা",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Laluk, Lakhimpur",
+        "addressRegion": "Assam",
+        "addressCountry": "IN"
+      },
+      "priceRange": "₹99 - ₹299",
+      "areaServed": "Assam"
+    }
+    </script>
+
     <!-- Supabase আৰু Razorpay ৰ অফিচিয়েল স্ক্ৰিপ্ট -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --primary-color: #6D28D9; --secondary-color: #DB2777; --dark-bg: #0f172a; --light-bg: #f8fafc; --text-dark: #1e293b; --text-light: #64748b; --border-color: #e2e8f0; --success-color: #10B981; --warning-color: #e11d48; }
-        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
-        nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
-        .logo { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
-        
-        .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
-        .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; }
-        .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 16px; color: var(--text-light); max-width: 700px; margin: 20px auto; }
-        .trust-badges { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin: 20px 0; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
-        .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #475569; }
-        .trust-item span { color: var(--success-color); font-size: 15px; }
-
-        .panchang-box { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; border-radius: 16px; padding: 25px; margin: 30px 0; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.1); }
-        .panchang-header { text-align: center; margin-bottom: 20px; }
-        .panchang-header h3 { color: #b45309; font-size: 22px; }
-        .panchang-date { font-weight: 600; color: #92400e; font-size: 15px; margin-top: 5px; }
-        .panchang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: white; padding: 20px; border-radius: 12px; }
-        .p-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px; border-radius: 8px; background: #fdf8f6; border: 1px solid #ffedd5; }
-        .p-label { font-size: 13px; color: var(--text-light); font-weight: 600; margin-bottom: 5px; }
-        .p-value { font-size: 16px; color: var(--text-dark); font-weight: 700; }
-
-        /* Free Tools CSS */
-        .free-tools-section { padding: 40px 20px; background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .tools-header { text-align: center; margin-bottom: 40px; }
-        .tools-header h2 { font-size: 28px; color: #1e293b; margin-bottom: 10px; }
-        .tools-header p { color: #64748b; font-size: 15px; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
-        .tool-card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; position: relative; overflow: hidden; }
-        .tool-card.personal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #8B5CF6, #6D28D9); }
-        .tool-card.couple::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #F43F5E, #E11D48); }
-        .tool-title { text-align: center; margin-bottom: 25px; }
-        .tool-title h3 { font-size: 20px; margin-bottom: 5px; }
-        .tool-title.personal h3 { color: #6D28D9; }
-        .tool-title.couple h3 { color: #E11D48; }
-        .tool-title p { font-size: 13px; color: #64748b; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px; }
-        .form-control { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s; box-sizing: border-box; }
-        .form-control:focus { border-color: #8B5CF6; }
-        .couple-row { display: flex; gap: 15px; }
-        .btn-submit { width: 100%; padding: 14px; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 10px; }
-        .btn-personal { background: linear-gradient(90deg, #8B5CF6, #6D28D9); box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
-        .btn-couple { background: linear-gradient(90deg, #F43F5E, #E11D48); box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3); }
-
-        /* 12 Rashi Grid */
-        .rashi-section { margin: 50px 0; text-align: center; }
-        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 25px; }
-        .rashi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .rashi-card:hover { border-color: var(--primary-color); transform: translateY(-5px); }
-        .rashi-icon { font-size: 32px; background: #f3e8ff; width: 60px; height: 60px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary-color); }
-        .rashi-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-        .rashi-card p { font-size: 13px; color: var(--text-light); }
-
-        .section { margin: 50px 0; }
-        .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
-        .section-subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 15px; }
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .service-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
-        .service-icon { font-size: 45px; margin-bottom: 20px; }
-        .service-price { font-size: 32px; font-weight: 700; color: var(--primary-color); margin: 20px 0; }
-        .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
-
-        .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
-        footer { background: var(--dark-bg); color: white; text-align: center; padding: 35px 0; font-size: 14px; }
-
-        /* General Modals */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 20px; }
-        .modal.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 550px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .close-modal { position: absolute; right: 20px; top: 15px; font-size: 26px; cursor: pointer; color: #666; }
-
-        /* Free Daily Horoscope Popup CSS */
-        .horoscope-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(5px); }
-        .horoscope-modal-content { background: white; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: 16px; padding: 30px; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        .close-horoscope-btn { position: absolute; top: 15px; right: 20px; background: #f1f5f9; border: none; font-size: 20px; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; color: #475569; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
-        .close-horoscope-btn:hover { background: #fee2e2; color: #dc2626; }
-    </style>
-    <script src="config.js"></script>
-</head>
+    <!-- আপোনাৰ পুৰণি Style খিনি ইয়াৰ তলত থাকিব... -->
+    <!-- <style> ... </style> -->
 <body>
     <nav>
         <div class="container nav-content">
