@@ -379,17 +379,15 @@
                     "key": window.JA_CONFIG.razorpayKeyId, "amount": responseData.amount, "currency": responseData.currency,
                     "name": window.JA_CONFIG.brand, "description": responseData.serviceName, "order_id": responseData.razorpayOrderId,
                     "theme": { "color": "#6D28D9" },
-                   "handler": function (response) {
-                // ১. পেমেন্ট সফল হোৱাৰ লগে লগে কোনো এৰৰ নোহোৱাকৈ ৰিপোৰ্টটো মুকলি কৰা
+                  "handler": function (response) {
                 alert("পেমেন্ট সফল হৈছে! আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে...");
                 if (typeof closeOrderModal === 'function') closeOrderModal();
                 
-                showReportToCustomer(); // লগে লগে ৰিপোৰ্ট দেখুৱাবলৈ কল কৰা হৈছে
+                showReportToCustomer(); 
 
                 btn.innerText = "Pay Now"; 
                 btn.disabled = false;
 
-                // ২. বেকএণ্ডত পেমেন্ট ষ্টেটাচটো মনে মনে আপডেট কৰা (যাতে এডমিন ডেশ্ববৰ্ডত Paid বুলি দেখুৱায়)
                 try {
                     fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
                         method: 'POST', 
@@ -402,10 +400,16 @@
                         })
                     });
                 } catch(e) { console.log("Background update skipped"); }
-            },
-                var rzp1 = new Razorpay(options);
-                rzp1.on('payment.failed', function (r){ alert("Failed: " + r.error.description); btn.innerText = "Pay Now"; btn.disabled = false; });
-                rzp1.open();
+            }
+        }; // <-- এই ব্ৰেকেটটোৱেই হেৰাই গৈছিল!
+
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (r){ 
+            alert("Failed: " + r.error.description); 
+            btn.innerText = "Pay Now"; 
+            btn.disabled = false; 
+        });
+        rzp1.open();
             } catch(err) { alert("Error: " + err.message); btn.innerText = "Pay Now"; btn.disabled = false; }
         }
 
