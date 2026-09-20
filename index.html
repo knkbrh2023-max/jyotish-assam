@@ -464,36 +464,102 @@ async function showReportToCustomer(orderId) {
         const data = await response.json();
         
         let deepAnalysis = "";
+        let contentHtml = "";
+
         if(response.ok && data.success) {
             const chart = data.chart;
             
-            let planetsHtml = '<table border="1" width="100%" style="border-collapse: collapse; text-align: center; margin-bottom: 20px;">';
-            planetsHtml += '<tr style="background-color: #f3e8ff;"><th>গ্ৰহ</th><th>ৰাশি</th><th>নক্ষত্ৰ</th><th>পদ</th></tr>';
+            // প্ৰফেছনেল গ্ৰহৰ টেবুল
+            let planetsHtml = `
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>গ্ৰহ (Planet)</th>
+                            <th>ৰাশি (Sign)</th>
+                            <th>নক্ষত্ৰ (Nakshatra)</th>
+                            <th>পদ (Pada)</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
             const p = chart.planets;
             const planetNames = { Sun: "সূৰ্য", Moon: "চন্দ্ৰ", Mars: "মংগল", Mercury: "বুধ", Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু" };
+            
             for(const key in p) {
-                planetsHtml += `<tr><td><strong>${planetNames[key] || key}</strong></td><td>${p[key].rashi}</td><td>${p[key].nakshatra}</td><td>${p[key].pada}</td></tr>`;
+                planetsHtml += `
+                        <tr>
+                            <td><strong>${planetNames[key] || key}</strong></td>
+                            <td>${p[key].rashi}</td>
+                            <td>${p[key].nakshatra}</td>
+                            <td>${p[key].pada}</td>
+                        </tr>`;
             }
-            planetsHtml += '</table>';
+            planetsHtml += `</tbody></table></div>`;
 
-            let dashaHtml = '<table border="1" width="100%" style="border-collapse: collapse; text-align: center;">';
-            dashaHtml += '<tr style="background-color: #fef3c7;"><th>দশা (Mahadasha)</th><th>আৰম্ভণি (Start)</th><th>অন্ত (End)</th></tr>';
+            // প্ৰফেছনেল দশা টেবুল
+            let dashaHtml = `
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>মহা দশা (Mahadasha)</th>
+                            <th>আৰম্ভণি (Start Date)</th>
+                            <th>অন্ত (End Date)</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
             chart.dashas.forEach(d => {
-                dashaHtml += `<tr><td><strong>${d.lord}</strong></td><td>${d.start_date}</td><td>${d.end_date}</td></tr>`;
+                dashaHtml += `
+                        <tr>
+                            <td><strong>${d.lord}</strong></td>
+                            <td>${d.start_date}</td>
+                            <td>${d.end_date}</td>
+                        </tr>`;
             });
-            dashaHtml += '</table>';
+            dashaHtml += `</tbody></table></div>`;
 
-            deepAnalysis = `
-                <div style="background: #fffbeb; padding: 15px; border-radius: 8px; border-left: 4px solid #d97706; margin-bottom: 20px;">
-                    <p style="font-size: 18px; margin: 0; color: #1e293b;"><strong>আপোনাৰ লগ্ন:</strong> ${chart.ascendant.rashi} | <strong>লগ্নৰ নক্ষত্ৰ:</strong> ${chart.ascendant.nakshatra}</p>
+            // সেৱা অনুসৰি বিশ্লেষণৰ পাঠ
+            let serviceAnalysisText = "";
+            if (service === 'career') {
+                serviceAnalysisText = "আপোনাৰ লগ্ন আৰু বৰ্তমানৰ দশাৰ ওপৰত ভিত্তি কৰি দেখা গৈছে যে আপোনাৰ কৰ্মজীৱনত এক গুৰুত্বপূৰ্ণ সময় চলি আছে। দশম স্থানৰ অধিপতিৰ অৱস্থানে আপোনাক নিজৰ ক্ষেত্ৰত সফলতা লাভ কৰাত সহায় কৰিব। ব্যৱসায়ত নতুন সুযোগৰ প্ৰতি চকু ৰাখক।";
+            } else if (service === 'love') {
+                serviceAnalysisText = "সপ্তম স্থান আৰু শুক্ৰৰ অৱস্থানে আপোনাৰ প্ৰেম আৰু সম্পৰ্কৰ দিশ নিৰ্ণয় কৰে। আপোনাৰ কুণ্ডলী অনুসৰি, পাৰস্পৰিক বুজাবুজি আৰু বিশ্বাসেই হৈছে আপোনাৰ সম্পৰ্কৰ মূল চাবিকাঠি। সংগীক সময় আৰু গুৰুত্ব দিয়ক।";
+            } else {
+                serviceAnalysisText = "বৈদিক জ্যোতিষ শাস্ত্ৰ অনুসৰি আপোনাৰ লগ্ন আৰু নক্ষত্ৰই আপোনাৰ সামগ্ৰিক ব্যক্তিত্ব আৰু জীৱনৰ যাত্ৰাপথ নিৰ্ণয় কৰে। বৰ্তমান চলি থকা মহাদশাই আপোনাৰ জীৱনলৈ নতুন পৰিৱৰ্তন আৰু সুযোগ কঢ়িয়াই আনিব পাৰে।";
+            }
+
+            contentHtml = `
+                <div class="highlight-box">
+                    <div class="highlight-item">
+                        <span class="label">আপোনাৰ লগ্ন (Ascendant)</span>
+                        <span class="value">${chart.ascendant.rashi}</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="label">লগ্নৰ নক্ষত্ৰ (Nakshatra)</span>
+                        <span class="value">${chart.ascendant.nakshatra}</span>
+                    </div>
                 </div>
-                <h3 style="color: #6D28D9; margin-top: 20px;">গ্ৰহৰ অৱস্থান আৰু নক্ষত্ৰ</h3>
+
+                <div class="section-title"><span>❖</span> গ্ৰহ আৰু নক্ষত্ৰৰ অৱস্থান</div>
                 ${planetsHtml}
-                <h3 style="color: #d97706; margin-top: 20px;">বিংশোত্তৰী মহা দশা</h3>
+
+                <div class="section-title"><span>❖</span> বিংশোত্তৰী মহা দশা</div>
                 ${dashaHtml}
+
+                <div class="section-title"><span>❖</span> জ্যোতিষীয় বিশ্লেষণ</div>
+                <div class="analysis-box">
+                    <p>${serviceAnalysisText}</p>
+                    <p><em>(অধিক বিতং বিশ্লেষণ আৰু প্ৰতিকাৰৰ বাবে আমাৰ সৈতে পোনপটীয়াকৈ যোগাযোগ কৰিব পাৰে।)</em></p>
+                </div>
             `;
         } else {
-            deepAnalysis = `<p style="color: red;">ৰিপোৰ্ট প্ৰস্তুত কৰাত কিছু সমস্যা হৈছে: ${data.error || 'অজ্ঞাত কাৰণ'}</p>`;
+            contentHtml = `
+                <div class="error-box">
+                    <h3>⚠️ ৰিপোৰ্ট প্ৰস্তুত কৰাত কিছু সমস্যা হৈছে</h3>
+                    <p>কাৰণ: ${data.error || 'অজ্ঞাত কাৰণ'}</p>
+                    <p>অনুগ্ৰহ কৰি স্ক্ৰীণশ্বট লৈ আমাৰ সৈতে যোগাযোগ কৰক।</p>
+                </div>`;
         }
 
         const reportHtml = `
@@ -501,35 +567,81 @@ async function showReportToCustomer(orderId) {
             <html lang="as">
             <head>
                 <meta charset="UTF-8">
-                <title>জ্যোতিষ অসম - আপোনাৰ ৰিপোৰ্ট</title>
+                <title>জ্যোতিষ অসম - প্ৰিমিয়াম ৰিপোৰ্ট</title>
                 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
                 <style>
-                    body { font-family: 'Noto Sans Assamese', sans-serif; line-height: 1.8; color: #1e293b; background: #f1f5f9; padding: 20px; }
-                    .report-container { max-width: 850px; margin: 0 auto; background: white; padding: 50px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 4px double #6D28D9; }
-                    .header-section { text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; }
-                    h1 { color: #6D28D9; margin-bottom: 5px; font-size: 28px; font-weight: 700; }
-                    .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; background: #faf5ff; padding: 25px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #6D28D9; }
-                    .section-title { color: #b91c1c; font-size: 22px; font-weight: 600; margin-top: 35px; margin-bottom: 15px; }
-                    .print-btn { display: block; width: 100%; max-width: 250px; margin: 40px auto 0; padding: 15px; background: #6D28D9; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
-                    td, th { padding: 10px; border-color: #cbd5e1; }
-                    th { color: #334155; }
+                    :root { --primary: #6D28D9; --secondary: #db2777; --bg: #f8fafc; --text: #1e293b; --border: #e2e8f0; }
+                    body { font-family: 'Noto Sans Assamese', sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; padding: 30px 15px; }
+                    .report-container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 50px rgba(0,0,0,0.08); border-top: 8px solid var(--primary); }
+                    
+                    /* Header Styles */
+                    .header { text-align: center; border-bottom: 2px dashed var(--border); padding-bottom: 25px; margin-bottom: 30px; }
+                    .om-symbol { font-size: 50px; color: #ea580c; line-height: 1; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(234, 88, 12, 0.2); }
+                    .header h1 { color: var(--primary); margin: 0 0 5px 0; font-size: 32px; font-weight: 700; letter-spacing: 1px; }
+                    .header p { color: #64748b; margin: 0; font-size: 16px; }
+
+                    /* Customer Info Grid */
+                    .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; background: #fdf4ff; padding: 25px; border-radius: 12px; margin-bottom: 35px; border: 1px solid #f0abfc; position: relative; }
+                    .info-grid::before { content: '👤 গ্ৰাহকৰ বিৱৰণ'; position: absolute; top: -12px; left: 20px; background: #fdf4ff; padding: 0 10px; color: #a21caf; font-weight: 600; font-size: 14px; border: 1px solid #f0abfc; border-radius: 20px; }
+                    .info-item { font-size: 15px; }
+                    .info-item span { display: block; color: #64748b; font-size: 13px; margin-bottom: 2px; }
+                    .info-item strong { color: #334155; font-size: 16px; }
+
+                    /* Section Titles */
+                    .section-title { font-size: 20px; font-weight: 700; color: var(--text); margin: 35px 0 15px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--bg); padding-bottom: 8px; }
+                    .section-title span { color: #ea580c; font-size: 24px; }
+
+                    /* Highlight Box */
+                    .highlight-box { display: flex; gap: 20px; margin-bottom: 30px; }
+                    .highlight-item { flex: 1; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #fde68a; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+                    .highlight-item .label { display: block; color: #b45309; font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+                    .highlight-item .value { display: block; color: #78350f; font-size: 24px; font-weight: 700; }
+
+                    /* Tables */
+                    .table-container { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+                    table { width: 100%; border-collapse: collapse; text-align: left; }
+                    th { background: #f1f5f9; color: #334155; font-weight: 600; padding: 15px; font-size: 15px; }
+                    td { padding: 12px 15px; border-top: 1px solid var(--border); font-size: 15px; color: #475569; }
+                    tr:nth-child(even) td { background: #f8fafc; }
+                    td strong { color: var(--primary); }
+
+                    /* Analysis Box */
+                    .analysis-box { background: #f0fdf4; padding: 25px; border-radius: 12px; border-left: 5px solid #16a34a; font-size: 16px; color: #166534; line-height: 1.8; text-align: justify; }
+
+                    /* Print Button */
+                    .print-section { text-align: center; margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border); }
+                    .print-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 15px 35px; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 20px rgba(109, 40, 217, 0.2); transition: transform 0.2s; font-family: inherit; }
+                    .print-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(109, 40, 217, 0.3); }
+
+                    .error-box { background: #fef2f2; border: 1px solid #fca5a5; padding: 20px; border-radius: 12px; color: #991b1b; text-align: center; }
+                    
+                    @media print {
+                        body { background: white; padding: 0; }
+                        .report-container { box-shadow: none; border-top: 5px solid var(--primary); padding: 20px; }
+                        .print-section { display: none; }
+                    }
                 </style>
             </head>
             <body>
                 <div class="report-container">
-                    <div class="header-section">
-                        <h1>জ্যোতিষ অসম (Jyotish Assam)</h1>
+                    <div class="header">
+                        <div class="om-symbol">ॐ</div>
+                        <h1>জ্যোতিষ অসম</h1>
+                        <p>আপোনাৰ প্ৰিমিয়াম জ্যোতিষীয় বিশ্লেষণ</p>
                     </div>
+                    
                     <div class="info-grid">
-                        <div><strong>গ্ৰাহকৰ নাম:</strong> ${name}</div>
-                        <div><strong>ইমেইল:</strong> ${email}</div>
-                        <div><strong>জন্ম তাৰিখ:</strong> ${dob}</div>
-                        <div><strong>জন্ম স্থান:</strong> ${place}</div>
-                        <div><strong>সেৱাৰ প্ৰকাৰ:</strong> ${serviceTitle}</div>
+                        <div class="info-item"><span>গ্ৰাহকৰ নাম</span><strong>${name}</strong></div>
+                        <div class="info-item"><span>সেৱাৰ প্ৰকাৰ</span><strong>${serviceTitle}</strong></div>
+                        <div class="info-item"><span>জন্ম তাৰিখ</span><strong>${dob}</strong></div>
+                        <div class="info-item"><span>জন্ম স্থান</span><strong>${place}</strong></div>
                     </div>
-                    <div class="section-title">নিৰ্দিষ্ট ভৱিষ্যদ্বাণী: ${serviceTitle}</div>
-                    ${deepAnalysis}
-                    <button class="print-btn" onclick="window.print()">ৰিপোৰ্ট প্ৰিন্ট / ছেভ কৰক</button>
+
+                    ${contentHtml}
+
+                    <div class="print-section">
+                        <button class="print-btn" onclick="window.print()">📥 ৰিপোৰ্ট প্ৰিন্ট / ছেভ কৰক</button>
+                    </div>
                 </div>
             </body>
             </html>
