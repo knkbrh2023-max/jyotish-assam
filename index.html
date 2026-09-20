@@ -388,19 +388,15 @@ async function processPayment(e) {
             "name": window.JA_CONFIG.brand, 
             "description": responseData.serviceName, 
             "order_id": responseData.razorpayOrderId,
-            "theme": { "color": "#6D28D9" },
+          "theme": { "color": "#6D28D9" },
             "handler": async function (response) {
-                alert("পেমেন্ট সফল হৈছে! আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অপেক্ষা কৰক।");
+                alert("পেমেন্ট সফল হৈছে! আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অলপ সময় অপেক্ষা কৰক।");
                 
-                // ১. ৰিপোৰ্ট কল
-                await showReportToCustomer(responseData.orderId); 
-
-                if (typeof closeOrderModal === 'function') closeOrderModal();
-                btn.innerText = "Pay Now"; 
-                btn.disabled = false;
+                btn.innerText = "Verifying...";
 
                 try {
-                    fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
+                    // ১. প্ৰথমে পেমেন্ট ভেৰিফাই কৰক (যাতে ডাটাবেছত ষ্টেটাছ 'paid' হয়)
+                    const verifyRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
                         method: 'POST', 
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
@@ -410,7 +406,23 @@ async function processPayment(e) {
                             razorpay_signature: response.razorpay_signature 
                         })
                     });
-                } catch(e) { console.log("Background update skipped"); }
+                    
+                    const verifyData = await verifyRes.json();
+                    
+                    // ২. পেমেন্ট ভেৰিফাই হোৱাৰ পিছতহে ৰিপোৰ্টটো দেখুৱাওক
+                    if(verifyRes.ok) {
+                        await showReportToCustomer(responseData.orderId); 
+                    } else {
+                        alert("পেমেন্ট ভেৰিফিকেচনত সমস্যা হৈছে: " + (verifyData.error || "Unknown"));
+                    }
+                } catch(e) { 
+                    console.error("Verification error:", e); 
+                    alert("চাৰ্ভাৰৰ সৈতে সংযোগ কৰিব পৰা নগ'ল।");
+                }
+
+                if (typeof closeOrderModal === 'function') closeOrderModal();
+                btn.innerText = "Pay Now"; 
+                btn.disabled = false;
             }
         }; 
 
