@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="as">
-<head>I
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags (Google Search & AdSense ৰ বাবে) -->
-    <title>জ্যোতিষ অসম - Jyotish Assam | নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>F
+    <title>জ্যোতিষ অসম - Jyotish Assam | নিখুঁত বৈদিক কুুণ্ডলী আৰু দৈনিক ৰাশিফল</title>
     <meta name="description" content="জ্যোতিষ অসম - 100% নিখুঁত বৈদিক জ্যোতিষ, জন্ম কুণ্ডলী, প্ৰেমৰ ৰিপোৰ্ট আৰু বিনামূলীয়া দৈনিক ৰাশিফল। অসমীয়া ভাষাত আপোনাৰ ভৱিষ্যৎ জানক।">
     <meta name="keywords" content="Jyotish Assam, Assamese Astrology, Daily Horoscope Assamese, Online Kundali Assam, অসমীয়া ৰাশিফল, জন্ম কুণ্ডলী, Laluk Astrologer">
     <meta name="author" content="Kanak Chandra Borah">
@@ -353,41 +353,54 @@
             document.getElementById('orderForm').reset();
         }
         async function processPayment(e) {
-            e.preventDefault();
-            const btn = document.getElementById('payBtn');
-            btn.innerText = "Processing..."; btn.disabled = true;
-            let h = parseInt(document.getElementById('custHour').value);
-            let m = document.getElementById('custMin').value.padStart(2, '0');
-            let ampm = document.getElementById('custAmPm').value;
-            if (ampm === 'PM' && h < 12) h += 12;
-            if (ampm === 'AM' && h === 12) h = 0;
-            let dbTime = h.toString().padStart(2, '0') + ":" + m + ":00";
-            const orderData = {
-    service: selectedService,
-    name: document.getElementById('custName').value,
-    email: document.getElementById('custEmail').value, // ইমেইল ইনপুটৰ পৰਾ ল'ব,
-    birthDate: document.getElementById('custDate').value,
-    birthTime: dbTime,
-    birthPlace: document.getElementById('custPlace').value,
-    language: currentLang
-};
-            try {
-                const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
-                const responseData = await createRes.json();
-                if (!responseData.success) throw new Error(responseData.error || "Order failed");
-                var options = {
-                    "key": window.JA_CONFIG.razorpayKeyId, "amount": responseData.amount, "currency": responseData.currency,
-                    "name": window.JA_CONFIG.brand, "description": responseData.serviceName, "order_id": responseData.razorpayOrderId,
-                    "theme": { "color": "#6D28D9" },
-                  "handler": function (response) {
-                alert("পেমেন্ট সফল হৈছে! আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে...");
-                if (typeof closeOrderModal === 'function') closeOrderModal();
+    e.preventDefault();
+    const btn = document.getElementById('payBtn');
+    btn.innerText = "Processing..."; btn.disabled = true;
+    
+    let h = parseInt(document.getElementById('custHour').value);
+    let m = document.getElementById('custMin').value.padStart(2, '0');
+    let ampm = document.getElementById('custAmPm').value;
+    if (ampm === 'PM' && h < 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    let dbTime = h.toString().padStart(2, '0') + ":" + m + ":00";
+    
+    const orderData = {
+        service: selectedService,
+        name: document.getElementById('custName').value,
+        email: document.getElementById('custEmail').value,
+        birthDate: document.getElementById('custDate').value,
+        birthTime: dbTime,
+        birthPlace: document.getElementById('custPlace').value,
+        language: currentLang
+    };
+    
+    try {
+        const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
+        const responseData = await createRes.json();
+        if (!responseData.success) throw new Error(responseData.error || "Order failed");
+        
+        var options = {
+            "key": window.JA_CONFIG.razorpayKeyId, 
+            "amount": responseData.amount, 
+            "currency": responseData.currency,
+            "name": window.JA_CONFIG.brand, 
+            "description": responseData.serviceName, 
+            "order_id": responseData.razorpayOrderId,
+            "theme": { "color": "#6D28D9" },
+            // এইখিনিতেই নতুন সালসলনি কৰা হৈছে
+            "handler": async function (response) {
+                alert("পেমেন্ট সফল হৈছে! আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... অনুগ্ৰহ কৰি অপেক্ষা কৰক।");
                 
-                showReportToCustomer(); 
+                // ১. প্ৰথমে ৰিপোৰ্টটো প্ৰদৰ্শন কৰক (ফৰ্মৰ ডাটা থকা অৱস্থাতে)
+                await showReportToCustomer(); 
+
+                // ২. তাৰ পিছতহে ফৰ্মখন বন্ধ কৰক আৰু ৰিছেট কৰক
+                if (typeof closeOrderModal === 'function') closeOrderModal();
 
                 btn.innerText = "Pay Now"; 
                 btn.disabled = false;
 
+                // ৩. পেমেন্ট ভেৰিফিকেচন
                 try {
                     fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
                         method: 'POST', 
@@ -401,7 +414,7 @@
                     });
                 } catch(e) { console.log("Background update skipped"); }
             }
-        }; // <-- এই ব্ৰেকেটটোৱেই হেৰাই গৈছিল!
+        }; 
 
         var rzp1 = new Razorpay(options);
         rzp1.on('payment.failed', function (r){ 
@@ -410,8 +423,12 @@
             btn.disabled = false; 
         });
         rzp1.open();
-            } catch(err) { alert("Error: " + err.message); btn.innerText = "Pay Now"; btn.disabled = false; }
-        }
+    } catch(err) { 
+        alert("Error: " + err.message); 
+        btn.innerText = "Pay Now"; 
+        btn.disabled = false; 
+    }
+}
 
         // --- 12 Rashi Logic (বিস্তাৰিত আৰু আকৰ্ষণীয় ৰূপত) ---
         const rashiData = { 
