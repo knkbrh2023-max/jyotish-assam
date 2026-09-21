@@ -633,18 +633,115 @@ async function showReportToCustomer(orderId) {
                 </div>`;
             }
 
-            // 4. MONTHLY & YEARLY PAGE
+           // 4. MONTHLY & YEARLY PAGE
             let extraAnalysisPage = "";
+            
+            // আজিৰ পৰা এমাহৰ তাৰিখ উলিওৱা
+            const todayDateObj = new Date();
+            const nextMonthObj = new Date(todayDateObj);
+            nextMonthObj.setMonth(nextMonthObj.getMonth() + 1);
+            
+            const currentMonthName = todayDateObj.toLocaleDateString('as-IN', { month: 'long' });
+            const nextMonthName = nextMonthObj.toLocaleDateString('as-IN', { month: 'long' });
+            const currentYear = todayDateObj.getFullYear();
+            
+            // তাৰিখৰ ৰেঞ্জ (যেনে: ২১ ছেপ্টেম্বৰ–২০ অক্টোবৰ)
+            const dateRangeStr = `${todayDateObj.getDate()} ${currentMonthName} – ${nextMonthObj.getDate()} ${nextMonthName} ${currentYear}`;
+
             if (service === 'monthly') {
                 extraAnalysisPage = `
                 <div class="page page-break">
-                    <h2 class="section-title">❁ মাহেকীয়া ৰাশিফল ❁</h2>
+                    <h2 class="section-title">❁ ১ মাহৰ সামগ্ৰিক ফল ❁</h2>
+                    <div class="text-section" style="text-align: center; color: #8b0000; font-weight: bold; margin-bottom: 20px;">
+                        [ ${dateRangeStr} ৰ বাবে Vedic/Sidereal (Lahiri) জ্যোতিষীয় ৰিডিং ]
+                    </div>
+                    
                     <div class="info-card">
                         <div class="card-content">
-                            আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু বৰ্তমানৰ গ্ৰহৰ গোচৰ অনুসৰি, আগন্তুক ৩০ দিন আপোনাৰ বাবে গুৰুত্বপূৰ্ণ। বৰ্তমান <strong>${currentDasha}</strong> মহাদশাৰ প্ৰভাৱত এই মাহত আপুনি স্বাস্থ্য আৰু আৰ্থিক দিশত সজাগ হোৱাটো প্ৰয়োজন। কৰ্মক্ষেত্ৰত নতুন সুযোগ লাভ কৰাৰ যোগ আছে।
+                            এই মাহটো আপোনাৰ বাবে <strong>“direction change + financial planning + relationship clarity”</strong>-ৰ মাহ।<br>
+                            সামগ্ৰিক শক্তি: ⭐⭐⭐⭐☆
+                        </div>
+                    </div>
+
+                    <h3 class="sub-heading">💼 Career (কৰ্মজীৱন)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>প্ৰথম ১০ দিন:</strong> কামত চাপ বা confusion অলপ থাকিব পাৰে। পুৰণি কাম শেষ কৰি নতুন plan বনোৱা ভাল।</li>
+                                <li><strong>মাজৰ ১০ দিন:</strong> নতুন opportunity, client/contact বা কামৰ proposal আহিব পাৰে।</li>
+                                <li><strong>শেষৰ ১০ দিন:</strong> নিজৰ সিদ্ধান্ত নিজে লৈ আগবঢ়াৰ সময়। Business বা independent work-ৰ ক্ষেত্ৰত নতুন idea বাস্তৱত ৰূপ দিব পাৰা।</li>
+                            </ul>
+                            <br>
+                            <em>Career theme:</em> নতুন সুযোগ আহিব পাৰে, কিন্তু ফলাফল আপোনাৰ consistency-ৰ ওপৰত নিৰ্ভৰ কৰিব। চাকৰি সলনিৰ কথা ভাবি থাকিলে তৎক্ষণাত resign নকৰি প্ৰথমে নতুন option নিশ্চিত কৰা ভাল।
+                        </div>
+                    </div>
+
+                    <h3 class="sub-heading">💰 Finance (আৰ্থিক অৱস্থা)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            এই মাহত income-তকৈ money management অধিক গুৰুত্বপূৰ্ণ।
+                            <ul>
+                                <li>মাহৰ প্ৰথম ভাগত unexpected expense হ'ব পাৰে।</li>
+                                <li>দ্বিতীয় সপ্তাহৰ পিছত financial situation অলপ stable হোৱাৰ সম্ভাৱনা।</li>
+                                <li>নতুন investment/loan-ৰ ক্ষেত্ৰত ভালদৰে research নকৰাকৈ সিদ্ধান্ত নল'বা।</li>
+                            </ul>
+                            <br>
+                            <em>Finance theme:</em> আয় বৃদ্ধি কৰাৰ সুযোগ + খৰচ নিয়ন্ত্ৰণৰ প্ৰয়োজন। এটা দ্বিতীয় income source বনোৱাৰ চিন্তা এই সময়ত উপযোগী।
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page page-break">
+                    <h3 class="sub-heading">❤️ Love (প্ৰেম আৰু সম্পৰ্ক)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            <strong>Relationship থাকিলে:</strong>
+                            <ul>
+                                <li>মাহৰ আৰম্ভণিতে communication gap হ'ব পাৰে।</li>
+                                <li>মাহৰ মাজভাগত serious কথা-বতৰা বা relationship-ৰ কোনো বিষয় clear হোৱাৰ সম্ভাৱনা।</li>
+                                <li>Partner-ৰ কথাক assumption নকৰি পোনপটীয়াকৈ সোধা ভাল। Ego clash এৰাই চলিলে relationship অধিক stable হ'ব।</li>
+                            </ul>
+                            <br>
+                            <strong>Single হলে:</strong>
+                            <ul>
+                                <li>নতুন connection social media, বন্ধুবৰ্গ বা কামৰ network-ৰ জৰিয়তে আহিব পাৰে।</li>
+                                <li>connection আৰম্ভ হ'লেই relationship বুলি ধৰি নল'বা; সময় দি মানুহজনক বুজি লোৱা ভাল।</li>
+                            </ul>
+                            <br>
+                            <em>Love theme:</em> clarity → understanding → stability.
+                        </div>
+                    </div>
+
+                    <h3 class="sub-heading">📅 মাহটোৰ গুৰুত্বপূৰ্ণ সময়</h3>
+                    <table class="vedic-table">
+                        <thead>
+                            <tr>
+                                <th>সময়সীমা</th>
+                                <th>সম্ভাব্য বিষয়</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>প্ৰথম ৫ দিন</td><td>Planning / চিন্তা বৃদ্ধি</td></tr>
+                            <tr><td>৬–১০ দিন</td><td>Career-related movement</td></tr>
+                            <tr><td>১১–১৫ দিন</td><td>Finance & opportunity</td></tr>
+                            <tr><td>১৬–২০ দিন</td><td>Love/communication</td></tr>
+                            <tr><td>২১–২৫ দিন</td><td>Career decision</td></tr>
+                            <tr><td>২৬–৩০ দিন</td><td>Stability & next-step planning</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-card" style="background: rgba(139, 0, 0, 0.05); border-left-color: #5c3a21;">
+                        <div class="card-title">🌟 এই মাহৰ মূল কথা</div>
+                        <div class="card-content">
+                            <strong>Career:</strong> নতুন direction বিচাৰি পাব পাৰা<br>
+                            <strong>Finance:</strong> আয়ৰ সুযোগ আছে, কিন্তু খৰচ control কৰা দৰকাৰ<br>
+                            <strong>Love:</strong> ভুল বুজাবুজি clear কৰাৰ সময়<br>
+                            <strong>Personal:</strong> confidence ধীৰে ধীৰে বৃদ্ধি পাব পাৰে<br><br>
+                            বিশেষকৈ মাহৰ মাজভাগৰ সময়ছোৱা আপোনাৰ বাবে গুৰুত্বপূৰ্ণ বুলি দেখা যায়—career আৰু personal decision দুয়োটা ক্ষেত্ৰতে।
                         </div>
                     </div>
                 </div>`;
+                
             } else if (service === 'yearly') {
                 extraAnalysisPage = `
                 <div class="page page-break">
