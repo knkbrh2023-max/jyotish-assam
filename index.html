@@ -452,7 +452,7 @@ async function showReportToCustomer(orderId) {
         'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
         'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)'
     };
-    const serviceTitle = serviceNameMap[service] || 'প্ৰিমিয়াম জ্যোতিষ সেৱা';
+    const serviceTitle = serviceNameMap[service] || 'ব্যক্তিগত বৈদিক জন্ম-কুণ্ডলী';
 
     try {
         const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
@@ -467,7 +467,7 @@ async function showReportToCustomer(orderId) {
         if(response.ok && data.success) {
             const chart = data.chart;
             
-            // ১. বৰ্তমানৰ দশা উলিওৱা
+            // বৰ্তমানৰ দশা উলিওৱা
             let currentDasha = "অজ্ঞাত";
             let today = new Date();
             chart.dashas.forEach(d => {
@@ -478,7 +478,7 @@ async function showReportToCustomer(orderId) {
                 }
             });
 
-            // ২. ৰত্নৰ পৰামৰ্শ (লগ্ন অনুসৰি)
+            // ৰত্নৰ পৰামৰ্শ
             const gemstones = {
                 "Aries": "ৰঙা প্ৰৱাল (Red Coral)", "Taurus": "হীৰা বা বগা অ'পেল (Opal)",
                 "Gemini": "পান্না (Emerald)", "Cancer": "মুকুতা (Pearl)",
@@ -489,13 +489,53 @@ async function showReportToCustomer(orderId) {
             };
             const luckyGem = gemstones[chart.ascendant.rashi] || "উপযুক্ত জ্যোতিষীৰ পৰামৰ্শ লওক";
 
-            // ৩. সময়সীমা (Timeframes)
-            let nextYear = new Date(today.setFullYear(today.getFullYear() + 1));
-            let currentMonthYear = new Date().toLocaleDateString('as-IN', {month:'long', year:'numeric'});
-            let nextMonthYear = nextYear.toLocaleDateString('as-IN', {month:'long', year:'numeric'});
-            let timeframeStr = `${currentMonthYear} ৰ পৰা ${nextMonthYear} লৈকে`;
+            // গ্ৰহৰ টেবুল (পুৰণি শৈলী)
+            let planetsHtml = `
+            <table class="vedic-table">
+                <thead>
+                    <tr>
+                        <th>গ্ৰহ</th>
+                        <th>ৰাশি</th>
+                        <th>নক্ষত্ৰ</th>
+                        <th>পদ</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            const p = chart.planets;
+            const planetNames = { Sun: "সূৰ্য", Moon: "চন্দ্ৰ", Mars: "মংগল", Mercury: "বুধ", Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু" };
+            for(const key in p) {
+                planetsHtml += `
+                    <tr>
+                        <td><strong>${planetNames[key] || key}</strong></td>
+                        <td>${p[key].rashi}</td>
+                        <td>${p[key].nakshatra}</td>
+                        <td>${p[key].pada}</td>
+                    </tr>`;
+            }
+            planetsHtml += `</tbody></table>`;
 
-            // ৪. জন্ম কুণ্ডলী চিত্ৰ (North Indian Style SVG)
+            // দশা টেবুল (পুৰণি শৈলী)
+            let dashaHtml = `
+            <table class="vedic-table">
+                <thead>
+                    <tr>
+                        <th>মহা দশা</th>
+                        <th>আৰম্ভণি (Start)</th>
+                        <th>অন্ত (End)</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            chart.dashas.forEach(d => {
+                dashaHtml += `
+                    <tr>
+                        <td><strong>${d.lord}</strong></td>
+                        <td>${d.start_date}</td>
+                        <td>${d.end_date}</td>
+                    </tr>`;
+            });
+            dashaHtml += `</tbody></table>`;
+
+            // জন্ম কুণ্ডলী চিত্ৰ (Vintage Red/Brown Ink SVG)
             const pAbbr = { Sun: "সূ", Moon: "চ", Mars: "মং", Mercury: "বু", Jupiter: "বৃ", Venus: "শু", Saturn: "শ", Rahu: "ৰা", Ketu: "কে" };
             const ascRashi = chart.ascendant.rashi_no;
             let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
@@ -506,156 +546,250 @@ async function showReportToCustomer(orderId) {
             }
 
             let svgHtml = `
-            <div style="text-align: center; margin: 30px 0;">
-                <svg viewBox="0 0 300 300" width="280" height="280" style="background: #fff; border: 2px solid #6D28D9; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                    <rect x="0" y="0" width="300" height="300" fill="none" stroke="#6D28D9" stroke-width="2"/>
-                    <line x1="0" y1="0" x2="300" y2="300" stroke="#6D28D9" stroke-width="2"/>
-                    <line x1="0" y1="300" x2="300" y2="0" stroke="#6D28D9" stroke-width="2"/>
-                    <line x1="150" y1="0" x2="300" y2="150" stroke="#6D28D9" stroke-width="2"/>
-                    <line x1="300" y1="150" x2="150" y2="300" stroke="#6D28D9" stroke-width="2"/>
-                    <line x1="150" y1="300" x2="0" y2="150" stroke="#6D28D9" stroke-width="2"/>
-                    <line x1="0" y1="150" x2="150" y2="0" stroke="#6D28D9" stroke-width="2"/>
+            <div class="kundali-wrapper">
+                <div class="chart-title">লগ্ণ কুণ্ডলী (D1 Chart)</div>
+                <svg viewBox="0 0 300 300" width="280" height="280" style="background: #fdf5e6; border: 3px solid #8b0000;">
+                    <rect x="0" y="0" width="300" height="300" fill="none" stroke="#8b0000" stroke-width="2"/>
+                    <line x1="0" y1="0" x2="300" y2="300" stroke="#8b0000" stroke-width="2"/>
+                    <line x1="0" y1="300" x2="300" y2="0" stroke="#8b0000" stroke-width="2"/>
+                    <line x1="150" y1="0" x2="300" y2="150" stroke="#8b0000" stroke-width="2"/>
+                    <line x1="300" y1="150" x2="150" y2="300" stroke="#8b0000" stroke-width="2"/>
+                    <line x1="150" y1="300" x2="0" y2="150" stroke="#8b0000" stroke-width="2"/>
+                    <line x1="0" y1="150" x2="150" y2="0" stroke="#8b0000" stroke-width="2"/>
                     
-                    <!-- House 1 --> <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#db2777">${ascRashi}</text>
-                    <!-- House 2 --> <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi)%12+1}</text>
-                    <!-- House 3 --> <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+1)%12+1}</text>
-                    <!-- House 4 --> <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+2)%12+1}</text>
-                    <!-- House 5 --> <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+3)%12+1}</text>
-                    <!-- House 6 --> <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+4)%12+1}</text>
-                    <!-- House 7 --> <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+5)%12+1}</text>
-                    <!-- House 8 --> <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+6)%12+1}</text>
-                    <!-- House 9 --> <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+7)%12+1}</text>
-                    <!-- House 10 --> <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+8)%12+1}</text>
-                    <!-- House 11 --> <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+9)%12+1}</text>
-                    <!-- House 12 --> <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#db2777">${(ascRashi+10)%12+1}</text>
+                    <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${ascRashi}</text>
+                    <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi)%12+1}</text>
+                    <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+1)%12+1}</text>
+                    <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+2)%12+1}</text>
+                    <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+3)%12+1}</text>
+                    <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+4)%12+1}</text>
+                    <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+5)%12+1}</text>
+                    <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+6)%12+1}</text>
+                    <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+7)%12+1}</text>
+                    <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+8)%12+1}</text>
+                    <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+9)%12+1}</text>
+                    <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+10)%12+1}</text>
                 </svg>
-                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">* ৰঙা সংখ্যাবোৰে ৰাশি বুজাইছে (১=মেষ, ২=বৃষ...)</p>
             </div>`;
 
-            // ৫. সেৱা আৰু দশা অনুসৰি বিশ্লেষণ
             let serviceAnalysisText = "";
             if (service === 'career') {
-                serviceAnalysisText = `আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু বৰ্তমান চলি থকা <strong>${currentDasha}</strong> ৰ মহাদশাই আপোনাৰ কৰ্মজীৱনলৈ গুৰুত্বপূৰ্ণ পৰিৱৰ্তন আনিছে। 
-                <br><br><strong>সময়সীমা:</strong> আগন্তুক <strong>${timeframeStr}</strong> আপোনাৰ বাবে বিশেষভাৱে গুৰুত্বপূৰ্ণ। 
-                <br><br><strong>প্ৰধান কৰ্ম দিশ (Primary Focus):</strong> গ্ৰহৰ স্থিতি অনুসৰি আপোনাৰ বাবে প্ৰশাসনিক ক্ষেত্ৰ, চৰকাৰী প্ৰতিষ্ঠান বা আইটি খণ্ডৰ চাকৰি আটাইতকৈ বেছি লাভজনক হ'ব। ব্যৱসায় কৰিব বিচাৰিলে, অংশীদাৰী ব্যৱসায়ৰ সলনি নিজা ব্যৱসায় (Independent Business) আৰম্ভ কৰাত গুৰুত্ব দিয়ক।`;
+                serviceAnalysisText = `আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু দশম স্থানৰ স্থিতিয়ে এক শক্তিশালী কৰ্মজীৱনৰ সূচনা কৰে। চৰকাৰী প্ৰশাসন, পৰিচালনা, বা স্বাধীন ব্যৱসায়ত আপুনি সফলতা লাভ কৰিব পাৰিব। বৰ্তমানৰ <strong>${currentDasha}</strong> মহাদশাই আপোনাক নিজৰ বৃত্তিত পৰিপক্কতা আৰু নতুন দিশ নিৰ্ণয় কৰাত সহায় কৰিব।`;
             } else if (service === 'love') {
-                serviceAnalysisText = `আপোনাৰ জন্ম কুণ্ডলী অনুসৰি আপোনাৰ ৰাশি হৈছে <strong>${chart.planets.Moon.rashi}</strong>। বৰ্তমান <strong>${currentDasha}</strong> ৰ প্ৰভাৱত প্ৰেম আৰু পাৰিবাৰিক জীৱনলৈ স্থিৰতা আহিব। 
-                <br><br><strong>সময়সীমা:</strong> <strong>${timeframeStr}</strong> বিবাহ বা গুৰুত্বপূৰ্ণ সম্পৰ্কৰ সিদ্ধান্ত লোৱাৰ বাবে আটাইতকৈ শুভ সময়। সংগীক বুজা আৰু বিশ্বাস কৰাটোৱেই হৈছে আপোনাৰ সম্পৰ্কৰ মূল চাবিকাঠি।`;
+                serviceAnalysisText = `আপোনাৰ <strong>${chart.planets.Moon.rashi}</strong> ৰাশি আৰু সপ্তম স্থানৰ অধিপতিৰ স্থিতিৰ পৰা বুজা যায় যে আপুনি প্ৰেম আৰু সম্পৰ্কত অত্যন্ত বিশ্বাসী আৰু নিষ্ঠাৱান। বৰ্তমান <strong>${currentDasha}</strong> ৰ প্ৰভাৱত আপোনাৰ ব্যক্তিগত জীৱনত স্থিৰতা আহিব আৰু পাৰিবাৰিক বান্ধোন দৃঢ় হ'ব।`;
             } else {
-                serviceAnalysisText = `আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু <strong>${chart.planets.Moon.rashi}</strong> ৰাশিৰ প্ৰভাৱত আপুনি এজন দায়িত্বশীল আৰু সৃজনশীল ব্যক্তি। 
-                <br><br><strong>সময়সীমা:</strong> <strong>${timeframeStr}</strong> বৰ্তমান চলি থকা <strong>${currentDasha}</strong> ৰ মহাদশাই আপোনাৰ জীৱনলৈ বিত্তীয় আৰু মানসিক স্থিৰতা কঢ়িয়াই আনিব। স্বাস্থ্য আৰু কেৰিয়াৰৰ দিশত এই সময়খিনি অতি অনুকূল।`;
+                serviceAnalysisText = `আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু <strong>${chart.planets.Moon.rashi}</strong> ৰাশিৰ সংমিশ্ৰণে আপোনাক এক গভীৰ চিন্তাশীল আৰু দায়িত্বশীল ব্যক্তি হিচাপে গঢ়ি তুলিছে। বৰ্তমান চলি থকা <strong>${currentDasha}</strong> মহাদশাই আপোনাৰ জীৱনৰ আধ্যাত্মিক আৰু লৌকিক উভয় দিশতে পৰিৱৰ্তন আনিব।`;
             }
 
             contentHtml = `
-                <div class="top-data-grid">
-                    <div class="data-box"><span>আপোনাৰ লগ্ন</span><strong>${chart.ascendant.rashi}</strong></div>
-                    <div class="data-box"><span>জন্ম ৰাশি (চন্দ্ৰ)</span><strong>${chart.planets.Moon.rashi}</strong></div>
-                    <div class="data-box"><span>জন্ম নক্ষত্ৰ</span><strong>${chart.planets.Moon.nakshatra}</strong></div>
-                    <div class="data-box highlight-dasha"><span>বৰ্তমানৰ মহাদশা</span><strong>${currentDasha}</strong></div>
-                </div>
+                <!-- Page 2: Core Details -->
+                <div class="page page-break">
+                    <h2 class="section-title">❁ মূল জ্যোতিষিক পৰিচয় ❁</h2>
+                    
+                    <div class="shloka">
+                        "যথা শিখা ময়ূৰাণাং নাগানাং মணயথা।<br>
+                        তদ্বদ্ বেদাঙ্গশাস্ত্ৰাণাং জ্যোতিষং মূৰ্ধনি স্থিতম্॥"
+                    </div>
 
-                <div class="section-title"><span>❖</span> নৱগ্ৰহ কুণ্ডলী (Birth Chart)</div>
-                ${svgHtml}
-
-                <div class="section-title"><span>❖</span> নিৰ্দিষ্ট জ্যোতিষীয় বিশ্লেষণ</div>
-                <div class="analysis-box">
-                    <p>${serviceAnalysisText}</p>
-                </div>
-
-                <div class="section-title"><span>❖</span> ৰত্ন আৰু প্ৰতিকাৰৰ পৰামৰ্শ</div>
-                <div class="remedy-box">
-                    <div class="gem-recommendation">
-                        <span class="gem-icon">💎</span>
-                        <div>
-                            <h4>আপোনাৰ বাবে শুভ ৰত্ন (Lucky Gemstone)</h4>
-                            <p>আপোনাৰ লগ্ন অনুসৰি <strong>${luckyGem}</strong> পৰিধান কৰিলে কৰ্ম আৰু ভাগ্যত সুপ্ৰভাৱ পৰিব।</p>
+                    <div class="info-card">
+                        <div class="card-title">লগ্ন (Ascendant)</div>
+                        <div class="card-content">
+                            <strong>${chart.ascendant.rashi}</strong><br>
+                            লগ্নই আপোনাৰ বাহ্যিক ব্যক্তিত্ব, শাৰীৰিক গঠন আৰু জীৱনৰ প্ৰাথমিক দিশ নিৰ্ণয় কৰে। এই লগ্নে আপোনাক আত্মবিশ্বাসী আৰু বিশ্লেষণাত্মক দৃষ্টিভংগী প্ৰদান কৰিছে।
                         </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="card-title">চন্দ্ৰ ৰাশি (Moon Sign)</div>
+                        <div class="card-content">
+                            <strong>${chart.planets.Moon.rashi}</strong><br>
+                            চন্দ্ৰই আপোনাৰ মন আৰু আৱেগক নিয়ন্ত্ৰণ কৰে। এই ৰাশিৰ প্ৰভাৱত আপোনাৰ অন্তৰ্নিহিত আৱেগ শক্তিশালী আৰু স্বাভাৱিকতে আপুনি স্বাধীনচিতীয়া।
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="card-title">জন্ম নক্ষত্ৰ (Nakshatra)</div>
+                        <div class="card-content">
+                            <strong>${chart.planets.Moon.nakshatra} (পদ: ${chart.planets.Moon.pada})</strong><br>
+                            নক্ষত্ৰই আপোনাৰ মানসিক স্থিতি আৰু কৰ্মফলৰ পথ প্ৰদৰ্শন কৰে।
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title">বৰ্তমান মহাদশা (Current Dasha)</div>
+                        <div class="card-content">
+                            <strong>${currentDasha} মহাদশা</strong><br>
+                            বৰ্তমানৰ মহাদশাই আপোনাৰ জীৱনৰ বৰ্তমানৰ পৰিস্থিতি, সুযোগ আৰু প্ৰত্যাহ্বানসমূহক প্ৰতিনিধিত্ব কৰিছে।
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 3: Charts & Planets -->
+                <div class="page page-break">
+                    <h2 class="section-title">❁ জন্ম কুণ্ডলী আৰু গ্ৰহ স্থিতি ❁</h2>
+                    
+                    ${svgHtml}
+                    
+                    <h3 class="sub-heading">গ্ৰহৰ স্পষ্ট অৱস্থান</h3>
+                    ${planetsHtml}
+                    
+                    <div class="info-card" style="margin-top: 25px;">
+                        <div class="card-title">বিশ্লেষণ আৰু সাৰাংশ</div>
+                        <div class="card-content">
+                            ${serviceAnalysisText}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 4: Remedies & Strategy -->
+                <div class="page page-break">
+                    <h2 class="section-title">❁ নিদান আৰু প্ৰতিকাৰ ❁</h2>
+                    
+                    <div class="text-section">
+                        বৈদিক জ্যোতিষত প্ৰতিকাৰসমূহ ভয়ৰ আধাৰত নহয়, বৰঞ্চ গ্ৰহৰ যোগাত্মক শক্তিক বৃদ্ধি কৰিবলৈহে ব্যৱহাৰ কৰা হয়।
+                    </div>
+                    
+                    <div class="info-card remedy-card">
+                        <div class="card-title">শুভ ৰত্ন (Lucky Gemstone)</div>
+                        <div class="card-content">
+                            আপোনাৰ লগ্নৰ অধিপতিৰ অৱস্থান অনুসৰি <strong>${luckyGem}</strong> ধাৰণ কৰিলে কৰ্ম আৰু ভাগ্যত সুপ্ৰভাৱ পৰিব। <em>(ধাৰণ কৰাৰ পূৰ্বে এজন প্ৰমাণিত জ্যোতিষীৰ পৰামৰ্শ গ্ৰহণ কৰিব)</em>।
+                        </div>
+                    </div>
+
+                    <div class="info-card remedy-card">
+                        <div class="card-title">প্ৰাথমিক প্ৰতিকাৰ</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>আধ্যাত্মিক অনুশীলন:</strong> প্ৰতিদিন পুৱা সূৰ্য দেৱতাক অৰ্ঘ্য প্ৰদান কৰক আৰু গায়ত্ৰী মন্ত্ৰ জপ কৰক।</li>
+                                <li><strong>কৰ্মফল:</strong> দৰিদ্ৰজনক অন্ন দান কৰিলে আৰু পিতৃ-মাতৃক শ্ৰদ্ধা কৰিলে আপোনাৰ কুণ্ডলীৰ বহু দোষ খণ্ডন হ'ব।</li>
+                                <li><strong>ধ্যান:</strong> মানসিক শান্তিৰ বাবে দৈনিক ১০ মিনিট "ওঁ নমঃ শিৱায়" মন্ত্ৰ জপ কৰি ধ্যান কৰক।</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="disclaimer">
+                        <strong>⚠️ অস্বীকাৰকৰণ (Disclaimer):</strong><br>
+                        এই ৰিপোৰ্টখন লাহিৰী অয়নাংশ আৰু বৈদিক জ্যোতিষৰ সূত্ৰৰ আধাৰত কম্পিউটাৰ জেনেইটেড। ইয়াক জীৱনৰ গুৰুত্বপূৰ্ণ সিদ্ধান্ত (যেনে চিকিৎসা বা আইনী) লোৱাৰ একমাত্ৰ ভিত্তি হিচাপে ল'ব নালাগে।
+                    </div>
+                    
+                    <div class="footer-seal">
+                        ॥ ইতি জ্যোতিষ অসম ॥<br>
+                        <strong>প্ৰস্তুতকৰ্তা:</strong> জ্যোতিষ অসম স্বয়ংচালিত ব্যৱস্থা
                     </div>
                 </div>
             `;
         } else {
             contentHtml = `
-                <div class="error-box">
-                    <h3>⚠️ ৰিপোৰ্ট প্ৰস্তুত কৰাত কিছু সমস্যা হৈছে</h3>
-                    <p>কাৰণ: ${data.error || 'অজ্ঞাত কাৰণ'}</p>
+                <div class="page">
+                    <h3 style="color: #8b0000; text-align: center;">⚠️ ৰিপোৰ্ট প্ৰস্তুত কৰাত কিছু সমস্যা হৈছে</h3>
+                    <p style="text-align: center;">কাৰণ: ${data.error || 'অজ্ঞাত কাৰণ'}</p>
                 </div>`;
         }
 
+        // Old Vedic Style CSS
         const reportHtml = `
             <!DOCTYPE html>
             <html lang="as">
             <head>
                 <meta charset="UTF-8">
-                <title>জ্যোতিষ অসম - প্ৰিমিয়াম ৰিপোৰ্ট</title>
+                <title>জ্যোতিষ অসম - বৈদিক ৰিপোৰ্ট</title>
                 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
                 <style>
-                    :root { --primary: #6D28D9; --secondary: #db2777; --bg: #f8fafc; --text: #1e293b; --border: #e2e8f0; }
-                    body { font-family: 'Noto Sans Assamese', sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; padding: 30px 15px; }
-                    .report-container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 50px rgba(0,0,0,0.08); border-top: 8px solid var(--primary); }
+                    body { 
+                        font-family: 'Noto Sans Assamese', Georgia, serif; 
+                        line-height: 1.8; 
+                        color: #3e2723; /* Dark brown text */
+                        background: #e8dcc4; /* Outer background */
+                        margin: 0; 
+                        padding: 20px; 
+                    }
+                    .page { 
+                        max-width: 800px; 
+                        margin: 0 auto 30px; 
+                        background: #fdf5e6; /* Old parchment color */
+                        padding: 50px 45px; 
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+                        border: 8px solid double #8b0000;
+                        border-image: repeating-linear-gradient(45deg, #8b0000, #8b0000 5px, transparent 5px, transparent 10px) 10;
+                        position: relative;
+                    }
+                    .page::before {
+                        content: '';
+                        position: absolute;
+                        top: 10px; left: 10px; right: 10px; bottom: 10px;
+                        border: 2px solid #8b0000;
+                        pointer-events: none;
+                    }
                     
-                    .header { text-align: center; border-bottom: 2px dashed var(--border); padding-bottom: 25px; margin-bottom: 30px; }
-                    .om-symbol { font-size: 50px; color: #ea580c; line-height: 1; margin-bottom: 10px; }
-                    .header h1 { color: var(--primary); margin: 0 0 5px 0; font-size: 32px; font-weight: 700; }
-                    .header p { color: #64748b; margin: 0; font-size: 16px; }
-
-                    .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; background: #fdf4ff; padding: 25px; border-radius: 12px; margin-bottom: 35px; border: 1px solid #f0abfc; position: relative; }
-                    .info-grid::before { content: '👤 গ্ৰাহকৰ বিৱৰণ'; position: absolute; top: -12px; left: 20px; background: #fdf4ff; padding: 0 10px; color: #a21caf; font-weight: 600; font-size: 14px; border: 1px solid #f0abfc; border-radius: 20px; }
-                    .info-item span { display: block; color: #64748b; font-size: 13px; }
-                    .info-item strong { color: #334155; font-size: 16px; }
-
-                    .top-data-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
-                    .data-box { background: #fffbeb; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #fde68a; }
-                    .data-box span { display: block; font-size: 13px; color: #b45309; margin-bottom: 5px; font-weight: 600; }
-                    .data-box strong { font-size: 16px; color: #78350f; }
-                    .highlight-dasha { background: #ecfdf5; border-color: #a7f3d0; }
-                    .highlight-dasha span { color: #047857; }
-                    .highlight-dasha strong { color: #064e3b; }
-
-                    .section-title { font-size: 20px; font-weight: 700; color: var(--text); margin: 35px 0 15px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--bg); padding-bottom: 8px; }
-                    .section-title span { color: #ea580c; font-size: 24px; }
-
-                    .analysis-box { background: #f8fafc; padding: 25px; border-radius: 12px; border-left: 5px solid var(--primary); font-size: 16px; color: #334155; line-height: 1.8; text-align: justify; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+                    /* Cover Page Styles */
+                    .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
+                    .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; }
+                    .cover-brand { font-size: 45px; font-weight: 700; color: #5c3a21; margin-bottom: 10px; border-bottom: 2px solid #8b0000; display: inline-block; padding-bottom: 10px;}
+                    .cover-subtitle { font-size: 22px; color: #8b0000; margin-bottom: 40px; font-weight: 600; }
+                    .cover-details { margin-top: 40px; text-align: left; background: rgba(219, 190, 146, 0.2); padding: 30px; border: 1px solid #c9a961; border-radius: 4px; }
+                    .detail-row { font-size: 18px; margin-bottom: 12px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px; }
+                    .detail-label { font-weight: 600; color: #8b0000; display: inline-block; width: 140px; }
                     
-                    .remedy-box { background: linear-gradient(135deg, #fff1f2, #ffe4e6); padding: 20px; border-radius: 12px; border: 1px solid #fecdd3; }
-                    .gem-recommendation { display: flex; align-items: center; gap: 15px; }
-                    .gem-icon { font-size: 35px; }
-                    .gem-recommendation h4 { margin: 0 0 5px 0; color: #be123c; font-size: 17px; }
-                    .gem-recommendation p { margin: 0; color: #881337; font-size: 15px; }
-
-                    .print-section { text-align: center; margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border); }
-                    .print-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 15px 35px; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 20px rgba(109, 40, 217, 0.2); transition: 0.3s; }
-                    .print-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(109, 40, 217, 0.3); }
+                    /* Typography & Elements */
+                    .section-title { font-size: 26px; font-weight: 700; color: #8b0000; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #8b0000; padding-bottom: 10px; }
+                    .sub-heading { font-size: 20px; color: #5c3a21; margin-top: 30px; border-left: 4px solid #8b0000; padding-left: 10px; }
+                    .shloka { text-align: center; font-size: 18px; color: #8b0000; font-style: italic; margin: 20px 0 40px; padding: 15px; background: rgba(139,0,0,0.05); border-radius: 5px; }
+                    
+                    .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 20px; margin: 20px 0; border-radius: 3px; }
+                    .remedy-card { border-left-color: #5c3a21; background: rgba(92, 58, 33, 0.05); }
+                    .card-title { font-weight: 700; color: #8b0000; margin-bottom: 10px; font-size: 18px; }
+                    .card-content { font-size: 16px; color: #3e2723; }
+                    
+                    /* Tables */
+                    .vedic-table { width: 100%; border-collapse: collapse; margin: 25px 0; border: 2px solid #8b0000; }
+                    .vedic-table th { background: #8b0000; color: #fdf5e6; padding: 12px; text-align: center; font-size: 16px; border: 1px solid #5c3a21; }
+                    .vedic-table td { padding: 12px; border: 1px solid #a67b5b; text-align: center; color: #3e2723; }
+                    .vedic-table tr:nth-child(even) { background: rgba(219, 190, 146, 0.2); }
+                    
+                    .kundali-wrapper { display: flex; flex-direction: column; align-items: center; margin: 30px 0; }
+                    .chart-title { font-weight: bold; font-size: 18px; color: #8b0000; margin-bottom: 15px; }
+                    
+                    .disclaimer { background: rgba(139, 0, 0, 0.05); padding: 15px; margin-top: 40px; font-size: 14px; border: 1px solid #8b0000; text-align: justify; }
+                    .footer-seal { text-align: center; margin-top: 50px; color: #8b0000; font-size: 18px; font-weight: bold; border-top: 2px dashed #8b0000; padding-top: 20px; }
+                    
+                    .print-btn-wrapper { text-align: center; margin-top: 20px; padding-bottom: 40px; }
+                    .print-btn { background: #8b0000; color: #fdf5e6; border: 2px solid #5c3a21; padding: 12px 30px; font-size: 18px; cursor: pointer; font-family: inherit; font-weight: bold; box-shadow: 3px 3px 0px #5c3a21; transition: 0.2s; }
+                    .print-btn:active { transform: translate(3px, 3px); box-shadow: none; }
+                    
+                    ul { margin: 10px 0 10px 20px; }
+                    li { margin-bottom: 8px; }
 
                     @media print {
-                        body { background: white; padding: 0; }
-                        .report-container { box-shadow: none; border-top: 5px solid var(--primary); padding: 20px; }
-                        .print-section { display: none; }
-                    }
-                    @media (max-width: 600px) {
-                        .top-data-grid { grid-template-columns: repeat(2, 1fr); }
+                        body { background: #fdf5e6; padding: 0; }
+                        .page { box-shadow: none; margin: 0; border: 4px double #8b0000; }
+                        .page-break { page-break-after: always; }
+                        .print-btn-wrapper { display: none; }
                     }
                 </style>
             </head>
             <body>
-                <div class="report-container">
-                    <div class="header">
-                        <div class="om-symbol">ॐ</div>
-                        <h1>জ্যোতিষ অসম</h1>
-                        <p>আপোনাৰ প্ৰিমিয়াম জ্যোতিষীয় বিশ্লেষণ</p>
+                <!-- Page 1: Cover Page -->
+                <div class="page page-break cover">
+                    <div class="om-symbol">ॐ</div>
+                    <div><h1 class="cover-brand">জ্যোতিষ অসম</h1></div>
+                    <div class="cover-subtitle">${serviceTitle}</div>
+                    
+                    <div style="color: #5c3a21; letter-spacing: 2px; font-size: 16px;">
+                        জীৱন • কৰ্ম • সম্পদ • প্ৰেম • বিবাহ • সময়চক্ৰ
                     </div>
                     
-                    <div class="info-grid">
-                        <div class="info-item"><span>গ্ৰাহকৰ নাম</span><strong>${name}</strong></div>
-                        <div class="info-item"><span>সেৱাৰ প্ৰকাৰ</span><strong>${serviceTitle}</strong></div>
-                        <div class="info-item"><span>জন্ম তাৰিখ</span><strong>${dob}</strong></div>
-                        <div class="info-item"><span>জন্ম স্থান</span><strong>${place}</strong></div>
+                    <div class="cover-details">
+                        <div class="detail-row"><span class="detail-label">গ্ৰাহকৰ নাম:</span> ${name}</div>
+                        <div class="detail-row"><span class="detail-label">জন্ম তাৰিখ:</span> ${dob}</div>
+                        <div class="detail-row"><span class="detail-label">জন্ম স্থান:</span> ${place}</div>
+                        <div class="detail-row"><span class="detail-label">সেৱাৰ প্ৰকাৰ:</span> ${serviceTitle}</div>
                     </div>
+                </div>
 
-                    ${contentHtml}
+                ${contentHtml}
 
-                    <div class="print-section">
-                        <button class="print-btn" onclick="window.print()">📥 ৰিপোৰ্ট প্ৰিন্ট / ছেভ কৰক</button>
-                    </div>
+                <div class="print-btn-wrapper">
+                    <button class="print-btn" onclick="window.print()">ৰিপোৰ্ট প্ৰিন্ট বা ছেভ কৰক</button>
                 </div>
             </body>
             </html>
