@@ -259,6 +259,20 @@
                     <div class="service-price">₹199</div>
                     <button class="service-btn" onclick="openOrderModal('Career & Business Forecast', 199)">সেৱা গ্ৰহণ কৰক</button>
                 </div>
+                <div class="service-card">
+    <div class="service-icon">📅</div>
+    <h3>মাহেকীয়া ৰাশিফল</h3>
+    <p>অহা ৩০ দিনৰ বাবে আপোনাৰ স্বাস্থ্য, অৰ্থ, আৰু কৰ্মৰ বিস্তাৰিত জ্যোতিষীয় ভৱিষ্যদ্বাণী।</p>
+    <div class="service-price">₹19</div>
+    <button class="service-btn" onclick="openOrderModal('Monthly Horoscope', 19)">সেৱা গ্ৰহণ কৰক</button>
+</div>
+<div class="service-card">
+    <div class="service-icon">📜</div>
+    <h3>বাৰ্ষিক ৰাশিফল</h3>
+    <p>সম্পূৰ্ণ এবছৰৰ বাবে আপোনাৰ জীৱনৰ গুৰুত্বপূৰ্ণ পৰিৱৰ্তন আৰু সাৱধানতাৰ নিৰ্দেশনা।</p>
+    <div class="service-price">₹49</div>
+    <button class="service-btn" onclick="openOrderModal('Yearly Horoscope', 49)">সেৱা গ্ৰহণ কৰক</button>
+</div>
             </div>
         </section>
         
@@ -345,6 +359,9 @@ function openOrderModal(service, price) {
     if(price === 299) selectedService = 'birth';
     else if(price === 99) selectedService = 'love';
     else if(price === 199) selectedService = 'career';
+    else if(price === 19) selectedService = 'monthly';
+    else if(price === 49) selectedService = 'yearly';
+    
     selectedPrice = price;
     document.getElementById('orderTitle').innerText = service + " - ₹" + price;
     document.getElementById('orderModal').classList.add('active');
@@ -451,6 +468,8 @@ async function showReportToCustomer(orderId) {
         'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
         'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
         'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)'
+        'monthly': 'মাহেকীয়া ৰাশিফল (Monthly Horoscope)',
+    'yearly': 'বাৰ্ষিক ৰাশিফল (Yearly Horoscope)'
     };
     const serviceTitle = serviceNameMap[service] || 'ব্যক্তিগত বৈদিক জন্ম-কুণ্ডলী';
 
@@ -638,12 +657,14 @@ async function showReportToCustomer(orderId) {
                 </div>`;
             }
 
-            // 4. DYNAMIC REMEDIES
+           // 4. DYNAMIC REMEDIES
             let specificRemedies = "";
             if (service === 'love') {
                 specificRemedies = `<li><strong>প্ৰেম আৰু বিবাহৰ প্ৰতিকাৰ:</strong> শুক্ৰ গ্ৰহৰ শুভ ফলৰ বাবে শুকুৰবাৰে বগা মিঠাই বা গাখীৰ দান কৰক। সংগীৰ সৈতে তৰ্কৰ পৰা বিৰত থাকক।</li>`;
             } else if (service === 'career') {
                 specificRemedies = `<li><strong>কৰ্ম আৰু অৰ্থৰ প্ৰতিকাৰ:</strong> কৰ্মক্ষেত্ৰত শনিৰ কুপ্ৰভাৱ আঁতৰাবলৈ শনিবাৰে দুখীয়াক অন্ন দান কৰক আৰু নিজৰ কৰ্মস্থান পৰিষ্কাৰ কৰি ৰাখক।</li>`;
+            } else if (service === 'monthly' || service === 'yearly') {
+                specificRemedies = `<li><strong>প্ৰাথমিক প্ৰতিকাৰ:</strong> গ্ৰহৰ শুভ ফল প্ৰাপ্তিৰ বাবে প্ৰতিদিনে পুৱা সূৰ্য দেৱতাক স্মৰণ কৰক আৰু দৰিদ্ৰক সাধ্যানুসৰি অন্ন বা বস্ত্ৰ দান কৰক।</li>`;
             } else {
                 specificRemedies = `
                 <li><strong>কৰ্মফল:</strong> দৰিদ্ৰজনক অন্ন দান কৰিলে আৰু পিতৃ-মাতৃক শ্ৰদ্ধা কৰিলে আপোনাৰ কুণ্ডলীৰ বহু দোষ খণ্ডন হ'ব।</li>
@@ -682,6 +703,30 @@ async function showReportToCustomer(orderId) {
                 </div>
             </div>`;
 
+            // 5. MONTHLY & YEARLY PAGE
+            let extraAnalysisPage = "";
+            if (service === 'monthly') {
+                extraAnalysisPage = `
+                <div class="page page-break">
+                    <h2 class="section-title">❁ মাহেকীয়া ৰাশিফল ❁</h2>
+                    <div class="info-card">
+                        <div class="card-content">
+                            আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু বৰ্তমানৰ গ্ৰহৰ গোচৰ অনুসৰি, আগন্তুক ৩০ দিন আপোনাৰ বাবে গুৰুত্বপূৰ্ণ। বৰ্তমান <strong>${currentDasha}</strong> মহাদশাৰ প্ৰভাৱত এই মাহত আপুনি স্বাস্থ্য আৰু আৰ্থিক দিশত সজাগ হোৱাটো প্ৰয়োজন। কৰ্মক্ষেত্ৰত নতুন সুযোগ লাভ কৰাৰ যোগ আছে।
+                        </div>
+                    </div>
+                </div>`;
+            } else if (service === 'yearly') {
+                extraAnalysisPage = `
+                <div class="page page-break">
+                    <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল ❁</h2>
+                    <div class="info-card">
+                        <div class="card-content">
+                            আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন অনুসৰি আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ ডাঙৰ পৰিৱৰ্তন আহিব পাৰে। <strong>${currentDasha}</strong> মহাদশাই আপোনাক কৰ্ম আৰু পৰিয়ালৰ ক্ষেত্ৰত নতুন দায়িত্ব দিব। বছৰটোৰ শেষৰ ফালে আপোনাৰ বিত্তীয় অৱস্থা যথেষ্ট টনকিয়াল হোৱাৰ যোগ আছে।
+                        </div>
+                    </div>
+                </div>`;
+            }
+
             // ================== ASSEMBLE ALL PAGES ==================
 
             contentHtml = `
@@ -705,6 +750,7 @@ async function showReportToCustomer(orderId) {
                 ${housesAnalysisPage}
                 ${careerAnalysisPage}
                 ${loveAnalysisPage}
+                ${extraAnalysisPage}
                 ${remediesPage}
             `;
             
