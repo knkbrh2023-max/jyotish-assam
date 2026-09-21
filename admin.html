@@ -178,7 +178,7 @@
             `).join('');
         }
 
-        function generateAndShowReport(orderId) {
+        async function generateAndShowReport(orderId) {
             const order = allOrders.find(o => o.id === orderId);
             if (!order) {
                 alert("অৰ্ডাৰৰ ডাটা পোৱা নগল!");
@@ -189,134 +189,284 @@
                 'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
                 'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
                 'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)',
-                'monthly': 'মাহেকীয়া ৰাশিফল (Monthly Horoscope)', // নতুনকৈ যোগ কৰা হ'ল
-                'yearly': 'বাৰ্ষিক ৰাশিফল (Yearly Horoscope)' // নতুনকৈ যোগ কৰা হ'ল
+                'monthly': 'মাহেকীয়া ৰাশিফল (Monthly Horoscope)',
+                'yearly': 'বাৰ্ষিক ৰাশিফল (Yearly Horoscope)'
             };
             const serviceTitle = serviceNameMap[order.service] || order.service || 'প্ৰিমিয়াম জ্যোতিষ সেৱা';
+            const service = order.service;
 
-            let deepAnalysis = "";
-            if (order.service === 'career') {
-                deepAnalysis = `
-                    <p>আপোনাৰ জন্ম কুণ্ডলীৰ দশম গৃহ (কৰ্মস্থান) আৰু একাদশ গৃহৰ (লাভস্থান) সুক্ষ্ম বিশ্লেষণৰ পৰা দেখা গৈছে যে আপোনাৰ কৰ্মজীৱনত এক শক্তিশালী পৰিৱৰ্তনৰ সময় আহি পৰিছে। শনি আৰু গুৰুৰ বৰ্তমানৰ অৱস্থানে প্ৰশাসনিক সেৱা, চৰকাৰী খণ্ড বা শৃংখলাবদ্ধ বিভাগত আপোনাৰ সফলতাৰ প্ৰবল যোগ নিৰ্দেশ কৰিছে।</p>
-                    <p>যদি আপুনি নিজা ব্যৱসায় বা কোনো প্ৰতিষ্ঠান পৰিচালনা কৰি আছে, তেন্তে আগন্তুক সময়ছোৱাত বিত্তীয় স্থিৰতা বৃদ্ধি পাব। নতুন পৰিকল্পনা হাতত লোৱাৰ বাবে এই সময় অনুকূল। মংগল গ্ৰহৰ প্ৰভাৱে আপোনাক সাহস আৰু কঠোৰ পৰিশ্ৰম কৰিবলৈ শক্তি প্ৰদান কৰিব, যিটো যিকোনো প্ৰতিযোগিতামূলক বা শাৰীৰিক পৰীক্ষাত উত্তীৰ্ণ হোৱাত সহায়ক হ'ব। ব্যৱসায়িক অংশীদাৰীত্বৰ ক্ষেত্ৰত অৱশ্যে সাৱধানতা অৱলম্বন কৰা উচিত।</p>
-                `;
-            } else if (order.service === 'love') {
-                deepAnalysis = `
-                    <p>জন্ম কুণ্ডলীত শুক্ৰ আৰু সপ্তম গৃহৰ অৱস্থান প্ৰেম আৰু সম্পৰ্কৰ বাবে অত্যন্ত গুৰুত্বপূৰ্ণ। আপোনাৰ গ্ৰহৰ স্থিতি অনুসৰি, সম্পৰ্কত পাৰস্পৰিক বুজাবুজি আৰু বিশ্বাস গভীৰ হোৱাৰ যোগ আছে। আগতে থকা যিকোনো মতানৈক্য বা ভুল বুজাবুজি এই সময়ত আঁতৰ হ'ব।</p>
-                    <p>অবিবাহিতসকলৰ বাবে বিবাহৰ নতুন আৰু উপযুক্ত প্ৰস্তাৱ অহাৰ সম্ভাৱনা আছে। যিসকল লোক ইতিমধ্যে প্ৰেমৰ সম্পৰ্কত আছে, তেওঁলোকৰ বাবে এই সময়ছোৱা মানসিক শান্তি আৰু আনন্দৰ কাৰণ হ'ব। ৰাহু আৰু কেতুৰ প্ৰভাৱৰ পৰা হাত সাৰিবলৈ সম্পৰ্কত অতিমাত্ৰা আৱেগিক সিদ্ধান্ত লোৱাৰ পৰা বিৰত থাকক আৰু সংগীৰ কথাক গুৰুত্ব দিয়ক।</p>
-                `;
-            } else if (order.service === 'monthly') {
-                // মাহেকীয়া ৰাশিফলৰ বাবে নতুন লজিক
-                const today = new Date();
-                const nextMonth = new Date(today);
-                nextMonth.setMonth(today.getMonth() + 1);
-                const dateRange = `${today.toLocaleDateString('as-IN', {day: 'numeric', month: 'long'})} – ${nextMonth.toLocaleDateString('as-IN', {day: 'numeric', month: 'long', year: 'numeric'})}`;
+            const name = order.name || 'গ্ৰাহক';
+            const email = order.email || 'N/A';
+            const dob = order.birth_date || 'N/A';
+            const place = order.birth_place || 'N/A';
+
+            try {
+                // এডমিন পেনেলৰ পৰা Edge Function লৈ ৰিকুৱেষ্ট
+                const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
+                const response = await fetch(supabaseUrl + '/functions/v1/calculate-chart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: orderId })
+                });
                 
-                deepAnalysis = `
-                    <p><strong>[ ${dateRange} ৰ বাবে সামগ্ৰিক জ্যোতিষীয় নিৰ্দেশনা ]</strong></p>
-                    <p>এই মাহটো আপোনাৰ বাবে "পৰিৱৰ্তন, আৰ্থিক পৰিকল্পনা আৰু সম্পৰ্কত স্পষ্টতা" ৰ মাহ। কৰ্মক্ষেত্ৰত নতুন সুযোগ লাভ কৰাৰ যোগ আছে, কিন্তু ফলাফল আপোনাৰ একাগ্ৰতাৰ ওপৰত নিৰ্ভৰ কৰিব।</p>
-                    <p>বিত্তীয় দিশত আয় বৃদ্ধিতকৈ খৰচ নিয়ন্ত্ৰণত অধিক গুৰুত্ব দিয়া উচিত। প্ৰেম আৰু সম্পৰ্কৰ ক্ষেত্ৰত, যদি কিবা ভুল বুজাবুজি আছিল, সেয়া এই মাহত দূৰ হোৱাৰ পূৰ্ণ সম্ভাৱনা আছে। স্বাস্থ্যৰ যতন লওক আৰু যিকোনো গুৰুত্বপূৰ্ণ সিদ্ধান্ত মাহৰ মাজভাগত লোৱাটো ফলপ্ৰসূ হ'ব।</p>
-                `;
-            } else if (order.service === 'yearly') {
-                // বাৰ্ষিক ৰাশিফলৰ বাবে নতুন লজিক
-                const year = new Date().getFullYear();
-                deepAnalysis = `
-                    <p><strong>[ আগন্তুক এবছৰৰ (২০২৬-২০২৭) বাবে সামগ্ৰিক জ্যোতিষীয় নিৰ্দেশনা ]</strong></p>
-                    <p>বৰ্তমান চলি থকা মহাদশা আৰু গ্ৰহৰ গোচৰে নিৰ্দেশ কৰে যে আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ বহুতো নতুন দায়িত্ব আৰু পৰিৱৰ্তন আহিব পাৰে। কৰ্ম আৰু ব্যৱসায়ত আপুনি বিচৰা মতেই সফলতা লাভ কৰিব পাৰিব, যদিও প্ৰাৰম্ভিক পৰ্যায়ত কিছু সংগ্ৰাম কৰিবলগীয়া হ'ব পাৰে।</p>
-                    <p>পৰিয়ালৰ সৈতে সময় কটোৱাৰ সুন্দৰ সুযোগ পাব। বছৰটোৰ শেষৰ ফালে আপোনাৰ আৰ্থিক অৱস্থা যথেষ্ট টনকিয়াল হোৱাৰ লগতে, মাটি বা সম্পত্তি ক্ৰয় কৰাৰ যোগ আছে। স্বাস্থ্যৰ প্ৰতি অৱহেলা নকৰিব।</p>
-                `;
-            } else {
-                deepAnalysis = `
-                    <p>লগ্নাধিপতি আৰু চন্দ্ৰৰ অৱস্থানে আপোনাৰ সামগ্ৰিক ব্যক্তিত্ব আৰু জীৱনৰ দিশ নিৰ্ণয় কৰে। লাহিৰী অয়নাংশৰ জৰিয়তে কৰা গাণিতিক বিশ্লেষণত দেখা গৈছে যে আপোনাৰ আধ্যাত্মিক আৰু মানসিক শক্তি বৰ্তমান বৃদ্ধি পাইছে।</p>
-                    <p>স্বাস্থ্যৰ দিশত কিছু সাৱধানতা অৱলম্বন কৰা উচিত যদিও কোনো ডাঙৰ সমস্যাৰ যোগ নাই। বিত্তীয় দিশত পুৰণি বিনিয়োগৰ পৰা লাভৱান হোৱাৰ সম্ভাৱনা আছে। পৰিয়ালত সুখ-শান্তি বিৰাজ কৰিব। ভৱিষ্যতৰ দীৰ্ঘম্যাদী পৰিকল্পনাসমূহ বাস্তৱায়িত কৰিবলৈ এয়াই উপযুক্ত সময়।</p>
-                `;
-            }
-            const reportHtml = `
-                <!DOCTYPE html>
-                <html lang="as">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>জ্যোতিষ অসম - প্ৰিমিয়াম ৰিপোৰ্ট</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Noto Sans Assamese', sans-serif; line-height: 1.8; color: #1e293b; background: #f1f5f9; padding: 20px; }
-                        .report-container { max-width: 850px; margin: 0 auto; background: white; padding: 50px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 4px double #6D28D9; }
-                        .header-section { text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; }
-                        .om-symbol { font-size: 40px; color: #ea580c; margin-bottom: 10px; }
-                        h1 { color: #6D28D9; margin-bottom: 5px; font-size: 28px; font-weight: 700; }
-                        .subtitle { color: #64748b; font-size: 16px; }
-                        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; background: #faf5ff; padding: 25px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #6D28D9; }
-                        .info-item { font-size: 16px; color: #334155; }
-                        .section-title { color: #b91c1c; font-size: 22px; font-weight: 600; margin-top: 35px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-                        .section-title::before { content: "❖"; color: #ea580c; }
-                        p { margin-bottom: 20px; font-size: 16px; color: #334155; text-align: justify; }
-                        .highlights-box { background: #fffbeb; padding: 20px; border-radius: 8px; margin-top: 30px; border: 1px solid #fde68a; }
-                        .highlights-box h3 { color: #d97706; margin-bottom: 15px; font-size: 18px; }
-                        .highlights-box ul { padding-left: 20px; color: #451a03; }
-                        .highlights-box li { margin-bottom: 10px; }
-                        .print-btn { display: block; width: 100%; max-width: 250px; margin: 40px auto 0; padding: 15px; background: #6D28D9; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-                        .print-btn:hover { background: #5b21b6; }
-                        .footer { text-align: center; margin-top: 50px; color: #94a3b8; font-size: 14px; border-top: 1px solid #e2e8f0; padding-top: 20px; }
-                        @media print { body { padding: 0; background: white; } .print-btn { display: none; } .report-container { box-shadow: none; border: 2px solid #000; } }
-                    </style>
-                </head>
-                <body>
-                    <div class="report-container">
-                        <div class="header-section">
+                const data = await response.json();
+                let contentHtml = "";
+
+                if(response.ok && data.success) {
+                    const chart = data.chart;
+                    
+                    let currentDasha = "অজ্ঞাত";
+                    let today = new Date();
+                    chart.dashas.forEach(d => {
+                        let start = new Date(d.start_date);
+                        let end = new Date(d.end_date);
+                        if(today >= start && today <= end) {
+                            currentDasha = d.lord;
+                        }
+                    });
+
+                    const gemstones = {
+                        "Aries": "ৰঙা প্ৰৱাল (Red Coral)", "Taurus": "হীৰা বা বগা অ'পেল (Opal)",
+                        "Gemini": "পান্না (Emerald)", "Cancer": "মুকুতা (Pearl)",
+                        "Leo": "মাণিক্য (Ruby)", "Virgo": "পান্না (Emerald)",
+                        "Libra": "হীৰা বা বগা অ'পেল (Opal)", "Scorpio": "ৰঙা প্ৰৱাল (Red Coral)",
+                        "Sagittarius": "হালধীয়া পোখৰাজ (Yellow Sapphire)", "Capricorn": "নীলা (Blue Sapphire)",
+                        "Aquarius": "নীলা (Blue Sapphire)", "Pisces": "হালধীয়া পোখৰাজ (Yellow Sapphire)"
+                    };
+                    const luckyGem = gemstones[chart.ascendant.rashi] || "উপযুক্ত জ্যোতিষীৰ পৰামৰ্শ লওক";
+
+                    const pAbbr = { Sun: "সূ", Moon: "চ", Mars: "মং", Mercury: "বু", Jupiter: "বৃ", Venus: "শু", Saturn: "শ", Rahu: "ৰা", Ketu: "কে" };
+                    const planetNames = { Sun: "সূৰ্য", Moon: "চন্দ্ৰ", Mars: "মংগল", Mercury: "বুধ", Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু" };
+                    const ascRashi = chart.ascendant.rashi_no;
+                    
+                    let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
+                    let hFull = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
+                    
+                    for(const [pName, pData] of Object.entries(chart.planets)) {
+                        let hNum = (pData.rashi_no - ascRashi + 12) % 12 + 1;
+                        hC[hNum].push(pAbbr[pName] || pName);
+                        hFull[hNum].push(planetNames[pName] || pName);
+                    }
+
+                    let planetsHtml = `<table class="vedic-table"><thead><tr><th>গ্ৰহ</th><th>ৰাশি</th><th>ঘৰ (House)</th><th>নক্ষত্ৰ</th><th>পদ</th></tr></thead><tbody>`;
+                    for(const key in chart.planets) {
+                        let hNum = (chart.planets[key].rashi_no - ascRashi + 12) % 12 + 1;
+                        planetsHtml += `<tr><td><strong>${planetNames[key] || key}</strong></td><td>${chart.planets[key].rashi}</td><td>${hNum}</td><td>${chart.planets[key].nakshatra}</td><td>${chart.planets[key].pada}</td></tr>`;
+                    }
+                    planetsHtml += `</tbody></table>`;
+
+                    let dashaHtml = `<table class="vedic-table"><thead><tr><th>মহা দশা</th><th>আৰম্ভণি (Start)</th><th>অন্ত (End)</th></tr></thead><tbody>`;
+                    chart.dashas.forEach(d => { dashaHtml += `<tr><td><strong>${d.lord}</strong></td><td>${d.start_date}</td><td>${d.end_date}</td></tr>`; });
+                    dashaHtml += `</tbody></table>`;
+
+                    let svgHtml = `
+                    <div class="kundali-wrapper">
+                        <svg viewBox="0 0 300 300" width="280" height="280" style="background: #fdf5e6; border: 3px solid #8b0000;">
+                            <rect x="0" y="0" width="300" height="300" fill="none" stroke="#8b0000" stroke-width="2"/>
+                            <line x1="0" y1="0" x2="300" y2="300" stroke="#8b0000" stroke-width="2"/>
+                            <line x1="0" y1="300" x2="300" y2="0" stroke="#8b0000" stroke-width="2"/>
+                            <line x1="150" y1="0" x2="300" y2="150" stroke="#8b0000" stroke-width="2"/>
+                            <line x1="300" y1="150" x2="150" y2="300" stroke="#8b0000" stroke-width="2"/>
+                            <line x1="150" y1="300" x2="0" y2="150" stroke="#8b0000" stroke-width="2"/>
+                            <line x1="0" y1="150" x2="150" y2="0" stroke="#8b0000" stroke-width="2"/>
+                            
+                            <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${ascRashi}</text>
+                            <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi)%12+1}</text>
+                            <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+1)%12+1}</text>
+                            <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+2)%12+1}</text>
+                            <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+3)%12+1}</text>
+                            <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+4)%12+1}</text>
+                            <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+5)%12+1}</text>
+                            <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+6)%12+1}</text>
+                            <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+7)%12+1}</text>
+                            <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+8)%12+1}</text>
+                            <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+9)%12+1}</text>
+                            <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+10)%12+1}</text>
+                        </svg>
+                    </div>`;
+
+                    let housesAnalysisPage = "";
+                    if (service === 'birth') {
+                        let housesContent = "";
+                        const houseNames = ["১ম ঘৰ", "২য় ঘৰ", "৩য় ঘৰ", "৪ৰ্থ ঘৰ", "৫ম ঘৰ", "৬ষ্ঠ ঘৰ", "৭ম ঘৰ", "৮ম ঘৰ", "৯ম ঘৰ", "১০ম ঘৰ", "১১তম ঘৰ", "১২তম ঘৰ"];
+                        const houseDescriptions = [
+                            "আপোনাৰ লগ্নৰ অধিপতিৰ অৱস্থানে আপোনাক এক বিশ্লেষণাত্মক আৰু যুক্তিবাদী ব্যক্তিত্ব প্ৰদান কৰিছে।",
+                            "এই ঘৰৰ অৱস্থাই আপোনাৰ আৰ্থিক পৰিচালনাৰ দক্ষতা আৰু পাৰিবাৰিক বান্ধোনৰ প্ৰতি গুৰুত্ব প্ৰদৰ্শন কৰে।",
+                            "যোগাযোগ আৰু সাহসৰ ক্ষেত্ৰত আপুনি স্পষ্টবাদী আৰু প্ৰত্যক্ষ।",
+                            "গৃহ আৰু সম্পত্তিৰ ক্ষেত্ৰত আপুনি স্থায়িত্ব বিচাৰে। মাটি বা ঘৰ-দুৱাৰ ক্ৰয় কৰাৰ সুন্দৰ যোগ আছে।",
+                            "আপোনাৰ সৃজনশীল শক্তি প্ৰবল। শিক্ষা আৰু নতুন কিবা শিকাৰ প্ৰতি আপোনাৰ সদায় আগ্ৰহ থাকে।",
+                            "প্ৰতিযোগিতা বা শত্ৰুৰ বিৰুদ্ধে আপুনি জয়ী হ'ব পৰা সামৰ্থ্য ৰাখে।",
+                            "জীৱনসংগীৰ ক্ষেত্ৰত আপুনি এজন দায়িত্বশীল ব্যক্তি বিচাৰে। অংশীদাৰী ব্যৱসায় লাভজনক হ'ব পাৰে।",
+                            "জীৱনত কিছুমান হঠাতে হোৱা পৰিৱৰ্তনৰ সন্মুখীন হ'বলগীয়া হ'ব পাৰে, যিয়ে আপোনাক মানসিকভাৱে শক্তিশালী কৰিব।",
+                            "আধ্যাত্মিকতা আৰু উচ্চ শিক্ষাৰ প্ৰতি আপোনাৰ গভীৰ আকৰ্ষণ আছে।",
+                            "কৰ্মক্ষেত্ৰত আপুনি অত্যন্ত উচ্চাকাংক্ষী। সমাজত মান-সন্মান আৰু খ্যাতি অৰ্জন কৰাৰ প্ৰৱল যোগ আছে।",
+                            "একাধিক আয়ৰ উৎস থকাৰ সম্ভাৱনা আছে। বন্ধুবৰ্গৰ জৰিয়তে আপুনি লাভৱান হ'ব।",
+                            "আধ্যাত্মিক যাত্ৰা বা বিদেশ ভ্ৰমণৰ যোগ আছে। অপ্ৰয়োজনীয় খৰচৰ পৰা বিৰত থকাটো মংগলজনক।"
+                        ];
+                        for(let i=1; i<=12; i++) {
+                            let pInH = hFull[i].length > 0 ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই";
+                            housesContent += `<div class="info-card"><div class="card-title">${houseNames[i-1]}</div><div class="card-content"><strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}<br><br>${houseDescriptions[i-1]}</div></div>`;
+                        }
+                        housesAnalysisPage = `<div class="page page-break"><h2 class="section-title">❁ ১২ টা ঘৰৰ বিশ্লেষণ ❁</h2><div class="text-section">জন্ম কুণ্ডলীৰ ১২ টা ঘৰে জীৱনৰ ১২ টা ভিন ভিন দিশ প্ৰতিনিধিত্ব কৰে।</div>${housesContent}</div>`;
+                    }
+
+                    let careerAnalysisPage = "";
+                    if (service === 'birth' || service === 'career') {
+                        careerAnalysisPage = `
+                        <div class="page page-break">
+                            <h2 class="section-title">❁ কৰ্মজীৱন আৰু অৰ্থ (Career & Wealth) ❁</h2>
+                            <div class="info-card"><div class="card-content">আপোনাৰ জন্ম কুণ্ডলীৰ দশম ঘৰ আৰু বৰ্তমান চলি থকা <strong>${currentDasha}</strong> মহাদশাই প্ৰমাণ কৰে যে আপোনাৰ কৰ্মজীৱনত এক গুৰুত্বপূৰ্ণ উত্থানৰ সময় চলি আছে।</div></div>
+                            <div class="info-card"><div class="card-title">নিজা ব্যৱসায় (Business/Entrepreneurship)</div><div class="card-content">✓ আপোনাৰ বিস্তৃত দৃষ্টিভংগী আৰু স্বাধীনতাই ব্যৱসায়ত সফলতা আনিব।</div></div>
+                        </div>`;
+                    }
+
+                    let loveAnalysisPage = "";
+                    if (service === 'birth' || service === 'love') {
+                        loveAnalysisPage = `
+                        <div class="page page-break">
+                            <h2 class="section-title">❁ প্ৰেম, বিবাহ আৰু সম্পৰ্ক ❁</h2>
+                            <div class="info-card"><div class="card-content">আপোনাৰ জন্ম কুণ্ডলীত <strong>${chart.planets.Moon.rashi}</strong> ৰাশি আৰু চন্দ্ৰৰ অৱস্থানে প্ৰমাণ কৰে যে প্ৰেমৰ ক্ষেত্ৰত আপুনি অত্যন্ত আৱেগিক যদিও বাহ্যিকভাৱে সেয়া সহজে প্ৰকাশ নকৰে।</div></div>
+                        </div>`;
+                    }
+
+                    let extraAnalysisPage = "";
+                    const todayDateObj = new Date();
+                    const nextMonthObj = new Date(todayDateObj);
+                    nextMonthObj.setMonth(nextMonthObj.getMonth() + 1);
+                    const currentMonthName = todayDateObj.toLocaleDateString('as-IN', { month: 'long' });
+                    const nextMonthName = nextMonthObj.toLocaleDateString('as-IN', { month: 'long' });
+                    const currentYear = todayDateObj.getFullYear();
+                    const dateRangeStr = `${todayDateObj.getDate()} ${currentMonthName} – ${nextMonthObj.getDate()} ${nextMonthName} ${currentYear}`;
+
+                    if (service === 'monthly') {
+                        extraAnalysisPage = `
+                        <div class="page page-break">
+                            <h2 class="section-title">❁ ১ মাহৰ সামগ্ৰিক ফল ❁</h2>
+                            <div class="text-section" style="text-align: center; color: #8b0000; font-weight: bold; margin-bottom: 20px;">[ ${dateRangeStr} ৰ বাবে Vedic (Lahiri) জ্যোতিষীয় ৰিডিং ]</div>
+                            <div class="info-card"><div class="card-content">এই মাহটো আপোনাৰ বাবে <strong>“direction change + financial planning + relationship clarity”</strong>-ৰ মাহ।<br>সামগ্ৰিক শক্তি: ⭐⭐⭐⭐☆</div></div>
+                            <h3 class="sub-heading">💼 Career (কৰ্মজীৱন)</h3>
+                            <div class="info-card"><div class="card-content">নতুন opportunity, client/contact বা কামৰ proposal আহিব পাৰে।</div></div>
+                            <h3 class="sub-heading">💰 Finance (আৰ্থিক অৱস্থা)</h3>
+                            <div class="info-card"><div class="card-content">এই মাহত income-তকৈ money management অধিক গুৰুত্বপূৰ্ণ।</div></div>
+                        </div>`;
+                    } else if (service === 'yearly') {
+                        extraAnalysisPage = `
+                        <div class="page page-break">
+                            <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল ❁</h2>
+                            <div class="info-card"><div class="card-content">আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন অনুসৰি আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ ডাঙৰ পৰিৱৰ্তন আহিব পাৰে। <strong>${currentDasha}</strong> মহাদশাই আপোনাক কৰ্ম আৰু পৰিয়ালৰ ক্ষেত্ৰত নতুন দায়িত্ব দিব।</div></div>
+                        </div>`;
+                    }
+
+                    let specificRemedies = "";
+                    if (service === 'monthly' || service === 'yearly') {
+                        specificRemedies = `<li><strong>প্ৰাথমিক প্ৰতিকাৰ:</strong> গ্ৰহৰ শুভ ফল প্ৰাপ্তিৰ বাবে প্ৰতিদিনে পুৱা সূৰ্য দেৱতাক স্মৰণ কৰক আৰু দৰিদ্ৰক সাধ্যানুসৰি অন্ন বা বস্ত্ৰ দান কৰক।</li>`;
+                    } else {
+                        specificRemedies = `<li><strong>কৰ্মফল:</strong> দৰিদ্ৰজনক অন্ন দান কৰিলে আৰু পিতৃ-মাতৃক শ্ৰদ্ধা কৰিলে আপোনাৰ কুণ্ডলীৰ বহু দোষ খণ্ডন হ'ব।</li>`;
+                    }
+
+                    let remediesPage = `
+                    <div class="page page-break">
+                        <h2 class="section-title">❁ নিদান আৰু প্ৰতিকাৰ ❁</h2>
+                        <div class="info-card remedy-card"><div class="card-title">শুভ ৰত্ন (Lucky Gemstone)</div><div class="card-content">আপোনাৰ লগ্নৰ অধিপতিৰ অৱস্থান অনুসৰি <strong>${luckyGem}</strong> ধাৰণ কৰিলে কৰ্ম আৰু ভাগ্যত সুপ্ৰভাৱ পৰিব।</div></div>
+                        <div class="info-card remedy-card"><div class="card-title">প্ৰাথমিক প্ৰতিকাৰ</div><div class="card-content"><ul>${specificRemedies}</ul></div></div>
+                    </div>`;
+
+                    contentHtml = `
+                        <div class="page page-break">
+                            <h2 class="section-title">❁ মূল জ্যোতিষিক পৰিচয় ❁</h2>
+                            <div class="info-card">
+                                <div class="card-title">লগ্ন (Ascendant): <strong>${chart.ascendant.rashi}</strong></div>
+                                <div class="card-title">চন্দ্ৰ ৰাশি (Moon Sign): <strong>${chart.planets.Moon.rashi}</strong></div>
+                                <div class="card-title">বৰ্তমান মহাদশা: <strong>${currentDasha} মহাদশা</strong></div>
+                            </div>
+                            <h2 class="section-title" style="margin-top:40px;">❁ জন্ম কুণ্ডলী আৰু গ্ৰহ স্থিতি ❁</h2>
+                            ${svgHtml}
+                            <h3 class="sub-heading">গ্ৰহৰ স্পষ্ট অৱস্থান</h3>
+                            ${planetsHtml}
+                            <h3 class="sub-heading">বিংশোত্তৰী মহা দশা</h3>
+                            ${dashaHtml}
+                        </div>
+                        ${housesAnalysisPage}
+                        ${careerAnalysisPage}
+                        ${loveAnalysisPage}
+                        ${extraAnalysisPage}
+                        ${remediesPage}
+                    `;
+                } else {
+                    contentHtml = `<div class="page"><h3 style="color: #8b0000; text-align: center;">⚠️ ৰিপোৰ্ট প্ৰস্তুত কৰাত কিছু সমস্যা হৈছে</h3><p style="text-align: center;">কাৰণ: ${data.error || 'অজ্ঞাত কাৰণ'}</p></div>`;
+                }
+
+                const reportHtml = `
+                    <!DOCTYPE html>
+                    <html lang="as">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>জ্যোতিষ অসম - বৈদিক ৰিপোৰ্ট (Admin)</title>
+                        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
+                        <style>
+                            body { font-family: 'Noto Sans Assamese', Georgia, serif; line-height: 1.8; color: #3e2723; background: #e8dcc4; margin: 0; padding: 20px; }
+                            .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 50px 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px solid double #8b0000; border-image: repeating-linear-gradient(45deg, #8b0000, #8b0000 5px, transparent 5px, transparent 10px) 10; position: relative; }
+                            .page::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #8b0000; pointer-events: none; }
+                            
+                            .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
+                            .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; }
+                            .cover-brand { font-size: 45px; font-weight: 700; color: #5c3a21; margin-bottom: 10px; border-bottom: 2px solid #8b0000; display: inline-block; padding-bottom: 10px;}
+                            .cover-subtitle { font-size: 24px; color: #8b0000; margin-bottom: 40px; font-weight: 600; }
+                            .cover-details { margin-top: 40px; text-align: left; background: rgba(219, 190, 146, 0.2); padding: 30px; border: 1px solid #c9a961; border-radius: 4px; }
+                            .detail-row { font-size: 18px; margin-bottom: 12px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px; }
+                            .detail-label { font-weight: 600; color: #8b0000; display: inline-block; width: 140px; }
+                            
+                            .section-title { font-size: 26px; font-weight: 700; color: #8b0000; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #8b0000; padding-bottom: 10px; }
+                            .sub-heading { font-size: 20px; color: #5c3a21; margin-top: 30px; margin-bottom: 15px; border-left: 4px solid #8b0000; padding-left: 10px; font-weight: bold;}
+                            
+                            .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 20px; margin: 15px 0; border-radius: 3px; }
+                            .remedy-card { border-left-color: #5c3a21; background: rgba(92, 58, 33, 0.05); }
+                            .card-title { font-weight: 700; color: #8b0000; margin-bottom: 10px; font-size: 18px; }
+                            .card-content { font-size: 16px; color: #3e2723; text-align: justify;}
+                            
+                            .vedic-table { width: 100%; border-collapse: collapse; margin: 25px 0; border: 2px solid #8b0000; }
+                            .vedic-table th { background: #8b0000; color: #fdf5e6; padding: 12px; text-align: center; font-size: 16px; border: 1px solid #5c3a21; }
+                            .vedic-table td { padding: 12px; border: 1px solid #a67b5b; text-align: center; color: #3e2723; }
+                            .vedic-table tr:nth-child(even) { background: rgba(219, 190, 146, 0.2); }
+                            
+                            .kundali-wrapper { display: flex; flex-direction: column; align-items: center; margin: 30px 0; }
+                            .print-btn-wrapper { text-align: center; margin-top: 20px; padding-bottom: 40px; }
+                            .print-btn { background: #8b0000; color: #fdf5e6; border: 2px solid #5c3a21; padding: 12px 30px; font-size: 18px; cursor: pointer; font-weight: bold; }
+                            @media print { body { background: #fdf5e6; padding: 0; } .page { box-shadow: none; margin: 0; border: 4px double #8b0000; } .page-break { page-break-after: always; } .print-btn-wrapper { display: none; } }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="page page-break cover">
                             <div class="om-symbol">ॐ</div>
-                            <h1>জ্যোতিষ অসম (Jyotish Assam)</h1>
-                            <div class="subtitle">বিশুদ্ধ বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ আধাৰত প্ৰস্তুতকৃত প্ৰিমিয়াম ৰিপোৰ্ট</div>
+                            <div><h1 class="cover-brand">জ্যোতিষ অসম</h1></div>
+                            <div class="cover-subtitle">${serviceTitle} (Admin Copy)</div>
+                            <div class="cover-details">
+                                <div class="detail-row"><span class="detail-label">গ্ৰাহকৰ নাম:</span> ${name}</div>
+                                <div class="detail-row"><span class="detail-label">জন্ম তাৰিখ:</span> ${dob}</div>
+                                <div class="detail-row"><span class="detail-label">জন্ম স্থান:</span> ${place}</div>
+                                <div class="detail-row"><span class="detail-label">সেৱাৰ প্ৰকাৰ:</span> ${serviceTitle}</div>
+                            </div>
                         </div>
-                        
-                        <div class="info-grid">
-                            <div class="info-item"><strong>গ্ৰাহকৰ নাম:</strong> ${order.name || 'প্ৰদান কৰা হোৱা নাই'}</div>
-                            <div class="info-item"><strong>ইমেইল:</strong> ${order.email || 'N/A'}</div>
-                            <div class="info-item"><strong>জন্ম তাৰিখ:</strong> ${order.birth_date || 'N/A'}</div>
-                            <div class="info-item"><strong>জন্ম সময়:</strong> ${order.birth_time || 'N/A'}</div>
-                            <div class="info-item"><strong>জন্ম স্থান:</strong> ${order.birth_place || 'N/A'}</div>
-                            <div class="info-item"><strong>সেৱাৰ প্ৰকাৰ:</strong> ${serviceTitle}</div>
+                        ${contentHtml}
+                        <div class="print-btn-wrapper">
+                            <button class="print-btn" onclick="window.print()">ৰিপোৰ্ট প্ৰিন্ট বা ছেভ কৰক</button>
                         </div>
+                    </body>
+                    </html>
+                `;
 
-                        <div class="section-title">গ্ৰহ আৰু নক্ষত্ৰৰ গভীৰ বিশ্লেষণ</div>
-                        <p>আপোনাৰ জন্মৰ সময় আৰু স্থানৰ ওপৰত ভিত্তি কৰি প্ৰস্তুত কৰা কুণ্ডলীত গ্ৰহসমূহৰ অৱস্থান অতি তাৎপৰ্যপূৰ্ণ। বৈদিক জ্যোতিষ শাস্ত্ৰ অনুসৰি, নৱগ্ৰহৰ স্থিতি আৰু বৰ্তমান চলি থকা মহাদশা তথা অন্তৰ্দশাই মানুহৰ জীৱনৰ সোঁত সলনি কৰিব পাৰে। আপোনাৰ লগ্ন আৰু ৰাশিৰ ওপৰত শুভ গ্ৰহৰ দৃষ্টি পৰাৰ ফলত আপোনাৰ জীৱনত ইতিবাচক শক্তিৰ সঞ্চাৰ হৈছে। বাধা-বিঘিনি থাকিলেও নিজৰ আত্মবিশ্বাস আৰু সঠিক কৰ্মৰ জৰিয়তে আপুনি সফলতাৰ শীৰ্ষত উপনীত হ'ব পাৰিব।</p>
+                const win = window.open('', '_blank');
+                if(win) {
+                    win.document.write(reportHtml);
+                    win.document.close();
+                } else {
+                    document.body.innerHTML = reportHtml;
+                }
 
-                        <div class="section-title">নিৰ্দিষ্ট ভৱিষ্যদ্বাণী: ${serviceTitle}</div>
-                        ${deepAnalysis}
-
-                        <div class="highlights-box">
-                            <h3>🪔 বিশেষ প্ৰতিকাৰ আৰু পৰামৰ্শ</h3>
-                            <ul>
-                                <li><strong>শুভ ৰং:</strong> বগা, হালধীয়া আৰু পাতল নীলা ৰঙৰ ব্যৱহাৰ বৃদ্ধি কৰক।</li>
-                                <li><strong>শুভ বাৰ:</strong> গুৰুবাৰ আৰু সোমবাৰ আপোনাৰ বাবে শুভ প্ৰমাণিত হ'ব।</li>
-                                <li><strong>প্ৰতিকাৰ ১:</strong> প্ৰতিদিন পুৱা সূৰ্য উদয়ৰ সময়ত সূৰ্য দেৱতাক অৰ্ঘ্য (জল) প্ৰদান কৰক।</li>
-                                <li><strong>প্ৰতিকাৰ ২:</strong> মানসিক শান্তি আৰু মনোযোগ বৃদ্ধিৰ বাবে দৈনিক ১০ মিনিটকৈ 'ওঁ নমঃ শিৱায়' মন্ত্ৰ জপ কৰক।</li>
-                                <li><strong>পৰামৰ্শ:</strong> যিকোনো গুৰুত্বপূৰ্ণ সিদ্ধান্ত লোৱাৰ আগতে জ্যেষ্ঠ আৰু অভিজ্ঞ ব্যক্তিৰ আশীৰ্বাদ আৰু পৰামৰ্শ ল'বলৈ নাপাহৰিব।</li>
-                            </ul>
-                        </div>
-
-                        <button class="print-btn" onclick="window.print()">ৰিপোৰ্ট প্ৰিন্ট / ছেভ কৰক</button>
-
-                        <div class="footer">
-                            এই ৰিপোৰ্ট জ্যোতিষ অসমৰ দ্বাৰা বৈদিক গণনাৰ জৰিয়তে প্ৰস্তুত কৰা হৈছে।<br>
-                            © ${new Date().getFullYear()} Jyotish Assam. All rights reserved.
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-
-            const win = window.open('', '_blank');
-            win.document.write(reportHtml);
-            win.document.close();
-        }
-
-        function filterTable() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allOrders.filter(o => 
-                (o.name && o.name.toLowerCase().includes(query)) || 
-                (o.email && o.email.includes(query))
-            );
-            renderTable(filtered);
+            } catch (error) {
+                console.error("Error fetching chart:", error);
+                alert("চাৰ্ভাৰৰ সৈতে সংযোগ কৰাত সমস্যা হৈছে।");
+            }
         }
     </script>
 </body>
