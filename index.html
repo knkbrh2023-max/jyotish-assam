@@ -467,9 +467,9 @@ async function showReportToCustomer(orderId) {
     const serviceNameMap = {
         'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
         'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
-        'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)'
+        'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)',
         'monthly': 'মাহেকীয়া ৰাশিফল (Monthly Horoscope)',
-    'yearly': 'বাৰ্ষিক ৰাশিফল (Yearly Horoscope)'
+        'yearly': 'বাৰ্ষিক ৰাশিফল (Yearly Horoscope)'
     };
     const serviceTitle = serviceNameMap[service] || 'ব্যক্তিগত বৈদিক জন্ম-কুণ্ডলী';
 
@@ -556,9 +556,7 @@ async function showReportToCustomer(orderId) {
                 </svg>
             </div>`;
 
-            // ================== DYNAMIC PAGES LOGIC ==================
-
-            // 1. 12 HOUSES PAGE (Only for Birth Chart)
+            // 1. 12 HOUSES PAGE
             let housesAnalysisPage = "";
             if (service === 'birth') {
                 let housesContent = "";
@@ -584,7 +582,7 @@ async function showReportToCustomer(orderId) {
                 housesAnalysisPage = `<div class="page page-break"><h2 class="section-title">❁ ১২ টা ঘৰৰ বিশ্লেষণ ❁</h2><div class="text-section">জন্ম কুণ্ডলীৰ ১২ টা ঘৰে জীৱনৰ ১২ টা ভিন ভিন দিশ প্ৰতিনিধিত্ব কৰে।</div>${housesContent}</div>`;
             }
 
-            // 2. CAREER & FINANCE PAGE (For Career and Birth Chart)
+            // 2. CAREER & FINANCE PAGE
             let careerAnalysisPage = "";
             if (service === 'birth' || service === 'career') {
                 careerAnalysisPage = `
@@ -611,16 +609,10 @@ async function showReportToCustomer(orderId) {
                             ✓ ৰিয়েল এষ্টেট, প্ৰযুক্তি, বা পৰামৰ্শদাতা হিচাপে ব্যৱসায় কৰিলে লাভৱান হ'ব।
                         </div>
                     </div>
-                    <div class="sub-heading">আৰ্থিক সমৃদ্ধি (Financial Growth)</div>
-                    <div class="info-card">
-                        <div class="card-content">
-                            হঠাতে বিনিয়োগ কৰাৰ সলনি পৰিকল্পিতভাৱে (Systematic Investment) আগবাঢ়িলে আপুনি প্ৰচুৰ ধন-সম্পত্তিৰ গৰাকী হ'ব পাৰিব। মাটি বা সম্পত্তি ক্ৰয় কৰাটো আপোনাৰ বাবে লাভজনক।
-                        </div>
-                    </div>
                 </div>`;
             }
 
-            // 3. LOVE & MARRIAGE PAGE (For Love and Birth Chart)
+            // 3. LOVE & MARRIAGE PAGE
             let loveAnalysisPage = "";
             if (service === 'birth' || service === 'love') {
                 loveAnalysisPage = `
@@ -632,32 +624,40 @@ async function showReportToCustomer(orderId) {
                             আপোনাৰ জন্ম কুণ্ডলীত <strong>${chart.planets.Moon.rashi}</strong> ৰাশি আৰু চন্দ্ৰৰ অৱস্থানে প্ৰমাণ কৰে যে প্ৰেমৰ ক্ষেত্ৰত আপুনি অত্যন্ত আৱেগিক যদিও বাহ্যিকভাৱে সেয়া সহজে প্ৰকাশ নকৰে। আপুনি সম্পৰ্কত গভীৰতা আৰু বিশ্বাসযোগ্যতা বিচাৰে।
                         </div>
                     </div>
-                    <div class="sub-heading">আদৰ্শ জীৱনসংগীৰ গুণাগুণ</div>
-                    <div class="info-card">
-                        <div class="card-content">
-                            <ul>
-                                <li>যিয়ে আপোনাৰ স্বাধীন চিন্তাধাৰা আৰু লক্ষ্যক সন্মান কৰে।</li>
-                                <li>যি মানসিকভাৱে পৰিপক্ক আৰু আৰ্থিকভাৱে স্থিৰ।</li>
-                                <li>প্ৰেমৰ লগতে যিয়ে বন্ধুত্বৰো মূল্য বুজি পায়।</li>
-                            </ul>
-                        </div>
-                    </div>
                     <div class="sub-heading">বিবাহৰ যোগ আৰু সময়</div>
                     <div class="info-card">
                         <div class="card-content">
-                            বৰ্তমানৰ <strong>${currentDasha}</strong> মহাদশাই বিবাহ বা গুৰুত্বপূৰ্ণ সম্পৰ্ক স্থাপনৰ বাবে এক অনুকূল পৰিৱেশ সৃষ্টি কৰিছে। লৰালৰিকৈ সিদ্ধান্ত লোৱাৰ সলনি সময় লৈ সঠিক ব্যক্তি নিৰ্বাচন কৰাটো উচিত। বিবাহৰ পিছত আপোনাৰ কৰ্ম আৰু ভাগ্য অধিক প্ৰবল হোৱাৰ যোগ আছে।
-                        </div>
-                    </div>
-                    <div class="sub-heading">সম্পৰ্কৰ প্ৰত্যাহ্বান (Challenges)</div>
-                    <div class="info-card">
-                        <div class="card-content">
-                            আপোনাৰ মনৰ কথা সহজে প্ৰকাশ নকৰা স্বভাৱটোৱে কেতিয়াবা সংগীৰ মনত ভুল বুজাবুজিৰ সৃষ্টি কৰিব পাৰে। মুকলিকৈ কথা পতাৰ অভ্যাস গঢ়ি তোলক।
+                            বৰ্তমানৰ <strong>${currentDasha}</strong> মহাদশাই বিবাহ বা গুৰুত্বপূৰ্ণ সম্পৰ্ক স্থাপনৰ বাবে এক অনুকূল পৰিৱেশ সৃষ্টি কৰিছে। লৰালৰিকৈ সিদ্ধান্ত লোৱাৰ সলনি সময় লৈ সঠিক ব্যক্তি নিৰ্বাচন কৰাটো উচিত।
                         </div>
                     </div>
                 </div>`;
             }
 
-           // 4. DYNAMIC REMEDIES
+            // 4. MONTHLY & YEARLY PAGE
+            let extraAnalysisPage = "";
+            if (service === 'monthly') {
+                extraAnalysisPage = `
+                <div class="page page-break">
+                    <h2 class="section-title">❁ মাহেকীয়া ৰাশিফল ❁</h2>
+                    <div class="info-card">
+                        <div class="card-content">
+                            আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু বৰ্তমানৰ গ্ৰহৰ গোচৰ অনুসৰি, আগন্তুক ৩০ দিন আপোনাৰ বাবে গুৰুত্বপূৰ্ণ। বৰ্তমান <strong>${currentDasha}</strong> মহাদশাৰ প্ৰভাৱত এই মাহত আপুনি স্বাস্থ্য আৰু আৰ্থিক দিশত সজাগ হোৱাটো প্ৰয়োজন। কৰ্মক্ষেত্ৰত নতুন সুযোগ লাভ কৰাৰ যোগ আছে।
+                        </div>
+                    </div>
+                </div>`;
+            } else if (service === 'yearly') {
+                extraAnalysisPage = `
+                <div class="page page-break">
+                    <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল ❁</h2>
+                    <div class="info-card">
+                        <div class="card-content">
+                            আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন অনুসৰি আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ ডাঙৰ পৰিৱৰ্তন আহিব পাৰে। <strong>${currentDasha}</strong> মহাদশাই আপোনাক কৰ্ম আৰু পৰিয়ালৰ ক্ষেত্ৰত নতুন দায়িত্ব দিব। বছৰটোৰ শেষৰ ফালে আপোনাৰ বিত্তীয় অৱস্থা যথেষ্ট টনকিয়াল হোৱাৰ যোগ আছে।
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // 5. DYNAMIC REMEDIES
             let specificRemedies = "";
             if (service === 'love') {
                 specificRemedies = `<li><strong>প্ৰেম আৰু বিবাহৰ প্ৰতিকাৰ:</strong> শুক্ৰ গ্ৰহৰ শুভ ফলৰ বাবে শুকুৰবাৰে বগা মিঠাই বা গাখীৰ দান কৰক। সংগীৰ সৈতে তৰ্কৰ পৰা বিৰত থাকক।</li>`;
@@ -702,30 +702,6 @@ async function showReportToCustomer(orderId) {
                     <strong>"আপোনাৰ জন্ম-কুণ্ডলী • আপোনাৰ সময় • আপোনাৰ সম্ভাৱনা"</strong>
                 </div>
             </div>`;
-
-            // 5. MONTHLY & YEARLY PAGE
-            let extraAnalysisPage = "";
-            if (service === 'monthly') {
-                extraAnalysisPage = `
-                <div class="page page-break">
-                    <h2 class="section-title">❁ মাহেকীয়া ৰাশিফল ❁</h2>
-                    <div class="info-card">
-                        <div class="card-content">
-                            আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু বৰ্তমানৰ গ্ৰহৰ গোচৰ অনুসৰি, আগন্তুক ৩০ দিন আপোনাৰ বাবে গুৰুত্বপূৰ্ণ। বৰ্তমান <strong>${currentDasha}</strong> মহাদশাৰ প্ৰভাৱত এই মাহত আপুনি স্বাস্থ্য আৰু আৰ্থিক দিশত সজাগ হোৱাটো প্ৰয়োজন। কৰ্মক্ষেত্ৰত নতুন সুযোগ লাভ কৰাৰ যোগ আছে।
-                        </div>
-                    </div>
-                </div>`;
-            } else if (service === 'yearly') {
-                extraAnalysisPage = `
-                <div class="page page-break">
-                    <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল ❁</h2>
-                    <div class="info-card">
-                        <div class="card-content">
-                            আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন অনুসৰি আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ ডাঙৰ পৰিৱৰ্তন আহিব পাৰে। <strong>${currentDasha}</strong> মহাদশাই আপোনাক কৰ্ম আৰু পৰিয়ালৰ ক্ষেত্ৰত নতুন দায়িত্ব দিব। বছৰটোৰ শেষৰ ফালে আপোনাৰ বিত্তীয় অৱস্থা যথেষ্ট টনকিয়াল হোৱাৰ যোগ আছে।
-                        </div>
-                    </div>
-                </div>`;
-            }
 
             // ================== ASSEMBLE ALL PAGES ==================
 
