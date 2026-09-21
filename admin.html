@@ -41,7 +41,6 @@
 </head>
 <body>
 
-    <!-- Login Overlay Screen -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2>🔒 এডমিন লগ্ন</h2>
@@ -52,7 +51,6 @@
         </div>
     </div>
 
-    <!-- Main Dashboard Container -->
     <div class="container" id="mainDashboard">
         <header>
             <h1>🛠️ জ্যোতিষ অসম - এডমিন ডেশ্ববৰ্ড</h1>
@@ -128,10 +126,8 @@
 
         async function fetchOrders() {
             try {
-                // ইয়াত আপোনাৰ আচল Supabase URL আৰু KEY বহুৱাব
                 const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
                 const supabaseKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; 
-                
                 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
                 const { data, error } = await client
@@ -144,7 +140,6 @@
                 allOrders = data || [];
                 renderTable(allOrders);
                 updateStats(allOrders);
-
             } catch (err) {
                 document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">ডাটা লোড কৰাত সমস্যা হৈছে: ${err.message}</td></tr>`;
             }
@@ -171,19 +166,14 @@
                     <td>${o.service || 'N/A'}</td>
                     <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
                     <td><span class="badge ${o.razorpay_payment_id ? 'success' : 'pending'}">${o.razorpay_payment_id ? 'Paid' : 'Pending'}</span></td>
-                    <td>
-                        <button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button>
-                    </td>
+                    <td><button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button></td>
                 </tr>
             `).join('');
         }
 
         async function generateAndShowReport(orderId) {
             const order = allOrders.find(o => o.id === orderId);
-            if (!order) {
-                alert("অৰ্ডাৰৰ ডাটা পোৱা নগল!");
-                return;
-            }
+            if (!order) return alert("অৰ্ডাৰৰ ডাটা পোৱা নগল!");
 
             const serviceNameMap = {
                 'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
@@ -194,14 +184,12 @@
             };
             const serviceTitle = serviceNameMap[order.service] || order.service || 'প্ৰিমিয়াম জ্যোতিষ সেৱা';
             const service = order.service;
-
             const name = order.name || 'গ্ৰাহক';
             const email = order.email || 'N/A';
             const dob = order.birth_date || 'N/A';
             const place = order.birth_place || 'N/A';
 
             try {
-                // এডমিন পেনেলৰ পৰা Edge Function লৈ ৰিকুৱেষ্ট
                 const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
                 const response = await fetch(supabaseUrl + '/functions/v1/calculate-chart', {
                     method: 'POST',
@@ -220,42 +208,38 @@
                     chart.dashas.forEach(d => {
                         let start = new Date(d.start_date);
                         let end = new Date(d.end_date);
-                        if(today >= start && today <= end) {
-                            currentDasha = d.lord;
-                        }
+                        if(today >= start && today <= end) currentDasha = d.lord;
                     });
 
                     const gemstones = {
-                        "Aries": "ৰঙা প্ৰৱাল (Red Coral)", "Taurus": "হীৰা বা বগা অ'পেল (Opal)",
-                        "Gemini": "পান্না (Emerald)", "Cancer": "মুকুতা (Pearl)",
-                        "Leo": "মাণিক্য (Ruby)", "Virgo": "পান্না (Emerald)",
-                        "Libra": "হীৰা বা বগা অ'পেল (Opal)", "Scorpio": "ৰঙা প্ৰৱাল (Red Coral)",
-                        "Sagittarius": "হালধীয়া পোখৰাজ (Yellow Sapphire)", "Capricorn": "নীলা (Blue Sapphire)",
-                        "Aquarius": "নীলা (Blue Sapphire)", "Pisces": "হালধীয়া পোখৰাজ (Yellow Sapphire)"
+                        "Aries": "ৰঙা প্ৰৱাল", "Taurus": "হীৰা বা বগা অ'পেল",
+                        "Gemini": "পান্না", "Cancer": "মুকুতা",
+                        "Leo": "মাণিক্য", "Virgo": "পান্না",
+                        "Libra": "হীৰা বা বগা অ'পেল", "Scorpio": "ৰঙা প্ৰৱাল",
+                        "Sagittarius": "হালধীয়া পোখৰাজ", "Capricorn": "নীলা",
+                        "Aquarius": "নীলা", "Pisces": "হালধীয়া পোখৰাজ"
                     };
                     const luckyGem = gemstones[chart.ascendant.rashi] || "উপযুক্ত জ্যোতিষীৰ পৰামৰ্শ লওক";
-
                     const pAbbr = { Sun: "সূ", Moon: "চ", Mars: "মং", Mercury: "বু", Jupiter: "বৃ", Venus: "শু", Saturn: "শ", Rahu: "ৰা", Ketu: "কে" };
                     const planetNames = { Sun: "সূৰ্য", Moon: "চন্দ্ৰ", Mars: "মংগল", Mercury: "বুধ", Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু" };
                     const ascRashi = chart.ascendant.rashi_no;
                     
                     let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
                     let hFull = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
-                    
                     for(const [pName, pData] of Object.entries(chart.planets)) {
                         let hNum = (pData.rashi_no - ascRashi + 12) % 12 + 1;
                         hC[hNum].push(pAbbr[pName] || pName);
                         hFull[hNum].push(planetNames[pName] || pName);
                     }
 
-                    let planetsHtml = `<table class="vedic-table"><thead><tr><th>গ্ৰহ</th><th>ৰাশি</th><th>ঘৰ (House)</th><th>নক্ষত্ৰ</th><th>পদ</th></tr></thead><tbody>`;
+                    let planetsHtml = `<table class="vedic-table"><thead><tr><th>গ্ৰহ</th><th>ৰাশি</th><th>ঘৰ</th><th>নক্ষত্ৰ</th><th>পদ</th></tr></thead><tbody>`;
                     for(const key in chart.planets) {
                         let hNum = (chart.planets[key].rashi_no - ascRashi + 12) % 12 + 1;
                         planetsHtml += `<tr><td><strong>${planetNames[key] || key}</strong></td><td>${chart.planets[key].rashi}</td><td>${hNum}</td><td>${chart.planets[key].nakshatra}</td><td>${chart.planets[key].pada}</td></tr>`;
                     }
                     planetsHtml += `</tbody></table>`;
 
-                    let dashaHtml = `<table class="vedic-table"><thead><tr><th>মহা দশা</th><th>আৰম্ভণি (Start)</th><th>অন্ত (End)</th></tr></thead><tbody>`;
+                    let dashaHtml = `<table class="vedic-table"><thead><tr><th>মহা দশা</th><th>আৰম্ভণি</th><th>অন্ত</th></tr></thead><tbody>`;
                     chart.dashas.forEach(d => { dashaHtml += `<tr><td><strong>${d.lord}</strong></td><td>${d.start_date}</td><td>${d.end_date}</td></tr>`; });
                     dashaHtml += `</tbody></table>`;
 
@@ -342,10 +326,10 @@
                         extraAnalysisPage = `
                         <div class="page page-break">
                             <h2 class="section-title">❁ ১ মাহৰ সামগ্ৰিক ফল ❁</h2>
-                            <div class="text-section" style="text-align: center; color: #8b0000; font-weight: bold; margin-bottom: 20px;">[ ${dateRangeStr} ৰ বাবে Vedic (Lahiri) জ্যোতিষীয় ৰিডিং ]</div>
-                            <div class="info-card"><div class="card-content">এই মাহটো আপোনাৰ বাবে <strong>“direction change + financial planning + relationship clarity”</strong>-ৰ মাহ।<br>সামগ্ৰিক শক্তি: ⭐⭐⭐⭐☆</div></div>
+                            <div class="text-section" style="text-align: center; color: #8b0000; font-weight: bold; margin-bottom: 20px;">[ ${dateRangeStr} ৰ বাবে Vedic/Sidereal (Lahiri) জ্যোতিষীয় ৰিডিং ]</div>
+                            <div class="info-card"><div class="card-content">এই মাহটো আপোনাৰ বাবে <strong>“direction change + financial planning + relationship clarity”</strong>-ৰ মাহ。<br>সামগ্ৰিক শক্তি: ⭐⭐⭐⭐☆</div></div>
                             <h3 class="sub-heading">💼 Career (কৰ্মজীৱন)</h3>
-                            <div class="info-card"><div class="card-content">নতুন opportunity, client/contact বা কামৰ proposal আহিব পাৰে।</div></div>
+                            <div class="info-card"><div class="card-content"><ul><li><strong>প্ৰথম ১০ দিন:</strong> কামত চাপ বা confusion অলপ থাকিব পাৰে।</li><li><strong>মাজৰ ১০ দিন:</strong> নতুন opportunity, client/contact বা কামৰ proposal আহিব পাৰে।</li><li><strong>শেষৰ ১০ দিন:</strong> নিজৰ সিদ্ধান্ত নিজে লৈ আগবঢ়াৰ সময়।</li></ul></div></div>
                             <h3 class="sub-heading">💰 Finance (আৰ্থিক অৱস্থা)</h3>
                             <div class="info-card"><div class="card-content">এই মাহত income-তকৈ money management অধিক গুৰুত্বপূৰ্ণ।</div></div>
                         </div>`;
@@ -353,7 +337,7 @@
                         extraAnalysisPage = `
                         <div class="page page-break">
                             <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল ❁</h2>
-                            <div class="info-card"><div class="card-content">আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন অনুসৰি আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ ডাঙৰ পৰিৱৰ্তন আহিব পাৰে। <strong>${currentDasha}</strong> মহাদশাই আপোনাক কৰ্ম আৰু পৰিয়ালৰ ক্ষেত্ৰত নতুন দায়িত্ব দিব।</div></div>
+                            <div class="info-card"><div class="card-content">আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন অনুসৰি আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ ডাঙৰ পৰিৱৰ্তন আহিব পাৰে। <strong>${currentDasha}</strong> মহাদশাই আপোনাক কৰ্ম আৰু পৰিয়ালৰ ক্ষেত্ৰত নতুন দায়িত্ব দিব। বছৰটোৰ শেষৰ ফালে আপোনাৰ বিত্তীয় অৱস্থা যথেষ্ট টনকিয়াল হোৱাৰ যোগ আছে।</div></div>
                         </div>`;
                     }
 
@@ -407,7 +391,6 @@
                             body { font-family: 'Noto Sans Assamese', Georgia, serif; line-height: 1.8; color: #3e2723; background: #e8dcc4; margin: 0; padding: 20px; }
                             .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 50px 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px solid double #8b0000; border-image: repeating-linear-gradient(45deg, #8b0000, #8b0000 5px, transparent 5px, transparent 10px) 10; position: relative; }
                             .page::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #8b0000; pointer-events: none; }
-                            
                             .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
                             .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; }
                             .cover-brand { font-size: 45px; font-weight: 700; color: #5c3a21; margin-bottom: 10px; border-bottom: 2px solid #8b0000; display: inline-block; padding-bottom: 10px;}
@@ -415,23 +398,20 @@
                             .cover-details { margin-top: 40px; text-align: left; background: rgba(219, 190, 146, 0.2); padding: 30px; border: 1px solid #c9a961; border-radius: 4px; }
                             .detail-row { font-size: 18px; margin-bottom: 12px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px; }
                             .detail-label { font-weight: 600; color: #8b0000; display: inline-block; width: 140px; }
-                            
                             .section-title { font-size: 26px; font-weight: 700; color: #8b0000; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #8b0000; padding-bottom: 10px; }
                             .sub-heading { font-size: 20px; color: #5c3a21; margin-top: 30px; margin-bottom: 15px; border-left: 4px solid #8b0000; padding-left: 10px; font-weight: bold;}
-                            
                             .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 20px; margin: 15px 0; border-radius: 3px; }
                             .remedy-card { border-left-color: #5c3a21; background: rgba(92, 58, 33, 0.05); }
                             .card-title { font-weight: 700; color: #8b0000; margin-bottom: 10px; font-size: 18px; }
                             .card-content { font-size: 16px; color: #3e2723; text-align: justify;}
-                            
                             .vedic-table { width: 100%; border-collapse: collapse; margin: 25px 0; border: 2px solid #8b0000; }
                             .vedic-table th { background: #8b0000; color: #fdf5e6; padding: 12px; text-align: center; font-size: 16px; border: 1px solid #5c3a21; }
                             .vedic-table td { padding: 12px; border: 1px solid #a67b5b; text-align: center; color: #3e2723; }
                             .vedic-table tr:nth-child(even) { background: rgba(219, 190, 146, 0.2); }
-                            
                             .kundali-wrapper { display: flex; flex-direction: column; align-items: center; margin: 30px 0; }
                             .print-btn-wrapper { text-align: center; margin-top: 20px; padding-bottom: 40px; }
                             .print-btn { background: #8b0000; color: #fdf5e6; border: 2px solid #5c3a21; padding: 12px 30px; font-size: 18px; cursor: pointer; font-weight: bold; }
+                            ul { margin: 10px 0 10px 20px; } li { margin-bottom: 8px; }
                             @media print { body { background: #fdf5e6; padding: 0; } .page { box-shadow: none; margin: 0; border: 4px double #8b0000; } .page-break { page-break-after: always; } .print-btn-wrapper { display: none; } }
                         </style>
                     </head>
@@ -467,6 +447,15 @@
                 console.error("Error fetching chart:", error);
                 alert("চাৰ্ভাৰৰ সৈতে সংযোগ কৰাত সমস্যা হৈছে।");
             }
+        }
+
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allOrders.filter(o => 
+                (o.name && o.name.toLowerCase().includes(query)) || 
+                (o.email && o.email.includes(query))
+            );
+            renderTable(filtered);
         }
     </script>
 </body>
