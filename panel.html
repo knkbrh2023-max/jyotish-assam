@@ -331,13 +331,69 @@
                             <h3 class="sub-heading">💼 Career (কৰ্মজীৱন)</h3>
                             <div class="info-card"><div class="card-content"><ul><li><strong>প্ৰথম ১০ দিন:</strong> কামত চাপ বা confusion অলপ থাকিব পাৰে।</li><li><strong>মাজৰ ১০ দিন:</strong> নতুন opportunity, client/contact বা কামৰ proposal আহিব পাৰে।</li><li><strong>শেষৰ ১০ দিন:</strong> নিজৰ সিদ্ধান্ত নিজে লৈ আগবঢ়াৰ সময়।</li></ul></div></div>
                             <h3 class="sub-heading">💰 Finance (আৰ্থিক অৱস্থা)</h3>
-                            <div class="info-card"><div class="card-content">এই মাহত income-তকৈ money management অধিক গুৰুত্বপূৰ্ণ।</div></div>
+                            <div class="info-card"><div class="card-content">এই মাহত income-তকৈ money management অধিক গুৰুত্বপূৰ্ণ। খৰচৰ প্ৰতি চকু ৰাখক।</div></div>
                         </div>`;
                     } else if (service === 'yearly') {
+                        const nextYear = currentYear + 1;
                         extraAnalysisPage = `
                         <div class="page page-break">
-                            <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল ❁</h2>
-                            <div class="info-card"><div class="card-content">আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন অনুসৰি আগন্তুক এবছৰ আপোনাৰ জীৱনলৈ ডাঙৰ পৰিৱৰ্তন আহিব পাৰে। <strong>${currentDasha}</strong> মহাদশাই আপোনাক কৰ্ম আৰু পৰিয়ালৰ ক্ষেত্ৰত নতুন দায়িত্ব দিব। বছৰটোৰ শেষৰ ফালে আপোনাৰ বিত্তীয় অৱস্থা যথেষ্ট টনকিয়াল হোৱাৰ যোগ আছে।</div></div>
+                            <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল (${currentYear} - ${nextYear}) ❁</h2>
+                            <div class="info-card">
+                                <div class="card-content">
+                                    আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু বৰ্তমান চলি থকা <strong>${currentDasha}</strong> মহাদশাৰ ভিত্তিত আগন্তুক এবছৰৰ সামগ্ৰিক ফল তলত দিয়া ধৰণৰ হ'ব। এই বছৰটো আপোনাৰ বাবে "কৰ্মত উন্নতি, নতুন দায়িত্ব আৰু আৰ্থিক স্থিৰতা" ৰ বছৰ হিচাপে পৰিগণিত হ'ব।
+                                </div>
+                            </div>
+
+                            <h3 class="sub-heading">💼 কৰ্মজীৱন আৰু ব্যৱসায় (Career & Business)</h3>
+                            <div class="info-card">
+                                <div class="card-content">
+                                    <ul>
+                                        <li><strong>প্ৰথম চতুৰ্থাংশ:</strong> বছৰৰ আৰম্ভণিতে কৰ্মক্ষেত্ৰত কিছু প্ৰত্যাহ্বান আহিব পাৰে, কিন্তু নিজৰ দক্ষতাৰে আপুনি তাক অতিক্ৰম কৰিব পাৰিব।</li>
+                                        <li><strong>মাজৰ সময়:</strong> চাকৰিয়ালসকলৰ বাবে পদোন্নতি বা স্থানান্তৰৰ যোগ আছে। ব্যৱসায়ত নতুন বিনিয়োগৰ বাবে এই সময় অনুকূল।</li>
+                                        <li><strong>শেষৰ ফালে:</strong> আপোনাৰ কঠোৰ পৰিশ্ৰমৰ ফল পাবলৈ আৰম্ভ কৰিব আৰু কৰ্মস্থানত মান-সন্মান বৃদ্ধি পাব।</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3 class="sub-heading">💰 আৰ্থিক অৱস্থা (Finance & Wealth)</h3>
+                            <div class="info-card">
+                                <div class="card-content">
+                                    <ul>
+                                        <li>বছৰটোৰ প্ৰথমাৰ্ধত খৰচৰ মাত্ৰা বৃদ্ধি পাব পাৰে। পৰিকল্পনা নকৰাকৈ ডাঙৰ বিনিয়োগ কৰাৰ পৰা বিৰত থাকক।</li>
+                                        <li>বছৰৰ শেষৰ ফালে একাধিক উৎসৰ পৰা ধন আগমনৰ যোগ আছে। মাটি বা বাহন ক্ৰয় কৰাৰ সপোন বাস্তৱায়িত হ'ব পাৰে।</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="page page-break">
+                            <h3 class="sub-heading">❤️ প্ৰেম, পৰিয়াল আৰু সম্পৰ্ক (Family & Love)</h3>
+                            <div class="info-card">
+                                <div class="card-content">
+                                    <ul>
+                                        <li>পৰিয়ালত সুখ-শান্তি বিৰাজ কৰিব। পিতৃ-মাতৃৰ স্বাস্থ্যৰ প্ৰতি অলপ চকু ৰখাটো প্ৰয়োজন।</li>
+                                        <li>অবিবাহিতসকলৰ বাবে বছৰৰ মাজভাগত বিবাহৰ উপযুক্ত প্ৰস্তাৱ অহাৰ পূৰ্ণ সম্ভাৱনা আছে।</li>
+                                        <li>প্ৰেমৰ সম্পৰ্কত থকাসকলৰ বাবে পাৰস্পৰিক বুজাবুজি বৃদ্ধি পাব, কিন্তু সৰু-সুৰা কথাত তৰ্ক কৰাৰ পৰা বিৰত থাকিব।</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3 class="sub-heading">🏥 স্বাস্থ্য (Health)</h3>
+                            <div class="info-card">
+                                <div class="card-content">
+                                    <ul>
+                                        <li>সামগ্ৰিকভাৱে স্বাস্থ্য ভালেই থাকিব, কিন্তু বতৰৰ পৰিৱৰ্তনৰ সময়ত সৰু-সুৰা অসুখ হ'ব পাৰে।</li>
+                                        <li>মানসিক চাপ কমোৱাৰ বাবে যোগাসন বা ধ্যান কৰাটো আপোনাৰ বাবে বিশেষভাৱে উপকাৰী হ'ব।</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="info-card" style="background: rgba(139, 0, 0, 0.05); border-left-color: #5c3a21; margin-top: 30px;">
+                                <div class="card-title">🌟 বছৰটোৰ মূল মন্ত্ৰ</div>
+                                <div class="card-content">
+                                    <strong>"ধৈৰ্য আৰু আত্মবিশ্বাস"</strong> - এই দুয়োটাই আপোনাক এই বছৰটোত সফলতাৰ শীৰ্ষলৈ লৈ যাব। যিকোনো গুৰুত্বপূৰ্ণ সিদ্ধান্ত লওঁতে খৰখেদা নকৰিব।
+                                </div>
+                            </div>
                         </div>`;
                     }
 
