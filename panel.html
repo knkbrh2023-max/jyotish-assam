@@ -194,7 +194,7 @@
                 const response = await fetch(supabaseUrl + '/functions/v1/calculate-chart', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ orderId: orderId })
+                    body: JSON.stringify({ orderId: order.public_order_id })
                 });
                 
                 const data = await response.json();
