@@ -820,7 +820,12 @@ async function fetchDailyRashi() {
     if(container) container.innerHTML = "<p style='text-align:center; color:#6D28D9; font-weight:bold;'>আজিৰ ৰাশিফল লোড হৈ আছে... ⏳</p>";
     
     try {
-        const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/daily-rashi', { method: 'POST' });
+        // ইয়াত daily-rashi ৰ সলনি free-daily-horoscope ব্যৱহাৰ কৰা হৈছে
+        const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/free-daily-horoscope', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: "all" }) // "all" পঠিয়ালে ১২ টা ৰাশিৰ ডাটা আহিব
+        });
         const result = await response.json();
         
         if (result.success) {
