@@ -467,7 +467,6 @@ async function showReportToCustomer(orderId) {
         if(response.ok && data.success) {
             const chart = data.chart;
             
-            // বৰ্তমানৰ দশা উলিওৱা
             let currentDasha = "অজ্ঞাত";
             let today = new Date();
             chart.dashas.forEach(d => {
@@ -478,7 +477,6 @@ async function showReportToCustomer(orderId) {
                 }
             });
 
-            // ৰত্নৰ পৰামৰ্শ
             const gemstones = {
                 "Aries": "ৰঙা প্ৰৱাল (Red Coral)", "Taurus": "হীৰা বা বগা অ'পেল (Opal)",
                 "Gemini": "পান্না (Emerald)", "Cancer": "মুকুতা (Pearl)",
@@ -493,7 +491,6 @@ async function showReportToCustomer(orderId) {
             const planetNames = { Sun: "সূৰ্য", Moon: "চন্দ্ৰ", Mars: "মংগল", Mercury: "বুধ", Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু" };
             const ascRashi = chart.ascendant.rashi_no;
             
-            // ১২ টা ঘৰত গ্ৰহৰ অৱস্থান নিৰ্ধাৰণ
             let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
             let hFull = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
             
@@ -503,55 +500,17 @@ async function showReportToCustomer(orderId) {
                 hFull[hNum].push(planetNames[pName] || pName);
             }
 
-            // গ্ৰহৰ টেবুল
-            let planetsHtml = `
-            <table class="vedic-table">
-                <thead>
-                    <tr>
-                        <th>গ্ৰহ</th>
-                        <th>ৰাশি</th>
-                        <th>ঘৰ (House)</th>
-                        <th>নক্ষত্ৰ</th>
-                        <th>পদ</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-            
+            let planetsHtml = `<table class="vedic-table"><thead><tr><th>গ্ৰহ</th><th>ৰাশি</th><th>ঘৰ (House)</th><th>নক্ষত্ৰ</th><th>পদ</th></tr></thead><tbody>`;
             for(const key in chart.planets) {
                 let hNum = (chart.planets[key].rashi_no - ascRashi + 12) % 12 + 1;
-                planetsHtml += `
-                    <tr>
-                        <td><strong>${planetNames[key] || key}</strong></td>
-                        <td>${chart.planets[key].rashi}</td>
-                        <td>${hNum}</td>
-                        <td>${chart.planets[key].nakshatra}</td>
-                        <td>${chart.planets[key].pada}</td>
-                    </tr>`;
+                planetsHtml += `<tr><td><strong>${planetNames[key] || key}</strong></td><td>${chart.planets[key].rashi}</td><td>${hNum}</td><td>${chart.planets[key].nakshatra}</td><td>${chart.planets[key].pada}</td></tr>`;
             }
             planetsHtml += `</tbody></table>`;
 
-            // দশা টেবুল 
-            let dashaHtml = `
-            <table class="vedic-table">
-                <thead>
-                    <tr>
-                        <th>মহা দশা</th>
-                        <th>আৰম্ভণি (Start)</th>
-                        <th>অন্ত (End)</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-            chart.dashas.forEach(d => {
-                dashaHtml += `
-                    <tr>
-                        <td><strong>${d.lord}</strong></td>
-                        <td>${d.start_date}</td>
-                        <td>${d.end_date}</td>
-                    </tr>`;
-            });
+            let dashaHtml = `<table class="vedic-table"><thead><tr><th>মহা দশা</th><th>আৰম্ভণি (Start)</th><th>অন্ত (End)</th></tr></thead><tbody>`;
+            chart.dashas.forEach(d => { dashaHtml += `<tr><td><strong>${d.lord}</strong></td><td>${d.start_date}</td><td>${d.end_date}</td></tr>`; });
             dashaHtml += `</tbody></table>`;
 
-            // জন্ম কুণ্ডলী চিত্ৰ (SVG)
             let svgHtml = `
             <div class="kundali-wrapper">
                 <svg viewBox="0 0 300 300" width="280" height="280" style="background: #fdf5e6; border: 3px solid #8b0000;">
@@ -578,127 +537,50 @@ async function showReportToCustomer(orderId) {
                 </svg>
             </div>`;
 
-            // ১২ টা ঘৰৰ বিশ্লেষণ নিৰ্মাণ
-            let housesAnalysisHtml = "";
-            const houseNames = [
-                "১ম ঘৰ - ব্যক্তিত্ব আৰু জীৱনৰ দিশ", "২য় ঘৰ - সম্পদ আৰু পাৰিবাৰিক জীৱন", "৩য় ঘৰ - সাহস আৰু যোগাযোগ",
-                "৪ৰ্থ ঘৰ - গৃহ আৰু সম্পত্তি", "৫ম ঘৰ - শিক্ষা আৰু সৃজনশীলতা", "৬ষ্ঠ ঘৰ - প্ৰতিযোগিতা আৰু স্বাস্থ্য",
-                "৭ম ঘৰ - বিবাহ আৰু অংশীদাৰীত্ব", "৮ম ঘৰ - পৰিৱৰ্তন আৰু আয়ুস", "৯ম ঘৰ - ভাগ্য আৰু উচ্চ শিক্ষা",
-                "১০ম ঘৰ - কৰ্মজীৱন আৰু খ্যাতি", "১১তম ঘৰ - আয় আৰু লাভ", "১২তম ঘৰ - ব্যয় আৰু বিদেশ ভ্ৰমণ"
-            ];
-            const houseDescriptions = [
-                `আপোনাৰ লগ্নৰ অধিপতিৰ অৱস্থানে আপোনাক এক বিশ্লেষণাত্মক আৰু যুক্তিবাদী ব্যক্তিত্ব প্ৰদান কৰিছে। আপুনি স্বাভাৱিকতে শৃংখলাবদ্ধ।`,
-                `এই ঘৰৰ অৱস্থাই আপোনাৰ আৰ্থিক পৰিচালনাৰ দক্ষতা আৰু পাৰিবাৰিক বান্ধোনৰ প্ৰতি গুৰুত্ব প্ৰদৰ্শন কৰে।`,
-                `যোগাযোগ আৰু সাহসৰ ক্ষেত্ৰত আপুনি স্পষ্টবাদী আৰু প্ৰত্যক্ষ। আপোনাৰ কথা-বতৰা প্ৰভাৱশালী।`,
-                `গৃহ আৰু সম্পত্তিৰ ক্ষেত্ৰত আপুনি স্থায়িত্ব বিচাৰে। মাটি বা ঘৰ-দুৱাৰ ক্ৰয় কৰাৰ সুন্দৰ যোগ আছে।`,
-                `আপোনাৰ সৃজনশীল শক্তি প্ৰবল। শিক্ষা আৰু নতুন কিবা শিকাৰ প্ৰতি আপোনাৰ সদায় আগ্ৰহ থাকে।`,
-                `প্ৰতিযোগিতা বা শত্ৰুৰ বিৰুদ্ধে আপুনি জয়ী হ'ব পৰা সামৰ্থ্য ৰাখে। স্বাস্থ্যৰ প্ৰতি সজাগ হোৱাটো প্ৰয়োজন।`,
-                `জীৱনসংগীৰ ক্ষেত্ৰত আপুনি এজন দায়িত্বশীল আৰু বুজাবুজি থকা ব্যক্তি বিচাৰে। অংশীদাৰী ব্যৱসায় লাভজনক হ'ব পাৰে।`,
-                `এই ঘৰৰ স্থিতিৰ পৰা বুজা যায় যে জীৱনত কিছুমান হঠাতে হোৱা পৰিৱৰ্তনৰ সন্মুখীন হ'বলগীয়া হ'ব পাৰে, যিয়ে আপোনাক মানসিকভাৱে শক্তিশালী কৰিব।`,
-                `আধ্যাত্মিকতা আৰু উচ্চ শিক্ষাৰ প্ৰতি আপোনাৰ গভীৰ আকৰ্ষণ আছে। ভাগ্যই আপোনাক কৰ্মৰ জৰিয়তেহে পূৰ্ণ ফল দিব।`,
-                `কৰ্মক্ষেত্ৰত আপুনি অত্যন্ত উচ্চাকাংক্ষী। সমাজত মান-সন্মান আৰু খ্যাতি অৰ্জন কৰাৰ প্ৰৱল যোগ আছে।`,
-                `একাধিক আয়ৰ উৎস থকাৰ সম্ভাৱনা আছে। বন্ধুবৰ্গ আৰু সামাজিক নেটৱৰ্কৰ জৰিয়তে আপুনি লাভৱান হ'ব।`,
-                `আধ্যাত্মিক যাত্ৰা বা বিদেশ ভ্ৰমণৰ যোগ আছে। অপ্ৰয়োজনীয় খৰচৰ পৰা বিৰত থকাটো মংগলজনক।`
-            ];
+            // ================== DYNAMIC PAGES LOGIC ==================
 
-            for(let i=1; i<=12; i++) {
-                let pInH = hFull[i].length > 0 ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই";
-                housesAnalysisHtml += `
-                <div class="info-card">
-                    <div class="card-title">${houseNames[i-1]}</div>
-                    <div class="card-content">
-                        <strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}<br><br>
-                        ${houseDescriptions[i-1]}
-                    </div>
-                </div>`;
+            // 1. 12 HOUSES PAGE (Only for Birth Chart)
+            let housesAnalysisPage = "";
+            if (service === 'birth') {
+                let housesContent = "";
+                const houseNames = ["১ম ঘৰ", "২য় ঘৰ", "৩য় ঘৰ", "৪ৰ্থ ঘৰ", "৫ম ঘৰ", "৬ষ্ঠ ঘৰ", "৭ম ঘৰ", "৮ম ঘৰ", "৯ম ঘৰ", "১০ম ঘৰ", "১১তম ঘৰ", "১২তম ঘৰ"];
+                const houseDescriptions = [
+                    "আপোনাৰ লগ্নৰ অধিপতিৰ অৱস্থানে আপোনাক এক বিশ্লেষণাত্মক আৰু যুক্তিবাদী ব্যক্তিত্ব প্ৰদান কৰিছে।",
+                    "এই ঘৰৰ অৱস্থাই আপোনাৰ আৰ্থিক পৰিচালনাৰ দক্ষতা আৰু পাৰিবাৰিক বান্ধোনৰ প্ৰতি গুৰুত্ব প্ৰদৰ্শন কৰে।",
+                    "যোগাযোগ আৰু সাহসৰ ক্ষেত্ৰত আপুনি স্পষ্টবাদী আৰু প্ৰত্যক্ষ।",
+                    "গৃহ আৰু সম্পত্তিৰ ক্ষেত্ৰত আপুনি স্থায়িত্ব বিচাৰে। মাটি বা ঘৰ-দুৱাৰ ক্ৰয় কৰাৰ সুন্দৰ যোগ আছে।",
+                    "আপোনাৰ সৃজনশীল শক্তি প্ৰবল। শিক্ষা আৰু নতুন কিবা শিকাৰ প্ৰতি আপোনাৰ সদায় আগ্ৰহ থাকে।",
+                    "প্ৰতিযোগিতা বা শত্ৰুৰ বিৰুদ্ধে আপুনি জয়ী হ'ব পৰা সামৰ্থ্য ৰাখে।",
+                    "জীৱনসংগীৰ ক্ষেত্ৰত আপুনি এজন দায়িত্বশীল ব্যক্তি বিচাৰে। অংশীদাৰী ব্যৱসায় লাভজনক হ'ব পাৰে।",
+                    "জীৱনত কিছুমান হঠাতে হোৱা পৰিৱৰ্তনৰ সন্মুখীন হ'বলগীয়া হ'ব পাৰে, যিয়ে আপোনাক মানসিকভাৱে শক্তিশালী কৰিব।",
+                    "আধ্যাত্মিকতা আৰু উচ্চ শিক্ষাৰ প্ৰতি আপোনাৰ গভীৰ আকৰ্ষণ আছে।",
+                    "কৰ্মক্ষেত্ৰত আপুনি অত্যন্ত উচ্চাকাংক্ষী। সমাজত মান-সন্মান আৰু খ্যাতি অৰ্জন কৰাৰ প্ৰৱল যোগ আছে।",
+                    "একাধিক আয়ৰ উৎস থকাৰ সম্ভাৱনা আছে। বন্ধুবৰ্গৰ জৰিয়তে আপুনি লাভৱান হ'ব।",
+                    "আধ্যাত্মিক যাত্ৰা বা বিদেশ ভ্ৰমণৰ যোগ আছে। অপ্ৰয়োজনীয় খৰচৰ পৰা বিৰত থকাটো মংগলজনক।"
+                ];
+                for(let i=1; i<=12; i++) {
+                    let pInH = hFull[i].length > 0 ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই";
+                    housesContent += `<div class="info-card"><div class="card-title">${houseNames[i-1]}</div><div class="card-content"><strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}<br><br>${houseDescriptions[i-1]}</div></div>`;
+                }
+                housesAnalysisPage = `<div class="page page-break"><h2 class="section-title">❁ ১২ টা ঘৰৰ বিশ্লেষণ ❁</h2><div class="text-section">জন্ম কুণ্ডলীৰ ১২ টা ঘৰে জীৱনৰ ১২ টা ভিন ভিন দিশ প্ৰতিনিধিত্ব কৰে।</div>${housesContent}</div>`;
             }
 
-            contentHtml = `
-                <!-- Page 2: Core Details -->
+            // 2. CAREER & FINANCE PAGE (For Career and Birth Chart)
+            let careerAnalysisPage = "";
+            if (service === 'birth' || service === 'career') {
+                careerAnalysisPage = `
                 <div class="page page-break">
-                    <h2 class="section-title">❁ মূল জ্যোতিষিক পৰিচয় ❁</h2>
-                    
-                    <div class="shloka">
-                        "যথা শিখা ময়ূৰাণাং নাগানাং মணயথা।<br>
-                        তদ্বদ্ বেদাঙ্গশাস্ত্ৰাণাং জ্যোতিষং মূৰ্ধনি স্থিতম্॥"
-                    </div>
-
-                    <div class="info-card">
-                        <div class="card-title">লগ্ন (Ascendant)</div>
-                        <div class="card-content">
-                            <strong>${chart.ascendant.rashi}</strong><br>
-                            লগ্নই আপোনাৰ বাহ্যিক ব্যক্তিত্ব, শাৰীৰিক গঠন আৰু জীৱনৰ প্ৰাথমিক দিশ নিৰ্ণয় কৰে। এই লগ্নে আপোনাক আত্মবিশ্বাসী, বিশ্লেষণাত্মক আৰু বাস্তৱবাদী দৃষ্টিভংগী প্ৰদান কৰিছে।
-                        </div>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="card-title">চন্দ্ৰ ৰাশি (Moon Sign)</div>
-                        <div class="card-content">
-                            <strong>${chart.planets.Moon.rashi}</strong><br>
-                            চন্দ্ৰই আপোনাৰ মন আৰু আৱেগক নিয়ন্ত্ৰণ কৰে। এই ৰাশিৰ প্ৰভাৱত আপোনাৰ অন্তৰ্নিহিত আৱেগ শক্তিশালী আৰু স্বাভাৱিকতে আপুনি স্বাধীনচিতীয়া।
-                        </div>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="card-title">জন্ম নক্ষত্ৰ (Nakshatra)</div>
-                        <div class="card-content">
-                            <strong>${chart.planets.Moon.nakshatra} (পদ: ${chart.planets.Moon.pada})</strong><br>
-                            এই নক্ষত্ৰৰ জাতকসকল দায়িত্বশীল, পাৰিবাৰিক মূল্যবোধত বিশ্বাসী আৰু দীৰ্ঘম্যাদী সম্পৰ্ক গঢ়ি তোলাত পাৰ্গত।
-                        </div>
-                    </div>
-
-                    <div class="info-card">
-                        <div class="card-title">বৰ্তমান মহাদশা (Current Dasha)</div>
-                        <div class="card-content">
-                            <strong>${currentDasha} মহাদশা</strong><br>
-                            পৰিৱৰ্তন আৰু নতুন সুযোগৰ এক গুৰুত্বপূৰ্ণ সময়। এই দশাই আপোনাৰ জীৱনৰ বৰ্তমানৰ পৰিস্থিতি, কৰ্মক্ষেত্ৰৰ দিশ আৰু প্ৰত্যাহ্বানসমূহক প্ৰতিনিধিত্ব কৰিছে।
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Page 3: Charts & Planetary Positions -->
-                <div class="page page-break">
-                    <h2 class="section-title">❁ জন্ম কুণ্ডলী আৰু গ্ৰহ স্থিতি ❁</h2>
-                    
-                    ${svgHtml}
-                    
-                    <h3 class="sub-heading">গ্ৰহৰ স্পষ্ট অৱস্থান</h3>
-                    ${planetsHtml}
-                    
-                    <h3 class="sub-heading">বিংশোত্তৰী মহা দশা</h3>
-                    ${dashaHtml}
-                </div>
-
-                <!-- Page 4: 12 Houses Analysis -->
-                <div class="page page-break">
-                    <h2 class="section-title">❁ ১২ টা ঘৰৰ বিশ্লেষণ ❁</h2>
-                    <div class="text-section">
-                        জন্ম কুণ্ডলীৰ ১২ টা ঘৰে জীৱনৰ ১২ টা ভিন ভিন দিশ প্ৰতিনিধিত্ব কৰে। আপোনাৰ কুণ্ডলীৰ ঘৰসমূহৰ বিশ্লেষণ তলত দিয়া হ'ল:
-                    </div>
-                    ${housesAnalysisHtml}
-                </div>
-
-                <!-- Page 5: Personality, Career & Finance -->
-                <div class="page page-break">
-                    <h2 class="section-title">❁ ব্যক্তিত্ব আৰু জীৱনৰ উদ্দেশ্য ❁</h2>
-                    
-                    <div class="sub-heading">আপোনাৰ প্ৰাকৃতিক শক্তি (Strengths)</div>
+                    <h2 class="section-title">❁ কৰ্মজীৱন আৰু অৰ্থ (Career & Wealth) ❁</h2>
+                    <div class="sub-heading">কৰ্মজীৱনৰ দিশ (Career Direction)</div>
                     <div class="info-card">
                         <div class="card-content">
-                            <ul>
-                                <li><strong>কৌশলগত চিন্তাধাৰা:</strong> আপুনি দীৰ্ঘম্যাদী পৰিকল্পনা কৰিব পাৰে আৰু অত্যন্ত ধৈৰ্যশীল।</li>
-                                <li><strong>নেতৃত্বৰ ক্ষমতা:</strong> পৰিস্থিতিৰ দায়িত্ব লৈ আগবাঢ়ি যোৱাৰ স্বাভাৱিক গুণ আপোনাৰ মাজত আছে।</li>
-                                <li><strong>যোগাযোগ দক্ষতা:</strong> স্পষ্ট আৰু প্ৰত্যক্ষ যোগাযোগ আপোনাৰ মূল অস্ত্ৰ।</li>
-                                <li><strong>আধ্যাত্মিক অন্তৰ্দৃষ্টি:</strong> জীৱনৰ গভীৰ অৰ্থ বুজি পোৱাৰ এক বিশেষ ক্ষমতা আপোনাৰ আছে।</li>
-                            </ul>
+                            আপোনাৰ জন্ম কুণ্ডলীৰ দশম ঘৰ আৰু বৰ্তমান চলি থকা <strong>${currentDasha}</strong> মহাদশাই প্ৰমাণ কৰে যে আপোনাৰ কৰ্মজীৱনত এক গুৰুত্বপূৰ্ণ উত্থানৰ সময় চলি আছে। আপুনি স্বাভাৱিকতে এজন নেতা আৰু পৰিচালনাৰ কামত অত্যন্ত সুদক্ষ।
                         </div>
                     </div>
-
-                    <div class="sub-heading">চাকৰি বনাম নিজা ব্যৱসায়</div>
+                    <div class="sub-heading">চাকৰি নে নিজা ব্যৱসায়?</div>
                     <div class="info-card">
                         <div class="card-title">চাকৰি (Job/Govt/Private)</div>
                         <div class="card-content">
-                            ✓ নিয়মীয়া আয় আৰু স্থিৰতা<br>
                             ✓ প্ৰশাসনিক বা পৰিচালনা স্তৰত কাম কৰিলে আপুনি দ্ৰুত উন্নতি কৰিব পাৰিব।<br>
                             ✗ আনৰ অধীনত কাম কৰিবলৈ গ'লে কেতিয়াবা আপোনাৰ স্বাধীন চিন্তাধাৰাত বাধা আহিব পাৰে।
                         </div>
@@ -707,74 +589,127 @@ async function showReportToCustomer(orderId) {
                         <div class="card-title">নিজা ব্যৱসায় (Business/Entrepreneurship)</div>
                         <div class="card-content">
                             ✓ আপোনাৰ বিস্তৃত দৃষ্টিভংগী আৰু স্বাধীনতাই ব্যৱসায়ত সফলতা আনিব।<br>
-                            ✓ ৰিয়েল এষ্টেট, প্ৰযুক্তি, বা পৰামৰ্শদাতা হিচাপে ব্যৱসায় কৰিলে লাভৱান হ'ব।<br>
-                            ✗ আৰম্ভণিৰ বছৰবোৰত কিছু সংগ্ৰাম কৰিবলগীয়া হ'ব পাৰে।
+                            ✓ ৰিয়েল এষ্টেট, প্ৰযুক্তি, বা পৰামৰ্শদাতা হিচাপে ব্যৱসায় কৰিলে লাভৱান হ'ব।
                         </div>
                     </div>
-
-                    <div class="sub-heading">অৰ্থ আৰু সম্পদ (Finance & Wealth)</div>
+                    <div class="sub-heading">আৰ্থিক সমৃদ্ধি (Financial Growth)</div>
                     <div class="info-card">
                         <div class="card-content">
-                            আপোনাৰ কুণ্ডলীত সম্পদ গঢ়াৰ শক্তিশালী যোগ আছে। হঠাতে বিনিয়োগ কৰাৰ সলনি পৰিকল্পিতভাৱে (Systematic Investment) আগবাঢ়িলে আপুনি জীৱনৰ মধ্যভাগত প্ৰচুৰ ধন-সম্পত্তিৰ গৰাকী হ'ব পাৰিব। মাটি বা সম্পত্তি ক্ৰয় কৰাটো আপোনাৰ বাবে লাভজনক।
+                            হঠাতে বিনিয়োগ কৰাৰ সলনি পৰিকল্পিতভাৱে (Systematic Investment) আগবাঢ়িলে আপুনি প্ৰচুৰ ধন-সম্পত্তিৰ গৰাকী হ'ব পাৰিব। মাটি বা সম্পত্তি ক্ৰয় কৰাটো আপোনাৰ বাবে লাভজনক।
                         </div>
                     </div>
-                </div>
+                </div>`;
+            }
 
-                <!-- Page 6: Love, Marriage & Remedies -->
+            // 3. LOVE & MARRIAGE PAGE (For Love and Birth Chart)
+            let loveAnalysisPage = "";
+            if (service === 'birth' || service === 'love') {
+                loveAnalysisPage = `
                 <div class="page page-break">
-                    <h2 class="section-title">❁ প্ৰেম, বিবাহ আৰু প্ৰতিকাৰ ❁</h2>
-                    
-                    <div class="sub-heading">প্ৰেম আৰু সম্পৰ্ক (Love & Marriage)</div>
+                    <h2 class="section-title">❁ প্ৰেম, বিবাহ আৰু সম্পৰ্ক ❁</h2>
+                    <div class="sub-heading">আপোনাৰ প্ৰেমৰ স্বভাৱ (Love Nature)</div>
                     <div class="info-card">
                         <div class="card-content">
-                            প্ৰেমৰ ক্ষেত্ৰত আপুনি অত্যন্ত আৱেগিক যদিও বাহ্যিকভাৱে সেয়া প্ৰকাশ নকৰে। আপুনি এনে এজন জীৱনসংগী বিচাৰে যিয়ে আপোনাৰ লক্ষ্য আৰু চিন্তাধাৰাক সন্মান কৰে। বিবাহৰ ক্ষেত্ৰত আপুনি লৰালৰিকৈ সিদ্ধান্ত লোৱাৰ সলনি সময় লৈ সঠিক ব্যক্তি নিৰ্বাচন কৰাটো উচিত। বিবাহৰ পিছত আপোনাৰ ভাগ্য অধিক প্ৰবল হোৱাৰ যোগ আছে।
+                            আপোনাৰ জন্ম কুণ্ডলীত <strong>${chart.planets.Moon.rashi}</strong> ৰাশি আৰু চন্দ্ৰৰ অৱস্থানে প্ৰমাণ কৰে যে প্ৰেমৰ ক্ষেত্ৰত আপুনি অত্যন্ত আৱেগিক যদিও বাহ্যিকভাৱে সেয়া সহজে প্ৰকাশ নকৰে। আপুনি সম্পৰ্কত গভীৰতা আৰু বিশ্বাসযোগ্যতা বিচাৰে।
                         </div>
                     </div>
-
-                    <h2 class="section-title" style="margin-top: 40px;">❁ ব্যৱহাৰিক নিদান আৰু প্ৰতিকাৰ ❁</h2>
-                    
-                    <div class="info-card remedy-card">
-                        <div class="card-title">১. শুভ ৰত্ন (Gemstone)</div>
-                        <div class="card-content">
-                            আপোনাৰ লগ্ন আৰু শুভ গ্ৰহৰ স্থিতি অনুসৰি <strong>${luckyGem}</strong> ধাৰণ কৰিলে জীৱনৰ বহুতো বাধা আঁতৰ হ'ব। <em>(ৰত্ন ধাৰণ কৰাৰ পূৰ্বে এজন প্ৰমাণিত জ্যোতিষীৰ পৰামৰ্শ ল'বলৈ নাপাহৰিব)</em>।
-                        </div>
-                    </div>
-
-                    <div class="info-card remedy-card">
-                        <div class="card-title">২. গ্ৰহ শান্তি আৰু দান-দক্ষিণা</div>
+                    <div class="sub-heading">আদৰ্শ জীৱনসংগীৰ গুণাগুণ</div>
+                    <div class="info-card">
                         <div class="card-content">
                             <ul>
-                                <li>প্ৰতি শনিবাৰে দুখীয়া লোকক অন্ন বা ক'লা বৰণৰ সামগ্ৰী দান কৰক।</li>
-                                <li>পুৱা উঠি সূৰ্য দেৱতাক অৰ্ঘ্য প্ৰদান কৰক, ই আত্মবিশ্বাস আৰু স্বাস্থ্য বৃদ্ধি কৰিব।</li>
-                                <li>পশুপক্ষীক আহাৰ দিয়াৰ অভ্যাস গঢ়ি তোলক।</li>
+                                <li>যিয়ে আপোনাৰ স্বাধীন চিন্তাধাৰা আৰু লক্ষ্যক সন্মান কৰে।</li>
+                                <li>যি মানসিকভাৱে পৰিপক্ক আৰু আৰ্থিকভাৱে স্থিৰ।</li>
+                                <li>প্ৰেমৰ লগতে যিয়ে বন্ধুত্বৰো মূল্য বুজি পায়।</li>
                             </ul>
                         </div>
                     </div>
-
-                    <div class="info-card remedy-card">
-                        <div class="card-title">৩. মন্ত্ৰ জপ আৰু ধ্যান</div>
+                    <div class="sub-heading">বিবাহৰ যোগ আৰু সময়</div>
+                    <div class="info-card">
                         <div class="card-content">
-                            মানসিক শান্তি আৰু একাগ্ৰতা বৃদ্ধিৰ বাবে দৈনিক পুৱা বা গধূলি ১০ মিনিট সময় উলিয়াই <strong>"ওঁ নমঃ শিৱায়"</strong> বা গায়ত্ৰী মন্ত্ৰ জপ কৰক। ই আপোনাৰ অতিৰিক্ত চিন্তা (Overthinking) কমোৱাত সহায় কৰিব।
+                            বৰ্তমানৰ <strong>${currentDasha}</strong> মহাদশাই বিবাহ বা গুৰুত্বপূৰ্ণ সম্পৰ্ক স্থাপনৰ বাবে এক অনুকূল পৰিৱেশ সৃষ্টি কৰিছে। লৰালৰিকৈ সিদ্ধান্ত লোৱাৰ সলনি সময় লৈ সঠিক ব্যক্তি নিৰ্বাচন কৰাটো উচিত। বিবাহৰ পিছত আপোনাৰ কৰ্ম আৰু ভাগ্য অধিক প্ৰবল হোৱাৰ যোগ আছে।
                         </div>
                     </div>
-
-                    <div class="disclaimer">
-                        <strong>⚠️ অস্বীকাৰকৰণ (Disclaimer):</strong><br>
-                        এই ৰিপোৰ্টখন লাহিৰী অয়নাংশ আৰু বৈদিক জ্যোতিষৰ গাণিতিক সূত্ৰৰ আধাৰত প্ৰস্তুত কৰা হৈছে। এই ফলাফলসমূহ সম্ভাৱনাহে, কোনো গেৰাণ্টি নহয়। ইয়াক চিকিৎসা, আইনী বা বিত্তীয় পৰামৰ্শ হিচাপে গ্ৰহণ কৰিব নালাগে।
+                    <div class="sub-heading">সম্পৰ্কৰ প্ৰত্যাহ্বান (Challenges)</div>
+                    <div class="info-card">
+                        <div class="card-content">
+                            আপোনাৰ মনৰ কথা সহজে প্ৰকাশ নকৰা স্বভাৱটোৱে কেতিয়াবা সংগীৰ মনত ভুল বুজাবুজিৰ সৃষ্টি কৰিব পাৰে। মুকলিকৈ কথা পতাৰ অভ্যাস গঢ়ি তোলক।
+                        </div>
                     </div>
-                    
-                    <div class="footer-seal">
-                        ॥ ইতি জ্যোতিষ অসম ॥<br>
-                        <strong>"আপোনাৰ জন্ম-কুণ্ডলী • আপোনাৰ সময় • আপোনাৰ সম্ভাৱনা"</strong>
+                </div>`;
+            }
+
+            // 4. DYNAMIC REMEDIES
+            let specificRemedies = "";
+            if (service === 'love') {
+                specificRemedies = `<li><strong>প্ৰেম আৰু বিবাহৰ প্ৰতিকাৰ:</strong> শুক্ৰ গ্ৰহৰ শুভ ফলৰ বাবে শুকুৰবাৰে বগা মিঠাই বা গাখীৰ দান কৰক। সংগীৰ সৈতে তৰ্কৰ পৰা বিৰত থাকক।</li>`;
+            } else if (service === 'career') {
+                specificRemedies = `<li><strong>কৰ্ম আৰু অৰ্থৰ প্ৰতিকাৰ:</strong> কৰ্মক্ষেত্ৰত শনিৰ কুপ্ৰভাৱ আঁতৰাবলৈ শনিবাৰে দুখীয়াক অন্ন দান কৰক আৰু নিজৰ কৰ্মস্থান পৰিষ্কাৰ কৰি ৰাখক।</li>`;
+            } else {
+                specificRemedies = `
+                <li><strong>কৰ্মফল:</strong> দৰিদ্ৰজনক অন্ন দান কৰিলে আৰু পিতৃ-মাতৃক শ্ৰদ্ধা কৰিলে আপোনাৰ কুণ্ডলীৰ বহু দোষ খণ্ডন হ'ব।</li>
+                <li><strong>প্ৰেমৰ প্ৰতিকাৰ:</strong> শুক্ৰ গ্ৰহৰ শুভ ফলৰ বাবে শুকুৰবাৰে বগা বস্ত্ৰ বা গাখীৰ দান কৰক।</li>`;
+            }
+
+            let remediesPage = `
+            <div class="page page-break">
+                <h2 class="section-title">❁ নিদান আৰু প্ৰতিকাৰ ❁</h2>
+                <div class="text-section">
+                    বৈদিক জ্যোতিষত প্ৰতিকাৰসমূহ ভয়ৰ আধাৰত নহয়, বৰঞ্চ গ্ৰহৰ যোগাত্মক শক্তিক বৃদ্ধি কৰিবলৈহে ব্যৱহাৰ কৰা হয়।
+                </div>
+                <div class="info-card remedy-card">
+                    <div class="card-title">শুভ ৰত্ন (Lucky Gemstone)</div>
+                    <div class="card-content">
+                        আপোনাৰ লগ্নৰ অধিপতিৰ অৱস্থান অনুসৰি <strong>${luckyGem}</strong> ধাৰণ কৰিলে কৰ্ম আৰু ভাগ্যত সুপ্ৰভাৱ পৰিব। <em>(ধাৰণ কৰাৰ পূৰ্বে এজন প্ৰমাণিত জ্যোতিষীৰ পৰামৰ্শ গ্ৰহণ কৰিব)</em>।
                     </div>
                 </div>
-            `;
-        } else {
+                <div class="info-card remedy-card">
+                    <div class="card-title">প্ৰাথমিক প্ৰতিকাৰ</div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>আধ্যাত্মিক অনুশীলন:</strong> প্ৰতিদিন পুৱা সূৰ্য দেৱতাক অৰ্ঘ্য প্ৰদান কৰক আৰু গায়ত্ৰী মন্ত্ৰ জপ কৰক।</li>
+                            ${specificRemedies}
+                            <li><strong>ধ্যান:</strong> মানসিক শান্তিৰ বাবে দৈনিক ১০ মিনিট "ওঁ নমঃ শিৱায়" মন্ত্ৰ জপ কৰি ধ্যান কৰক।</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="disclaimer">
+                    <strong>⚠️ অস্বীকাৰকৰণ (Disclaimer):</strong><br>
+                    এই ৰিপোৰ্টখন লাহিৰী অয়নাংশ আৰু বৈদিক জ্যোতিষৰ সূত্ৰৰ আধাৰত কম্পিউটাৰ জেনেইটেড। ইয়াক জীৱনৰ গুৰুত্বপূৰ্ণ সিদ্ধান্ত (যেনে চিকিৎসা বা আইনী) লোৱাৰ একমাত্ৰ ভিত্তি হিচাপে ল'ব নালাগে।
+                </div>
+                <div class="footer-seal">
+                    ॥ ইতি জ্যোতিষ অসম ॥<br>
+                    <strong>"আপোনাৰ জন্ম-কুণ্ডলী • আপোনাৰ সময় • আপোনাৰ সম্ভাৱনা"</strong>
+                </div>
+            </div>`;
+
+            // ================== ASSEMBLE ALL PAGES ==================
+
             contentHtml = `
-                <div class="page">
-                    <h3 style="color: #8b0000; text-align: center;">⚠️ ৰিপোৰ্ট প্ৰস্তুত কৰাত কিছু সমস্যা হৈছে</h3>
-                    <p style="text-align: center;">কাৰণ: ${data.error || 'অজ্ঞাত কাৰণ'}</p>
-                </div>`;
+                <!-- Page 1: Core Details & Charts -->
+                <div class="page page-break">
+                    <h2 class="section-title">❁ মূল জ্যোতিষিক পৰিচয় ❁</h2>
+                    <div class="shloka">"যথা শিখা ময়ূৰাণাং নাগানাং মணயথা।<br>তদ্বদ্ বেদাঙ্গশাস্ত্ৰাণাং জ্যোতিষং মূৰ্ধনি স্থিতম্॥"</div>
+                    <div class="info-card">
+                        <div class="card-title">লগ্ন (Ascendant): <strong>${chart.ascendant.rashi}</strong></div>
+                        <div class="card-title">চন্দ্ৰ ৰাশি (Moon Sign): <strong>${chart.planets.Moon.rashi}</strong></div>
+                        <div class="card-title">বৰ্তমান মহাদশা: <strong>${currentDasha} মহাদশা</strong></div>
+                    </div>
+                    <h2 class="section-title" style="margin-top:40px;">❁ জন্ম কুণ্ডলী আৰু গ্ৰহ স্থিতি ❁</h2>
+                    ${svgHtml}
+                    <h3 class="sub-heading">গ্ৰহৰ স্পষ্ট অৱস্থান</h3>
+                    ${planetsHtml}
+                    <h3 class="sub-heading">বিংশোত্তৰী মহা দশা</h3>
+                    ${dashaHtml}
+                </div>
+
+                ${housesAnalysisPage}
+                ${careerAnalysisPage}
+                ${loveAnalysisPage}
+                ${remediesPage}
+            `;
+            
+        } else {
+            contentHtml = `<div class="page"><h3 style="color: #8b0000; text-align: center;">⚠️ ৰিপোৰ্ট প্ৰস্তুত কৰাত কিছু সমস্যা হৈছে</h3><p style="text-align: center;">কাৰণ: ${data.error || 'অজ্ঞাত কাৰণ'}</p></div>`;
         }
 
         const reportHtml = `
@@ -782,31 +717,12 @@ async function showReportToCustomer(orderId) {
             <html lang="as">
             <head>
                 <meta charset="UTF-8">
-                <title>জ্যোতিষ অসম - সম্পূৰ্ণ বৈদিক ৰিপোৰ্ট</title>
+                <title>জ্যোতিষ অসম - বৈদিক ৰিপোৰ্ট</title>
                 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
                 <style>
-                    body { 
-                        font-family: 'Noto Sans Assamese', Georgia, serif; 
-                        line-height: 1.8; 
-                        color: #3e2723;
-                        background: #e8dcc4;
-                        margin: 0; 
-                        padding: 20px; 
-                    }
-                    .page { 
-                        max-width: 850px; 
-                        margin: 0 auto 30px; 
-                        background: #fdf5e6; 
-                        padding: 50px 45px; 
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-                        border: 8px solid double #8b0000;
-                        border-image: repeating-linear-gradient(45deg, #8b0000, #8b0000 5px, transparent 5px, transparent 10px) 10;
-                        position: relative;
-                    }
-                    .page::before {
-                        content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
-                        border: 2px solid #8b0000; pointer-events: none;
-                    }
+                    body { font-family: 'Noto Sans Assamese', Georgia, serif; line-height: 1.8; color: #3e2723; background: #e8dcc4; margin: 0; padding: 20px; }
+                    .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 50px 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px solid double #8b0000; border-image: repeating-linear-gradient(45deg, #8b0000, #8b0000 5px, transparent 5px, transparent 10px) 10; position: relative; }
+                    .page::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #8b0000; pointer-events: none; }
                     
                     .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
                     .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; }
@@ -852,7 +768,6 @@ async function showReportToCustomer(orderId) {
                 </style>
             </head>
             <body>
-                <!-- Page 1: Cover Page -->
                 <div class="page page-break cover">
                     <div class="om-symbol">ॐ</div>
                     <div><h1 class="cover-brand">জ্যোতিষ অসম</h1></div>
