@@ -1003,11 +1003,14 @@ async function fetchDailyRashi() {
     if(container) container.innerHTML = "<p style='text-align:center; color:#6D28D9; font-weight:bold;'>আজিৰ ৰাশিফল লোড হৈ আছে... ⏳</p>";
     
     try {
-        // ইয়াত daily-rashi ৰ সলনি free-daily-horoscope ব্যৱহাৰ কৰা হৈছে
-        const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/free-daily-horoscope', { 
+        // আজিৰ তাৰিখ আৰু ব্ৰাউজাৰ কেচ (Cache) ক্লিয়াৰ কৰাৰ লজিক
+        const todayStr = new Date().toISOString().split('T')[0]; 
+        const cacheBuster = new Date().getTime();
+
+        const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/free-daily-horoscope?v=' + cacheBuster, { 
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: "all" }) // "all" পঠিয়ালে ১২ টা ৰাশিৰ ডাটা আহিব
+            headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+            body: JSON.stringify({ type: "all", date: todayStr }) 
         });
         const result = await response.json();
         
@@ -1080,10 +1083,12 @@ document.getElementById('btn-personal').addEventListener('click', async function
     
     btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳"; btn.disabled = true;
     try {
-        const response = await fetch(FREE_API_URL, { 
+        const todayStr = new Date().toISOString().split('T')[0];
+        const cacheBuster = new Date().getTime();
+        const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
             method: "POST", 
-            headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ type: "personal", dob, rashi }) 
+            headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" }, 
+            body: JSON.stringify({ type: "personal", dob, rashi, date: todayStr }) 
         });
         const data = await response.json();
         if (data.success) {
@@ -1109,10 +1114,12 @@ document.getElementById('btn-couple').addEventListener('click', async function()
     
     btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳"; btn.disabled = true;
     try {
-        const response = await fetch(FREE_API_URL, { 
+        const todayStr = new Date().toISOString().split('T')[0];
+        const cacheBuster = new Date().getTime();
+        const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
             method: "POST", 
-            headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ type: "couple", boyDob, boyRashi, girlDob, girlRashi }) 
+            headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" }, 
+            body: JSON.stringify({ type: "couple", boyDob, boyRashi, girlDob, girlRashi, date: todayStr }) 
         });
         const data = await response.json();
         if (data.success) {
