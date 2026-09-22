@@ -232,7 +232,36 @@
             <h2 class="section-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
             <div class="rashi-grid" id="rashiGridContainer"></div>
         </section>
+<!-- Reviews Section -->
+        <section class="section">
+            <h2 class="section-title">গ্ৰাহকৰ মতামত (Customer Reviews)</h2>
+            <p class="section-subtitle">আমাৰ সেৱা গ্ৰহণ কৰা গ্ৰাহকসকলৰ অনুভৱ</p>
+            
+            <div class="review-container" style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
+                
+                <!-- Display Reviews -->
+                <div id="reviewsList" style="margin-bottom: 30px; max-height: 400px; overflow-y: auto;">
+                    <p style="text-align: center; color: #64748b;">মতামত লোড হৈ আছে...</p>
+                </div>
 
+                <!-- Review Form -->
+                <div id="reviewFormContainer" style="padding-top: 20px; border-top: 1px dashed #e2e8f0;">
+                    <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px;">আপোনাৰ মতামত দিয়ক</h3>
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <input type="text" id="reviewerName" class="form-control" placeholder="আপোনাৰ নাম" required style="flex: 1;">
+                        <select id="reviewRating" class="form-control" required style="flex: 1;">
+                            <option value="5">⭐⭐⭐⭐⭐ (অতিকৈ ভাল)</option>
+                            <option value="4">⭐⭐⭐⭐ (ভাল)</option>
+                            <option value="3">⭐⭐⭐ (ঠিকে আছে)</option>
+                            <option value="2">⭐⭐ (বেয়া)</option>
+                            <option value="1">⭐ (অতিকৈ বেয়া)</option>
+                        </select>
+                    </div>
+                    <textarea id="reviewComment" class="form-control" rows="3" placeholder="আপোনাৰ অনুভৱ লিখক..." style="margin-bottom: 15px;" required></textarea>
+                    <button onclick="submitReview()" class="service-btn" style="width: auto; padding: 10px 25px;">মতামত পঠিয়াওক</button>
+                </div>
+            </div>
+        </section>
         <!-- Premium Services -->
         <section class="section">
             <h2 class="section-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
@@ -1133,7 +1162,64 @@ document.getElementById('btn-couple').addEventListener('click', async function()
         btn.innerText = "যুটীয়া ৰাশিফল চাওক"; btn.disabled = false; 
     }
 });
+// --- Review System Logic ---
+async function fetchReviews() {
+    const list = document.getElementById('reviewsList');
+    try {
+        // Supabase-ৰ পৰা পোনে পোনে ডাটা অনা
+        const client = window.supabase.createClient(window.JA_CONFIG.apiBaseUrl.replace('/functions/v1', ''), window.JA_CONFIG.supabaseKey || "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
+        
+        const { data, error } = await client.from('reviews').select('*').order('created_at', { ascending: false }).limit(10);
+        if (error) throw error;
+        
+        if (data.length === 0) {
+            list.innerHTML = "<p style='text-align:center;'>এতিয়ালৈকে কোনো মতামত অহা নাই। প্ৰথম মতামত আপুনিয়েই দিয়ক!</p>";
+            return;
+        }
+        
+        list.innerHTML = data.map(r => `
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #10B981;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <strong style="color: #1e293b;">${r.customer_name}</strong>
+                    <span>${'⭐'.repeat(r.rating)}</span>
+                </div>
+                <p style="margin: 0; color: #475569; font-size: 14.5px;">"${r.comment}"</p>
+            </div>
+        `).join('');
+    } catch (err) {
+        list.innerHTML = "<p style='text-align:center; color: red;'>মতামত লোড কৰাত সমস্যা হৈছে।</p>";
+    }
+}
 
+async function submitReview() {
+    const name = document.getElementById('reviewerName').value;
+    const rating = document.getElementById('reviewRating').value;
+    const comment = document.getElementById('reviewComment').value;
+    
+    if(!name || !comment) return alert("অনুগ্ৰহ কৰি আপোনাৰ নাম আৰু মতামত লিখক।");
+    
+    const btn = document.querySelector('#reviewFormContainer button');
+    btn.innerText = "পঠিওৱা হৈছে..."; btn.disabled = true;
+    
+    try {
+        const client = window.supabase.createClient(window.JA_CONFIG.apiBaseUrl.replace('/functions/v1', ''), window.JA_CONFIG.supabaseKey || "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
+        
+        const { error } = await client.from('reviews').insert([
+            { customer_name: name, rating: parseInt(rating), comment: comment }
+        ]);
+        
+        if (error) throw error;
+        
+        alert("আপোনাৰ মূল্যৱান মতামতৰ বাবে ধন্যবাদ!");
+        document.getElementById('reviewerName').value = '';
+        document.getElementById('reviewComment').value = '';
+        fetchReviews(); // নতুন ৰিভিউটো লগে লগে দেখুৱাবলৈ
+    } catch (err) {
+        alert("মতামত পঠোৱাত সমস্যা হৈছে।");
+    } finally {
+        btn.innerText = "মতামত পঠিয়াওক"; btn.disabled = false;
+    }
+}
 window.addEventListener('DOMContentLoaded', () => { 
     updateDate(); 
     fetchDailyRashi(); // ৱেবছাইট খোল খালেই লাইভ ৰাশিফল আহিব
