@@ -310,8 +310,13 @@
             <div class="review-container" style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
                 
                 <!-- Display Reviews -->
-                <div id="reviewsList" style="margin-bottom: 30px; max-height: 400px; overflow-y: auto;">
+                <div id="reviewsList" style="margin-bottom: 20px; max-height: 500px; overflow-y: auto;">
                     <p style="text-align: center; color: #64748b;">মতামত লোড হৈ আছে...</p>
+                </div>
+                
+                <!-- View More Button -->
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <button id="viewMoreBtn" onclick="loadMoreReviews()" class="service-btn" style="display: none; width: auto; padding: 8px 20px; font-size: 14px; background: #475569; margin: 0 auto; box-shadow: none;">আৰু মতামত চাওক (View More) ⬇</button>
                 </div>
 
                 <!-- Review Form -->
@@ -1183,16 +1188,19 @@ document.getElementById('btn-couple').addEventListener('click', async function()
         btn.innerText = "যুটীয়া ৰাশিফল চাওক"; btn.disabled = false; 
     }
 });
-// --- Review System Logic ---
+// --- Review System Logic (Updated with View More) ---
 const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
-const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; // <--- এইখিনি মচি আপোনাৰ আচল anon key টো পেষ্ট কৰক
+const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; // <--- আপোনাৰ আচল Key টো ইয়াত দিব
+
+let allFetchedReviews = [];
+let currentlyShowingReviews = 5;
 
 async function fetchReviews() {
     const list = document.getElementById('reviewsList');
     try {
         const client = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
         
-        const { data, error } = await client.from('reviews').select('*').order('created_at', { ascending: false }).limit(10);
+        const { data, error } = await client.from('reviews').select('*').order('created_at', { ascending: false }).limit(50);
         if (error) throw error;
         
         if (!data || data.length === 0) {
@@ -1200,21 +1208,42 @@ async function fetchReviews() {
             return;
         }
         
-        list.innerHTML = data.map(r => `
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #10B981;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <strong style="color: #1e293b;">${r.customer_name}</strong>
-                    <span>${'⭐'.repeat(r.rating)}</span>
-                </div>
-                <p style="margin: 0; color: #475569; font-size: 14.5px;">"${r.comment}"</p>
-            </div>
-        `).join('');
+        allFetchedReviews = data;
+        currentlyShowingReviews = 5; // প্ৰথমে কেৱল ৫ টা দেখুৱাব
+        renderReviewsDisplay();
     } catch (err) {
         console.error("Review Fetch Error:", err);
         list.innerHTML = "<p style='text-align:center; color: red;'>মতামত লোড কৰাত সমস্যা হৈছে।</p>";
     }
 }
 
+function renderReviewsDisplay() {
+    const list = document.getElementById('reviewsList');
+    const btn = document.getElementById('viewMoreBtn');
+    
+    const reviewsToShow = allFetchedReviews.slice(0, currentlyShowingReviews);
+    
+    list.innerHTML = reviewsToShow.map(r => `
+        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #10B981;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <strong style="color: #1e293b;">${r.customer_name}</strong>
+                <span>${'⭐'.repeat(r.rating)}</span>
+            </div>
+            <p style="margin: 0; color: #475569; font-size: 14.5px;">"${r.comment}"</p>
+        </div>
+    `).join('');
+
+    if (allFetchedReviews.length > currentlyShowingReviews) {
+        if(btn) btn.style.display = 'block';
+    } else {
+        if(btn) btn.style.display = 'none';
+    }
+}
+
+function loadMoreReviews() {
+    currentlyShowingReviews += 5; // ক্লিক কৰিলে আৰু ৫ টা বাঢ়িব
+    renderReviewsDisplay();
+}
 async function submitReview() {
     const name = document.getElementById('reviewerName').value;
     const rating = document.getElementById('reviewRating').value;
