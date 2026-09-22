@@ -1182,16 +1182,18 @@ document.getElementById('btn-couple').addEventListener('click', async function()
     }
 });
 // --- Review System Logic ---
+const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
+const supabaseAnonKey = "ইয়াত_আপোনাৰ_SUPABASE_ANON_KEY_টো_দিব"; // <--- এইখিনি মচি আপোনাৰ আচল anon key টো পেষ্ট কৰক
+
 async function fetchReviews() {
     const list = document.getElementById('reviewsList');
     try {
-        // Supabase-ৰ পৰা পোনে পোনে ডাটা অনা
-        const client = window.supabase.createClient(window.JA_CONFIG.apiBaseUrl.replace('/functions/v1', ''), window.JA_CONFIG.supabaseKey || "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
+        const client = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
         
         const { data, error } = await client.from('reviews').select('*').order('created_at', { ascending: false }).limit(10);
         if (error) throw error;
         
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
             list.innerHTML = "<p style='text-align:center;'>এতিয়ালৈকে কোনো মতামত অহা নাই। প্ৰথম মতামত আপুনিয়েই দিয়ক!</p>";
             return;
         }
@@ -1206,6 +1208,7 @@ async function fetchReviews() {
             </div>
         `).join('');
     } catch (err) {
+        console.error("Review Fetch Error:", err);
         list.innerHTML = "<p style='text-align:center; color: red;'>মতামত লোড কৰাত সমস্যা হৈছে।</p>";
     }
 }
@@ -1221,8 +1224,7 @@ async function submitReview() {
     btn.innerText = "পঠিওৱা হৈছে..."; btn.disabled = true;
     
     try {
-        const client = window.supabase.createClient(window.JA_CONFIG.apiBaseUrl.replace('/functions/v1', ''), window.JA_CONFIG.supabaseKey || "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
-        
+        const client = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
         const { error } = await client.from('reviews').insert([
             { customer_name: name, rating: parseInt(rating), comment: comment }
         ]);
@@ -1234,6 +1236,7 @@ async function submitReview() {
         document.getElementById('reviewComment').value = '';
         fetchReviews(); // নতুন ৰিভিউটো লগে লগে দেখুৱাবলৈ
     } catch (err) {
+        console.error("Review Submit Error:", err);
         alert("মতামত পঠোৱাত সমস্যা হৈছে।");
     } finally {
         btn.innerText = "মতামত পঠিয়াওক"; btn.disabled = false;
