@@ -1009,7 +1009,7 @@ async function fetchDailyRashi() {
 
         const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/free-daily-horoscope?v=' + cacheBuster, { 
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: "all", date: todayStr }) 
         });
         const result = await response.json();
@@ -1087,7 +1087,7 @@ document.getElementById('btn-personal').addEventListener('click', async function
         const cacheBuster = new Date().getTime();
         const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
             method: "POST", 
-            headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" }, 
+            headers: { "Content-Type": "application/json" }, 
             body: JSON.stringify({ type: "personal", dob, rashi, date: todayStr }) 
         });
         const data = await response.json();
@@ -1118,7 +1118,7 @@ document.getElementById('btn-couple').addEventListener('click', async function()
         const cacheBuster = new Date().getTime();
         const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
             method: "POST", 
-            headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" }, 
+            headers: { "Content-Type": "application/json" }, 
             body: JSON.stringify({ type: "couple", boyDob, boyRashi, girlDob, girlRashi, date: todayStr }) 
         });
         const data = await response.json();
