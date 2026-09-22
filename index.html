@@ -46,18 +46,23 @@
         :root { --primary-color: #6D28D9; --secondary-color: #DB2777; --dark-bg: #0f172a; --light-bg: #f8fafc; --text-dark: #1e293b; --text-light: #64748b; --border-color: #e2e8f0; --success-color: #10B981; --warning-color: #e11d48; }
         body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-.nav-links { display: flex; gap: 20px; align-items: center; overflow-x: auto; white-space: nowrap; }
+/* Premium Dark Purple Menu */
+        nav { background: linear-gradient(135deg, #4c1d95, #6D28D9); box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
+        
+        /* White Logo for Dark Background */
+        .logo { font-size: 26px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        
+        /* Golden & White Links */
+        .nav-links { display: flex; gap: 20px; align-items: center; overflow-x: auto; white-space: nowrap; }
         .nav-links::-webkit-scrollbar { display: none; }
-        .nav-links a { text-decoration: none; color: #475569; font-weight: 600; font-size: 15px; transition: 0.3s; padding: 5px 8px; border-radius: 6px; }
-        .nav-links a:hover { color: var(--primary-color); background: #f1f5f9; }
+        .nav-links a { text-decoration: none; color: #f8fafc; font-weight: 600; font-size: 15px; transition: 0.3s; padding: 6px 12px; border-radius: 6px; }
+        .nav-links a:hover { color: #fde68a; background: rgba(255, 255, 255, 0.15); }
+        
         @media (max-width: 768px) {
             .nav-content { flex-direction: column; gap: 12px; }
             .nav-links { width: 100%; justify-content: flex-start; padding-bottom: 5px; }
         }
-        nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
-        .logo { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
-        
         .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
         .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; }
         .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -138,7 +143,8 @@
         <div class="container nav-content">
             <div class="logo">✨ জ্যোতিষ অসম</div>
             <div class="nav-links">
-                <a href="#" style="color: var(--primary-color);">প্ৰধান পৃষ্ঠা</a>
+                <!-- এক্টিভ থকা পেজটো অলপ বেলেগ ৰঙৰ হ'ব -->
+                <a href="#" style="color: #fde68a; background: rgba(255,255,255,0.15);">প্ৰধান পৃষ্ঠা</a>
                 <a href="#free-tools-section" onclick="document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
                 <a href="#premium-services" onclick="document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
                 <a href="#reviews" onclick="document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
@@ -146,7 +152,6 @@
             </div>
         </div>
     </nav>
-
     <div class="container">
         <!-- Hero Section -->
         <section class="hero">
