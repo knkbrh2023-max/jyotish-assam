@@ -44,6 +44,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* Mobile Swipeable Menu Fix */
+@media (max-width: 768px) {
+    .nav-links {
+        display: flex;
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px; 
+        -webkit-overflow-scrolling: touch; /* মোবাইলত স্মুথ স্লাইড হোৱাৰ বাবে */
+        scrollbar-width: none; /* Firefox-ৰ বাবে scrollbar লুকুৱাবলৈ */
+    }
+
+    /* Chrome, Safari আৰু Opera-ৰ বাবে scrollbar লুকুৱাবলৈ */
+    .nav-links::-webkit-scrollbar {
+        display: none; 
+    }
+    
+    .nav-links a {
+        flex: 0 0 auto; /* বুটামবোৰ যাতে সৰু হৈ নাযায় তাৰ বাবে */
+    }
+}
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --primary-color: #6D28D9; --secondary-color: #DB2777; --dark-bg: #0f172a; --light-bg: #f8fafc; --text-dark: #1e293b; --text-light: #64748b; --border-color: #e2e8f0; --success-color: #10B981; --warning-color: #e11d48; }
         body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
