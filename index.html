@@ -44,50 +44,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Hamburger Icon Styles */
+        /* --- Hamburger Menu Fix --- */
+.nav-content {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    position: relative;
+    flex-wrap: nowrap !important;
+}
+
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
+    z-index: 1001; /* বুটামটো সদায় ওপৰত থাকিবলৈ */
 }
 
 .hamburger span {
     width: 25px;
     height: 3px;
-    background-color: white; /* ৩ ডাল আঁচৰ ৰং */
+    background-color: white;
     border-radius: 3px;
-    transition: 0.3s;
 }
 
-/* Mobile Menu Styles */
 @media (max-width: 768px) {
     .hamburger {
         display: flex;
     }
     
     .nav-links {
-        display: none; /* প্ৰথমতে মেনুখন লুকাই থাকিব */
+        display: none !important; /* প্ৰথমতে লুকাই থাকিব */
         flex-direction: column;
         position: absolute;
-        top: 100%; 
+        top: 100%; /* হেডাৰৰ ঠিক তলৰ পৰা আৰম্ভ হ'ব */
         left: 0;
         width: 100%;
-        background: #5b21b6; /* মেনুখন খোল খালে ওলোৱা বেকগ্ৰাউণ্ড ৰং */
-        padding: 10px 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        background: #4c1d95; /* ডাঠ বেঙুনীয়া ৰং */
+        padding: 0;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         z-index: 1000;
     }
 
     .nav-links.active {
-        display: flex; /* বুটামত ক্লিক কৰিলে খোল খাব */
+        display: flex !important; /* ক্লিক কৰিলেহে ওলাব */
     }
 
     .nav-links a {
-        text-align: center;
-        padding: 12px;
-        margin: 5px 20px;
-        border-radius: 8px;
+        text-align: left;
+        padding: 15px 25px;
+        margin: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1); /* প্ৰতিটো অপচনৰ মাজত এডাল পাতল আঁচ */
+        border-radius: 0;
         display: block;
     }
 }
@@ -189,8 +197,8 @@
 </head>
 <body>
    <nav>
-        <div class="container nav-content" style="position: relative; display: flex; justify-content: space-between; align-items: center;">
-    <div class="logo">✨ জ্যোতিষ অসম</div>
+        <div class="container nav-content">
+    <div class="logo" style="margin: 0;">✨ জ্যোতিষ অসম</div>
     
     <!-- Hamburger Icon -->
     <div class="hamburger" onclick="toggleMenu()">
@@ -200,7 +208,6 @@
     </div>
 
     <div class="nav-links" id="navLinks">
-        <!-- এক্টিভ থকা পেজটো অলপ বেলেগ ৰঙৰ হ'ব -->
         <a href="#" style="color: #fde68a; background: rgba(255,255,255,0.15);" onclick="toggleMenu()">প্ৰধান পৃষ্ঠা</a>
         <a href="#free-tools-section" onclick="toggleMenu(); document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
         <a href="#premium-services" onclick="toggleMenu(); document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
