@@ -47,10 +47,16 @@
         /* --- Hamburger Menu Fix --- */
 .nav-content {
     display: flex !important;
-    justify-content: space-between !important;
+    flex-direction: row !important; /* নাম আৰু বুটাম একেশাৰীত ৰাখিবলৈ */
+    justify-content: space-between !important; /* দুয়োটাকে দুয়োকাষে ঠেলি দিবলৈ */
     align-items: center !important;
-    position: relative;
-    flex-wrap: nowrap !important;
+    width: 100% !important;
+}
+
+.logo {
+    margin: 0 !important;
+    text-align: left !important; /* নামটো বাওঁফালে থাকিব */
+    flex: 1 !important; /* বাওঁফালৰ পৰা ঠাইখিনি ল'ব */
 }
 
 .hamburger {
@@ -58,7 +64,8 @@
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
-    z-index: 1001; /* বুটামটো সদায় ওপৰত থাকিবলৈ */
+    z-index: 1001;
+    margin-left: auto !important; /* বুটামটোক একেবাৰে সোঁফাললৈ ঠেলিবলৈ */
 }
 
 .hamburger span {
@@ -70,31 +77,31 @@
 
 @media (max-width: 768px) {
     .hamburger {
-        display: flex;
+        display: flex !important;
     }
     
     .nav-links {
-        display: none !important; /* প্ৰথমতে লুকাই থাকিব */
+        display: none !important;
         flex-direction: column;
         position: absolute;
-        top: 100%; /* হেডাৰৰ ঠিক তলৰ পৰা আৰম্ভ হ'ব */
+        top: 100%; 
         left: 0;
         width: 100%;
-        background: #4c1d95; /* ডাঠ বেঙুনীয়া ৰং */
+        background: #4c1d95; 
         padding: 0;
         box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         z-index: 1000;
     }
 
     .nav-links.active {
-        display: flex !important; /* ক্লিক কৰিলেহে ওলাব */
+        display: flex !important; 
     }
 
     .nav-links a {
         text-align: left;
         padding: 15px 25px;
         margin: 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1); /* প্ৰতিটো অপচনৰ মাজত এডাল পাতল আঁচ */
+        border-bottom: 1px solid rgba(255,255,255,0.1);
         border-radius: 0;
         display: block;
     }
