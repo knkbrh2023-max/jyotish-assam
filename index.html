@@ -44,25 +44,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Mobile Swipeable Menu Fix */
-@media (max-width: 768px) {
-    .nav-links {
-        display: flex;
-        flex-wrap: nowrap !important;
-        overflow-x: auto;
-        white-space: nowrap;
-        padding-bottom: 5px; 
-        -webkit-overflow-scrolling: touch; /* মোবাইলত স্মুথ স্লাইড হোৱাৰ বাবে */
-        scrollbar-width: none; /* Firefox-ৰ বাবে scrollbar লুকুৱাবলৈ */
-    }
+        /* Hamburger Icon Styles */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+}
 
-    /* Chrome, Safari আৰু Opera-ৰ বাবে scrollbar লুকুৱাবলৈ */
-    .nav-links::-webkit-scrollbar {
-        display: none; 
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: white; /* ৩ ডাল আঁচৰ ৰং */
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+/* Mobile Menu Styles */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
     }
     
+    .nav-links {
+        display: none; /* প্ৰথমতে মেনুখন লুকাই থাকিব */
+        flex-direction: column;
+        position: absolute;
+        top: 100%; 
+        left: 0;
+        width: 100%;
+        background: #5b21b6; /* মেনুখন খোল খালে ওলোৱা বেকগ্ৰাউণ্ড ৰং */
+        padding: 10px 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        display: flex; /* বুটামত ক্লিক কৰিলে খোল খাব */
+    }
+
     .nav-links a {
-        flex: 0 0 auto; /* বুটামবোৰ যাতে সৰু হৈ নাযায় তাৰ বাবে */
+        text-align: center;
+        padding: 12px;
+        margin: 5px 20px;
+        border-radius: 8px;
+        display: block;
     }
 }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1217,6 +1243,11 @@ document.getElementById('btn-couple').addEventListener('click', async function()
         btn.innerText = "যুটীয়া ৰাশিফল চাওক"; btn.disabled = false; 
     }
 });
+        // Hamburger Menu Toggle Logic
+function toggleMenu() {
+    const nav = document.getElementById('navLinks');
+    nav.classList.toggle('active');
+}
 // --- Review System Logic (Updated with View More) ---
 const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
 const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; // <--- আপোনাৰ আচল Key টো ইয়াত দিব
