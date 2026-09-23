@@ -163,17 +163,25 @@
 </head>
 <body>
    <nav>
-        <div class="container nav-content">
-            <div class="logo">✨ জ্যোতিষ অসম</div>
-            <div class="nav-links">
-                <!-- এক্টিভ থকা পেজটো অলপ বেলেগ ৰঙৰ হ'ব -->
-                <a href="#" style="color: #fde68a; background: rgba(255,255,255,0.15);">প্ৰধান পৃষ্ঠা</a>
-                <a href="#free-tools-section" onclick="document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
-                <a href="#premium-services" onclick="document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
-                <a href="#reviews" onclick="document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
-                <a href="contact.html">যোগাযোগ</a>
-            </div>
-        </div>
+        <div class="container nav-content" style="position: relative; display: flex; justify-content: space-between; align-items: center;">
+    <div class="logo">✨ জ্যোতিষ অসম</div>
+    
+    <!-- Hamburger Icon -->
+    <div class="hamburger" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+        <!-- এক্টিভ থকা পেজটো অলপ বেলেগ ৰঙৰ হ'ব -->
+        <a href="#" style="color: #fde68a; background: rgba(255,255,255,0.15);" onclick="toggleMenu()">প্ৰধান পৃষ্ঠা</a>
+        <a href="#free-tools-section" onclick="toggleMenu(); document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
+        <a href="#premium-services" onclick="toggleMenu(); document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
+        <a href="#reviews" onclick="toggleMenu(); document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
+        <a href="contact.html">যোগাযোগ</a>
+    </div>
+</div>
     </nav>
     <div class="container">
         <!-- Hero Section -->
