@@ -1148,7 +1148,7 @@ async function showReportToCustomer(orderId) {
                 </div>`;
             }
 
-           // 4. MONTHLY & YEARLY PAGE
+         // 4. MONTHLY & YEARLY PAGE (DETAILED DYNAMIC VERSION)
             let extraAnalysisPage = "";
             
             // আজিৰ পৰা এমাহৰ তাৰিখ উলিওৱা
@@ -1160,178 +1160,225 @@ async function showReportToCustomer(orderId) {
             const nextMonthName = nextMonthObj.toLocaleDateString('as-IN', { month: 'long' });
             const currentYear = todayDateObj.getFullYear();
             
-            // তাৰিখৰ ৰেঞ্জ (যেনে: ২১ ছেপ্টেম্বৰ–২০ অক্টোবৰ)
+            // তাৰিখৰ ৰেঞ্জ (যেনে: ২৫ ছেপ্টেম্বৰ – ২৫ অক্টোবৰ ২০২৬)
             const dateRangeStr = `${todayDateObj.getDate()} ${currentMonthName} – ${nextMonthObj.getDate()} ${nextMonthName} ${currentYear}`;
+
+            // ৰাশি অনুযায়ী মাহেকীয়া বিশেষ ফলাফল আৰু শুভ সংকেত
+            const rashiMonthlyData = {
+                "Aries": { asName: "মেষ", theme: "কৰ্মোদ্যম বৃদ্ধি + আৰ্থিক পৰিকল্পনা + সম্পৰ্কত স্পষ্টতা", careerFocus: "নতুন দায়িত্ব আৰু নেতৃত্বৰ সুযোগ", luckyDays: "মঙলবাৰ, দেওবাৰ", luckyColor: "ৰঙা আৰু সোণালী", luckyNum: "১, ৯" },
+                "Taurus": { asName: "বৃষ", theme: "আৰ্থিক স্থিৰতা + পাৰিবাৰিক সুখ + ধৈৰ্যশীল সিদ্ধান্ত", careerFocus: "স্থায়ী কামত অগ্ৰগতি আৰু সঞ্চয় বৃদ্ধি", luckyDays: "শুক্ৰবাৰ, বুধবাৰ", luckyColor: "বগা আৰু পাতল নীলা", luckyNum: "২, ৬" },
+                "Gemini": { asName: "মিথুন", theme: "বৌদ্ধিক বিকাশ + নতুন যোগাযোগ + ব্যৱসায়িক কৌশল", careerFocus: "নতুন চুক্তি, যোগাযোগ আৰু সৃজনশীল পৰিকল্পনা", luckyDays: "বুধবাৰ, শুক্ৰবাৰ", luckyColor: "সেউজীয়া আৰু হালধীয়া", luckyNum: "৩, ৫" },
+                "Cancer": { asName: "কৰ্কট", theme: "মানসিক শান্তি + ঘৰুৱা উন্নতি + আৱেগিক ভাৰসাম্য", careerFocus: "সহকৰ্মীৰ সহযোগিতা আৰু পুৰণি কামৰ সফল সমাপ্তি", luckyDays: "সোমবাৰ, বৃহস্পতিবাৰ", luckyColor: "বগা আৰু ৰূপালী", luckyNum: "২, ৭" },
+                "Leo": { asName: "সিংহ", theme: "আত্মবিশ্বাস বৃদ্ধি + সামাজিক সন্মান + কৰ্মক্ষেত্ৰত প্ৰভাৱ", careerFocus: "উচ্চস্তৰীয় ব্যক্তিৰ সান্নিধ্য আৰু পদোন্নতিৰ যোগ", luckyDays: "দেওবাৰ, মঙলবাৰ", luckyColor: "গেৰুৱা আৰু সোণালী", luckyNum: "১, ৫" },
+                "Virgo": { asName: "কন্যা", theme: "শৃংখলাবদ্ধ কৰ্ম + ব্যয় নিয়ন্ত্ৰণ + স্বাস্থ্য সচেতনতা", careerFocus: "হিচাপ-নিকাচ, বিশ্লেষণ আৰু নিখুঁত পৰিকল্পনাৰে সফলতা", luckyDays: "বুধবাৰ, শনিবাৰ", luckyColor: "পান্না সেউজীয়া আৰু বগা", luckyNum: "৫, ৬" },
+                "Libra": { asName: "তুলা", theme: "সম্পৰ্কত মধুৰতা + ব্যৱসায়িক অংশীদাৰীত্ব + আৰ্থিক ভাৰসাম্য", careerFocus: "নতুন ক্লায়েণ্ট বা ব্যৱসায়িক লেনদেনত লাভ", luckyDays: "শুক্ৰবাৰ, শনিবাৰ", luckyColor: "গুলপীয়া আৰু ক্ৰীম", luckyNum: "৬, ৮" },
+                "Scorpio": { asName: "বৃশ্চিক", theme: "গভীৰ সংকল্প + বাধা অতিক্ৰম + আকস্মিক ধনযোগ", careerFocus: "জটিল কামৰ সমাধান আৰু গোপন পৰিকল্পনাত সফলতা", luckyDays: "মঙলবাৰ, বৃহস্পতিবাৰ", luckyColor: "গাঢ় ৰঙা আৰু মেৰুণ", luckyNum: "৪, ৯" },
+                "Sagittarius": { asName: "ধনু", theme: "ভাগ্যোদয় + উচ্চ শিক্ষা বা ভ্ৰমণ + আধ্যাত্মিক ইতিবাচকতা", careerFocus: "জ্যেষ্ঠজনৰ পৰামৰ্শ আৰু নতুন জ্ঞানৰ দ্বাৰা উন্নতি", luckyDays: "বৃহস্পতিবাৰ, দেওবাৰ", luckyColor: "হালধীয়া আৰু কমলা", luckyNum: "৩, ৯" },
+                "Capricorn": { asName: "মকৰ", theme: "কঠোৰ পৰিশ্ৰমৰ ফল + কৰ্মত স্থায়িত্ব + দীর্ঘম্যাদী বিনিয়োগ", careerFocus: "ধীৰ কিন্তু স্থায়ীভাৱে কৰ্মক্ষেত্ৰত নিজৰ স্থান সুদৃঢ় কৰণ", luckyDays: "শনিবাৰ, শুক্ৰবাৰ", luckyColor: "নীলা আৰু ছাই ৰং", luckyNum: "৪, ৮" },
+                "Aquarius": { asName: "কুম্ভ", theme: "নতুন উদ্ভাৱনী চিন্তা + মিত্ৰলাভ + আয়ৰ বিকল্প পথ", careerFocus: "আধুনিক প্ৰযুক্তি বা নেটৱৰ্কিঙৰ জৰিয়তে বিশেষ লাভ", luckyDays: "শনিবাৰ, বুধবাৰ", luckyColor: "আকাশী নীলা আৰু বেঙুনীয়া", luckyNum: "৭, ৮" },
+                "Pisces": { asName: "মীন", theme: "সৃজনশীল সাফল্য + মানসিক প্ৰশান্তি + পাৰিবাৰিক সহযোগিতা", careerFocus: "নিজস্ব প্ৰতিভাৰ বিকাশ আৰু সন্মানজনক কাজের সুযোগ", luckyDays: "বৃহস্পতিবাৰ, সোমবাৰ", luckyColor: "হালধীয়া আৰু সাগৰীয় সেউজীয়া", luckyNum: "৩, ৭" }
+            };
+
+            const mMoonRashi = chart?.planets?.Moon?.rashi || "Aries";
+            const mLagnaRashi = chart?.ascendant?.rashi || "Aries";
+            const mNakshatra = chart?.planets?.Moon?.nakshatra || "";
+            const mInfo = rashiMonthlyData[mMoonRashi] || rashiMonthlyData["Aries"];
 
             if (service === 'monthly') {
                 extraAnalysisPage = `
                 <div class="page page-break">
-                    <h2 class="section-title">❁ ১ মাহৰ সামগ্ৰিক ফল ❁</h2>
-                    <div class="text-section" style="text-align: center; color: #8b0000; font-weight: bold; margin-bottom: 20px;">
-                        [ ${dateRangeStr} ৰ বাবে Vedic/Sidereal (Lahiri) জ্যোতিষীয় ৰিডিং ]
+                    <h2 class="section-title">❁ অহা ৩০ দিনৰ বিস্তৃত মাহেকীয়া ৰাশিফল ❁</h2>
+                    <div class="text-section" style="text-align: center; color: #8b0000; font-weight: bold; margin-bottom: 15px;">
+                        [ ${dateRangeStr} লৈকে বৈদিক লাহিৰী অয়নাংশভিত্তিক বিশেষ গণনা ]
                     </div>
                     
                     <div class="info-card">
                         <div class="card-content">
-                            এই মাহটো আপোনাৰ বাবে <strong>“direction change + financial planning + relationship clarity”</strong>-ৰ মাহ।<br>
-                            সামগ্ৰিক শক্তি: ⭐⭐⭐⭐☆
+                            আপোনাৰ চন্দ্ৰ ৰাশি <strong>${mInfo.asName} (${mMoonRashi} - ${mNakshatra} নক্ষত্ৰ)</strong>, লগ্ন <strong>${mLagnaRashi}</strong> আৰু বৰ্তমান চলি থকা <strong>${currentDasha} মহাদশা</strong>ৰ গোচৰ ফল অনুসৰি অহা ৩০ দিন আপোনাৰ বাবে <strong>“${mInfo.theme}”</strong>-ৰ সময়।<br>
+                            <strong>মাহটোৰ সামগ্ৰিক শুভ শক্তি:</strong> ⭐⭐⭐⭐☆ (৮৫% অনুকূল)
                         </div>
                     </div>
 
-                    <h3 class="sub-heading">💼 Career (কৰ্মজীৱন)</h3>
+                    <h3 class="sub-heading">💼 ১. কৰ্মজীৱন আৰু ব্যৱসায় (Career & Business)</h3>
                     <div class="info-card">
                         <div class="card-content">
+                            <strong>এই মাহৰ মূল দিশ:</strong> ${mInfo.careerFocus}।
                             <ul>
-                                <li><strong>প্ৰথম ১০ দিন:</strong> কামত চাপ বা confusion অলপ থাকিব পাৰে। পুৰণি কাম শেষ কৰি নতুন plan বনোৱা ভাল।</li>
-                                <li><strong>মাজৰ ১০ দিন:</strong> নতুন opportunity, client/contact বা কামৰ proposal আহিব পাৰে।</li>
-                                <li><strong>শেষৰ ১০ দিন:</strong> নিজৰ সিদ্ধান্ত নিজে লৈ আগবঢ়াৰ সময়। Business বা independent work-ৰ ক্ষেত্ৰত নতুন idea বাস্তৱত ৰূপ দিব পাৰা।</li>
+                                <li><strong>প্ৰথম ১০ দিন:</strong> কৰ্মক্ষেত্ৰত কিছু ব্যস্ততা বা পুৰণি কামৰ চাপ থাকিব পাৰে। এই সময়ছোৱাত আধৰুৱা কামসমূহ শেষ কৰি অহা দিনবোৰৰ বাবে সুপৰিকল্পিত তালিকা প্ৰস্তুত কৰাটো উত্তম।</li>
+                                <li><strong>মাজৰ ১০ দিন:</strong> গ্ৰহৰ শুভ দৃষ্টিৰ ফলত নতুন সুযোগ, গ্ৰাহকৰ সৈতে সু-সম্পৰ্ক বা কৰ্মসংস্থাপনৰ নতুন প্ৰস্তাৱ আহিব পাৰে। উচ্চপদস্থ বিষয়াৰ সহযোগিতা লাভ কৰিব।</li>
+                                <li><strong>শেষৰ ১০ দিন:</strong> আত্মবিশ্বাসেৰে নিজৰ সিদ্ধান্ত কাৰ্যকৰী কৰাৰ সময়। স্বতন্ত্ৰভাৱে কৰা কাম বা নিজা ব্যৱসায়ত নতুন চিন্তাধাৰাই সুন্দৰ ফল দিব।</li>
                             </ul>
-                            <br>
-                            <em>Career theme:</em> নতুন সুযোগ আহিব পাৰে, কিন্তু ফলাফল আপোনাৰ consistency-ৰ ওপৰত নিৰ্ভৰ কৰিব। চাকৰি সলনিৰ কথা ভাবি থাকিলে তৎক্ষণাত resign নকৰি প্ৰথমে নতুন option নিশ্চিত কৰা ভাল।
+                            <em>বিশেষ পৰামৰ্শ:</em> চাকৰি বা ব্যৱসায় সলনিৰ কথা ভাবি থাকিলে খৰখেদা নকৰি প্ৰথমে বিকল্প পথটো সম্পূৰ্ণ নিশ্চিত কৰি ল'ব।
                         </div>
                     </div>
 
-                    <h3 class="sub-heading">💰 Finance (আৰ্থিক অৱস্থা)</h3>
+                    <h3 class="sub-heading">💰 ২. আৰ্থিক স্থিতি আৰু ধন ব্যৱস্থাপনা (Finance & Wealth)</h3>
                     <div class="info-card">
                         <div class="card-content">
-                            এই মাহত income-তকৈ money management অধিক গুৰুত্বপূৰ্ণ।
+                            এই মাহত কেৱল উপাৰ্জনেই নহয়, বৰঞ্চ সুশৃংখল আৰ্থিক পৰিচালনা (Money Management) আপোনাৰ বাবে অধিক গুৰুত্বপূৰ্ণ হ'ব।
                             <ul>
-                                <li>মাহৰ প্ৰথম ভাগত unexpected expense হ'ব পাৰে।</li>
-                                <li>দ্বিতীয় সপ্তাহৰ পিছত financial situation অলপ stable হোৱাৰ সম্ভাৱনা।</li>
-                                <li>নতুন investment/loan-ৰ ক্ষেত্ৰত ভালদৰে research নকৰাকৈ সিদ্ধান্ত নল'বা।</li>
+                                <li><strong>আয় আৰু ব্যয়:</strong> মাহৰ প্ৰথম সপ্তাহত ঘৰুৱা বা ব্যক্তিগত কাৰণত কিছু অপ্ৰত্যাশিত খৰচ হ'ব পাৰে, কিন্তু ১০ তাৰিখৰ পিছৰ পৰা ধনৰ আগমন স্থিৰ হ'ব।</li>
+                                <li><strong>বিনিয়োগ আৰু ঋণ:</strong> এই মাহত কাকো ডাঙৰ অংকৰ ধন ধাৰলৈ নিদিব আৰু নতুন ঋণ বা শ্বেয়াৰ বজাৰত বিনিয়োগ কৰাৰ পূৰ্বে অভিজ্ঞজনৰ পৰামৰ্শ ল'ব।</li>
+                                <li><strong>অতিৰিক্ত উপাৰ্জন:</strong> আপোনাৰ জন্ম নক্ষত্ৰ (${mNakshatra}) ৰ প্ৰভাৱত এটা দ্বিতীয় আয়ৰ উৎস (Secondary Income) গঢ়ি তোলাৰ বাবে এই সময়ছোৱা অতি উপযোগী।</li>
                             </ul>
-                            <br>
-                            <em>Finance theme:</em> আয় বৃদ্ধি কৰাৰ সুযোগ + খৰচ নিয়ন্ত্ৰণৰ প্ৰয়োজন। এটা দ্বিতীয় income source বনোৱাৰ চিন্তা এই সময়ত উপযোগী।
                         </div>
                     </div>
                 </div>
 
                 <div class="page page-break">
-                    <h3 class="sub-heading">❤️ Love (প্ৰেম আৰু সম্পৰ্ক)</h3>
+                    <h2 class="section-title">❁ মাহেকীয়া ৰাশিফল (খণ্ড - ২) ❁</h2>
+
+                    <h3 class="sub-heading">❤️ ৩. প্ৰেম, বিবাহ আৰু পাৰিবাৰিক সম্পৰ্ক (Love & Family)</h3>
                     <div class="info-card">
                         <div class="card-content">
-                            <strong>Relationship থাকিলে:</strong>
+                            <strong>বিবাহিত বা সম্পৰ্কত থকাসকলৰ বাবে:</strong>
                             <ul>
-                                <li>মাহৰ আৰম্ভণিতে communication gap হ'ব পাৰে।</li>
-                                <li>মাহৰ মাজভাগত serious কথা-বতৰা বা relationship-ৰ কোনো বিষয় clear হোৱাৰ সম্ভাৱনা।</li>
-                                <li>Partner-ৰ কথাক assumption নকৰি পোনপটীয়াকৈ সোধা ভাল। Ego clash এৰাই চলিলে relationship অধিক stable হ'ব।</li>
+                                <li>মাহৰ আৰম্ভণিতে কৰ্মব্যস্ততাৰ বাবে সংগীৰ সৈতে যোগাযোগৰ কিছু ব্যৱধান (Communication Gap) হ'ব পাৰে।</li>
+                                <li>মাহৰ মাজভাগত পাৰস্পৰিক বুজাবুজি বৃদ্ধি পাব আৰু সম্পৰ্কৰ যিকোনো পুৰণি ভুল বুজাবুজি দূৰ হ'ব।</li>
+                                <li>মনৰ কথা অনুমান কৰি লোৱাৰ সলনি সংগীৰ সৈতে খোলাখুলিকৈ কথা পাতক। অহংকাৰ বা খং এৰাই চলিলে ঘৰুৱা পৰিৱেশ অত্যন্ত আনন্দময় হ'ব।</li>
                             </ul>
-                            <br>
-                            <strong>Single হলে:</strong>
+                            <strong>অবিবাহিতসকলৰ বাবে (Singles):</strong>
                             <ul>
-                                <li>নতুন connection social media, বন্ধুবৰ্গ বা কামৰ network-ৰ জৰিয়তে আহিব পাৰে।</li>
-                                <li>connection আৰম্ভ হ'লেই relationship বুলি ধৰি নল'বা; সময় দি মানুহজনক বুজি লোৱা ভাল।</li>
+                                <li>সামাজিক মাধ্যম, বন্ধুবৰ্গ বা কৰ্মক্ষেত্ৰৰ জৰিয়তে নতুন কোনো বিশেষ ব্যক্তিৰ সৈতে চিনাকি হোৱাৰ যোগ আছে।</li>
+                                <li>লগে লগে আৱেগিক সিদ্ধান্ত নলৈ ব্যক্তিজনৰ স্বভাৱ বুজিবলৈ অলপ সময় লওক।</li>
                             </ul>
-                            <br>
-                            <em>Love theme:</em> clarity → understanding → stability.
                         </div>
                     </div>
 
-                    <h3 class="sub-heading">📅 মাহটোৰ গুৰুত্বপূৰ্ণ সময়</h3>
+                    <h3 class="sub-heading">🌿 ৪. স্বাস্থ্য আৰু মানসিক স্থিতি (Health & Wellness)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            গ্ৰহৰ স্থান পৰিৱৰ্তনৰ বাবে মাহৰ প্ৰথম ভাগত কিছু মানসিক ভাগৰ, অনিদ্ৰা বা পেটৰ সাধাৰণ সমস্যাই দেখা দিব পাৰে। পৰ্যাপ্ত পৰিমাণে পানী পান কৰক, সময়মতে আহাৰ গ্ৰহণ কৰক আৰু দৈনিক অন্ততঃ ১৫ মিনিট খোজ কঢ়া বা প্ৰাণায়াম কৰাৰ অভ্যাস গঢ়ি তোলক।
+                        </div>
+                    </div>
+
+                    <h3 class="sub-heading">📅 ৫. অহা ৩০ দিনৰ সময়সূচী আৰু পূৰ্বাভাস</h3>
                     <table class="vedic-table">
                         <thead>
                             <tr>
                                 <th>সময়সীমা</th>
-                                <th>সম্ভাব্য বিষয়</th>
+                                <th>গ্ৰহৰ প্ৰভাৱ আৰু সম্ভাব্য ফলাফল</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>প্ৰথম ৫ দিন</td><td>Planning / চিন্তা বৃদ্ধি</td></tr>
-                            <tr><td>৬–১০ দিন</td><td>Career-related movement</td></tr>
-                            <tr><td>১১–১৫ দিন</td><td>Finance & opportunity</td></tr>
-                            <tr><td>১৬–২০ দিন</td><td>Love/communication</td></tr>
-                            <tr><td>২১–২৫ দিন</td><td>Career decision</td></tr>
-                            <tr><td>২৬–৩০ দিন</td><td>Stability & next-step planning</td></tr>
+                            <tr><td>১ম – ৫ম দিন</td><td>নতুন পৰিকল্পনা, মানসিক ব্যস্ততা আৰু পুৰণি কামৰ সমীক্ষা</td></tr>
+                            <tr><td>৬ষ্ঠ – ১০ম দিন</td><td>কৰ্মক্ষেত্ৰত সক্ৰিয়তা বৃদ্ধি আৰু নতুন দায়িত্ব গ্ৰহণ</td></tr>
+                            <tr><td>১১তম – ১৫তম দিন</td><td>আৰ্থিক লেনদেনত সুফল আৰু নতুন সুযোগ লাভ</td></tr>
+                            <tr><td>১৬তম – ২০তম দিন</td><td>প্ৰেম, পাৰিবাৰিক আলোচনা আৰু সামাজিক সম্পৰ্কত উন্নতি</td></tr>
+                            <tr><td>২১তম – ২৫তম দিন</td><td>ব্যৱসায় বা কেৰিয়াৰ সম্পৰ্কীয় গুৰুত্বপূৰ্ণ সিদ্ধান্ত গ্ৰহণ</td></tr>
+                            <tr><td>২৬তম – ৩০তম দিন</td><td>মানসিক স্থিৰতা, ধন সঞ্চয় আৰু পৰৱৰ্তী মাহৰ সফল প্ৰস্তুতি</td></tr>
                         </tbody>
                     </table>
 
-                    <div class="info-card" style="background: rgba(139, 0, 0, 0.05); border-left-color: #5c3a21;">
-                        <div class="card-title">🌟 এই মাহৰ মূল কথা</div>
+                    <div class="info-card" style="background: rgba(139, 0, 0, 0.05); border-left-color: #5c3a21; margin-top: 15px;">
+                        <div class="card-title">🌟 এই মাহৰ শুভ সংকেত আৰু মূল সাৰাংশ</div>
                         <div class="card-content">
-                            <strong>Career:</strong> নতুন direction বিচাৰি পাব পাৰা<br>
-                            <strong>Finance:</strong> আয়ৰ সুযোগ আছে, কিন্তু খৰচ control কৰা দৰকাৰ<br>
-                            <strong>Love:</strong> ভুল বুজাবুজি clear কৰাৰ সময়<br>
-                            <strong>Personal:</strong> confidence ধীৰে ধীৰে বৃদ্ধি পাব পাৰে<br><br>
-                            বিশেষকৈ মাহৰ মাজভাগৰ সময়ছোৱা আপোনাৰ বাবে গুৰুত্বপূৰ্ণ বুলি দেখা যায়—career আৰু personal decision দুয়োটা ক্ষেত্ৰতে।
+                            <strong>শুভ বাৰ:</strong> ${mInfo.luckyDays} &nbsp;|&nbsp; 
+                            <strong>শুভ ৰং:</strong> ${mInfo.luckyColor} &nbsp;|&nbsp; 
+                            <strong>শুভ সংখ্যা:</strong> ${mInfo.luckyNum}<br><br>
+                            <strong>মূল মন্ত্ৰ:</strong> অহা ৩০ দিনত আপোনাৰ সফলতাৰ মূল চাবি-কাঠি হ'ব ধৈৰ্য আৰু নিষ্ঠা। মাহৰ মাজভাগৰ সময়ছোৱা আপোনাৰ কেৰিয়াৰ আৰু ব্যক্তিগত সিদ্ধান্ত দুয়োটা ক্ষেত্ৰতে আটাইতকৈ শুভ বুলি বিবেচিত হৈছে।
                         </div>
                     </div>
                 </div>`;
-                
             } else if (service === 'yearly') {
-                        const currentYear = new Date().getFullYear();
-                        const nextYear = currentYear + 1;
-                        
-                        // ১২ মাহৰ ভৱিষ্যদ্বাণীৰ তালিকা আৰু লজিক
-                        const monthNamesAs = ["জানুৱাৰী", "ফেব্ৰুৱাৰী", "মাৰ্চ", "এপ্ৰিল", "মে'", "জুন", "জুলাই", "আগষ্ট", "ছেপ্টেম্বৰ", "অক্টোবৰ", "নৱেম্বৰ", "ডিচেম্বৰ"];
-                        const todayForYearly = new Date();
-                        let currentM = todayForYearly.getMonth();
-                        let currentY = todayForYearly.getFullYear();
-                        
-                        const monthPredictions = [
-                            "কৰ্মক্ষেত্ৰত নতুন সুযোগ লাভ কৰিব। আত্মবিশ্বাস আৰু উদ্যম বৃদ্ধি পাব।",
-                            "আৰ্থিক লাভালাভৰ যোগ আছে। পুৰণি বিনিয়োগৰ পৰা ধন আহিব পাৰে।",
-                            "মানসিক শান্তি আৰু পাৰিবাৰিক সুখ বৃদ্ধি পাব। সৰু-সুৰা যাত্ৰাৰ যোগ আছে।",
-                            "কামত অলপ বেছি পৰিশ্ৰম কৰিবলগীয়া হ'ব পাৰে। স্বাস্থ্যৰ যত্ন ল'ব।",
-                            "প্ৰেম আৰু সম্পৰ্কৰ বাবে অতি শুভ সময়। পৰিয়ালত কোনো শুভ কাৰ্য হ'ব পাৰে।",
-                            "ব্যৱসায়ত নতুন চুক্তি বা চাকৰিত পদোন্নতিৰ সম্ভাৱনা আছে।",
-                            "মাটি বা সম্পত্তি সম্পৰ্কীয় কামত সফলতা লাভ কৰিব। খৰচ নিয়ন্ত্ৰণ কৰক।",
-                            "আধ্যাত্মিকতাৰ প্ৰতি আগ্ৰহ বাঢ়িব। গুৰুত্বপূৰ্ণ সিদ্ধান্ত লোৱাৰ বাবে ভাল সময়।",
-                            "নতুন ব্যক্তিৰ সৈতে পৰিচয় হ'ব যি ভৱিষ্যতে সহায়ক হ'ব।",
-                            "স্বাস্থ্যৰ অলপ অৱনতি ঘটিব পাৰে। খাদ্যাভ্যাসৰ প্ৰতি সতৰ্ক হওক।",
-                            "আৰ্থিক দিশত স্থিৰতা আহিব। পৰিয়ালৰ সদস্যৰ পৰা পূৰ্ণ সমৰ্থন পাব।",
-                            "বছৰটোৰ শেষত আপোনাৰ দীৰ্ঘদিনীয়া পৰিকল্পনাসমূহ সফল হোৱাৰ যোগ আছে।"
-                        ];
+                const currentYear = new Date().getFullYear();
+                const nextYear = currentYear + 1;
+                
+                const monthNamesAs = ["জানুৱাৰী", "ফেব্ৰুৱাৰী", "মাৰ্চ", "এপ্ৰিল", "মে'", "জুন", "জুলাই", "আগষ্ট", "ছেপ্টেম্বৰ", "অক্টোবৰ", "নৱেম্বৰ", "ডিচেম্বৰ"];
+                const todayForYearly = new Date();
+                let currentM = todayForYearly.getMonth();
+                let currentY = todayForYearly.getFullYear();
 
-                        let monthlyBreakdownHtml = "";
-                        for(let i = 0; i < 12; i++) {
-                            let mIndex = (currentM + i) % 12;
-                            let displayYear = currentY + Math.floor((currentM + i) / 12);
-                            monthlyBreakdownHtml += `<li style="margin-bottom: 12px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;"><strong>${monthNamesAs[mIndex]} ${displayYear}:</strong> ${monthPredictions[i]}</li>`;
-                        }
+                const yLagnaRashi = chart?.ascendant?.rashi || "Aries";
+                const yMoonRashi = chart?.planets?.Moon?.rashi || "Aries";
+                const yMoonNakshatra = chart?.planets?.Moon?.nakshatra || "";
+                const yJupiterRashi = chart?.planets?.Jupiter?.rashi || "বৃহস্পতি";
+                const ySaturnRashi = chart?.planets?.Saturn?.rashi || "শনি";
+                
+                // গ্ৰাহকৰ লগ্ন আৰু চন্দ্ৰ ৰাশিৰ সংখ্যা অনুযায়ী মাহৰ ফলাফল ডাইনামিক কৰা
+                const rashiShift = ((chart?.ascendant?.rashi_no || 1) + (chart?.planets?.Moon?.rashi_no || 1)) % 12;
 
-                        extraAnalysisPage = `
-                        <div class="page page-break">
-                            <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল (${currentYear} - ${nextYear}) ❁</h2>
-                            <div class="info-card">
-                                <div class="card-content">
-                                    আপোনাৰ <strong>${chart.ascendant.rashi}</strong> লগ্ন আৰু বৰ্তমান চলি থকা <strong>${currentDasha}</strong> মহাদশাৰ ভিত্তিত আগন্তুক এবছৰৰ সামগ্ৰিক ফল আৰু মাহেকীয়া বিৱৰণ তলত দিয়া ধৰণৰ হ'ব।
-                                </div>
-                            </div>
+                const dynamicMonthPredictions = [
+                    "<strong>কৰ্মোদ্যম আৰু নতুন আৰম্ভণি:</strong> কৰ্মক্ষেত্ৰত নতুন সুযোগ আৰু দায়িত্ব লাভ কৰিব। আত্মবিশ্বাস বৃদ্ধি পাব আৰু পূৰ্বৰ আধৰুৱা কামসমূহ সুন্দৰভাৱে সমাপ্ত হ'ব।",
+                    "<strong>আৰ্থিক উন্নতি আৰু সঞ্চয়:</strong> ধন আগমনৰ যোগ প্রবল। পুৰণি বিনিয়োগ বা ব্যৱসায়িক লেনদেনৰ পৰা আশানুৰূপ লাভ আদায় হ'ব পাৰে।",
+                    "<strong>পাৰিবাৰিক সুখ আৰু ভ্ৰমণ:</strong> ঘৰুৱা পৰিৱেশ আনন্দময় হ'ব। আত্মীয় বা পৰিয়ালৰ সৈতে মাংগলিক কাৰ্য বা চুটি যাত্ৰাৰ যোগ দেখা যায়।",
+                    "<strong>কঠোৰ পৰিশ্ৰম আৰু ধৈৰ্যৰ পৰীক্ষা:</strong> কামৰ চাপ অলপ বৃদ্ধি পাব পাৰে। খৰখেদাকৈ কোনো সিদ্ধান্ত নল'ব আৰু নিজৰ স্বাস্থ্য তথা খাদ্যাভ্যাসৰ যত্ন ল'ব।",
+                    "<strong>প্ৰেম, সম্পৰ্ক আৰু শুভ সংবাদ:</strong> প্ৰেম আৰু দাম্পত্য জীৱনৰ বাবে অতি শুভ মাহ। অবিবাহিতসকলৰ বাবে বিবাহৰ কথা-বতৰা আগবাঢ়িব পাৰে।",
+                    "<strong>ব্যৱসায়িক চুক্তি আৰু পদোন্নতি:</strong> চাকৰিয়ালসকলৰ বাবে উচ্চপদস্থ বিষয়াৰ প্ৰশংসা আৰু ব্যৱসায়ীসকলৰ বাবে নতুন লাভজনক পদক্ষেপৰ যোগ আছে।",
+                    "<strong>সম্পত্তি আৰু ব্যয় নিয়ন্ত্ৰণ:</strong> মাটি-বাৰী, বাহন বা ঘৰ মেৰামতি সম্পৰ্কীয় কামত অগ্ৰগতি হ'ব। অৱশ্যে অপ্ৰয়োজনীয় খৰচৰ পৰা হাত সাৰি থাকিব।",
+                    "<strong>আধ্যাত্মিক শক্তি আৰু মানসিক স্পষ্টতা:</strong> ধৰ্মীয় কাৰ্যত মন বহিব। জীৱনৰ কোনো জটিল সমস্যাৰ সমাধানসূত্ৰ ওলাব আৰু মানসিক দুশ্চিন্তা দূৰ হ'ব।",
+                    "<strong>সামাজিক যোগাযোগ আৰু মিত্ৰলাভ:</strong> প্ৰভাৱশালী ব্যক্তিৰ সৈতে নতুন পৰিচয় হ'ব, যিয়ে ভৱিষ্যতে আপোনাৰ কেৰিয়াৰ বা ব্যৱসায়ত বিশেষ সহায় কৰিব।",
+                    "<strong>স্বাস্থ্য সচেতনতা আৰু গোপন শত্ৰুৰ পৰা সতৰ্কতা:</strong> কাম-কাজত কিছু লেহেমীয়া গতি আহিব পাৰে। কাকো অন্ধভাৱে বিশ্বাস নকৰিব আৰু ঋণ লেনদেন এৰাই চলিব।",
+                    "<strong>আৰ্থিক স্থিৰতা আৰু পাৰিবাৰিক সমৰ্থন:</strong> উপাৰ্জনৰ নতুন পথ মুকলি হ'ব। পিতৃ-মাতৃ বা জ্যেষ্ঠজনৰ আশীৰ্বাদত কোনো ডাঙৰ কামত সফলতা লাভ কৰিব।",
+                    "<strong>ইচ্ছাপূৰণ আৰু ভৱিষ্যৎ সফলতা:</strong> দীর্ঘদিনীয়া পৰিকল্পনাসমূহ বাস্তৱায়িত হোৱাৰ সময়। সামাজিক মান-সন্মান বৃদ্ধি পাব আৰু মন প্রফুল্লিত থাকিব।"
+                ];
 
-                            <h3 class="sub-heading">📅 আগন্তুক ১২ মাহৰ বিতং বিৱৰণ (Month-by-Month)</h3>
-                            <div class="info-card">
-                                <div class="card-content">
-                                    <ul style="list-style-type: none; padding-left: 0;">
-                                        ${monthlyBreakdownHtml}
-                                    </ul>
-                                </div>
-                            </div>
+                let monthlyBreakdownHtml = "";
+                for (let i = 0; i < 12; i++) {
+                    let mIndex = (currentM + i) % 12;
+                    let displayYear = currentY + Math.floor((currentM + i) / 12);
+                    let predIndex = (i + rashiShift) % 12;
+                    monthlyBreakdownHtml += `<li style="margin-bottom: 10px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; font-size: 13.5px;"><strong>🗓️ ${monthNamesAs[mIndex]} ${displayYear}:</strong> ${dynamicMonthPredictions[predIndex]}</li>`;
+                }
+
+                extraAnalysisPage = `
+                <div class="page page-break">
+                    <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল (${currentYear} – ${nextYear}) : খণ্ড - ১ ❁</h2>
+                    <div class="info-card">
+                        <div class="card-content">
+                            আপোনাৰ জন্ম লগ্ন <strong>${yLagnaRashi}</strong>, চন্দ্ৰ ৰাশি <strong>${yMoonRashi} (${yMoonNakshatra} নক্ষত্ৰ)</strong> আৰু বৰ্তমান চলি থকা <strong>${currentDasha} মহাদশা</strong>ৰ গাণিতিক বিচাৰ অনুসৰি আগন্তুক ১২ মাহ আপোনাৰ বাবে আত্ম-প্ৰতিষ্ঠা, আৰ্থিক সুদৃঢ়তা আৰু জীৱনৰ গুৰুত্বপূৰ্ণ সিদ্ধান্ত গ্ৰহণৰ বছৰ হ'ব।
                         </div>
+                    </div>
 
-                        <div class="page page-break">
-                            <h3 class="sub-heading">💼 কৰ্মজীৱন আৰু অৰ্থ (Career & Finance)</h3>
-                            <div class="info-card">
-                                <div class="card-content">
-                                    বছৰটোৰ প্ৰথমাৰ্ধত খৰচৰ মাত্ৰা বৃদ্ধি পাব পাৰে। পৰিকল্পনা নকৰাকৈ ডাঙৰ বিনিয়োগ কৰাৰ পৰা বিৰত থাকক। চাকৰিয়ালসকলৰ বাবে পদোন্নতি বা স্থানান্তৰৰ যোগ আছে। বছৰৰ শেষৰ ফালে একাধিক উৎসৰ পৰা ধন আগমনৰ যোগ আছে।
-                                </div>
-                            </div>
+                    <h3 class="sub-heading">📅 আগন্তুক ১২ মাহৰ মাহেকীয়া বিস্তৃত বিৱৰণ (Month-by-Month Forecast)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+                                ${monthlyBreakdownHtml}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-                            <h3 class="sub-heading">❤️ প্ৰেম, পৰিয়াল আৰু স্বাস্থ্য (Love, Family & Health)</h3>
-                            <div class="info-card">
-                                <div class="card-content">
-                                    পৰিয়ালত সুখ-শান্তি বিৰাজ কৰিব। অবিবাহিতসকলৰ বাবে বছৰৰ মাজভাগত বিবাহৰ উপযুক্ত প্ৰস্তাৱ অহাৰ পূৰ্ণ সম্ভাৱনা আছে। সামগ্ৰিকভাৱে স্বাস্থ্য ভালেই থাকিব, কিন্তু মানসিক চাপ কমোৱাৰ বাবে যোগাসন বা ধ্যান কৰাটো আপোনাৰ বাবে উপকাৰী হ'ব।
-                                </div>
-                            </div>
+                <div class="page page-break">
+                    <h2 class="section-title">❁ বাৰ্ষিক ৰাশিফল (${currentYear} – ${nextYear}) : খণ্ড - ২ ❁</h2>
 
-                            <div class="info-card" style="background: rgba(139, 0, 0, 0.05); border-left-color: #5c3a21; margin-top: 30px;">
-                                <div class="card-title">🌟 বছৰটোৰ মূল মন্ত্ৰ</div>
-                                <div class="card-content">
-                                    <strong>"ধৈৰ্য আৰু আত্মবিশ্বাস"</strong> - এই দুয়োটাই আপোনাক এই বছৰটোত সফলতাৰ শীৰ্ষলৈ লৈ যাব।
-                                </div>
-                            </div>
-                        </div>`;
-                    }
+                    <h3 class="sub-heading">💼 ১. কৰ্মজীৱন, চাকৰি আৰু ব্যৱসায় (Career & Business)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            আপোনাৰ কুণ্ডলীত শনি গ্ৰহ <strong>${ySaturnRashi}</strong> ৰাশিত আৰু বৃহস্পতি গ্ৰহ <strong>${yJupiterRashi}</strong> ৰাশিত অৱস্থান কৰাৰ ফলত এই বছৰটোত আপোনাৰ কৰ্মদক্ষতা বৃদ্ধি পাব। চাকৰিয়ালসকলৰ বাবে বছৰৰ মধ্যভাগত পদোন্নতি, দৰমহা বৃদ্ধি বা পচন্দৰ স্থানলৈ বদলি হোৱাৰ যোগ আছে। ব্যৱসায়ীসকলে নতুন ক্ষেত্ৰত বিনিয়োগ কৰিব পাৰিব, কিন্তু অংশীদাৰী কামত লিখিত চুক্তিৰ অবিহনে আগনবঢ়াই শ্রেয়।
+                        </div>
+                    </div>
 
+                    <h3 class="sub-heading">💰 ২. আৰ্থিক স্থিতি, সঞ্চয় আৰু সম্পত্তি যোগ (Wealth & Property)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            বছৰটোৰ প্ৰথম তিনি মাহত ঘৰুৱা বা বাহ্যিক কাৰণত কিছু খৰচৰ মাত্ৰা বৃদ্ধি পাব পাৰে, সেয়ে বাজেট অনুসৰি চলিবলৈ চেষ্টা কৰক। অৱশ্যে দ্বিতীয়াৰ্ধত একাধিক উৎসৰ পৰা ধন আগমন হ'ব আৰু পূৰ্বৰ ধাৰ-ঋণ থাকিলে সেয়া পৰিশোধ কৰাত সফল হ'ব। ভূমি, গৃহ নিৰ্মাণ বা বাহন ক্ৰয়ৰ পরিকল্পনা থাকিলে এই বছৰত সেয়া বাস্তৱায়িত হোৱাৰ সুন্দৰ যোগ আছে।
+                        </div>
+                    </div>
+
+                    <h3 class="sub-heading">❤️ ৩. প্ৰেম, বিবাহ আৰু পাৰিবাৰিক জীৱন (Love, Marriage & Family)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            পাৰিবাৰিক দিশত এই বছৰটোত সুখ-শান্তি আৰু একতা বজাই থাকিব। ঘৰত কোনো মাংগলিক বা ধৰ্মীয় অনুষ্ঠান সম্পন্ন হ'ব পাৰে। প্ৰেমৰ সম্পৰ্কত থকাসকলৰ মাজত বিশ্বাস গভীৰ হ'ব আৰু অবিবাহিতসকলৰ বাবে উপযুক্ত জীৱনসংগী বিচাৰি পোৱাৰ প্রবল সম্ভাৱনা আছে। বিবাহিতসকলে সংগীৰ স্বাস্থ্য আৰু মতামতক গুৰুত্ব দিলে দাম্পত্য জীৱন অধিক মধুৰ হ'ব।
+                        </div>
+                    </div>
+
+                    <h3 class="sub-heading">🌿 ৪. স্বাস্থ্য, শিক্ষা আৰু বিশেষ সতৰ্কতা (Health & Education)</h3>
+                    <div class="info-card">
+                        <div class="card-content">
+                            সামগ্ৰিকভাৱে আপোনাৰ স্বাস্থ্য ভালেই থাকিব, কিন্তু ঋতু পৰিৱৰ্তনৰ সময়ত চৰ্দি, পেটৰ সমস্যা বা মানসিক অৱসাদৰ পৰা সাৱধানে থাকিব। শিক্ষাৰ্থীসকলৰ বাবে প্ৰতিযোগিতামূলক পৰীক্ষা বা উচ্চ শিক্ষাত সফলতা লাভৰ বাবে এই বছৰটো অতি অনুকূল। দৈনিক যোগাসন, সূৰ্য নমস্কাৰ আৰু সৎ সংগত থকাটোৱে আপোনাৰ মানসিক শক্তি দুগুণ বৃদ্ধি কৰিব।
+                        </div>
+                    </div>
+
+                    <div class="info-card" style="background: rgba(139, 0, 0, 0.05); border-left-color: #5c3a21; margin-top: 15px;">
+                        <div class="card-title">🌟 আগন্তুক বৰ্ষৰ মূল জ্যোতিষীয় সাৰাংশ</div>
+                        <div class="card-content">
+                            <strong>বৰ্ষটোৰ মূল মন্ত্ৰ:</strong> <em>"সঠিক পৰিকল্পনা, ধৈৰ্য আৰু নিৰন্তৰ প্রচেষ্টা"</em>—এই তিনিটা নীতি মানি চলিলে আগন্তুক ১২ মাহত আপুনি জীৱনত এক নতুন উচ্চতাত উপনীত হ'ব পাৰিব।
+                        </div>
+                    </div>
+                </div>`;
+            }
             // 5. DYNAMIC REMEDIES
             let specificRemedies = "";
             if (service === 'love') {
