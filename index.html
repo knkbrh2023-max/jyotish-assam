@@ -542,9 +542,83 @@ function checkLuckyGem() {
     <span>📲 বন্ধু বা পৰিয়ালক আজিৰ ৰাশিফল পঠিয়াওক (WhatsApp)</span>
   </a>
 </div>
+        <!-- Auto Daily Assamese Shubha Muhurat & Rahu Kaal Widget Start -->
+<section style="max-width: 1050px; margin: 25px auto; padding: 20px; background: linear-gradient(135deg, #1a0505, #3d0c0c); color: #fff; border: 2px solid #d4af37; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); font-family: inherit;">
+  <div style="text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 12px; margin-bottom: 16px;">
+    <span style="background: #d4af37; color: #1a0505; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; letter-spacing: 0.5px;">🕉️ দৈনিক বৈদিক সময়সূচী</span>
+    <h2 style="color: #ffd700; font-size: 20px; margin: 8px 0 4px 0; font-weight: bold;">⏳ আজিৰ শুভ মুহূৰ্ত, ৰাহুকাল আৰু যাত্ৰা বিধি</h2>
+    <div id="panchang-date-bar" style="font-size: 13.5px; color: #f5deb3;"></div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; text-align: left;">
+    <!-- শুভ মুহূৰ্ত -->
+    <div style="background: rgba(255, 255, 255, 0.07); padding: 14px; border-radius: 10px; border-left: 4px solid #25D366;">
+      <div style="font-size: 13px; color: #a3e6be; font-weight: bold;">✅ আজিৰ অভিজিৎ শুভ মুহূৰ্ত</div>
+      <div id="shubha-time" style="font-size: 15.5px; font-weight: bold; color: #fff; margin: 5px 0;"></div>
+      <div style="font-size: 11.5px; color: #ddd;">নতুন কাম, লেনদেন আৰু শুভ কাৰ্যৰ বাবে উত্তম সময়।</div>
+    </div>
+
+    <!-- ৰাহুকাল -->
+    <div style="background: rgba(255, 255, 255, 0.07); padding: 14px; border-radius: 10px; border-left: 4px solid #ff4d4d;">
+      <div style="font-size: 13px; color: #ffb3b3; font-weight: bold;">⛔ আজিৰ ৰাহুকাল (অশুভ সময়)</div>
+      <div id="rahu-time" style="font-size: 15.5px; font-weight: bold; color: #fff; margin: 5px 0;"></div>
+      <div style="font-size: 11.5px; color: #ddd;">এই সময়খিনিত নতুন বা মাঙ্গলিক কাৰ্য আৰম্ভ নকৰিব।</div>
+    </div>
+
+    <!-- দিকশূল আৰু যাত্ৰা বিধি -->
+    <div style="background: rgba(255, 255, 255, 0.07); padding: 14px; border-radius: 10px; border-left: 4px solid #ffd700;">
+      <div style="font-size: 13px; color: #ffe680; font-weight: bold;">🧭 আজিৰ যাত্ৰা বিধি (দিকশূল)</div>
+      <div id="disha-info" style="font-size: 14px; font-weight: bold; color: #fff; margin: 5px 0;"></div>
+      <div id="disha-remedy" style="font-size: 11.5px; color: #f5deb3;"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const now = new Date();
+  const dayIndex = now.getDay(); // 0 = Sunday ... 6 = Saturday
+
+  const assameseDays = ["দেওবাৰ (Sunday)", "সোমবাৰ (Monday)", "মঙ্গলবাৰ (Tuesday)", "বুধবাৰ (Wednesday)", "বৃহস্পতিবাৰ (Thursday)", "শুক্ৰবাৰ (Friday)", "শনিবাৰ (Saturday)"];
+  const assameseMonths = ["জানুৱাৰী", "ফেব্ৰুৱাৰী", "মাৰ্চ", "এপ্ৰিল", "মে'", "জুন", "জুলাই", "আগষ্ট", "ছেপ্টেম্বৰ", "অক্টোবৰ", "নৱেম্বৰ", "ডিচেম্বৰ"];
+  
+  function toAssameseNum(num) {
+    const map = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+    return String(num).replace(/[0-9]/g, m => map[m]);
+  }
+
+  const panchangData = [
+    // 0: দেওবাৰ
+    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ (আৰু পুৱা ০৭:৩০ - ০৯:০০)", rahu: "বিয়লি ০৪:০০ বজাৰ পৰা ০৫:৩০ বজালৈ", disha: "পশ্চিম দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: জৰুৰী যাত্ৰাত পাণ বা ঘিউ খাই ঘৰৰ পৰা ওলাব।" },
+    // 1: সোমবাৰ
+    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ (আৰু পুৱা ০৯:১৫ - ১০:৩০)", rahu: "পুৱা ০৭:০০ বজাৰ পৰা ০৮:৩০ বজালৈ", disha: "পূব দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: জৰুৰী যাত্ৰাত দাপোনত মুখ চাই বা গাখীৰ খাই ওলাব।" },
+    // 2: মঙ্গলবাৰ
+    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ (আৰু পুৱা ১০:৩০ - ১২:০০)", rahu: "আবেলি ০২:৩০ বজাৰ পৰা ০৪:০০ বজালৈ", disha: "উত্তৰ দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: জৰুৰী যাত্ৰাত গুড় খাই ইষ্ট দেৱতাক স্মৰণ কৰি ওলাব।" },
+    // 3: বুধবাৰ
+    { shubha: "পুৱা ০৭:০০ ৰ পৰা ০৯:০০ লৈ (আৰু আবেলি ০৩:০০ - ০৪:৩০)", rahu: "দুপৰীয়া ১১:৩০ বজাৰ পৰা ০১:০০ বজালৈ", disha: "উত্তৰ দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: জৰুৰী যাত্ৰাত ধনীয়া বা তিল খাই ঘৰৰ পৰা ওলাব।" },
+    // 4: বৃহস্পতিবাৰ
+    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ (আৰু পুৱা ০৬:৩০ - ০৮:০০)", rahu: "দুপৰীয়া ০১:০০ বজাৰ পৰা ০২:৩০ বজালৈ", disha: "দক্ষিণ দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: জৰুৰী যাত্ৰাত দৈ বা জিৰা খাই ঘৰৰ পৰা ওলাব।" },
+    // 5: শুক্ৰবাৰ
+    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ (আৰু পুৱা ০৭:৩০ - ০৯:৩০)", rahu: "পুৱা ১০:০০ বজাৰ পৰা ১১:৩০ বজালৈ", disha: "পশ্চিম দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: জৰুৰী যাত্ৰাত দৈ বা মিঠা বস্তু খাই ঘৰৰ পৰা ওলাব।" },
+    // 6: শনিবাৰ
+    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ (আৰু দুপৰীয়া ১২:৩০ - ০২:০০)", rahu: "পুৱা ০৮:৩০ বজাৰ পৰা ১০:০০ বজালৈ", disha: "পূব দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: জৰুৰী যাত্ৰাত আদা বা মাটিমাহ স্পৰ্শ কৰি ঘৰৰ পৰা ওলাব।" }
+  ];
+
+  const todayInfo = panchangData[dayIndex];
+  const dateStr = `📅 আজি: ${toAssameseNum(now.getDate())} ${assameseMonths[now.getMonth()]}, ${toAssameseNum(now.getFullYear())} | ${assameseDays[dayIndex]}`;
+
+  document.getElementById("panchang-date-bar").innerText = dateStr;
+  document.getElementById("shubha-time").innerText = todayInfo.shubha;
+  document.getElementById("rahu-time").innerText = todayInfo.rahu;
+  document.getElementById("disha-info").innerText = todayInfo.disha;
+  document.getElementById("disha-remedy").innerText = todayInfo.remedy;
+})();
+</script>
+<!-- Auto Daily Assamese Shubha Muhurat & Rahu Kaal Widget End -->
 <p style="text-align: center; color: #475569; font-size: 15px; max-width: 700px; margin: 10px auto 30px auto; line-height: 1.6;">
     জীৱনৰ গুৰুত্বপূৰ্ণ সিদ্ধান্তবোৰ কেতিয়াও কেৱল অনুমানৰ ওপৰত নিৰ্ভৰ কৰি ল'ব নালাগে। কেৰিয়াৰ, বিবাহ, বা আৰ্থিক সমস্যাৰ নিখুঁত আৰু ব্যক্তিগত সমাধানৰ বাবে আমাৰ প্ৰিমিয়াম সেৱাসমূহ গ্ৰহণ কৰক। আপোনাৰ জন্ম কুণ্ডলীৰ গভীৰ বিশ্লেষণৰ জৰিয়তে ইয়াত সঠিক মাৰ্গদৰ্শন কৰা হ'ব।
 </p>
+        
         <!-- Premium Services -->
         <section class="section">
             <h2 class="section-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
