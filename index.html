@@ -1923,6 +1923,46 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchReviews();
 });
     </script>
-    
+    <!-- Live Customer Trust Notification (Social Proof) Start -->
+<div id="astro-live-toast" style="position: fixed; bottom: 18px; left: 18px; background: #ffffff; border-left: 4px solid #25D366; padding: 10px 15px; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.18); display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #222; z-index: 9999; transform: translateY(150%); transition: transform 0.5s ease-in-out; max-width: 300px; font-family: inherit;">
+  <span style="font-size: 18px;">✅</span>
+  <div>
+    <div id="toast-text" style="font-weight: 600; line-height: 1.4;">গুৱাহাটীৰ পৰা অংকিতা বৰাই এইমাত্ৰ জন্ম কুণ্ডলী (PDF) ডাউনলোড কৰিলে।</div>
+    <div style="font-size: 10.5px; color: #128C7E; margin-top: 2px;">⚡ এইমাত্ৰ ভেৰিফাইড পেমেন্ট সম্পন্ন</div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const messages = [
+      "গুৱাহাটীৰ পৰা অংকিতা বৰাই এইমাত্ৰ জন্ম কুণ্ডলী (PDF) ডাউনলোড কৰিলে।",
+      "যোৰহাটৰ পৰা প্ৰাঞ্জল শইকীয়াই সম্পূর্ণ সোঁৱৰণী ডাউনলোড কৰিলে।",
+      "ডিব্ৰুগড়ৰ পৰা পল্লৱী গগৈয়ে বিবাহ কুণ্ডলী মিলন কৰিলে।",
+      "তেজপুৰৰ পৰা বিকাশ কলিতাই এইমাত্ৰ জন্ম পত্ৰিকা লাভ কৰিলে।",
+      "লখিমপুৰৰ পৰা মণিষা দত্তই প্ৰিমিয়াম কুণ্ডলী ডাউনলোড কৰিলে।",
+      "নগাঁৱৰ পৰা সৌৰভ শৰ্মাই যুটীয়া ৰাশিফল ৰিপোৰ্ট ডাউনলোড কৰিলে।",
+      "শিৱসাগৰৰ পৰা দেৱাশীষ ফুকনে এইমাত্ৰ সোঁৱৰণী (PDF) লাভ কৰিলে।"
+    ];
+    let index = 0;
+    const toast = document.getElementById("astro-live-toast");
+    const toastText = document.getElementById("toast-text");
+
+    function showToast() {
+      toastText.innerText = messages[index];
+      toast.style.transform = "translateY(0)";
+      setTimeout(() => {
+        toast.style.transform = "translateY(150%)";
+      }, 4500); // ৪.৫ ছেকেণ্ড দেখুৱাই লুকাই যাব
+      index = (index + 1) % messages.length;
+    }
+
+    // ছাইট খোলাৰ ৮ ছেকেণ্ড পিছত প্ৰথমবাৰ ওলাব, তাৰ পিছত প্ৰতি ২২ ছেকেণ্ডৰ মূৰে মূৰে
+    setTimeout(() => {
+      showToast();
+      setInterval(showToast, 22000);
+    }, 8000);
+  })();
+</script>
+<!-- Live Customer Trust Notification End -->
 </body>
 </html>
