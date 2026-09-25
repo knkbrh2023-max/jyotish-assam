@@ -7,7 +7,7 @@ window.JA_CONFIG = {
     "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1",
 
   razorpayKeyId:
-    "rzp_test_TYoGOC4jNFpbQE",
+    "rzp_live_TgKAgOTcPX03fT",
 
   siteUrl:
     "https://knkbrh2023-max.github.io/jyotish-assam/",
