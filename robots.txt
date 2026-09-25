@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: https://YOUR-DOMAIN.example/sitemap.xml
+Disallow: /admin.html
+
+Sitemap: https://jyotishassam.com/sitemap.xml
