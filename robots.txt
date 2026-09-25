@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
+Disallow: /panel.html
 
 Sitemap: https://jyotishassam.com/sitemap.xml
