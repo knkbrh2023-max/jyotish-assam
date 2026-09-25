@@ -452,6 +452,74 @@
                 </div>
             </div>
         </div>
+        <!-- Free Lucky Gemstone & Numerology Hook Section Start -->
+<section style="max-width: 900px; margin: 35px auto; padding: 28px 20px; background: linear-gradient(145deg, #fffdf7, #fff6e0); border: 2px solid #d4af37; border-radius: 16px; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.18); text-align: center; font-family: inherit;">
+  <h2 style="color: #8b0000; font-size: 22px; margin-bottom: 8px; font-weight: bold;">💍 আপোনাৰ শুভ ৰত্ন আৰু ভাগ্যশালী সংখ্যা জানক (বিনামূলীয়া)</h2>
+  <p style="color: #555; font-size: 14px; margin-bottom: 20px;">আপোনাৰ জন্ম তাৰিখটো নিৰ্বাচন কৰি আপোনাৰ অধিপতি গ্ৰহ আৰু কোনটো ৰত্ন (Gemstone) আপোনাৰ বাবে সৌভাগ্যশালী চাওক:</p>
+
+  <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
+    <input type="date" id="gem-dob" style="padding: 11px 16px; border: 1.5px solid #c99e32; border-radius: 8px; font-size: 15px; outline: none; background: #fff; color: #222;">
+    <button onclick="checkLuckyGem()" style="background: linear-gradient(135deg, #8b0000, #b30000); color: #ffd700; border: 1px solid #ffd700; padding: 11px 24px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(139, 0, 0, 0.25);">
+      🔍 মোৰ শুভ ৰত্ন চাওক
+    </button>
+  </div>
+
+  <!-- Result Box (প্রথমতে লুকাই থাকিব) -->
+  <div id="gem-result-box" style="display: none; margin-top: 22px; padding: 20px; background: #ffffff; border: 1px solid #e6c875; border-radius: 12px; text-align: left; box-shadow: inset 0 0 10px rgba(212,175,55,0.1);">
+    <div id="gem-output" style="font-size: 15px; line-height: 1.8; color: #222;"></div>
+    
+    <!-- Conversion Hook to Paid Kundali -->
+    <div style="margin-top: 16px; padding: 14px; background: #fff3cd; border-left: 4px solid #d9534f; border-radius: 6px; font-size: 13.5px; color: #664d03; line-height: 1.6;">
+      ⚠️ <strong>জ্যোতিষীয় সতৰ্কবাণী:</strong> এইটো আপোনাৰ জন্ম তাৰিখ (মূলাংক) অনুসৰি ওলোৱা প্ৰাথমিক ৰত্নহে। কিন্তু যিকোনো ৰত্ন আঙঠিত ধাৰণ কৰাৰ আগতে আপোনাৰ <strong>লগ্ন কুণ্ডলী, ৰাশি চক্ৰ আৰু বৰ্তমান চলি থকা মহাদশা</strong> পৰীক্ষা কৰাটো অত্যন্ত জৰুৰী— নহ'লে ভুল ৰত্নই বিপৰীত ফল দিব পাৰে! 
+      <br><strong style="color: #8b0000;">👉 আপোনাৰ বাবে ১০০% উপযুক্ত শুভ ৰত্ন, গ্ৰহ দোষৰ প্ৰতিকাৰ আৰু ভৱিষ্যৎ জানিবলৈ আমাৰ সম্পূৰ্ণ জন্ম কুণ্ডলী (PDF) ডাউনলোড কৰক।</strong>
+    </div>
+  </div>
+</section>
+
+<script>
+function checkLuckyGem() {
+  const dobInput = document.getElementById("gem-dob").value;
+  if (!dobInput) {
+    alert("অনুগ্ৰহ কৰি প্ৰথমে আপোনাৰ জন্ম তাৰিখটো নিৰ্বাচন কৰক!");
+    return;
+  }
+
+  const day = new Date(dobInput).getDate();
+  // মূলাংক গণনা (1 ৰ পৰা 9 লৈ)
+  let mulank = day;
+  while (mulank > 9) {
+    mulank = Math.floor(mulank / 10) + (mulank % 10);
+  }
+
+  const gemData = {
+    1: { planet: "সূৰ্য (Sun)", gem: "মাণিক (Ruby)", color: "সোণালী, কমলা আৰু ৰঙা", day: "দেওবাৰ", nature: "আপুনি নেতৃত্ব দিব পৰা, আত্মবিশ্বাসী আৰু স্বাধীনচেতীয়া স্বভাৱৰ ব্যক্তি।" },
+    2: { planet: "চন্দ্ৰ (Moon)", gem: "মুকুতা (Natural Pearl)", color: "বগা আৰু পাতল সেউজীয়া", day: "সোমবাৰ", nature: "আপুনি শান্তিপ্ৰিয়, আৱেগিক, কল্পনাপ্ৰৱণ আৰু কোমল অন্তৰৰ ব্যক্তি।" },
+    3: { planet: "বৃহস্পতি (Jupiter)", gem: "পোখৰাজ (Yellow Sapphire)", color: "হালধীয়া আৰু কেশৰীয়া", day: "বৃহস্পতিবাৰ", nature: "আপুনি জ্ঞানী, ধৰ্মপৰায়ণ, উচ্চাকাংক্ষী আৰু সমাজত সন্মান লাভ কৰা ব্যক্তি।" },
+    4: { planet: "ৰাহু (Rahu / Uranus)", gem: "গোমেদ (Hessonite)", color: "নীলা আৰু ছাই ৰং", day: "শনিবাৰ আৰু দেওবাৰ", nature: "আপুনি ব্যতিক্ৰমী চিন্তাধাৰাৰ, সাহসী আৰু হঠাৎ জীৱনত ডাঙৰ পৰিৱৰ্তন অনা ব্যক্তি।" },
+    5: { planet: "বুধ (Mercury)", gem: "পান্না (Emerald)", color: "সেউজীয়া আৰু বগা", day: "বুধবাৰ", nature: "আপুনি অত্যন্ত তীক্ষ্ণ বুদ্ধিৰ, ব্যৱসায়িক মনৰ আৰু যিকোনো কামত চতুৰ ব্যক্তি।" },
+    6: { planet: "শুক্ৰ (Venus)", gem: "বগা ওপাল (White Opal) বা হীৰা", color: "বগা, আকাশী নীলা আৰু গোলাপী", day: "শুক্ৰবাৰ", nature: "আপুনি আকৰ্ষণীয় ব্যক্তিত্বৰ, শিল্প-সৌন্দৰ্যপ্ৰিয় আৰু বিলাসী জীৱন ভাল পোৱা ব্যক্তি।" },
+    7: { planet: "কেতু (Ketu / Neptune)", gem: "বৈদূৰ্য মণি (Cat's Eye)", color: "পাতল হালধীয়া আৰু বগা", day: "সোমবাৰ আৰু দেওবাৰ", nature: "আপুনি গভীৰ চিন্তাবিদ, আধ্যাত্মিক আৰু গোপন ৰহস্য উদঘাটনত পাৰ্গত ব্যক্তি।" },
+    8: { planet: "শনি (Saturn)", gem: "নীলা (Blue Sapphire / Neelam) বা এমেথিষ্ট", color: "গাঢ় নীলা আৰু ক'লা", day: "শনিবাৰ", nature: "আপুনি কঠোৰ পৰিশ্ৰমী, ন্যায়প্ৰিয় আৰু ধৈৰ্যৰে জীৱনত স্থায়ী সফলতা লাভ কৰা ব্যক্তি।" },
+    9: { planet: "মঙ্গল (Mars)", gem: "ৰঙা প্ৰবাল (Red Coral / Moonga)", color: "ৰঙা আৰু গোলাপী", day: "মঙ্গলবাৰ", nature: "আপুনি অত্যন্ত সাহসী, শক্তিশালী মনোবলৰ আৰু কোনো বাধালৈ ভয় নকৰা ব্যক্তি।" }
+  };
+
+  const info = gemData[mulank];
+  const outputDiv = document.getElementById("gem-output");
+  outputDiv.innerHTML = `
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px;">
+      <div>🔢 <strong>আপোনাৰ মূলাংক:</strong> ${mulank}</div>
+      <div>🪐 <strong>অধিপতি গ্ৰহ:</strong> ${info.planet}</div>
+      <div>💎 <strong>প্ৰাথমিক শুভ ৰত্ন:</strong> <span style="color: #8b0000; font-weight: bold;">${info.gem}</span></div>
+      <div>🎨 <strong>শুভ ৰং:</strong> ${info.color}</div>
+      <div>📅 <strong>শুভ বাৰ:</strong> ${info.day}</div>
+    </div>
+    <div style="padding-top: 8px; border-top: 1px dashed #ddd;">✨ <strong>আপোনাৰ স্বভাৱ:</strong> ${info.nature}</div>
+  `;
+
+  document.getElementById("gem-result-box").style.display = "block";
+}
+</script>
+<!-- Free Lucky Gemstone & Numerology Hook Section End -->
 <!-- Couple Horoscope WhatsApp Share Button -->
 <div style="text-align: center; margin-top: 18px; margin-bottom: 10px;">
   <a href="https://api.whatsapp.com/send?text=❤️%20*চোৱাচোন,%20মই%20আমাৰ%20দুয়োৰে%20আজিৰ%20যুটীয়া%20ৰাশিফল%20আৰু%20ৰাশি%20মিলন%20চালোঁ!*%20✨%0A%0Aতুমিও%20আমাৰ%20যোৰাটোৰ%20ফলাফল%20চাবলৈ%20তলৰ%20লিংকত%20ক্লিক%20কৰা%20👇%0Ahttps://jyotishassam.com" 
