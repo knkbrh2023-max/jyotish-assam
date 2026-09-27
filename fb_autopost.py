@@ -1,5 +1,6 @@
 import os
 import time
+import shutil
 import subprocess
 import requests
 from datetime import datetime, timezone, timedelta
@@ -34,19 +35,26 @@ def generate_image():
 
 # ২. ফটোখনৰ পৰা ১০ ছেকেণ্ডৰ HD Reel ভিডিঅ' (1080x1920) তৈয়াৰ কৰা
 def generate_reel_video():
+    # যদি ছাৰ্ভাৰত ffmpeg ভিডিঅ' মেচিনটো নাই, তেন্তে ৰবটে নিজে নিজেই ইনষ্টল কৰি ল'ব
+    if not shutil.which("ffmpeg"):
+        print("⚙️ ছাৰ্ভাৰত FFmpeg ভিডিঅ' মেচিনটো ইনষ্টল কৰা হৈছে...")
+        subprocess.run(["sudo", "apt-get", "update", "-y"], check=True)
+        subprocess.run(["sudo", "apt-get", "install", "-y", "ffmpeg"], check=True)
+        print("✅ FFmpeg সফলতাৰে ইনষ্টল হ'ল!")
+
     vf_filter = (
         "scale=1080:1920:force_original_aspect_ratio=decrease,"
-        "pad=1080:1920:(ow-iw)/2:(oh-ih)/2:#120524,format=yuv420p"
+        "pad=1080:1920:(ow-iw)/2:(oh-ih)/2:color=0x120524,format=yuv420p"
     )
     
-    # যদি আপুনি গিটহাবত music.mp3 ফাইল ভৰাই থয় তেন্তে সেইটো বজাব, নহ'লে শান্তিপূৰ্ণ ধ্যানৰ সুৰ নিজে বনাব
+    # যদি গিটহাবত music.mp3 ফাইল থাকে তেন্তে সেইটো বজাব, নহ'লে শান্তিপূৰ্ণ ধ্যানৰ ধ্বনি নিজে বনাব
     if os.path.exists("music.mp3"):
         cmd = [
             "ffmpeg", "-y",
             "-loop", "1", "-i", "daily_rashifal.png",
             "-i", "music.mp3",
             "-vf", vf_filter,
-            "-c:v", "libx264", "-t", "12", "-r", "30",
+            "-c:v", "libx264", "-t", "12", "-r", "24", "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "128k", "-shortest",
             "daily_reel.mp4"
         ]
@@ -54,9 +62,9 @@ def generate_reel_video():
         cmd = [
             "ffmpeg", "-y",
             "-loop", "1", "-i", "daily_rashifal.png",
-            "-f", "lavfi", "-i", "aevalsrc=0.1*sin(2*PI*432*t)+0.08*sin(2*PI*540*t)+0.05*sin(2*PI*648*t):d=10",
+            "-f", "lavfi", "-i", "sine=frequency=432:duration=10",
             "-vf", vf_filter,
-            "-c:v", "libx264", "-t", "10", "-r", "30",
+            "-c:v", "libx264", "-t", "10", "-r", "24", "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "128k", "-shortest",
             "daily_reel.mp4"
         ]
@@ -100,13 +108,12 @@ def post_photo_to_facebook(page_id, access_token, caption):
         post_id = res_data.get("post_id") or res_data.get("id")
         add_first_comment(post_id, access_token)
     else:
-        print("❌ ফটো পোষ্টত সমস্যা:", res_data)
+        raise Exception(f"❌ ফটো পোষ্টত সমস্যা: {res_data}")
 
 # ৫. ফেচবুকত Auto Reel ভিডিঅ' পোষ্ট কৰা
 def post_reel_to_facebook(page_id, access_token, caption):
     print("🚀 ৪. Facebook Reels আপলোড আৰম্ভ হৈছে...")
     
-    # Step A: Initialize Reel Upload
     init_url = f"https://graph.facebook.com/v20.0/{page_id}/video_reels"
     init_res = requests.post(init_url, data={
         "upload_phase": "start",
@@ -118,7 +125,6 @@ def post_reel_to_facebook(page_id, access_token, caption):
         upload_url = init_res["upload_url"]
         file_size = os.path.getsize("daily_reel.mp4")
 
-        # Step B: Upload Binary Video
         with open("daily_reel.mp4", "rb") as f:
             headers = {
                 "Authorization": f"OAuth {access_token}",
@@ -127,7 +133,6 @@ def post_reel_to_facebook(page_id, access_token, caption):
             }
             requests.post(upload_url, headers=headers, data=f)
 
-        # Step C: Publish the Reel
         finish_res = requests.post(init_url, data={
             "access_token": access_token,
             "video_id": video_id,
@@ -139,8 +144,7 @@ def post_reel_to_facebook(page_id, access_token, caption):
         print("🎉 ৫. Facebook Reel সফলতাৰে পাব্লিছ হ'ল!", finish_res)
         add_first_comment(video_id, access_token)
     else:
-        # যদি Reels API ত কিবা বাধা আহে, তেন্তে ডাইৰেক্ট ভিডিঅ' হিচাপে আপলোড কৰিব
-        print("⚠️ Reels API ৰ সলনি Standard Video হিচাপে আপলোড কৰা হৈছে...")
+        print("⚠️ Reels ৰ সলনি HD Video হিচাপে আপলোড কৰা হৈছে...")
         vid_url = f"https://graph.facebook.com/v20.0/{page_id}/videos"
         with open("daily_reel.mp4", "rb") as vf:
             v_res = requests.post(
