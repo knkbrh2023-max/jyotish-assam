@@ -2108,51 +2108,68 @@ window.addEventListener('DOMContentLoaded', () => {
   })();
 </script>
 <!-- Live Customer Trust Notification End -->
-     <style>
-/* Mobile & Facebook Browser Popup Fix */
-@media (max-width: 768px) {
-  .modal, .popup, .rashi-modal, .modal-overlay, [id*="modal"], [id*="Modal"], [id*="popup"] {
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 12px !important;
-    overflow-y: auto !important;
-    box-sizing: border-box !important;
-  }
-
-  .modal-content, .popup-content, .modal-box, .modal-body, .rashi-modal-content, 
-  .modal > div, [id*="modal"] > div, [id*="Modal"] > div {
-    max-height: 80vh !important;
-    overflow-y: auto !important;
-    margin: auto !important;
+ <style>
+  /* মেইন মেনু আৰু হেডাৰটো স্ক্ৰল কৰিলে ওপৰলৈ গুচি যোৱা কৰা */
+  header, nav, .navbar, .header, .main-menu, .nav-container, .top-nav, .sticky-header {
     position: relative !important;
-    width: 94% !important;
-    max-width: 94% !important;
-    border-radius: 16px !important;
-    padding: 18px 14px !important;
-    box-sizing: border-box !important;
+    top: auto !important;
   }
-
-  /* Close (X) বুটামটো যাতে স্ক্ৰল কৰিলেও সদায় ওপৰত দেখা যায় */
-  .close, .close-btn, .modal-close, [onclick*="close"], [onclick*="Close"] {
-    position: sticky !important;
-    top: 5px !important;
-    right: 5px !important;
-    float: right !important;
-    z-index: 99999 !important;
-    background: #e11d48 !important;
-    color: #ffffff !important;
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 20px !important;
-    font-weight: bold !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
-    cursor: pointer !important;
-  }
-}
 </style>
+
+<script>
+// 1. মেইন মেনুখন আঠা লাগি থকাৰ পৰা মুক্ত কৰা (Scroll up naturally)
+window.addEventListener("DOMContentLoaded", function() {
+  const topBars = document.querySelectorAll("header, nav, div");
+  topBars.forEach(el => {
+    const style = window.getComputedStyle(el);
+    if ((style.position === "sticky" || style.position === "fixed") && el.offsetHeight < 220 && el.getBoundingClientRect().top <= 10) {
+      el.style.setProperty("position", "relative", "important");
+    }
+  });
+});
+
+// 2. মোবাইলৰ ৰাশিফল পপ-আপ বক্সটো ঠিক কৰা (Mobile Popup Fixer)
+document.addEventListener("click", function() {
+  setTimeout(function() {
+    const allElements = document.querySelectorAll("div, section");
+    allElements.forEach(el => {
+      const style = window.getComputedStyle(el);
+      if (style.position === "fixed" && style.display !== "none" && el.innerText.includes("সামগ্ৰিক ফল")) {
+        
+        el.style.setProperty("align-items", "center", "important");
+        el.style.setProperty("justify-content", "center", "important");
+        el.style.setProperty("padding", "15px 10px", "important");
+        el.style.setProperty("box-sizing", "border-box", "important");
+
+        const innerBox = el.firstElementChild;
+        if (innerBox) {
+          innerBox.style.setProperty("max-height", "80vh", "important");
+          innerBox.style.setProperty("overflow-y", "auto", "important");
+          innerBox.style.setProperty("width", "95%", "important");
+          innerBox.style.setProperty("max-width", "450px", "important");
+          innerBox.style.setProperty("margin", "auto", "important");
+          innerBox.style.setProperty("border-radius", "16px", "important");
+          innerBox.style.setProperty("position", "relative", "important");
+          innerBox.style.setProperty("-webkit-overflow-scrolling", "touch", "important");
+
+          if (!innerBox.querySelector(".auto-close-rashifal-btn")) {
+            const closeBtn = document.createElement("button");
+            closeBtn.className = "auto-close-rashifal-btn";
+            closeBtn.innerHTML = "❌ বন্ধ কৰক (Close)";
+            closeBtn.style.cssText = "position:sticky; bottom:0; left:0; width:100%; background:#e11d48; color:#ffffff; border:none; padding:12px; border-radius:10px; font-size:16px; font-weight:bold; margin-top:12px; z-index:99999; cursor:pointer; box-shadow:0 -4px 12px rgba(0,0,0,0.15);";
+            
+            closeBtn.onclick = function(e) {
+              e.stopPropagation();
+              el.style.display = "none";
+              document.body.style.overflow = "auto";
+            };
+            innerBox.appendChild(closeBtn);
+          }
+        }
+      }
+    });
+  }, 50);
+});
+</script>
 </body>
 </html>
