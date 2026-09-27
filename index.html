@@ -1785,52 +1785,7 @@ async function showReportToCustomer(orderId) {
                         .page-break { page-break-after: always; }
                         .print-btn-wrapper { display: none; }
                     }
-                    <style>
-/* Mobile & Facebook Browser Popup Fix */
-@media (max-width: 768px) {
-  .modal, .popup, .rashi-modal, .modal-overlay, [id*="modal"], [id*="Modal"], [id*="popup"] {
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 12px !important;
-    overflow-y: auto !important;
-    box-sizing: border-box !important;
-  }
-
-  .modal-content, .popup-content, .modal-box, .modal-body, .rashi-modal-content, 
-  .modal > div, [id*="modal"] > div, [id*="Modal"] > div {
-    max-height: 80vh !important;
-    overflow-y: auto !important;
-    margin: auto !important;
-    position: relative !important;
-    width: 94% !important;
-    max-width: 94% !important;
-    border-radius: 16px !important;
-    padding: 18px 14px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Close (X) বুটামটো যাতে স্ক্ৰল কৰিলেও সদায় ওপৰত দেখা যায় */
-  .close, .close-btn, .modal-close, [onclick*="close"], [onclick*="Close"] {
-    position: sticky !important;
-    top: 5px !important;
-    right: 5px !important;
-    float: right !important;
-    z-index: 99999 !important;
-    background: #e11d48 !important;
-    color: #ffffff !important;
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 20px !important;
-    font-weight: bold !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
-    cursor: pointer !important;
-  }
-}
-</style>
+                   
                 </style>
             </head>
             <body>
@@ -2153,5 +2108,51 @@ window.addEventListener('DOMContentLoaded', () => {
   })();
 </script>
 <!-- Live Customer Trust Notification End -->
+     <style>
+/* Mobile & Facebook Browser Popup Fix */
+@media (max-width: 768px) {
+  .modal, .popup, .rashi-modal, .modal-overlay, [id*="modal"], [id*="Modal"], [id*="popup"] {
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .modal-content, .popup-content, .modal-box, .modal-body, .rashi-modal-content, 
+  .modal > div, [id*="modal"] > div, [id*="Modal"] > div {
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    margin: auto !important;
+    position: relative !important;
+    width: 94% !important;
+    max-width: 94% !important;
+    border-radius: 16px !important;
+    padding: 18px 14px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Close (X) বুটামটো যাতে স্ক্ৰল কৰিলেও সদায় ওপৰত দেখা যায় */
+  .close, .close-btn, .modal-close, [onclick*="close"], [onclick*="Close"] {
+    position: sticky !important;
+    top: 5px !important;
+    right: 5px !important;
+    float: right !important;
+    z-index: 99999 !important;
+    background: #e11d48 !important;
+    color: #ffffff !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+    cursor: pointer !important;
+  }
+}
+</style>
 </body>
 </html>
