@@ -2171,39 +2171,60 @@ document.addEventListener("click", function() {
   }, 50);
 });
 </script>
-
-    <!-- 💳 Razorpay Checkout Script -->
+<!-- 💳 Razorpay Checkout Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<!-- 💬 Jyotish Assam: Real Human-Style Live Chat (Powered by Supabase calculate-chat: Swiss Ephemeris + Gemini AI) -->
 <style>
+  /* ১. মেইন মেনু স্ক্ৰল কৰিলে ওপৰলৈ গুচি যোৱা */
+  header, nav, .navbar, .header, .main-menu, .nav-container, .top-nav, .sticky-header {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  /* ২. হোৱাটছএপ-ষ্টাইল লাইভ চেট ডিজাইন (সৰ্বোচ্চ Z-Index সহ) */
   #ja-chat-launcher {
-    position: fixed; bottom: 20px; right: 20px; z-index: 99998;
-    background: linear-gradient(135deg, #15803d, #065f46);
-    color: #ffffff; border: 2.5px solid #ffd700; border-radius: 50px;
-    padding: 12px 20px; font-weight: 900; font-size: 15px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); cursor: pointer;
-    display: flex; align-items: center; gap: 10px;
-    animation: jaPulse 2s infinite; font-family: inherit;
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 16px !important;
+    z-index: 2147483646 !important;
+    pointer-events: auto !important;
+    background: linear-gradient(135deg, #15803d, #065f46) !important;
+    color: #ffffff !important;
+    border: 2.5px solid #ffd700 !important;
+    border-radius: 50px !important;
+    padding: 12px 18px !important;
+    font-weight: 900 !important;
+    font-size: 15px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
   }
   .ja-online-dot {
     width: 11px; height: 11px; background: #4ade80; border-radius: 50%;
     display: inline-block; box-shadow: 0 0 8px #4ade80;
   }
-  @keyframes jaPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.04); }
-    100% { transform: scale(1); }
-  }
   #ja-chat-window {
-    position: fixed; bottom: 80px; right: 15px; width: 375px; max-width: 94vw;
-    height: 560px; max-height: 83vh; background: #0b141a;
-    border: 2px solid #ffd700; border-radius: 18px; z-index: 99999;
-    display: none; flex-direction: column; overflow: hidden;
-    box-shadow: 0 12px 45px rgba(0,0,0,0.85); font-family: inherit;
+    position: fixed !important;
+    bottom: 80px !important;
+    right: 15px !important;
+    width: 370px !important;
+    max-width: 94vw !important;
+    height: 540px !important;
+    max-height: 80vh !important;
+    background: #0b141a !important;
+    border: 2px solid #ffd700 !important;
+    border-radius: 18px !important;
+    z-index: 2147483647 !important;
+    pointer-events: auto !important;
+    display: none;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.9) !important;
   }
   .ja-chat-header {
-    background: #075e54; padding: 11px 14px; color: #fff;
+    background: #075e54; padding: 12px 14px; color: #fff;
     border-bottom: 1.5px solid #ffd700;
     display: flex; justify-content: space-between; align-items: center;
   }
@@ -2213,12 +2234,11 @@ document.addEventListener("click", function() {
   }
   #ja-chat-messages {
     flex: 1; padding: 14px; overflow-y: auto; display: flex;
-    flex-direction: column; gap: 10px;
-    background: #0b141a;
+    flex-direction: column; gap: 10px; background: #0b141a;
   }
   .ja-msg {
     max-width: 85%; padding: 9px 13px; border-radius: 12px;
-    font-size: 14.5px; line-height: 1.55; word-wrap: break-word; position: relative;
+    font-size: 14.5px; line-height: 1.55; word-wrap: break-word;
   }
   .ja-bot {
     background: #202c33; color: #f1f5f9; align-self: flex-start;
@@ -2245,7 +2265,8 @@ document.addEventListener("click", function() {
     background: linear-gradient(135deg, #22c55e, #15803d);
     color: #fff; border: 2px solid #ffd700; padding: 11px;
     border-radius: 10px; font-weight: 900; font-size: 15px;
-    cursor: pointer; margin: 10px 0 4px 0;
+    cursor: pointer !important; margin: 10px 0 4px 0;
+    pointer-events: auto !important;
   }
   .ja-input-bar {
     padding: 10px; background: #202c33; display: flex; gap: 8px; align-items: center;
@@ -2254,19 +2275,18 @@ document.addEventListener("click", function() {
     flex: 1; padding: 11px 14px; border-radius: 25px; border: 1px solid #475569;
     background: #2a3942; color: #fff; font-size: 14.5px; outline: none;
   }
-  .ja-input-bar input::placeholder { color: #94a3b8; }
   .ja-input-bar button {
     background: #00a884; color: #fff; border: none; width: 42px; height: 42px;
-    border-radius: 50%; font-weight: 900; cursor: pointer; font-size: 18px;
+    border-radius: 50%; font-weight: 900; cursor: pointer !important; font-size: 18px;
     display: flex; align-items: center; justify-content: center;
   }
 </style>
 
-<!-- ভাসমান হোৱাটছএপ-ষ্টাইল লাইভ চেট বুটাম -->
-<button id="ja-chat-launcher" onclick="toggleJaChat()">
+<!-- ভাসমান চেট বুটাম -->
+<div id="ja-chat-launcher" role="button" tabindex="0">
   <span class="ja-online-dot"></span>
-  <span>💬 আচাৰ্যৰ সৈতে পোনপটীয়া কথা পাতক</span>
-</button>
+  <span>💬 আচাৰ্যৰ সৈতে কথা পাতক (₹৪৯)</span>
+</div>
 
 <!-- চেট উইণ্ড' -->
 <div id="ja-chat-window">
@@ -2280,7 +2300,7 @@ document.addEventListener("click", function() {
     </div>
     <div style="display:flex; align-items:center; gap:8px;">
       <span id="ja-timer" class="ja-timer-badge">⏳ 05:00</span>
-      <span onclick="toggleJaChat()" style="cursor:pointer; font-size:20px; font-weight:bold; color:#fff;">✖</span>
+      <span id="ja-close-chat" style="cursor:pointer; font-size:22px; font-weight:bold; color:#fff; padding:0 5px;">✖</span>
     </div>
   </div>
 
@@ -2288,13 +2308,66 @@ document.addEventListener("click", function() {
   <div id="ja-typing" class="ja-typing-bar">✍️ আচাৰ্যই আপোনাৰ কুণ্ডলীখন চাই লিখি আছে...</div>
 
   <div class="ja-input-bar">
-    <input type="text" id="ja-user-input" placeholder="ইয়াত মেছেজ লিখক..." onkeypress="if(event.key==='Enter') handleJaSend()">
-    <button onclick="handleJaSend()">➤</button>
+    <input type="text" id="ja-user-input" placeholder="ইয়াত মেছেজ লিখক...">
+    <button id="ja-send-btn" type="button">➤</button>
   </div>
 </div>
 
 <script>
-  // ====== index.html ৰ পৰা Supabase URL, Key আৰু Razorpay Key নিজে নিজে চিনাক্ত কৰা ======
+(function() {
+  // ১. মেইন মেনু স্ক্ৰল ফিক্স
+  window.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll("header, nav, div").forEach(el => {
+      const style = window.getComputedStyle(el);
+      if ((style.position === "sticky" || style.position === "fixed") && el.offsetHeight < 220 && el.getBoundingClientRect().top <= 10 && el.id !== "ja-chat-launcher") {
+        el.style.setProperty("position", "relative", "important");
+      }
+    });
+  });
+
+  // ২. মোবাইল ৰাশিফল পপ-আপ ফিক্স
+  document.addEventListener("click", function() {
+    setTimeout(function() {
+      document.querySelectorAll("div, section").forEach(el => {
+        if (el.id === "ja-chat-window" || el.id === "ja-chat-launcher") return;
+        const style = window.getComputedStyle(el);
+        if (style.position === "fixed" && style.display !== "none" && el.innerText && el.innerText.includes("সামগ্ৰিক ফল")) {
+          el.style.setProperty("align-items", "center", "important");
+          el.style.setProperty("justify-content", "center", "important");
+          el.style.setProperty("padding", "15px 10px", "important");
+          const innerBox = el.firstElementChild;
+          if (innerBox) {
+            innerBox.style.setProperty("max-height", "80vh", "important");
+            innerBox.style.setProperty("overflow-y", "auto", "important");
+            innerBox.style.setProperty("width", "95%", "important");
+            innerBox.style.setProperty("max-width", "450px", "important");
+            innerBox.style.setProperty("margin", "auto", "important");
+            innerBox.style.setProperty("border-radius", "16px", "important");
+            if (!innerBox.querySelector(".auto-close-rashifal-btn")) {
+              const closeBtn = document.createElement("button");
+              closeBtn.className = "auto-close-rashifal-btn";
+              closeBtn.innerHTML = "❌ বন্ধ কৰক (Close)";
+              closeBtn.style.cssText = "position:sticky; bottom:0; left:0; width:100%; background:#e11d48; color:#ffffff; border:none; padding:12px; border-radius:10px; font-size:16px; font-weight:bold; margin-top:12px; z-index:99999; cursor:pointer;";
+              closeBtn.onclick = function(e) {
+                e.stopPropagation();
+                el.style.display = "none";
+                document.body.style.overflow = "auto";
+              };
+              innerBox.appendChild(closeBtn);
+            }
+          }
+        }
+      });
+    }, 50);
+  });
+
+  // ৩. লাইভ চেটবট ইঞ্জিন (Supabase calculate-chat + Razorpay)
+  let jaState = "FREE_FIRST_MSG";
+  let jaChatHistory = [];
+  let jaSavedBirthContext = "";
+  let jaTimeLeft = 300;
+  let jaTimerInterval = null;
+
   function getAutoConfig() {
     const html = document.documentElement.innerHTML;
     const rzpMatch = html.match(/rzp_(live|test)_[a-zA-Z0-9]+/);
@@ -2307,18 +2380,12 @@ document.addEventListener("click", function() {
     };
   }
 
-  let jaState = "FREE_FIRST_MSG"; // প্ৰথম মেছেজটো ফ্ৰী টোপ হিচাপে যাব
-  let jaChatHistory = [];
-  let jaSavedBirthContext = "";
-  let jaTimeLeft = 300; // 5 minutes
-  let jaTimerInterval = null;
-
   function getNowTime() {
-    const d = new Date();
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  function toggleJaChat() {
+  function toggleJaChat(e) {
+    if (e) e.stopPropagation();
     const win = document.getElementById("ja-chat-window");
     if (win.style.display === "flex") {
       win.style.display = "none";
@@ -2329,7 +2396,7 @@ document.addEventListener("click", function() {
         setTimeout(() => {
           showTyping(false);
           addBotMsg("নমস্কাৰ! 🙏 মই আচাৰ্যই কৈছোঁ। আপোনাৰ মনত কি কথাই অশান্তি দি আছে বা কি জানিব বিচাৰিছে মোক খুলি কওকচোন?<br><br>প্ৰথমে আপোনাৰ <b>নাম, জন্মৰ তাৰিখ, সময় আৰু জন্ম স্থান</b> আৰু আপোনাৰ <b>প্ৰশ্নটো</b> তলত মেছেজ হিচাপে লিখি পঠিয়াওক— মই পঞ্জিকাখন মেলি লৈছোঁ...");
-        }, 1200);
+        }, 900);
       }
     }
   }
@@ -2370,9 +2437,10 @@ document.addEventListener("click", function() {
       <div style="font-size:12.5px; margin:6px 0; color:#e2e8f0; line-height:1.45;">
         আপোনাৰ কুণ্ডলীৰ গভীৰ দশা আৰু সমাধানসমূহৰ বিষয়ে আচাৰ্যৰ সৈতে অহা ৫ মিনিট ধৰি যিকোনো কথা পোনপটীয়াকৈ পাতিবলৈ মাত্ৰ <b>₹৪৯ দক্ষিণা</b> আগবঢ়াওক:
       </div>
-      <button class="ja-rzp-btn" onclick="payWithRazorpay49()">💳 ₹৪৯ দি কথা পাতক (Instant Unlock)</button>
+      <button type="button" class="ja-rzp-btn">💳 ₹৪৯ দি কথা পাতক (Instant Unlock)</button>
       <div style="font-size:11px; color:#86efac;">🔒 100% গোপনীয় | Razorpay (GPay / PhonePe / Paytm)</div>
     `;
+    div.querySelector(".ja-rzp-btn").addEventListener("click", payWithRazorpay49);
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   }
@@ -2388,9 +2456,9 @@ document.addEventListener("click", function() {
       showTyping(true);
       setTimeout(() => {
         showTyping(false);
-        addBotMsg("মই আপোনাৰ কথাটো বুজি পাইছোঁ আৰু আপোনাৰ কুণ্ডলীখনো মোৰ সন্মুখতে মেলি থোৱা আছে। অনুগ্ৰহ কৰি ওপৰৰ সেউজীয়া বুটামটোত টিপি <b>মাত্ৰ ₹৪৯ দক্ষিণা</b> দি চেশ্যনটো খুলি লওক, মই লগে লগে আপোনাক ইয়াৰ সম্পূৰ্ণ সমাধান কৈ দিছোঁ...");
+        addBotMsg("মই আপোনাৰ কথাটো বুজি পাইছোঁ আৰু আপোনাৰ কুণ্ডলীখনো মোৰ সন্মুখতে মেলি থোৱা আছে। অনুগ্ৰহ কৰি তলৰ সেউজীয়া বুটামটোত টিপি <b>মাত্ৰ ₹৪৯ দক্ষিণা</b> দি চেশ্যনটো খুলি লওক, মই লগে লগে আপোনাক ইয়াৰ সম্পূৰ্ণ সমাধান কৈ দিছোঁ...");
         showPaywallCard();
-      }, 1100);
+      }, 900);
       return;
     }
 
@@ -2398,27 +2466,19 @@ document.addEventListener("click", function() {
     addUserMsg(text);
     jaChatHistory.push({ role: "user", content: text });
 
-    // যদি এইটো গ্ৰাহকৰ প্ৰথম মেছেজ (জন্ম তাৰিখ আৰু প্ৰশ্ন)
     if (jaState === "FREE_FIRST_MSG") {
       jaSavedBirthContext = text;
       showTyping(true);
-
-      // পোনপটীয়াকৈ আপোনাৰ Supabase calculate-chat (Swiss Ephemeris + Gemini) কল কৰা
       const firstReply = await askSupabaseGeminiEngine(
         `গ্ৰাহকৰ প্ৰথম মেছেজ: "${text}". নিৰ্দেশ: এজন জীৱন্ত অভিজ্ঞ অসমীয়া জ্যোতিষী আচাৰ্যৰ দৰে ঘৰুৱা কথিত অসমীয়া ভাষাত ৩-৪ শাৰীত তেওঁৰ গ্ৰহ স্থিতিৰ এটা চমু আভাস দিয়ক আৰু কওক যে তেওঁৰ কুণ্ডলীত এটা বিশেষ যোগ আৰু এটা সূক্ষ্ম গ্ৰহ-বাধা দেখা গৈছে, যাৰ বিষয়ে অহা ৫ মিনিটত আপুনি বিতংকৈ ক'ব।`,
         true
       );
-
       showTyping(false);
       jaChatHistory.push({ role: "assistant", content: firstReply });
       addBotMsg(firstReply);
-
       jaState = "WAIT_PAYMENT";
-      setTimeout(() => {
-        showPaywallCard();
-      }, 700);
+      setTimeout(showPaywallCard, 600);
     } 
-    // যদি গ্ৰাহকে ₹৪৯ পেমেন্ট কৰিলে — এতিয়া ৫ মিনিট ধৰি সম্পূৰ্ণ জীৱন্ত মানুহৰ দৰে উত্তৰ দিব!
     else if (jaState === "PAID_ACTIVE") {
       showTyping(true);
       const reply = await askSupabaseGeminiEngine(text, false);
@@ -2428,8 +2488,7 @@ document.addEventListener("click", function() {
     }
   }
 
-  // পোনপটীয়াকৈ আপোনাৰ Supabase "calculate-chat" ফাংচনটোলৈ মেছেজ পঠিওৱা
-  async function askSupabaseGeminiEngine(userMessage, isTeaser = false) {
+  async function askSupabaseGeminiEngine(userMessage, isTeaser) {
     const cfg = getAutoConfig();
     const payload = {
       message: userMessage,
@@ -2443,17 +2502,10 @@ document.addEventListener("click", function() {
     };
 
     try {
-      // ১. যদি পেজত ইতিমধ্যে supabase ক্লায়েন্ট আছে
       if (window.supabase && typeof window.supabase.functions?.invoke === "function") {
-        const { data, error } = await window.supabase.functions.invoke("calculate-chat", {
-          body: payload
-        });
-        if (!error && data) {
-          return extractTextFromResponse(data);
-        }
+        const { data, error } = await window.supabase.functions.invoke("calculate-chat", { body: payload });
+        if (!error && data) return extractText(data);
       }
-
-      // ২. ডাইৰেক্ট Supabase Edge Function URL লৈ Fetch কল
       if (cfg.sbUrl) {
         const headers = { "Content-Type": "application/json" };
         if (cfg.sbKey) {
@@ -2461,46 +2513,35 @@ document.addEventListener("click", function() {
           headers["apikey"] = cfg.sbKey;
         }
         const res = await fetch(`${cfg.sbUrl}/functions/v1/calculate-chat`, {
-          method: "POST",
-          headers: headers,
-          body: JSON.stringify(payload)
+          method: "POST", headers, body: JSON.stringify(payload)
         });
         if (res.ok) {
           const data = await res.json();
-          return extractTextFromResponse(data);
+          return extractText(data);
         }
       }
     } catch (e) {
-      console.warn("calculate-chat connection note:", e);
+      console.warn("Supabase note:", e);
     }
 
-    return "মই আপোনাৰ কুণ্ডলীৰ গ্ৰহ স্থিতি নিৰীক্ষণ কৰি আছোঁ। আপোনাৰ বৰ্তমানৰ দশা অনুসৰি শনি আৰু বৃহস্পতিৰ দৃষ্টিয়ে আপোনাৰ কামত থকা বাধাসমূহ অহা কিছু দিনৰ ভিতৰত আঁতৰাব। আপুনি জন্ম তাৰিখ আৰু সময়টো আকৌ এবাৰ স্পষ্টকৈ লিখি পঠিয়াওকচোন...";
+    return "মই পঞ্জিকাখনত আপোনাৰ জন্ম সময়ৰ গ্ৰহ-নক্ষত্ৰৰ অৱস্থান নিৰীক্ষণ কৰি আছোঁ। আপোনাৰ বৰ্তমানৰ গোচৰ ফল অনুসৰি শনি আৰু বৃহস্পতিৰ দৃষ্টিয়ে আপোনাৰ কামত এটা ডাঙৰ পৰিৱৰ্তন আনিবলৈ ওলাইছে। আপুনি অহা ৫ মিনিটৰ চেশ্যনটোত মোক বিতংকৈ সোধকচোন...";
   }
 
-  function extractTextFromResponse(data) {
+  function extractText(data) {
     if (typeof data === "string") return data;
-    return (
-      data.reply ||
-      data.answer ||
-      data.response ||
-      data.message ||
-      data.text ||
-      data.output ||
-      (data.choices && data.choices[0]?.message?.content) ||
-      JSON.stringify(data)
-    );
+    return data.reply || data.answer || data.response || data.message || data.text || data.output || JSON.stringify(data);
   }
 
-  function payWithRazorpay49() {
+  function payWithRazorpay49(e) {
+    if (e) e.stopPropagation();
     const cfg = getAutoConfig();
     if (!cfg.rzpKey) {
       alert("Razorpay Key পোৱা নগ'ল!");
       return;
     }
-
     const options = {
       key: cfg.rzpKey,
-      amount: 4900, // ₹49
+      amount: 4900,
       currency: "INR",
       name: "জ্যোতিষ অসম - Jyotish Assam",
       description: "আচাৰ্যৰ সৈতে ৫ মিনিটৰ ব্যক্তিগত কুণ্ডলী পৰামৰ্শ",
@@ -2510,14 +2551,13 @@ document.addEventListener("click", function() {
       },
       theme: { color: "#075e54" }
     };
-
     const rzp = new Razorpay(options);
     rzp.open();
   }
 
   function startPaidHumanSession(paymentId) {
     jaState = "PAID_ACTIVE";
-    jaTimeLeft = 300; // 5 minutes
+    jaTimeLeft = 300;
     const timerBadge = document.getElementById("ja-timer");
     timerBadge.style.display = "inline-block";
     document.getElementById("ja-user-input").focus();
@@ -2525,12 +2565,12 @@ document.addEventListener("click", function() {
     showTyping(true);
     setTimeout(async () => {
       const fullFirstAnswer = await askSupabaseGeminiEngine(
-        `গ্ৰাহকে ₹৪৯ দক্ষিণা দিলে। এতিয়া তেওঁৰ প্ৰথম প্রশ্নটোৰ ("${jaSavedBirthContext}") সম্পূৰ্ণ গভীৰ বৈদিক উত্তৰ আৰু নিখুঁত উপায় এজন মৰমিয়াল জ্যেষ্ঠ অসমীয়া পণ্ডিতৰ দৰে ঘৰুৱা কথোপকথনৰ ভাষাত দিয়ক আৰু শেষত সোধক তেওঁ আৰু কি জানিব বিচাৰে।`,
+        `গ্ৰাহকে ₹৪৯ দক্ষিণা দিলে। এতিয়া তেওঁৰ প্ৰথম প্রশ্নটোৰ ("${jaSavedBirthContext}") সম্পূৰ্ণ গভীৰ বৈদিক উত্তৰ আৰু নিখুঁত উপায় এজন মৰমিয়াল জ্যেষ্ঠ অসমীয়া পণ্ডিতৰ দৰে ঘৰুৱা কথোপকথনৰ ভাষাত দিয়ক।`,
         false
       );
       showTyping(false);
       addBotMsg(`🙏 ধন্যবাদ, আপোনাৰ দক্ষিণা পালোঁ। এতিয়া শুনক আপোনাৰ কুণ্ডলীয়ে কি কয়—<br><br>${fullFirstAnswer}`);
-    }, 1000);
+    }, 900);
 
     if (jaTimerInterval) clearInterval(jaTimerInterval);
     jaTimerInterval = setInterval(() => {
@@ -2538,16 +2578,24 @@ document.addEventListener("click", function() {
       const m = String(Math.floor(jaTimeLeft / 60)).padStart(2, "0");
       const s = String(jaTimeLeft % 60).padStart(2, "0");
       timerBadge.innerText = `⏳ ${m}:${s}`;
-
       if (jaTimeLeft <= 0) {
         clearInterval(jaTimerInterval);
         jaState = "WAIT_PAYMENT";
         timerBadge.style.display = "none";
-        addBotMsg("🙏 আমাৰ ৫ মিনিটৰ সময় ইমানতে সমাপ্ত হ'ল। আশা কৰোঁ মোৰ কথাই আপোনাৰ মনলৈ শান্তি আনিব। যদি মনত আৰু কিবা কথা সুধিবলৈ ৰৈ গ'ল, তেন্তে তলত টিপি আকৌ ৫ মিনিটৰ বাবে কথা পাতিব পাৰে। ঈশ্বৰে আপোনাৰ মঙ্গল কৰক!");
+        addBotMsg("🙏 আমাৰ ৫ মিনিটৰ সময় ইমানতে সমাপ্ত হ'ল। মনত আৰু কিবা কথা থাকিলে তলত টিপি আকৌ ৫ মিনিটৰ বাবে কথা পাতিব পাৰে।");
         showPaywallCard();
       }
     }, 1000);
   }
+
+  // বুটামবোৰত পোনপটীয়াকৈ ক্লিক লগোৱা (যাতে ১০০% ক্লিক কাম কৰে)
+  document.getElementById("ja-chat-launcher").addEventListener("click", toggleJaChat);
+  document.getElementById("ja-close-chat").addEventListener("click", toggleJaChat);
+  document.getElementById("ja-send-btn").addEventListener("click", handleJaSend);
+  document.getElementById("ja-user-input").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") handleJaSend();
+  });
+})();
 </script>
 </body>
 </html>
