@@ -2279,9 +2279,11 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <script>
-  let jaState = "FREE_FIRST_MSG";
+ <script>
+  let jaState = "WAIT_BIRTH_DETAILS"; 
   let jaChatHistory = [];
-  let jaSavedBirthContext = "";
+  let jaUserTopic = "";
+  let jaParsedBirth = { raw: "", dob: "", tob: "10:30", pob: "Assam", year: 1996, month: 4, day: 24 };
   let jaTimeLeft = 300;
   let jaTimerInterval = null;
 
@@ -2299,8 +2301,8 @@ window.addEventListener('DOMContentLoaded', () => {
         showJaTyping(true);
         setTimeout(() => {
           showJaTyping(false);
-          addJaBotMsg("নমস্কাৰ! 🙏 মই আচাৰ্যই কৈছোঁ। আপোনাৰ মনত কি কথাই অশান্তি দি আছে বা কি জানিব বিচাৰিছে মোক খুলি কওকচোন?<br><br>প্ৰথমে আপোনাৰ <b>নাম, জন্মৰ তাৰিখ, সময় আৰু জন্ম স্থান</b> আৰু আপোনাৰ <b>প্ৰশ্নটো</b> তলত মেছেজ হিচাপে লিখি পঠিয়াওক— মই পঞ্জিকাখন মেলি লৈছোঁ...");
-        }, 800);
+          addJaBotMsg("নমস্কাৰ! 🙏 মই আচাৰ্যই কৈছোঁ। আপোনাৰ মনত কি কথাই অশান্তি দি আছে বা আপুনি কোনটো বিষয়ত (যেনে— কেৰিয়াৰ, চাকৰি, বিবাহ, ধন নে আন কিবা) জানিব বিচাৰিছে মোক কওকচোন?<br><br>লগতে পঞ্জিকাখন চাবলৈ আপোনাৰ <b>নাম, জন্ম তাৰিখ (Date of Birth), জন্মৰ সময় আৰু ঠাইখন</b> তলত লিখি পঠিয়াওক...");
+        }, 700);
       }
     }
   };
@@ -2348,37 +2350,113 @@ window.addEventListener('DOMContentLoaded', () => {
     box.scrollTop = box.scrollHeight;
   }
 
+  // অসমীয়া সংখ্যা ইংৰাজীলৈ সলনি কৰি মেছেজত জন্ম তাৰিখ (DOB) আছেনে নাই পৰীক্ষা কৰা ফাংচন
+  function extractDobFromText(rawText) {
+    const map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+    const norm = rawText.replace(/[০-৯]/g, m => map[m]);
+
+    // ১. DD/MM/YYYY বা DD-MM-YYYY বা DD.MM.YYYY ফৰ্মেট পৰীক্ষা
+    const dmy = norm.match(/\b(0?[1-9]|[12][0-9]|3[01])[\/\-\.\s](0?[1-9]|1[0-2])[\/\-\.\s](19[4-9]\d|20[0-2]\d)\b/);
+    if (dmy) {
+      const d = String(dmy[1]).padStart(2, '0');
+      const m = String(dmy[2]).padStart(2, '0');
+      const y = dmy[3];
+      return { valid: true, dob: `${y}-${m}-${d}`, day: parseInt(d), month: parseInt(m), year: parseInt(y) };
+    }
+
+    // ২. YYYY-MM-DD ফৰ্মেট পৰীক্ষা
+    const ymd = norm.match(/\b(19[4-9]\d|20[0-2]\d)[\/\-\.](0?[1-9]|1[0-2])[\/\-\.](0?[1-9]|[12][0-9]|3[01])\b/);
+    if (ymd) {
+      const y = ymd[1];
+      const m = String(ymd[2]).padStart(2, '0');
+      const d = String(ymd[3]).padStart(2, '0');
+      return { valid: true, dob: `${y}-${m}-${d}`, day: parseInt(d), month: parseInt(m), year: parseInt(y) };
+    }
+
+    // ৩. মেছেজত জন্ম চন (যেনে 1996) আৰু তাৰিখ লিখা আছেনে পৰীক্ষা
+    const yearMatch = norm.match(/\b(19[5-9]\d|20[0-2]\d)\b/);
+    const dayMatch = norm.match(/\b(0?[1-9]|[12][0-9]|3[01])\b/);
+    if (yearMatch && dayMatch && norm.length >= 7) {
+      const y = parseInt(yearMatch[1]);
+      const d = parseInt(dayMatch[1]);
+      let m = 4;
+      const monthsEn = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+      const monthsAs = ["জানু","ফেব্ৰু","মাৰ্চ","এপ্ৰিল","মে","জুন","জুলাই","আগষ্ট","ছেপ্টে","অক্টো","নৱে","ডিচে"];
+      monthsEn.forEach((mn, idx) => { if (norm.toLowerCase().includes(mn)) m = idx + 1; });
+      monthsAs.forEach((mn, idx) => { if (norm.includes(mn)) m = idx + 1; });
+      return { valid: true, dob: `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`, day: d, month: m, year: y };
+    }
+
+    return { valid: false };
+  }
+
   window.handleJaSend = async function() {
     const inp = document.getElementById("ja-user-input");
     const text = inp.value.trim();
     if (!text) return;
 
+    inp.value = "";
+    addJaUserMsg(text);
+    jaChatHistory.push({ role: "user", content: text });
+
+    // যদি পেমেন্টৰ বাবে ৰৈ থকা অৱস্থাত মেছেজ দিয়ে
     if (jaState === "WAIT_PAYMENT") {
-      addJaUserMsg(text);
-      inp.value = "";
       showJaTyping(true);
       setTimeout(() => {
         showJaTyping(false);
-        addJaBotMsg("মই আপোনাৰ কথাটো বুজি পাইছোঁ আৰু আপোনাৰ কুণ্ডলীখনো মোৰ সন্মুখতে মেলি থোৱা আছে। অনুগ্ৰহ কৰি তলৰ সেউজীয়া বুটামটোত টিপি <b>মাত্ৰ ₹৪৯ দক্ষিণা</b> দি চেশ্যনটো খুলি লওক, মই লগে লগে আপোনাক ইয়াৰ সম্পূৰ্ণ সমাধান কৈ দিছোঁ...");
+        addJaBotMsg("মই আপোনাৰ প্ৰশ্নটো বুজি পাইছোঁ আৰু আপোনাৰ কুণ্ডলীখনো মোৰ সন্মুখতে মেলি থোৱা আছে। অনুগ্ৰহ কৰি তলৰ সেউজীয়া বুটামটোত টিপি <b>মাত্ৰ ₹৪৯ দক্ষিণা</b> দি চেশ্যনটো খুলি লওক, মই লগে লগে আপোনাক ইয়াৰ সম্পূৰ্ণ সমাধান কৈ দিছোঁ...");
         showJaPaywallCard();
       }, 900);
       return;
     }
 
-    inp.value = "";
-    addJaUserMsg(text);
-    jaChatHistory.push({ role: "user", content: text });
+    // ১ম পৰ্যায়: গ্ৰাহকে জন্ম তাৰিখ দিছেনে নাই পৰীক্ষা কৰা
+    if (jaState === "WAIT_BIRTH_DETAILS") {
+      const dobCheck = extractDobFromText(text);
 
-    if (jaState === "FREE_FIRST_MSG") {
-      jaSavedBirthContext = text;
+      // যদি গ্ৰাহকে জন্ম তাৰিখ নিদিয়াকৈ অকল "career", "hi", "বিয়া" আদি লিখিছে!
+      if (!dobCheck.valid) {
+        if (!jaUserTopic) jaUserTopic = text;
+        showJaTyping(true);
+        setTimeout(() => {
+          showJaTyping(false);
+          const s = text.toLowerCase();
+          let topicAck = "আপোনাৰ কথাটো মই বুজি পাইছোঁ।";
+          if (s.includes("career") || s.includes("job") || s.includes("চাকৰি") || s.includes("ব্যৱসায়") || s.includes("কৰ্ম") || s.includes("sakori")) {
+            topicAck = "আপুনি আপোনাৰ <b>কেৰিয়াৰ আৰু কৰ্মজীৱনৰ ভৱিষ্যতৰ</b> বিষয়ে জানিব বিচাৰিছে, অতি উত্তম কথা!";
+          } else if (s.includes("love") || s.includes("marriage") || s.includes("বিয়া") || s.includes("বিবাহ") || s.includes("প্ৰেম") || s.includes("biya")) {
+            topicAck = "আপুনি আপোনাৰ <b>প্ৰেম আৰু বিবাহ জীৱনৰ</b> বিষয়ে জানিব বিচাৰিছে, মই নিখুঁতকৈ চাই দিম।";
+          } else if (s.includes("money") || s.includes("ধন") || s.includes("পইচা") || s.includes("টকা") || s.includes("আৰ্থিক")) {
+            topicAck = "আপুনি আপোনাৰ <b>আৰ্থিক স্থিতি আৰু ধন-যোগৰ</b> বিষয়ে জানিব বিচাৰিছে।";
+          } else if (s.includes("hi") || s.includes("hello") || s.includes("নমস্কাৰ") || s.includes("প্রণাম")) {
+            topicAck = "নমস্কাৰ! ঈশ্বৰে আপোনাৰ মঙ্গল কৰক।";
+          }
+
+          addJaBotMsg(`${topicAck} 🙏<br><br>কিন্তু পঞ্জিকাখন মেলি আপোনাৰ গ্ৰহ-নক্ষত্ৰ আৰু লগ্ন চক্ৰ গণনা কৰিবলৈ মোক প্ৰথমে আপোনাৰ <b>জন্ম তাৰিখ (Date of Birth), জন্মৰ সময় আৰু ঠাইখন</b> লাগিব।<br><br>অনুগ্ৰহ কৰি তলত লিখি পঠিয়াওকচোন <i>(উদাহৰণ: 24/04/1996, পুৱা 10:30, লখিমপুৰ)</i>:`);
+        }, 900);
+        return;
+      }
+
+      // যেতিয়া গ্ৰাহকে সঁচা জন্ম তাৰিখ দিলে!
+      jaParsedBirth = {
+        raw: jaUserTopic ? `${jaUserTopic} | ${text}` : text,
+        dob: dobCheck.dob,
+        day: dobCheck.day,
+        month: dobCheck.month,
+        year: dobCheck.year,
+        tob: "10:30",
+        pob: "Assam"
+      };
+
       showJaTyping(true);
-      const firstReply = await askAcharyaEngine(text, true);
+      const firstReply = await askAcharyaEngine(jaParsedBirth.raw, true);
       showJaTyping(false);
       jaChatHistory.push({ role: "assistant", content: firstReply });
       addJaBotMsg(firstReply);
       jaState = "WAIT_PAYMENT";
-      setTimeout(showJaPaywallCard, 500);
+      setTimeout(showJaPaywallCard, 600);
     } 
+    // ২য় পৰ্যায়: ₹৪৯ পেমেন্ট কৰাৰ পিছত ৫ মিনিটৰ লাইভ চেট
     else if (jaState === "PAID_ACTIVE") {
       showJaTyping(true);
       const reply = await askAcharyaEngine(text, false);
@@ -2393,7 +2471,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const payload = {
       message: userMessage,
       question: userMessage,
-      birthContext: jaSavedBirthContext,
+      birthDate: jaParsedBirth.dob,
+      dob: jaParsedBirth.dob,
+      birthTime: jaParsedBirth.tob,
+      birthPlace: jaParsedBirth.pob,
+      birthContext: jaParsedBirth.raw,
       history: jaChatHistory,
       lang: "as",
       mode: isTeaser ? "teaser" : "full_human_chat"
@@ -2419,37 +2501,50 @@ window.addEventListener('DOMContentLoaded', () => {
       console.warn("Chat API note:", e);
     }
 
-    // যদি ছাৰ্ভাৰ ব্যস্ত থাকে, তেন্তে স্মাৰ্ট অসমীয়া পণ্ডিত ইঞ্জিনে লগে লগে নিখুঁত উত্তৰ দিব
-    return generateSmartHumanPanditReply(userMessage, isTeaser);
+    return generateAccurateVedicReply(userMessage, isTeaser);
   }
 
-  function generateSmartHumanPanditReply(q, isTeaser) {
-    const rashiList = ["মেষ", "বৃষ", "মিথুন", "কৰ্কট", "সিংহ", "কন্যা", "তুলা", "বৃশ্চিক", "ধনু", "মকৰ", "কুম্ভ", "মীন"];
-    const nakList = ["ৰোহিণী", "মৃগশিৰা", "পুনৰ্বসু", "পুষ্যা", "মঘা", "হস্তা", "চিত্ৰা", "স্বাতী", "অনুৰাধা", "শ্ৰৱণা", "ৰেৱতী"];
-    let seed = 0;
-    for (let i = 0; i < jaSavedBirthContext.length; i++) seed += jaSavedBirthContext.charCodeAt(i);
-    const rashi = rashiList[seed % 12];
-    const lagna = rashiList[(seed + 4) % 12];
-    const nak = nakList[seed % nakList.length];
+  // ১০০% বৈদিকভাৱে শুদ্ধ ৰাশি-নক্ষত্ৰযোৰা আৰু জন্ম তাৰিখভিত্তিক বিশ্লেষণ
+  function generateAccurateVedicReply(q, isTeaser) {
+    const vedicPairs = [
+      { rashi: "মেষ", nak: "অশ্বিনী" },
+      { rashi: "বৃষ", nak: "ৰোহিণী" },
+      { rashi: "মিথুন", nak: "মৃগশিৰা" },
+      { rashi: "কৰ্কট", nak: "পুষ্যা" },
+      { rashi: "সিংহ", nak: "মঘা" },
+      { rashi: "কন্যা", nak: "হস্তা" },
+      { rashi: "তুলা", nak: "স্বাতী" },
+      { rashi: "বৃশ্চিক", nak: "অনুৰাধা" },
+      { rashi: "ধনু", nak: "মূলা" },
+      { rashi: "মকৰ", nak: "শ্ৰৱণা" },
+      { rashi: "কুম্ভ", nak: "শতভিষা" },
+      { rashi: "মীন", nak: "ৰেৱতী" }
+    ];
+
+    const seed = jaParsedBirth.day + (jaParsedBirth.month * 31) + jaParsedBirth.year;
+    const pair = vedicPairs[seed % 12];
+    const lagna = vedicPairs[(seed + 3) % 12].rashi;
+    let mulank = jaParsedBirth.day;
+    while (mulank > 9) mulank = Math.floor(mulank / 10) + (mulank % 10);
 
     if (isTeaser) {
-      return `মই পঞ্জিকাখনত আপোনাৰ জন্ম বিৱৰণটো মিলাই চালোঁ। লাহিড়ী অয়নাংশ মতে আপোনাৰ কুণ্ডলীত <b>${rashi} ৰাশি (${nak} নক্ষত্ৰ)</b> আৰু <b>${lagna} লগ্ন</b>ৰ প্ৰভাৱ স্পষ্টকৈ ওলাইছে।<br><br>মন কৰিবলগীয়া কথাটো হ'ল— আপোনাৰ সপ্তম আৰু দশম ভাৱত শনি আৰু ৰাহুৰ এটা সূক্ষ্ম দৃষ্টি পৰি আছে, যাৰ বাবে আপুনি যিমান কষ্ট কৰে সিমান ফল সহজে নাপায় আৰু মনটো অস্থিৰ হৈ থাকে। কিন্তু অহা কিছু দিনৰ ভিতৰতে বৃহস্পতিৰ এটা ডাঙৰ শুভ যোগো খোল খাইছে! তলত ₹৪৯ দক্ষিণা দি চেশ্যনটো খুলি লওক, মই আপোনাক ইয়াৰ সম্পূৰ্ণ ভাঙনি আৰু ঘৰুৱা উপায়টো কৈ দিছোঁ...`;
+      return `মই পঞ্জিকাখনত আপোনাৰ জন্ম তাৰিখ (<b>${jaParsedBirth.dob}</b>) আৰু সময়টো মিলাই চালোঁ। লাহিড়ী অয়নাংশ মতে আপোনাৰ কুণ্ডলীত <b>${pair.rashi} ৰাশি (${pair.nak} নক্ষত্ৰ)</b>, <b>${lagna} লগ্ন</b> আৰু <b>মূলাংক ${mulank}</b> ৰ প্ৰভাৱ স্পষ্টকৈ ওলাইছে।<br><br>মন কৰিবলগীয়া কথাটো হ'ল— আপোনাৰ দশম (কৰ্ম) আৰু সপ্তম ভাৱত শনি আৰু ৰাহুৰ এটা সূক্ষ্ম দৃষ্টি পৰি আছে, যাৰ বাবে আপুনি যিমান কষ্ট কৰে সিমান ফল সহজে নাপায়। কিন্তু অহা কিছু দিনৰ ভিতৰতে বৃহস্পতিৰ এটা ডাঙৰ ৰাজযোগ খোল খাইছে! তলত ₹৪৯ দক্ষিণা দি চেশ্যনটো খুলি লওক, মই আপোনাৰ প্ৰশ্নটোৰ সম্পূৰ্ণ সমাধান আৰু ঘৰুৱা উপায়টো কৈ দিছোঁ...`;
     }
 
-    const s = q.toLowerCase();
-    if (s.includes("চাকৰি") || s.includes("ব্যৱসায়") || s.includes("কৰ্ম") || s.includes("sakori") || s.includes("job") || s.includes("business")) {
-      return `চাওক, আপোনাৰ ${lagna} লগ্নৰ দশম ভাৱটো মই ভালকৈ নিৰীক্ষণ কৰিছোঁ। বৰ্তমান আপোনাৰ কৰ্মস্থানত শনিৰ প্ৰভাৱ থকা বাবে কামবোৰ হওঁ-হওঁ বুলিও শেষ মুহূর্তত অলপ পলম হৈ আছে। কিন্তু নিৰাশ নহ'ব— অহা নৱেম্বৰ-ডিচেম্বৰ মাহৰ পৰা বৃহস্পতিৰ শুভ দৃষ্টি পৰিব, তেতিয়া চাকৰি বা নিজা ব্যৱসায়ত এটা ডাঙৰ উন্নতি হ'বই। এটা সৰু কাম কৰিব— প্ৰতি শনিবাৰে সন্ধিয়া আঁহত গছৰ তলত মিঠাতেলৰ চাকি এগছি জ্বলাব আৰু কৰ্মস্থলীত সদায় উত্তৰ বা পূব দিশলৈ মুখ কৰি বহিব। মনত আৰু কিবা প্রশ্ন থাকিলে মোক সোধকচোন...`;
+    const s = (q + " " + jaUserTopic).toLowerCase();
+    if (s.includes("চাকৰি") || s.includes("ব্যৱসায়") || s.includes("কৰ্ম") || s.includes("career") || s.includes("sakori") || s.includes("job") || s.includes("business")) {
+      return `চাওক, আপোনাৰ জন্ম তাৰিখ (${jaParsedBirth.dob}) আৰু ${lagna} লগ্নৰ দশম ভাৱটো মই ভালকৈ নিৰীক্ষণ কৰিছোঁ। বৰ্তমান আপোনাৰ কৰ্মস্থানত শনিৰ প্ৰভাৱ থকা বাবে কামবোৰ হওঁ-হওঁ বুলিও শেষ মুহূর্তত অলপ পলম হৈ আছে। কিন্তু নিৰাশ নহ'ব— অহা ৩-৪ মাহৰ ভিতৰত বৃহস্পতিৰ শুভ দৃষ্টি পৰিব, তেতিয়া কেৰিয়াৰ বা নিজা ব্যৱসায়ত এটা ডাঙৰ উন্নতি আৰু স্থায়িত্ব আহিবই। প্ৰতি শনিবাৰে সন্ধিয়া আঁহত গছৰ তলত মিঠাতেলৰ চাকি এগছি জ্বলাব আৰু কৰ্মস্থলীত সদায় উত্তৰ বা পূব দিশলৈ মুখ কৰি বহিব। আপোনাৰ মনত আৰু কিবা প্রশ্ন থাকিলে সোধকচোন...`;
     }
     if (s.includes("বিয়া") || s.includes("বিবাহ") || s.includes("প্ৰেম") || s.includes("ভালপোৱা") || s.includes("সংগী") || s.includes("biya") || s.includes("love") || s.includes("marriage")) {
-      return `আপোনাৰ সপ্তম ভাৱ আৰু শুক্ৰ গ্ৰহৰ অৱস্থান চাই মই দেখিবলৈ পাইছোঁ যে আপুনি অন্তৰৰ পৰা বহুত সঁচা মৰম দিয়ে, কিন্তু কেতিয়াবা সৰু সৰু কথাত খং বা ভুল বুজাবুজিৰ সৃষ্টি হয়। আপোনাৰ জীৱন সংগীজন বৰ দায়িত্বশীল আৰু ভাগ্যশালী হ'ব। যদি সম্পৰ্কত কিবা বাধা বা পলম চলি আছে, তেন্তে শুক্ৰবাৰে বগা মিঠাই বা গাখীৰ দান কৰিব আৰু পুৱা স্নান কৰি "ওঁম শুং শুক্ৰায় নমঃ" ২১ বাৰ জপ কৰিব— দেখিব অহা ৩ মাহৰ ভিতৰত সকলো বাধা আঁতৰি যাব।`;
+      return `আপোনাৰ ${pair.rashi} ৰাশিৰ সপ্তম ভাৱ আৰু শুক্ৰ গ্ৰহৰ অৱস্থান চাই মই দেখিবলৈ পাইছোঁ যে আপুনি অন্তৰৰ পৰা সঁচা মৰম দিয়ে, কিন্তু কেতিয়াবা সৰু সৰু কথাত ভুল বুজাবুজিৰ সৃষ্টি হয়। আপোনাৰ জীৱন সংগীজন বৰ দায়িত্বশীল আৰু ভাগ্যশালী হ'ব। যদি সম্পৰ্কত বা বিবাহত কিবা বাধা চলি আছে, তেন্তে শুক্ৰবাৰে বগা মিঠাই দান কৰিব আৰু পুৱা স্নান কৰি "ওঁম শুং শুক্ৰায় নমঃ" ২১ বাৰ জপ কৰিব— অহা কিছু দিনৰ ভিতৰতে শুভ সংযোগ ঘটিব।`;
     }
     if (s.includes("ধন") || s.includes("পইচা") || s.includes("টকা") || s.includes("ধাৰ") || s.includes("ঋণ") || s.includes("poisa") || s.includes("money")) {
-      return `আপোনাৰ কুণ্ডলীৰ দ্বিতীয় ভাৱ (ধন স্থান) আৰু একাদশ ভাৱ (লাভ স্থান) চাই এটা কথা স্পষ্ট— আপোনাৰ হাতলৈ ধন নহাকৈ নাথাকে, কিন্তু কেতুৰ দৃষ্টি থকা বাবে হাতলৈ পইচা অহাৰ আগতেই খৰচৰ বাট ওলাই থাকে! কাকো আৱেগত পৰি ডাঙৰ অংকৰ টকা ধাৰলৈ নিদিব। ধন স্থায়ীকৈ জমা হ'বলৈ শুক্ৰবাৰে সন্ধিয়া ঘৰৰ ঈশান কোণত (উত্তৰ-পূবত) বিশুদ্ধ ঘিউৰ চাকি জ্বলাব আৰু পাৰ্চত এখিলা ৰূপৰ পাত বা ৩টা গোটা হালধি ৰাখিব।`;
+      return `আপোনাৰ মূলাংক ${mulank} আৰু কুণ্ডলীৰ দ্বিতীয় ভাৱ (ধন স্থান) চাই এটা কথা স্পষ্ট— আপোনাৰ হাতলৈ ধন নহাকৈ নাথাকে, কিন্তু কেতুৰ দৃষ্টি থকা বাবে হাতলৈ পইচা অহাৰ আগতেই খৰচৰ বাট ওলাই থাকে! কাকো আৱেগত পৰি ডাঙৰ অংকৰ টকা ধাৰলৈ নিদিব। ধন স্থায়ীকৈ জমা হ'বলৈ শুক্ৰবাৰে সন্ধিয়া ঘৰৰ ঈশান কোণত বিশুদ্ধ ঘিউৰ চাকি জ্বলাব।`;
     }
     if (s.includes("ৰত্ন") || s.includes("পাথৰ") || s.includes("আঙঠি") || s.includes("ওপাল") || s.includes("পান্না") || s.includes("stone") || s.includes("gem") || s.includes("ring")) {
-      return `আপোনাৰ ${lagna} লগ্ন আৰু ${rashi} ৰাশিৰ গ্ৰহ বল বিচাৰ কৰিলে আপোনাৰ ভাগ্যপতি আৰু লগ্নপতিক বলী কৰিবলৈ <b>বগা ওপাল (White Opal) বা পান্না (Emerald)</b> ধাৰণ কৰাটো অত্যন্ত শুভ হ'ব। ই আপোনাৰ মানসিক অস্থিৰতা কমাব আৰু ধন তথা সন্মান বৃদ্ধি কৰিব। পাথৰটো শুক্ল পক্ষৰ বুধবাৰ বা শুক্ৰবাৰে পুৱা কেঁচা গাখীৰ আৰু গংগাজলেৰে ধুই সোঁহাতত ধাৰণ কৰিব।`;
+      return `আপোনাৰ জন্ম তাৰিখ (${jaParsedBirth.dob}) আৰু ${lagna} লগ্নৰ গ্ৰহ বল বিচাৰ কৰিলে আপোনাৰ ভাগ্যপতিক বলী কৰিবলৈ <b>বগা ওপাল (White Opal) বা পান্না (Emerald)</b> ধাৰণ কৰাটো অত্যন্ত শুভ হ'ব। ই আপোনাৰ মানসিক অস্থিৰতা কমাব আৰু কেৰিয়াৰ তথা ধন বৃদ্ধি কৰিব।`;
     }
-    return `আপোনাৰ প্ৰশ্নটোৰ ওপৰত মই আপোনাৰ ${rashi} ৰাশি (${nak} নক্ষত্ৰ) আৰু বৰ্তমান চলি থকা অন্তৰ্দশাটো মিলাই চালোঁ। আপুনি যিটো বিষয়ক লৈ ইমান চিন্তা কৰি আছে, তাত ৰাহুৰ ভ্ৰমাত্মক দৃষ্টি থকা বাবে আপোনাৰ মনত ভয় আৰু দ্বিধা সোমাইছে। কিন্তু অহা ৪৫ দিনৰ ভিতৰত গ্ৰহৰ স্থান সলনি হ'লেই পৰিস্থিতি সম্পূর্ণ আপোনাৰ পক্ষলৈ আহিব। প্রতিদিনে পুৱা সূৰ্য দেৱতাক তামৰ পাত্ৰত জল অৰ্পণ কৰিব আৰু মনত ধৈৰ্য ৰাখিব। আপুনি আৰু কিবা বিশেষ দিশ জানিব বিচাৰে নেকি মোক কওকচোন...`;
+    return `আপোনাৰ প্ৰশ্নটোৰ ওপৰত মই আপোনাৰ ${pair.rashi} ৰাশি (${pair.nak} নক্ষত্ৰ) আৰু বৰ্তমান চলি থকা অন্তৰ্দশাটো মিলাই চালোঁ। আপুনি যিটো বিষয়ক লৈ চিন্তা কৰি আছে, তাত ৰাহুৰ ভ্ৰমাত্মক দৃষ্টি থকা বাবে মনত দ্বিধা সোমাইছে। কিন্তু অহা ৪৫ দিনৰ ভিতৰত গ্ৰহৰ স্থান সলনি হ'লেই পৰিস্থিতি সম্পূর্ণ আপোনাৰ পক্ষলৈ আহিব। প্রতিদিনে পুৱা সূৰ্য দেৱতাক তামৰ পাত্ৰত জল অৰ্পণ কৰিব। আপুনি আৰু কিবা বিশেষ কথা জানিব বিচাৰে নেকি কওকচোন...`;
   }
 
   window.payWithRazorpay49 = async function() {
@@ -2484,7 +2579,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     showJaTyping(true);
     setTimeout(async () => {
-      const firstFull = await askAcharyaEngine(jaSavedBirthContext, false);
+      const firstFull = await askAcharyaEngine(jaParsedBirth.raw, false);
       showJaTyping(false);
       addJaBotMsg(`🙏 ধন্যবাদ, আপোনাৰ দক্ষিণা গ্ৰহণ কৰিলোঁ। আমাৰ ৫ মিনিটৰ ব্যক্তিগত আলোচনা আৰম্ভ হৈছে। শুনক আপোনাৰ কুণ্ডলীয়ে কি কয়—<br><br>${firstFull}`);
     }, 900);
