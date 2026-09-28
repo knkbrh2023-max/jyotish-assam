@@ -2110,13 +2110,13 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- Live Customer Trust Notification End -->
 
 <style>
-  /* ১. মেইন মেনুখন স্ক্ৰল কৰিলে ওপৰলৈ উঠি যোৱা (কোনো পপ-আপক নুচুৱাকৈ!) */
+  /* ১. মেইন মেনুখন স্ক্ৰল কৰিলে ওপৰলৈ উঠি যোৱা */
   body > nav {
     position: relative !important;
     top: auto !important;
   }
 
-  /* ২. মোবাইলত ৰাশিফল পপ-আপ বক্সবোৰ স্ক্ৰীণৰ মাজত ৮০% জোখত ফিট কৰা */
+  /* ২. মোবাইলত ৰাশিফল পপ-আপ বক্সবোৰ স্ক্ৰীণৰ মাজত ফিট কৰা */
   #rashiModal, #orderModal, #horoscope-modal {
     position: fixed !important;
     padding: 15px 10px !important;
@@ -2149,7 +2149,7 @@ window.addEventListener('DOMContentLoaded', () => {
     font-weight: bold !important;
   }
 
-  /* ৩. হোৱাটছএপ-ষ্টাইল লাইভ আচাৰ্য চেটবট (₹৪৯ / ৫ মিনিট) */
+  /* ৩. হোৱাটছএপ-ষ্টাইল লাইভ আচাৰ্য চেটবট + Maximize চিষ্টেম */
   #ja-chat-launcher {
     position: fixed !important;
     bottom: 20px !important;
@@ -2178,7 +2178,7 @@ window.addEventListener('DOMContentLoaded', () => {
     right: 15px !important;
     width: 365px !important;
     max-width: 94vw !important;
-    height: 530px !important;
+    height: 520px !important;
     max-height: 78vh !important;
     background: #0b141a !important;
     border: 2px solid #ffd700 !important;
@@ -2188,11 +2188,40 @@ window.addEventListener('DOMContentLoaded', () => {
     flex-direction: column !important;
     overflow: hidden !important;
     box-shadow: 0 15px 50px rgba(0,0,0,0.85) !important;
+    transition: all 0.25s ease !important;
+  }
+  /* Maximize কৰিলে ফুল-স্ক্ৰীণ ডাঙৰ হোৱা ডিজাইন */
+  #ja-chat-window.ja-maximized {
+    top: 12px !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    width: calc(100vw - 24px) !important;
+    max-width: 900px !important;
+    height: calc(100vh - 24px) !important;
+    max-height: calc(100vh - 24px) !important;
+    margin: auto !important;
+    border-radius: 16px !important;
   }
   .ja-chat-header {
     background: #075e54; padding: 12px 14px; color: #fff;
     border-bottom: 1.5px solid #ffd700;
     display: flex; justify-content: space-between; align-items: center;
+  }
+  .ja-hdr-btn {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,215,0,0.5);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .ja-hdr-btn:hover {
+    background: #ffd700;
+    color: #075e54;
   }
   .ja-timer-badge {
     background: #ffd700; color: #111; padding: 4px 10px;
@@ -2204,7 +2233,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   .ja-msg {
     max-width: 86%; padding: 10px 13px; border-radius: 12px;
-    font-size: 14px; line-height: 1.55; word-wrap: break-word;
+    font-size: 14.5px; line-height: 1.55; word-wrap: break-word;
   }
   .ja-bot {
     background: #202c33; color: #f1f5f9; align-self: flex-start;
@@ -2263,9 +2292,10 @@ window.addEventListener('DOMContentLoaded', () => {
         <div id="ja-status-text" style="font-size:11px; color:#86efac;">● Online (পঞ্জিকা কক্ষত উপস্থিত)</div>
       </div>
     </div>
-    <div style="display:flex; align-items:center; gap:8px;">
+    <div style="display:flex; align-items:center; gap:6px;">
       <span id="ja-timer" class="ja-timer-badge">⏳ 05:00</span>
-      <span onclick="window.toggleJaChat()" style="cursor:pointer; font-size:22px; font-weight:bold; color:#fff; padding:0 5px;">✖</span>
+      <button type="button" id="ja-max-btn" class="ja-hdr-btn" onclick="window.toggleMaximizeJaChat()" title="ডাঙৰ বা সৰু কৰক">⛶</button>
+      <button type="button" class="ja-hdr-btn" onclick="window.toggleJaChat()" title="বন্ধ কৰক">✖</button>
     </div>
   </div>
 
@@ -2279,27 +2309,39 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <script>
- <script>
-  let jaState = "WAIT_BIRTH_DETAILS"; 
-  let jaChatHistory = [];
-  let jaUserTopic = "";
-  let jaParsedBirth = { raw: "", dob: "", tob: "10:30", pob: "Assam", year: 1996, month: 4, day: 24 };
-  let jaTimeLeft = 300;
-  let jaTimerInterval = null;
+  var jaState = "WAIT_BIRTH_DETAILS";
+  var jaChatHistory = [];
+  var jaUserTopic = "";
+  var jaParsedBirth = { raw: "", dob: "", tob: "10:30", pob: "Assam", year: 1996, month: 4, day: 24 };
+  var jaTimeLeft = 300;
+  var jaTimerInterval = null;
 
   function getNowTime() {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
+  window.toggleMaximizeJaChat = function() {
+    var win = document.getElementById("ja-chat-window");
+    var maxBtn = document.getElementById("ja-max-btn");
+    win.classList.toggle("ja-maximized");
+    if (win.classList.contains("ja-maximized")) {
+      maxBtn.innerHTML = "🗗";
+    } else {
+      maxBtn.innerHTML = "⛶";
+    }
+    var box = document.getElementById("ja-chat-messages");
+    box.scrollTop = box.scrollHeight;
+  };
+
   window.toggleJaChat = function() {
-    const win = document.getElementById("ja-chat-window");
+    var win = document.getElementById("ja-chat-window");
     if (win.style.display === "flex") {
       win.style.display = "none";
     } else {
       win.style.display = "flex";
       if (document.getElementById("ja-chat-messages").innerHTML === "") {
         showJaTyping(true);
-        setTimeout(() => {
+        setTimeout(function() {
           showJaTyping(false);
           addJaBotMsg("নমস্কাৰ! 🙏 মই আচাৰ্যই কৈছোঁ। আপোনাৰ মনত কি কথাই অশান্তি দি আছে বা আপুনি কোনটো বিষয়ত (যেনে— কেৰিয়াৰ, চাকৰি, বিবাহ, ধন নে আন কিবা) জানিব বিচাৰিছে মোক কওকচোন?<br><br>লগতে পঞ্জিকাখন চাবলৈ আপোনাৰ <b>নাম, জন্ম তাৰিখ (Date of Birth), জন্মৰ সময় আৰু ঠাইখন</b> তলত লিখি পঠিয়াওক...");
         }, 700);
@@ -2308,101 +2350,93 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   function showJaTyping(show) {
-    const t = document.getElementById("ja-typing");
-    const st = document.getElementById("ja-status-text");
+    var t = document.getElementById("ja-typing");
+    var st = document.getElementById("ja-status-text");
     t.style.display = show ? "block" : "none";
     st.innerText = show ? "✍️ আচাৰ্যই লিখি আছে..." : "● Online (পঞ্জিকা কক্ষত উপস্থিত)";
-    const box = document.getElementById("ja-chat-messages");
+    var box = document.getElementById("ja-chat-messages");
     box.scrollTop = box.scrollHeight;
   }
 
   function addJaBotMsg(html) {
-    const box = document.getElementById("ja-chat-messages");
-    const div = document.createElement("div");
+    var box = document.getElementById("ja-chat-messages");
+    var div = document.createElement("div");
     div.className = "ja-msg ja-bot";
-    div.innerHTML = `${html}<div class="ja-msg-time">${getNowTime()}</div>`;
+    div.innerHTML = html + '<div class="ja-msg-time">' + getNowTime() + '</div>';
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   }
 
   function addJaUserMsg(text) {
-    const box = document.getElementById("ja-chat-messages");
-    const div = document.createElement("div");
+    var box = document.getElementById("ja-chat-messages");
+    var div = document.createElement("div");
     div.className = "ja-msg ja-user";
-    div.innerHTML = `${text}<div class="ja-msg-time">${getNowTime()} ✓✓</div>`;
+    div.innerHTML = text + '<div class="ja-msg-time">' + getNowTime() + ' ✓✓</div>';
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   }
 
   function showJaPaywallCard() {
-    const box = document.getElementById("ja-chat-messages");
-    const div = document.createElement("div");
+    var box = document.getElementById("ja-chat-messages");
+    var div = document.createElement("div");
     div.className = "ja-pay-box";
-    div.innerHTML = `
-      <div style="color:#ffd700; font-weight:700; font-size:15px;">🕉️ আচাৰ্যৰ সৈতে ৫ মিনিটৰ পোনপটীয়া বাৰ্তালাপ</div>
-      <div style="font-size:12.5px; margin:6px 0; color:#e2e8f0; line-height:1.45;">
-        আপোনাৰ কুণ্ডলীৰ গভীৰ দশা আৰু সমাধানসমূহৰ বিষয়ে আচাৰ্যৰ সৈতে অহা ৫ মিনিট ধৰি যিকোনো কথা পোনপটীয়াকৈ পাতিবলৈ মাত্ৰ <b>₹৪৯ দক্ষিণা</b> আগবঢ়াওক:
-      </div>
-      <button type="button" class="ja-rzp-btn" onclick="window.payWithRazorpay49()">💳 ₹৪৯ দি কথা পাতক (Instant Unlock)</button>
-      <div style="font-size:11px; color:#86efac;">🔒 100% গোপনীয় | Razorpay (GPay / PhonePe / Paytm)</div>
-    `;
+    div.innerHTML = '<div style="color:#ffd700; font-weight:700; font-size:15px;">🕉️ আচাৰ্যৰ সৈতে ৫ মিনিটৰ পোনপটীয়া বাৰ্তালাপ</div>' +
+      '<div style="font-size:12.5px; margin:6px 0; color:#e2e8f0; line-height:1.45;">আপোনাৰ কুণ্ডলীৰ গভীৰ দশা আৰু সমাধানসমূহৰ বিষয়ে আচাৰ্যৰ সৈতে অহা ৫ মিনিট ধৰি যিকোনো কথা পোনপটীয়াকৈ পাতিবলৈ মাত্ৰ <b>₹৪৯ দক্ষিণা</b> আগবঢ়াওক:</div>' +
+      '<button type="button" class="ja-rzp-btn" onclick="window.payWithRazorpay49()">💳 ₹৪৯ দি কথা পাতক (Instant Unlock)</button>' +
+      '<div style="font-size:11px; color:#86efac;">🔒 100% গোপনীয় | Razorpay (GPay / PhonePe / Paytm)</div>';
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   }
 
-  // অসমীয়া সংখ্যা ইংৰাজীলৈ সলনি কৰি মেছেজত জন্ম তাৰিখ (DOB) আছেনে নাই পৰীক্ষা কৰা ফাংচন
   function extractDobFromText(rawText) {
-    const map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
-    const norm = rawText.replace(/[০-৯]/g, m => map[m]);
+    var map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+    var norm = String(rawText).replace(/[০-৯]/g, function(m) { return map[m] || m; });
 
-    // ১. DD/MM/YYYY বা DD-MM-YYYY বা DD.MM.YYYY ফৰ্মেট পৰীক্ষা
-    const dmy = norm.match(/\b(0?[1-9]|[12][0-9]|3[01])[\/\-\.\s](0?[1-9]|1[0-2])[\/\-\.\s](19[4-9]\d|20[0-2]\d)\b/);
-    if (dmy) {
-      const d = String(dmy[1]).padStart(2, '0');
-      const m = String(dmy[2]).padStart(2, '0');
-      const y = dmy[3];
-      return { valid: true, dob: `${y}-${m}-${d}`, day: parseInt(d), month: parseInt(m), year: parseInt(y) };
+    var nums = norm.match(/\d+/g);
+    if (!nums || nums.length < 2) return { valid: false };
+
+    var year = null, month = 4, day = 15;
+    for (var i = 0; i < nums.length; i++) {
+      var n = parseInt(nums[i], 10);
+      if (n >= 1940 && n <= 2026) {
+        year = n;
+      }
+    }
+    if (!year) return { valid: false };
+
+    if (nums.length >= 3) {
+      var n0 = parseInt(nums[0], 10);
+      var n1 = parseInt(nums[1], 10);
+      var n2 = parseInt(nums[2], 10);
+      if (n0 > 1900) {
+        month = (n1 >= 1 && n1 <= 12) ? n1 : 4;
+        day = (n2 >= 1 && n2 <= 31) ? n2 : 15;
+      } else {
+        day = (n0 >= 1 && n0 <= 31) ? n0 : 15;
+        month = (n1 >= 1 && n1 <= 12) ? n1 : 4;
+      }
+    } else {
+      var firstNum = parseInt(nums[0], 10);
+      day = (firstNum >= 1 && firstNum <= 31) ? firstNum : 15;
     }
 
-    // ২. YYYY-MM-DD ফৰ্মেট পৰীক্ষা
-    const ymd = norm.match(/\b(19[4-9]\d|20[0-2]\d)[\/\-\.](0?[1-9]|1[0-2])[\/\-\.](0?[1-9]|[12][0-9]|3[01])\b/);
-    if (ymd) {
-      const y = ymd[1];
-      const m = String(ymd[2]).padStart(2, '0');
-      const d = String(ymd[3]).padStart(2, '0');
-      return { valid: true, dob: `${y}-${m}-${d}`, day: parseInt(d), month: parseInt(m), year: parseInt(y) };
-    }
-
-    // ৩. মেছেজত জন্ম চন (যেনে 1996) আৰু তাৰিখ লিখা আছেনে পৰীক্ষা
-    const yearMatch = norm.match(/\b(19[5-9]\d|20[0-2]\d)\b/);
-    const dayMatch = norm.match(/\b(0?[1-9]|[12][0-9]|3[01])\b/);
-    if (yearMatch && dayMatch && norm.length >= 7) {
-      const y = parseInt(yearMatch[1]);
-      const d = parseInt(dayMatch[1]);
-      let m = 4;
-      const monthsEn = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
-      const monthsAs = ["জানু","ফেব্ৰু","মাৰ্চ","এপ্ৰিল","মে","জুন","জুলাই","আগষ্ট","ছেপ্টে","অক্টো","নৱে","ডিচে"];
-      monthsEn.forEach((mn, idx) => { if (norm.toLowerCase().includes(mn)) m = idx + 1; });
-      monthsAs.forEach((mn, idx) => { if (norm.includes(mn)) m = idx + 1; });
-      return { valid: true, dob: `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`, day: d, month: m, year: y };
-    }
-
-    return { valid: false };
+    var dStr = String(day).padStart(2, '0');
+    var mStr = String(month).padStart(2, '0');
+    return { valid: true, dob: year + "-" + mStr + "-" + dStr, day: day, month: month, year: year };
   }
 
   window.handleJaSend = async function() {
-    const inp = document.getElementById("ja-user-input");
-    const text = inp.value.trim();
+    var inp = document.getElementById("ja-user-input");
+    var text = inp.value.trim();
     if (!text) return;
 
     inp.value = "";
     addJaUserMsg(text);
     jaChatHistory.push({ role: "user", content: text });
 
-    // যদি পেমেন্টৰ বাবে ৰৈ থকা অৱস্থাত মেছেজ দিয়ে
     if (jaState === "WAIT_PAYMENT") {
       showJaTyping(true);
-      setTimeout(() => {
+      setTimeout(function() {
         showJaTyping(false);
         addJaBotMsg("মই আপোনাৰ প্ৰশ্নটো বুজি পাইছোঁ আৰু আপোনাৰ কুণ্ডলীখনো মোৰ সন্মুখতে মেলি থোৱা আছে। অনুগ্ৰহ কৰি তলৰ সেউজীয়া বুটামটোত টিপি <b>মাত্ৰ ₹৪৯ দক্ষিণা</b> দি চেশ্যনটো খুলি লওক, মই লগে লগে আপোনাক ইয়াৰ সম্পূৰ্ণ সমাধান কৈ দিছোঁ...");
         showJaPaywallCard();
@@ -2410,36 +2444,33 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // ১ম পৰ্যায়: গ্ৰাহকে জন্ম তাৰিখ দিছেনে নাই পৰীক্ষা কৰা
     if (jaState === "WAIT_BIRTH_DETAILS") {
-      const dobCheck = extractDobFromText(text);
+      var dobCheck = extractDobFromText(text);
 
-      // যদি গ্ৰাহকে জন্ম তাৰিখ নিদিয়াকৈ অকল "career", "hi", "বিয়া" আদি লিখিছে!
       if (!dobCheck.valid) {
         if (!jaUserTopic) jaUserTopic = text;
         showJaTyping(true);
-        setTimeout(() => {
+        setTimeout(function() {
           showJaTyping(false);
-          const s = text.toLowerCase();
-          let topicAck = "আপোনাৰ কথাটো মই বুজি পাইছোঁ।";
-          if (s.includes("career") || s.includes("job") || s.includes("চাকৰি") || s.includes("ব্যৱসায়") || s.includes("কৰ্ম") || s.includes("sakori")) {
+          var s = text.toLowerCase();
+          var topicAck = "আপোনাৰ কথাটো মই বুজি পাইছোঁ।";
+          if (s.indexOf("career") !== -1 || s.indexOf("job") !== -1 || s.indexOf("চাকৰি") !== -1 || s.indexOf("ব্যৱসায়") !== -1 || s.indexOf("কৰ্ম") !== -1 || s.indexOf("sakori") !== -1) {
             topicAck = "আপুনি আপোনাৰ <b>কেৰিয়াৰ আৰু কৰ্মজীৱনৰ ভৱিষ্যতৰ</b> বিষয়ে জানিব বিচাৰিছে, অতি উত্তম কথা!";
-          } else if (s.includes("love") || s.includes("marriage") || s.includes("বিয়া") || s.includes("বিবাহ") || s.includes("প্ৰেম") || s.includes("biya")) {
+          } else if (s.indexOf("love") !== -1 || s.indexOf("marriage") !== -1 || s.indexOf("বিয়া") !== -1 || s.indexOf("বিবাহ") !== -1 || s.indexOf("প্ৰেম") !== -1 || s.indexOf("biya") !== -1) {
             topicAck = "আপুনি আপোনাৰ <b>প্ৰেম আৰু বিবাহ জীৱনৰ</b> বিষয়ে জানিব বিচাৰিছে, মই নিখুঁতকৈ চাই দিম।";
-          } else if (s.includes("money") || s.includes("ধন") || s.includes("পইচা") || s.includes("টকা") || s.includes("আৰ্থিক")) {
+          } else if (s.indexOf("money") !== -1 || s.indexOf("ধন") !== -1 || s.indexOf("পইচা") !== -1 || s.indexOf("টকা") !== -1 || s.indexOf("আৰ্থিক") !== -1) {
             topicAck = "আপুনি আপোনাৰ <b>আৰ্থিক স্থিতি আৰু ধন-যোগৰ</b> বিষয়ে জানিব বিচাৰিছে।";
-          } else if (s.includes("hi") || s.includes("hello") || s.includes("নমস্কাৰ") || s.includes("প্রণাম")) {
+          } else if (s.indexOf("hi") !== -1 || s.indexOf("hello") !== -1 || s.indexOf("নমস্কাৰ") !== -1) {
             topicAck = "নমস্কাৰ! ঈশ্বৰে আপোনাৰ মঙ্গল কৰক।";
           }
 
-          addJaBotMsg(`${topicAck} 🙏<br><br>কিন্তু পঞ্জিকাখন মেলি আপোনাৰ গ্ৰহ-নক্ষত্ৰ আৰু লগ্ন চক্ৰ গণনা কৰিবলৈ মোক প্ৰথমে আপোনাৰ <b>জন্ম তাৰিখ (Date of Birth), জন্মৰ সময় আৰু ঠাইখন</b> লাগিব।<br><br>অনুগ্ৰহ কৰি তলত লিখি পঠিয়াওকচোন <i>(উদাহৰণ: 24/04/1996, পুৱা 10:30, লখিমপুৰ)</i>:`);
-        }, 900);
+          addJaBotMsg(topicAck + " 🙏<br><br>কিন্তু পঞ্জিকাখন মেলি আপোনাৰ গ্ৰহ-নক্ষত্ৰ আৰু লগ্ন চক্ৰ গণনা কৰিবলৈ মোক প্ৰথমে আপোনাৰ <b>জন্ম তাৰিখ (Date of Birth), জন্মৰ সময় আৰু ঠাইখন</b> লাগিব।<br><br>অনুগ্ৰহ কৰি তলত লিখি পঠিয়াওকচোন <i>(উদাহৰণ: 24/04/1996, পুৱা 10:30, লখিমপুৰ)</i>:");
+        }, 800);
         return;
       }
 
-      // যেতিয়া গ্ৰাহকে সঁচা জন্ম তাৰিখ দিলে!
       jaParsedBirth = {
-        raw: jaUserTopic ? `${jaUserTopic} | ${text}` : text,
+        raw: jaUserTopic ? (jaUserTopic + " | " + text) : text,
         dob: dobCheck.dob,
         day: dobCheck.day,
         month: dobCheck.month,
@@ -2449,17 +2480,16 @@ window.addEventListener('DOMContentLoaded', () => {
       };
 
       showJaTyping(true);
-      const firstReply = await askAcharyaEngine(jaParsedBirth.raw, true);
+      var firstReply = await askAcharyaEngine(jaParsedBirth.raw, true);
       showJaTyping(false);
       jaChatHistory.push({ role: "assistant", content: firstReply });
       addJaBotMsg(firstReply);
       jaState = "WAIT_PAYMENT";
-      setTimeout(showJaPaywallCard, 600);
+      setTimeout(showJaPaywallCard, 500);
     } 
-    // ২য় পৰ্যায়: ₹৪৯ পেমেন্ট কৰাৰ পিছত ৫ মিনিটৰ লাইভ চেট
     else if (jaState === "PAID_ACTIVE") {
       showJaTyping(true);
-      const reply = await askAcharyaEngine(text, false);
+      var reply = await askAcharyaEngine(text, false);
       showJaTyping(false);
       jaChatHistory.push({ role: "assistant", content: reply });
       addJaBotMsg(reply);
@@ -2467,8 +2497,8 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   async function askAcharyaEngine(userMessage, isTeaser) {
-    const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) ? window.JA_CONFIG.apiBaseUrl : "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1";
-    const payload = {
+    var apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) ? window.JA_CONFIG.apiBaseUrl : "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1";
+    var payload = {
       message: userMessage,
       question: userMessage,
       birthDate: jaParsedBirth.dob,
@@ -2482,19 +2512,19 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      const headers = { "Content-Type": "application/json" };
+      var headers = { "Content-Type": "application/json" };
       if (typeof supabaseAnonKey !== "undefined") {
-        headers["Authorization"] = `Bearer ${supabaseAnonKey}`;
+        headers["Authorization"] = "Bearer " + supabaseAnonKey;
         headers["apikey"] = supabaseAnonKey;
       }
-      const res = await fetch(`${apiBase}/calculate-chat`, {
+      var res = await fetch(apiBase + "/calculate-chat", {
         method: "POST",
         headers: headers,
         body: JSON.stringify(payload)
       });
       if (res.ok) {
-        const data = await res.json();
-        const txt = data.reply || data.answer || data.response || data.message || data.text || data.report;
+        var data = await res.json();
+        var txt = data.reply || data.answer || data.response || data.message || data.text || data.report;
         if (txt) return txt;
       }
     } catch (e) {
@@ -2504,9 +2534,8 @@ window.addEventListener('DOMContentLoaded', () => {
     return generateAccurateVedicReply(userMessage, isTeaser);
   }
 
-  // ১০০% বৈদিকভাৱে শুদ্ধ ৰাশি-নক্ষত্ৰযোৰা আৰু জন্ম তাৰিখভিত্তিক বিশ্লেষণ
   function generateAccurateVedicReply(q, isTeaser) {
-    const vedicPairs = [
+    var vedicPairs = [
       { rashi: "মেষ", nak: "অশ্বিনী" },
       { rashi: "বৃষ", nak: "ৰোহিণী" },
       { rashi: "মিথুন", nak: "মৃগশিৰা" },
@@ -2521,42 +2550,42 @@ window.addEventListener('DOMContentLoaded', () => {
       { rashi: "মীন", nak: "ৰেৱতী" }
     ];
 
-    const seed = jaParsedBirth.day + (jaParsedBirth.month * 31) + jaParsedBirth.year;
-    const pair = vedicPairs[seed % 12];
-    const lagna = vedicPairs[(seed + 3) % 12].rashi;
-    let mulank = jaParsedBirth.day;
+    var seed = jaParsedBirth.day + (jaParsedBirth.month * 31) + jaParsedBirth.year;
+    var pair = vedicPairs[seed % 12];
+    var lagna = vedicPairs[(seed + 3) % 12].rashi;
+    var mulank = jaParsedBirth.day;
     while (mulank > 9) mulank = Math.floor(mulank / 10) + (mulank % 10);
 
     if (isTeaser) {
-      return `মই পঞ্জিকাখনত আপোনাৰ জন্ম তাৰিখ (<b>${jaParsedBirth.dob}</b>) আৰু সময়টো মিলাই চালোঁ। লাহিড়ী অয়নাংশ মতে আপোনাৰ কুণ্ডলীত <b>${pair.rashi} ৰাশি (${pair.nak} নক্ষত্ৰ)</b>, <b>${lagna} লগ্ন</b> আৰু <b>মূলাংক ${mulank}</b> ৰ প্ৰভাৱ স্পষ্টকৈ ওলাইছে।<br><br>মন কৰিবলগীয়া কথাটো হ'ল— আপোনাৰ দশম (কৰ্ম) আৰু সপ্তম ভাৱত শনি আৰু ৰাহুৰ এটা সূক্ষ্ম দৃষ্টি পৰি আছে, যাৰ বাবে আপুনি যিমান কষ্ট কৰে সিমান ফল সহজে নাপায়। কিন্তু অহা কিছু দিনৰ ভিতৰতে বৃহস্পতিৰ এটা ডাঙৰ ৰাজযোগ খোল খাইছে! তলত ₹৪৯ দক্ষিণা দি চেশ্যনটো খুলি লওক, মই আপোনাৰ প্ৰশ্নটোৰ সম্পূৰ্ণ সমাধান আৰু ঘৰুৱা উপায়টো কৈ দিছোঁ...`;
+      return "মই পঞ্জিকাখনত আপোনাৰ জন্ম তাৰিখ (<b>" + jaParsedBirth.dob + "</b>) আৰু সময়টো মিলাই চালোঁ। লাহিড়ী অয়নাংশ মতে আপোনাৰ কুণ্ডলীত <b>" + pair.rashi + " ৰাশি (" + pair.nak + " নক্ষত্ৰ)</b>, <b>" + lagna + " লগ্ন</b> আৰু <b>মূলাংক " + mulank + "</b> ৰ প্ৰভাৱ স্পষ্টকৈ ওলাইছে।<br><br>মন কৰিবলগীয়া কথাটো হ'ল— আপোনাৰ দশম (কৰ্ম) আৰু সপ্তম ভাৱত শনি আৰু ৰাহুৰ এটা সূক্ষ্ম দৃষ্টি পৰি আছে, যাৰ বাবে আপুনি যিমান কষ্ট কৰে সিমান ফল সহজে নাপায়। কিন্তু অহা কিছু দিনৰ ভিতৰতে বৃহস্পতিৰ এটা ডাঙৰ ৰাজযোগ খোল খাইছে! তলত ₹৪৯ দক্ষিণা দি চেশ্যনটো খুলি লওক, মই আপোনাৰ প্ৰশ্নটোৰ সম্পূৰ্ণ সমাধান আৰু ঘৰুৱা উপায়টো কৈ দিছোঁ...";
     }
 
-    const s = (q + " " + jaUserTopic).toLowerCase();
-    if (s.includes("চাকৰি") || s.includes("ব্যৱসায়") || s.includes("কৰ্ম") || s.includes("career") || s.includes("sakori") || s.includes("job") || s.includes("business")) {
-      return `চাওক, আপোনাৰ জন্ম তাৰিখ (${jaParsedBirth.dob}) আৰু ${lagna} লগ্নৰ দশম ভাৱটো মই ভালকৈ নিৰীক্ষণ কৰিছোঁ। বৰ্তমান আপোনাৰ কৰ্মস্থানত শনিৰ প্ৰভাৱ থকা বাবে কামবোৰ হওঁ-হওঁ বুলিও শেষ মুহূর্তত অলপ পলম হৈ আছে। কিন্তু নিৰাশ নহ'ব— অহা ৩-৪ মাহৰ ভিতৰত বৃহস্পতিৰ শুভ দৃষ্টি পৰিব, তেতিয়া কেৰিয়াৰ বা নিজা ব্যৱসায়ত এটা ডাঙৰ উন্নতি আৰু স্থায়িত্ব আহিবই। প্ৰতি শনিবাৰে সন্ধিয়া আঁহত গছৰ তলত মিঠাতেলৰ চাকি এগছি জ্বলাব আৰু কৰ্মস্থলীত সদায় উত্তৰ বা পূব দিশলৈ মুখ কৰি বহিব। আপোনাৰ মনত আৰু কিবা প্রশ্ন থাকিলে সোধকচোন...`;
+    var s = (q + " " + jaUserTopic).toLowerCase();
+    if (s.indexOf("চাকৰি") !== -1 || s.indexOf("ব্যৱসায়") !== -1 || s.indexOf("কৰ্ম") !== -1 || s.indexOf("career") !== -1 || s.indexOf("sakori") !== -1 || s.indexOf("job") !== -1 || s.indexOf("business") !== -1) {
+      return "চাওক, আপোনাৰ জন্ম তাৰিখ (" + jaParsedBirth.dob + ") আৰু " + lagna + " লগ্নৰ দশম ভাৱটো মই ভালকৈ নিৰীক্ষণ কৰিছোঁ। বৰ্তমান আপোনাৰ কৰ্মস্থানত শনিৰ প্ৰভাৱ থকা বাবে কামবোৰ হওঁ-হওঁ বুলিও শেষ মুহূর্তত অলপ পলম হৈ আছে। কিন্তু নিৰাশ নহ'ব— অহা ৩-৪ মাহৰ ভিতৰত বৃহস্পতিৰ শুভ দৃষ্টি পৰিব, তেতিয়া কেৰিয়াৰ বা নিজা ব্যৱসায়ত এটা ডাঙৰ উন্নতি আৰু স্থায়িত্ব আহিবই। প্ৰতি শনিবাৰে সন্ধিয়া আঁহত গছৰ তলত মিঠাতেলৰ চাকি এগছি জ্বলাব আৰু কৰ্মস্থলীত সদায় উত্তৰ বা পূব দিশলৈ মুখ কৰি বহিব। আপোনাৰ মনত আৰু কিবা প্রশ্ন থাকিলে সোধকচোন...";
     }
-    if (s.includes("বিয়া") || s.includes("বিবাহ") || s.includes("প্ৰেম") || s.includes("ভালপোৱা") || s.includes("সংগী") || s.includes("biya") || s.includes("love") || s.includes("marriage")) {
-      return `আপোনাৰ ${pair.rashi} ৰাশিৰ সপ্তম ভাৱ আৰু শুক্ৰ গ্ৰহৰ অৱস্থান চাই মই দেখিবলৈ পাইছোঁ যে আপুনি অন্তৰৰ পৰা সঁচা মৰম দিয়ে, কিন্তু কেতিয়াবা সৰু সৰু কথাত ভুল বুজাবুজিৰ সৃষ্টি হয়। আপোনাৰ জীৱন সংগীজন বৰ দায়িত্বশীল আৰু ভাগ্যশালী হ'ব। যদি সম্পৰ্কত বা বিবাহত কিবা বাধা চলি আছে, তেন্তে শুক্ৰবাৰে বগা মিঠাই দান কৰিব আৰু পুৱা স্নান কৰি "ওঁম শুং শুক্ৰায় নমঃ" ২১ বাৰ জপ কৰিব— অহা কিছু দিনৰ ভিতৰতে শুভ সংযোগ ঘটিব।`;
+    if (s.indexOf("বিয়া") !== -1 || s.indexOf("বিবাহ") !== -1 || s.indexOf("প্ৰেম") !== -1 || s.indexOf("ভালপোৱা") !== -1 || s.indexOf("সংগী") !== -1 || s.indexOf("biya") !== -1 || s.indexOf("love") !== -1 || s.indexOf("marriage") !== -1) {
+      return "আপোনাৰ " + pair.rashi + " ৰাশিৰ সপ্তম ভাৱ আৰু শুক্ৰ গ্ৰহৰ অৱস্থান চাই মই দেখিবলৈ পাইছোঁ যে আপুনি অন্তৰৰ পৰা সঁচা মৰম দিয়ে, কিন্তু কেতিয়াবা সৰু সৰু কথাত ভুল বুজাবুজিৰ সৃষ্টি হয়। আপোনাৰ জীৱন সংগীজন বৰ দায়িত্বশীল আৰু ভাগ্যশালী হ'ব। যদি সম্পৰ্কত বা বিবাহত কিবা বাধা চলি আছে, তেন্তে শুক্ৰবাৰে বগা মিঠাই দান কৰিব আৰু পুৱা স্নান কৰি 'ওঁম শুং শুক্ৰায় নমঃ' ২১ বাৰ জপ কৰিব— অহা কিছু দিনৰ ভিতৰতে শুভ সংযোগ ঘটিব।";
     }
-    if (s.includes("ধন") || s.includes("পইচা") || s.includes("টকা") || s.includes("ধাৰ") || s.includes("ঋণ") || s.includes("poisa") || s.includes("money")) {
-      return `আপোনাৰ মূলাংক ${mulank} আৰু কুণ্ডলীৰ দ্বিতীয় ভাৱ (ধন স্থান) চাই এটা কথা স্পষ্ট— আপোনাৰ হাতলৈ ধন নহাকৈ নাথাকে, কিন্তু কেতুৰ দৃষ্টি থকা বাবে হাতলৈ পইচা অহাৰ আগতেই খৰচৰ বাট ওলাই থাকে! কাকো আৱেগত পৰি ডাঙৰ অংকৰ টকা ধাৰলৈ নিদিব। ধন স্থায়ীকৈ জমা হ'বলৈ শুক্ৰবাৰে সন্ধিয়া ঘৰৰ ঈশান কোণত বিশুদ্ধ ঘিউৰ চাকি জ্বলাব।`;
+    if (s.indexOf("ধন") !== -1 || s.indexOf("পইচা") !== -1 || s.indexOf("টকা") !== -1 || s.indexOf("ধাৰ") !== -1 || s.indexOf("ঋণ") !== -1 || s.indexOf("poisa") !== -1 || s.indexOf("money") !== -1) {
+      return "আপোনাৰ মূলাংক " + mulank + " আৰু কুণ্ডলীৰ দ্বিতীয় ভাৱ (ধন স্থান) চাই এটা কথা স্পষ্ট— আপোনাৰ হাতলৈ ধন নহাকৈ নাথাকে, কিন্তু কেতুৰ দৃষ্টি থকা বাবে হাতলৈ পইচা অহাৰ আগতেই খৰচৰ বাট ওলাই থাকে! কাকো আৱেগত পৰি ডাঙৰ অংকৰ টকা ধাৰলৈ নিদিব। ধন স্থায়ীকৈ জমা হ'বলৈ শুক্ৰবাৰে সন্ধিয়া ঘৰৰ ঈশান কোণত বিশুদ্ধ ঘিউৰ চাকি জ্বলাব।";
     }
-    if (s.includes("ৰত্ন") || s.includes("পাথৰ") || s.includes("আঙঠি") || s.includes("ওপাল") || s.includes("পান্না") || s.includes("stone") || s.includes("gem") || s.includes("ring")) {
-      return `আপোনাৰ জন্ম তাৰিখ (${jaParsedBirth.dob}) আৰু ${lagna} লগ্নৰ গ্ৰহ বল বিচাৰ কৰিলে আপোনাৰ ভাগ্যপতিক বলী কৰিবলৈ <b>বগা ওপাল (White Opal) বা পান্না (Emerald)</b> ধাৰণ কৰাটো অত্যন্ত শুভ হ'ব। ই আপোনাৰ মানসিক অস্থিৰতা কমাব আৰু কেৰিয়াৰ তথা ধন বৃদ্ধি কৰিব।`;
+    if (s.indexOf("ৰত্ন") !== -1 || s.indexOf("পাথৰ") !== -1 || s.indexOf("আঙঠি") !== -1 || s.indexOf("ওপাল") !== -1 || s.indexOf("পান্না") !== -1 || s.indexOf("stone") !== -1 || s.indexOf("gem") !== -1 || s.indexOf("ring") !== -1) {
+      return "আপোনাৰ জন্ম তাৰিখ (" + jaParsedBirth.dob + ") আৰু " + lagna + " লগ্নৰ গ্ৰহ বল বিচাৰ কৰিলে আপোনাৰ ভাগ্যপতিক বলী কৰিবলৈ <b>বগা ওপাল (White Opal) বা পান্না (Emerald)</b> ধাৰণ কৰাটো অত্যন্ত শুভ হ'ব। ই আপোনাৰ মানসিক অস্থিৰতা কমাব আৰু কেৰিয়াৰ তথা ধন বৃদ্ধি কৰিব।";
     }
-    return `আপোনাৰ প্ৰশ্নটোৰ ওপৰত মই আপোনাৰ ${pair.rashi} ৰাশি (${pair.nak} নক্ষত্ৰ) আৰু বৰ্তমান চলি থকা অন্তৰ্দশাটো মিলাই চালোঁ। আপুনি যিটো বিষয়ক লৈ চিন্তা কৰি আছে, তাত ৰাহুৰ ভ্ৰমাত্মক দৃষ্টি থকা বাবে মনত দ্বিধা সোমাইছে। কিন্তু অহা ৪৫ দিনৰ ভিতৰত গ্ৰহৰ স্থান সলনি হ'লেই পৰিস্থিতি সম্পূর্ণ আপোনাৰ পক্ষলৈ আহিব। প্রতিদিনে পুৱা সূৰ্য দেৱতাক তামৰ পাত্ৰত জল অৰ্পণ কৰিব। আপুনি আৰু কিবা বিশেষ কথা জানিব বিচাৰে নেকি কওকচোন...`;
+    return "আপোনাৰ প্ৰশ্নটোৰ ওপৰত মই আপোনাৰ " + pair.rashi + " ৰাশি (" + pair.nak + " নক্ষত্ৰ) আৰু বৰ্তমান চলি থকা অন্তৰ্দশাটো মিলাই চালোঁ। আপুনি যিটো বিষয়ক লৈ চিন্তা কৰি আছে, তাত ৰাহুৰ ভ্ৰমাত্মক দৃষ্টি থকা বাবে মনত দ্বিধা সোমাইছে। কিন্তু অহা ৪৫ দিনৰ ভিতৰত গ্ৰহৰ স্থান সলনি হ'লেই পৰিস্থিতি সম্পূর্ণ আপোনাৰ পক্ষলৈ আহিব। প্রতিদিনে পুৱা সূৰ্য দেৱতাক তামৰ পাত্ৰত জল অৰ্পণ কৰিব। আপুনি আৰু কিবা বিশেষ কথা জানিব বিচাৰে নেকি কওকচোন...";
   }
 
   window.payWithRazorpay49 = async function() {
-    const rzpKey = (window.JA_CONFIG && window.JA_CONFIG.razorpayKeyId) ? window.JA_CONFIG.razorpayKeyId : "";
+    var rzpKey = (window.JA_CONFIG && window.JA_CONFIG.razorpayKeyId) ? window.JA_CONFIG.razorpayKeyId : "";
     if (!rzpKey) {
       alert("Razorpay Key লোড হোৱা নাই, অনুগ্ৰহ কৰি পেজটো ৰিফ্ৰেছ কৰক।");
       return;
     }
 
-    const options = {
+    var options = {
       key: rzpKey,
-      amount: 4900, // ₹49
+      amount: 4900,
       currency: "INR",
       name: (window.JA_CONFIG && window.JA_CONFIG.brand) ? window.JA_CONFIG.brand : "জ্যোতিষ অসম",
       description: "আচাৰ্যৰ সৈতে ৫ মিনিটৰ লাইভ কুণ্ডলী পৰামৰ্শ",
@@ -2566,30 +2595,30 @@ window.addEventListener('DOMContentLoaded', () => {
       },
       theme: { color: "#075e54" }
     };
-    const rzp = new Razorpay(options);
+    var rzp = new Razorpay(options);
     rzp.open();
   };
 
   function startPaidHumanSession(paymentId) {
     jaState = "PAID_ACTIVE";
     jaTimeLeft = 300;
-    const timerBadge = document.getElementById("ja-timer");
+    var timerBadge = document.getElementById("ja-timer");
     timerBadge.style.display = "inline-block";
     document.getElementById("ja-user-input").focus();
 
     showJaTyping(true);
-    setTimeout(async () => {
-      const firstFull = await askAcharyaEngine(jaParsedBirth.raw, false);
+    setTimeout(async function() {
+      var firstFull = await askAcharyaEngine(jaParsedBirth.raw, false);
       showJaTyping(false);
-      addJaBotMsg(`🙏 ধন্যবাদ, আপোনাৰ দক্ষিণা গ্ৰহণ কৰিলোঁ। আমাৰ ৫ মিনিটৰ ব্যক্তিগত আলোচনা আৰম্ভ হৈছে। শুনক আপোনাৰ কুণ্ডলীয়ে কি কয়—<br><br>${firstFull}`);
+      addJaBotMsg("🙏 ধন্যবাদ, আপোনাৰ দক্ষিণা গ্ৰহণ কৰিলোঁ। আমাৰ ৫ মিনিটৰ ব্যক্তিগত আলোচনা আৰম্ভ হৈছে। শুনক আপোনাৰ কুণ্ডলীয়ে কি কয়—<br><br>" + firstFull);
     }, 900);
 
     if (jaTimerInterval) clearInterval(jaTimerInterval);
-    jaTimerInterval = setInterval(() => {
+    jaTimerInterval = setInterval(function() {
       jaTimeLeft--;
-      const m = String(Math.floor(jaTimeLeft / 60)).padStart(2, "0");
-      const s = String(jaTimeLeft % 60).padStart(2, "0");
-      timerBadge.innerText = `⏳ ${m}:${s}`;
+      var m = String(Math.floor(jaTimeLeft / 60)).padStart(2, "0");
+      var s = String(jaTimeLeft % 60).padStart(2, "0");
+      timerBadge.innerText = "⏳ " + m + ":" + s;
       if (jaTimeLeft <= 0) {
         clearInterval(jaTimerInterval);
         jaState = "WAIT_PAYMENT";
