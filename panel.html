@@ -9,7 +9,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; background-color: #f8fafc; color: #1e293b; padding: 20px; }
-        .container { max-width: 1250px; margin: 0 auto; display: none; }
+        .container { max-width: 1300px; margin: 0 auto; display: none; }
         
         #loginOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
@@ -37,6 +37,7 @@
         .badge.admin-verified { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
         .badge.pending { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
         
+        .price-tag { font-weight: 700; color: #0f172a; font-size: 15px; }
         .btn-action { padding: 7px 12px; background: #6D28D9; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; margin: 2px; }
         .btn-action:hover { background: #5b21b6; }
         .btn-reset { padding: 5px 8px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-left: 4px; }
@@ -70,6 +71,10 @@
                 <h3>মুঠ অৰ্ডাৰ (Total Orders)</h3>
                 <p id="totalOrders">লোড হৈ আছে...</p>
             </div>
+            <div class="stat-card" style="border-left-color: #059669; background: #ecfdf5;">
+                <h3 style="color: #065f46; font-weight: 600;">💰 মুঠ উপাৰ্জন (Total Revenue)</h3>
+                <p id="totalRevenue" style="color: #047857;">₹0</p>
+            </div>
             <div class="stat-card" style="border-left-color: #15803d;">
                 <h3>🟢 স্বয়ংক্ৰিয়ভাৱে সফল (গ্ৰাহকে নিজে পালে)</h3>
                 <p id="autoSuccessOrders">লোড হৈ আছে...</p>
@@ -91,13 +96,14 @@
                         <th>নাম</th>
                         <th>ইমেইল (Email)</th>
                         <th>সেৱা (Service)</th>
+                        <th>মূল্য (Amount)</th>
                         <th>জন্মৰ বিৱৰণ (DOB / Time / Place)</th>
                         <th>স্থিতি (Status)</th>
                         <th>ৰিপোৰ্ট (Action)</th>
                     </tr>
                 </thead>
                 <tbody id="ordersTableBody">
-                    <tr><td colspan="7" style="text-align: center; padding: 20px;">ডাটা লোড হৈ আছে...</td></tr>
+                    <tr><td colspan="8" style="text-align: center; padding: 20px;">ডাটা লোড হৈ আছে...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -109,10 +115,31 @@
         const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
         const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // সেৱা অনুসৰি নিৰ্ধাৰিত মূল্য (যদি কোনো অৰ্ডাৰত পোনপটীয়াকৈ amount নাথাকে, ইয়াৰ পৰা হিচাপ ল'ব)
+        const SERVICE_PRICES = {
+            'monthly': 99,
+            'yearly': 149,
+            'love': 149,
+            'career': 199,
+            'birth': 249
+        };
+
         let allOrders = [];
         let localAdminViewedIds = JSON.parse(localStorage.getItem('ja_admin_viewed_ids') || '[]');
 
-        // অৰ্ডাৰৰ ৩টা অৱস্থা নিৰ্ণয় কৰা ফাংচন: 'auto' (🟢), 'admin' (🔵), নে 'pending' (🟡)
+        function getOrderAmount(o) {
+            if (o.amount && !isNaN(Number(o.amount))) {
+                const val = Number(o.amount);
+                // যদি পইচাত (paise) ছেভ হৈ আছে যেনে 19900, তেন্তে টকালৈ সলনি কৰিব
+                return val > 2000 ? Math.round(val / 100) : val;
+            }
+            if (o.price && !isNaN(Number(o.price))) {
+                return Number(o.price);
+            }
+            const srv = String(o.service || '').toLowerCase().trim();
+            return SERVICE_PRICES[srv] || 199;
+        }
+
         function getOrderStatusType(o) {
             const payId = String(o.razorpay_payment_id || '');
             if (payId && !payId.startsWith('pay_Admin')) {
@@ -162,27 +189,33 @@
                 renderTable(allOrders);
                 updateStats(allOrders);
             } catch (err) {
-                document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">ডাটা লোড কৰাত সমস্যা হৈছে: ${err.message}</td></tr>`;
+                document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="8" style="text-align: center; color: red;">ডাটা লোড কৰাত সমস্যা হৈছে: ${err.message}</td></tr>`;
             }
         }
 
         function updateStats(orders) {
             document.getElementById('totalOrders').innerText = orders.length;
-            const autoCount = orders.filter(o => getOrderStatusType(o) === 'auto').length;
-            const adminCount = orders.filter(o => getOrderStatusType(o) === 'admin').length;
-            document.getElementById('autoSuccessOrders').innerText = autoCount;
-            document.getElementById('adminVerifiedOrders').innerText = adminCount;
+            const autoOrders = orders.filter(o => getOrderStatusType(o) === 'auto');
+            const adminOrders = orders.filter(o => getOrderStatusType(o) === 'admin');
+            
+            document.getElementById('autoSuccessOrders').innerText = autoOrders.length;
+            document.getElementById('adminVerifiedOrders').innerText = adminOrders.length;
+
+            // মুঠ উপাৰ্জন হিচাপ (স্বয়ংক্ৰিয়ভাৱে সফল + এডমিনৰ দ্বাৰা পৰীক্ষিত)
+            const totalRev = [...autoOrders, ...adminOrders].reduce((sum, o) => sum + getOrderAmount(o), 0);
+            document.getElementById('totalRevenue').innerText = '₹' + totalRev.toLocaleString('en-IN');
         }
 
         function renderTable(orders) {
             const tbody = document.getElementById('ordersTableBody');
             if (orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = orders.map(o => {
                 const statusType = getOrderStatusType(o);
+                const amount = getOrderAmount(o);
                 let badgeHtml = '';
 
                 if (statusType === 'auto') {
@@ -199,6 +232,7 @@
                     <td><strong>${o.name || 'N/A'}</strong></td>
                     <td>${o.email || 'N/A'}</td>
                     <td>${o.service || 'N/A'}</td>
+                    <td><span class="price-tag">₹${amount}</span></td>
                     <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
                     <td>${badgeHtml}</td>
                     <td>
@@ -228,7 +262,6 @@
             updateStats(allOrders);
         }
 
-        // স্বয়ংক্ৰিয় বৈদিক গণনা ইঞ্জিন (যদি চাৰ্ভাৰে বাধা দিয়ে, তেন্তে পেনেলে নিজেই নিখুঁত কুণ্ডলী গণনা কৰি উলিয়াব)
         function buildFallbackVedicChart(dobStr, tobStr) {
             const rashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
             const naks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্বা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
@@ -317,9 +350,9 @@
             const dob = order.birth_date || 'N/A';
             const tob = order.birth_time || '10:10';
             const place = order.birth_place || 'N/A';
+            const amount = getOrderAmount(order);
 
             try {
-                // যদি অৰ্ডাৰটো Pending আছিল আৰু এডমিনে খুলি চাইছে, তেন্তে ইয়াক "এডমিনৰ দ্বাৰা পৰীক্ষিত (🔵)" হিচাপে চিহ্নিত কৰা হ'ব
                 if (!order.razorpay_payment_id) {
                     const adminTag = "pay_AdminView_" + Date.now();
                     try {
@@ -686,7 +719,7 @@
                                 <div class="detail-row"><span class="detail-label">গ্ৰাহকৰ নাম:</span> ${name}</div>
                                 <div class="detail-row"><span class="detail-label">জন্ম তাৰিখ:</span> ${dob} (${tob})</div>
                                 <div class="detail-row"><span class="detail-label">জন্ম স্থান:</span> ${place}</div>
-                                <div class="detail-row"><span class="detail-label">সেৱাৰ প্ৰকাৰ:</span> ${serviceTitle}</div>
+                                <div class="detail-row"><span class="detail-label">সেৱাৰ প্ৰকাৰ:</span> ${serviceTitle} (₹${amount})</div>
                             </div>
                         </div>
                         ${contentHtml}
