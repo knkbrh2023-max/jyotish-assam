@@ -2,7 +2,7 @@ name: Auto Post Daily Rashifal to Facebook
 
 on:
   schedule:
-    - cron: '30 0 * * *'
+    - cron: '23 0 * * *'
   workflow_dispatch:
 
 jobs:
