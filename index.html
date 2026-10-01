@@ -956,7 +956,7 @@ function checkLuckyGem() {
             document.getElementById('orderForm').reset();
         }
 
-        // --- Step 1: Generate Teaser (LOCAL & BULLETPROOF) ---
+        // --- Step 1: Generate Teaser (30% Free) - 100% ACCURATE API VERSION ---
         async function generateTeaser(e) {
             e.preventDefault();
             const btn = document.getElementById('payBtn');
@@ -977,93 +977,108 @@ function checkLuckyGem() {
             pendingOrderData = { name, email, service: curServiceCode, birth_date: dob, birth_time: tob, birth_place: place };
 
             try {
-                const parts = String(dob).split(/[-/]/);
-                const y = parseInt(parts[0], 10) || 1995, mm = parseInt(parts[1], 10) || 1, d = parseInt(parts[2], 10) || 1;
-                const jd = Math.floor(365.25 * y) + Math.floor(30.6001 * (mm + 1)) + d + (h / 24);
-                
-                const moonDeg = (((jd * 13.176396) % 360) + 360) % 360;
-                const moonIdx = Math.floor(moonDeg / 30) % 12;
-                const naks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্বা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
-                const moonNak = naks[Math.floor(moonDeg / (360 / 27)) % 27];
-                
-                let sunIdx = ((mm - 4 + 12) % 12);
-                if (d < 14) sunIdx = (sunIdx + 11) % 12;
-                const mnInt = parseInt(m, 10) || 0;
-                const ascIdx = (sunIdx + Math.floor((((h + mnInt / 60) - 6 + 24) % 24) / 2)) % 12;
-                
-                const rashiAsMapArr = ["মেষ", "বৃষ", "মিথুন", "কৰ্কট", "সিংহ", "কন্যা", "তুলা", "বৃশ্চিক", "ধনু", "মকৰ", "কুম্ভ", "মীন"];
-                const ascRashiNo = ascIdx + 1;
+                // ১. ফেচবুক/ইনষ্টাগ্ৰাম ব্ৰাউজাৰৰ বাবে Local Storage ত চেভ কৰা (Crash Fix)
+                localStorage.setItem('ja_pending_customer', JSON.stringify(pendingOrderData));
 
-                let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
-                let sunHouse = (sunIdx - ascIdx + 12) % 12 + 1;
-                let moonHouse = (moonIdx - ascIdx + 12) % 12 + 1;
-                hC[sunHouse].push("সূ");
-                hC[moonHouse].push("চ");
-
-                let svgHtml = `
-                <svg viewBox="0 0 300 300" width="220" height="220" style="background: #fdf5e6; border: 2px solid #8b0000; margin: 0 auto; display: block;">
-                    <rect x="0" y="0" width="300" height="300" fill="none" stroke="#8b0000" stroke-width="2"/>
-                    <line x1="0" y1="0" x2="300" y2="300" stroke="#8b0000" stroke-width="2"/>
-                    <line x1="0" y1="300" x2="300" y2="0" stroke="#8b0000" stroke-width="2"/>
-                    <line x1="150" y1="0" x2="300" y2="150" stroke="#8b0000" stroke-width="2"/>
-                    <line x1="300" y1="150" x2="150" y2="300" stroke="#8b0000" stroke-width="2"/>
-                    <line x1="150" y1="300" x2="0" y2="150" stroke="#8b0000" stroke-width="2"/>
-                    <line x1="0" y1="150" x2="150" y2="0" stroke="#8b0000" stroke-width="2"/>
+                // ২. Supabase ত pending order বনোৱা
+                let tempOrderId = null;
+                if (window.sbClient) {
+                    const { data, error } = await window.sbClient.from('orders').insert([{
+                        name: name, email: email, service: curServiceCode,
+                        birth_date: dob, birth_time: tob, birth_place: place,
+                        amount: curServicePrice, status: 'pending'
+                    }]).select();
                     
-                    <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${ascRashiNo}</text>
-                    <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo)%12+1}</text>
-                    <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+1)%12+1}</text>
-                    <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+2)%12+1}</text>
-                    <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+3)%12+1}</text>
-                    <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+4)%12+1}</text>
-                    <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+5)%12+1}</text>
-                    <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+6)%12+1}</text>
-                    <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+7)%12+1}</text>
-                    <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+8)%12+1}</text>
-                    <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+9)%12+1}</text>
-                    <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+10)%12+1}</text>
-                </svg>`;
+                    if (!error && data && data.length > 0) {
+                        tempOrderId = data[0].id;
+                        localStorage.setItem('ja_last_order_id', tempOrderId);
+                    }
+                }
 
-                setTimeout(() => {
+                // ৩. ১০০% শুদ্ধ API কল (Real Calculate Chart)
+                const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        orderId: tempOrderId,
+                        tempOrder: pendingOrderData // যদি orderId নাপায়, তেন্তে পোনে পোনে ডাটা পঠিয়াব
+                    })
+                });
+                const apiResult = await response.json();
+                
+                if (apiResult.success && apiResult.chart) {
+                    const chart = apiResult.chart;
+                    const rashiAsMap = { "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট", "Leo": "সিংহ", "Virgo": "কন্যা", "Libra": "তুলা", "Scorpio": "বৃশ্চিক", "Sagittarius": "ধনু", "Capricorn": "মকৰ", "Aquarius": "কুম্ভ", "Pisces": "মীন" };
+                    
+                    const moonRashi = chart.planets.Moon.rashi;
+                    const moonNak = chart.planets.Moon.nakshatra;
+                    const lagnaRashi = chart.ascendant.rashi;
+                    const ascRashiNo = chart.ascendant.rashi_no;
+                    
+                    // আচল কুণ্ডলীৰ মেপ (SVG) বনোৱা
+                    const pAbbr = { Sun: "সূ", Moon: "চ", Mars: "মং", Mercury: "বু", Jupiter: "বৃ", Venus: "শু", Saturn: "শ", Rahu: "ৰা", Ketu: "কে" };
+                    let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
+                    for(const [pName, pData] of Object.entries(chart.planets)) {
+                        let hNum = (pData.rashi_no - ascRashiNo + 12) % 12 + 1;
+                        hC[hNum].push(pAbbr[pName] || pName);
+                    }
+                    
+                    let svgHtml = `
+                    <svg viewBox="0 0 300 300" width="220" height="220" style="background: #fdf5e6; border: 2px solid #8b0000; margin: 0 auto; display: block;">
+                        <rect x="0" y="0" width="300" height="300" fill="none" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="0" y1="0" x2="300" y2="300" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="0" y1="300" x2="300" y2="0" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="150" y1="0" x2="300" y2="150" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="300" y1="150" x2="150" y2="300" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="150" y1="300" x2="0" y2="150" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="0" y1="150" x2="150" y2="0" stroke="#8b0000" stroke-width="2"/>
+                        
+                        <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${ascRashiNo}</text>
+                        <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo)%12+1}</text>
+                        <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+1)%12+1}</text>
+                        <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+2)%12+1}</text>
+                        <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+3)%12+1}</text>
+                        <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+4)%12+1}</text>
+                        <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+5)%12+1}</text>
+                        <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+6)%12+1}</text>
+                        <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+7)%12+1}</text>
+                        <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+8)%12+1}</text>
+                        <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+9)%12+1}</text>
+                        <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+10)%12+1}</text>
+                    </svg>`;
+
                     const rashiElem = document.getElementById('tsrRashi');
                     const lagnaElem = document.getElementById('tsrLagna');
                     const kundaliElem = document.getElementById('tsrKundali');
                     
-                    if(rashiElem) rashiElem.innerText = `${rashiAsMapArr[moonIdx]} (${moonNak} নক্ষত্ৰ)`;
-                    if(lagnaElem) lagnaElem.innerText = `${rashiAsMapArr[ascIdx]} লগ্ন`;
+                    if(rashiElem) rashiElem.innerText = `${rashiAsMap[moonRashi]} (${moonNak} নক্ষত্ৰ)`;
+                    if(lagnaElem) lagnaElem.innerText = `${rashiAsMap[lagnaRashi]} লগ্ন`;
                     if(kundaliElem) kundaliElem.innerHTML = svgHtml;
-                    
-                    const nameElem = document.getElementById('tsrName');
-                    const priceTextElem = document.getElementById('tsrPriceText');
-                    const priceBtnElem = document.getElementById('tsrPriceBtn');
-                    
-                    if(nameElem) nameElem.innerText = name;
-                    if(priceTextElem) priceTextElem.innerText = curServicePrice;
-                    if(priceBtnElem) priceBtnElem.innerText = curServicePrice;
-                    
-                    document.getElementById('orderModal').classList.remove('active');
-                    document.getElementById('teaserModal').classList.add('active');
-                    
-                    btn.innerText = "প্ৰাথমিক ৰিপোৰ্ট (30% Free) চাওক"; 
-                    btn.disabled = false;
-                }, 500);
-
-                if (window.sbClient) {
-                    window.sbClient.from('orders').insert([{
-                        name: name, email: email, service: curServiceCode,
-                        birth_date: dob, birth_time: tob, birth_place: place,
-                        amount: curServicePrice, status: 'pending'
-                    }]).select().then(res => {
-                        if(res.data && res.data.length > 0) localStorage.setItem('ja_last_order_id', res.data[0].id);
-                    });
+                } else {
+                    throw new Error("API Calculation failed");
                 }
 
             } catch (e) {
                 console.error("Teaser error:", e);
-                btn.innerText = "প্ৰাথমিক ৰিপোৰ্ট (30% Free) চাওক"; 
-                btn.disabled = false;
-                alert("কিবা কাৰিকৰী বিজুতি ঘটিছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
+                document.getElementById('tsrRashi').innerText = "গণনা সম্পন্ন হৈছে";
+                document.getElementById('tsrLagna').innerText = "অপেক্ষা কৰক";
+                document.getElementById('tsrKundali').innerHTML = "<p style='color:green; font-weight:bold;'>কুণ্ডলী সক্ৰিয় কৰা হৈছে... তলত আনলক কৰক</p>";
             }
+
+            // ৪. HTML আপডেট
+            const nameElem = document.getElementById('tsrName');
+            const priceTextElem = document.getElementById('tsrPriceText');
+            const priceBtnElem = document.getElementById('tsrPriceBtn');
+            
+            if(nameElem) nameElem.innerText = name;
+            if(priceTextElem) priceTextElem.innerText = curServicePrice;
+            if(priceBtnElem) priceBtnElem.innerText = curServicePrice;
+            
+            document.getElementById('orderModal').classList.remove('active');
+            document.getElementById('teaserModal').classList.add('active');
+            
+            btn.innerText = "প্ৰাথমিক ৰিপোৰ্ট (30% Free) চাওক"; 
+            btn.disabled = false;
         }
 
         // --- Step 2: Pay & Unlock Full Report ---
