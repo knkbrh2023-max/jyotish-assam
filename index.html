@@ -209,6 +209,31 @@
     <script src="config.js"></script>
 </head>
 <body>
+    <!-- ==========================================
+         MAINTENANCE MODE (WITH SECRET ADMIN BYPASS)
+    =========================================== -->
+    <div id="maintenance-mode" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(135deg, #0f172a, #1e1b4b); z-index: 99999999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px; font-family: 'Noto Sans Assamese', sans-serif;">
+        
+        <!-- Secret Bypass: ৩ বাৰ ক্লিক কৰিলে স্ক্ৰীণখন আঁতৰি যাব -->
+        <div id="magic-gear" style="font-size: 70px; margin-bottom: 20px; animation: spin 4s linear infinite; cursor: pointer;" title="Admin Access">⚙️</div>
+        
+        <h1 style="color: #fde047; font-size: 32px; font-weight: bold; margin-bottom: 15px;">ৱেবছাইটৰ উন্নীতকৰণ চলি আছে</h1>
+        <p style="font-size: 16px; color: #cbd5e1; max-width: 500px; line-height: 1.6; margin-bottom: 30px;">আমাৰ গ্ৰাহকসকলক আৰু অধিক উন্নত সেৱা প্ৰদান কৰিবলৈ ৱেবছাইটত বৰ্তমান কিছু নতুন সুবিধা সংযোগ কৰাৰ কাম চলি আছে। আমি অতি সোনকালেই নতুন ৰূপত ঘূৰি আহিম!</p>
+        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">যিকোনো জৰুৰী প্ৰয়োজনত আমাৰ লগত পোনপটীয়াকৈ যোগাযোগ কৰক:</p>
+        <a href="https://wa.me/91XXXXXXXXXX" style="background: #25D366; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);">🎧 হোৱাটছএপত মেছেজ কৰক</a>
+        
+        <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
+        <script>
+            let gearClickCount = 0;
+            document.getElementById('magic-gear').onclick = function() {
+                gearClickCount++;
+                if(gearClickCount >= 3) {
+                    document.getElementById('maintenance-mode').style.display = 'none'; // ৩ বাৰ ক্লিক কৰিলে নাইকিয়া হ'ব
+                }
+            };
+        </script>
+    </div>
+    <!-- ========================================== -->
    <nav>
         <div class="container nav-content">
    <div class="logo" style="margin: 0; display: flex; align-items: center; gap: 10px;">
