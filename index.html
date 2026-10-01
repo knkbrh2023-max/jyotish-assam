@@ -841,11 +841,21 @@ function checkLuckyGem() {
         <button onclick="reopenLastPaidReport()" style="background: #fbbf24; color: #0f172a; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; white-space: nowrap;">📥 ৰিপোৰ্ট চাওক</button>
     </div>
 
-    <!-- Free Daily Horoscope Popup Modal -->
+   <!-- Free Daily Horoscope Popup Modal (Scrollable & Clear UI) -->
     <div id="horoscope-modal" class="horoscope-modal-overlay">
         <div class="horoscope-modal-content">
+            <!-- Top Right Close Button -->
             <button class="close-horoscope-btn" onclick="closeHoroscopeModal()">✖</button>
+            
+            <!-- Clear Title -->
+            <h2 style="color: #8b0000; font-size: 22px; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #fde047; padding-bottom: 10px;">🌙 চন্দ্ৰ ৰাশিৰ আধাৰত ফলাফল</h2>
+            
             <div id="horoscope-modal-body"></div>
+            
+            <!-- Bottom Close Button -->
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="closeHoroscopeModal()" style="background: #475569; color: white; padding: 10px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">বন্ধ কৰক (Close)</button>
+            </div>
         </div>
     </div>
 
