@@ -767,57 +767,65 @@ function checkLuckyGem() {
         </div>
     </div>
 
-    <!-- Teaser (30% Free) Modal - Premium API Version -->
-    <div class="modal" id="teaserModal">
-        <div class="modal-content" style="max-width: 650px; padding: 0; overflow: hidden; border: none; background: #e8dcc4;">
-            
-            <div style="background: #fdf5e6; border-bottom: 2px solid #8b0000; padding: 25px 20px; text-align: center;">
-                <div style="font-size:35px; color:#8b0000;">ॐ</div>
-                <h2 style="margin: 0; font-size: 24px; font-weight: bold; color: #5c3a21;">প্ৰাথমিক জ্যোতিষিক গণনা</h2>
-                <p style="margin: 5px 0 0; font-size: 14px; color: #8b0000; font-weight: bold;">(FREE PREVIEW 30%)</p>
+   <!-- Teaser (30% Free) Modal - API Version with Scroll & Close Button -->
+<div class="modal" id="teaserModal">
+    <div class="modal-content" style="max-width: 650px; padding: 0; overflow-y: auto; max-height: 90vh; border: none; background: #e8dcc4; position: relative;">
+        
+        <!-- Close (X) Button -->
+        <span style="position: absolute; right: 15px; top: 15px; font-size: 26px; cursor: pointer; color: #8b0000; z-index: 10; font-weight: bold; background: rgba(255,255,255,0.8); width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="document.getElementById('teaserModal').classList.remove('active')">&times;</span>
+        
+        <!-- Real Report Header -->
+        <div style="background: #fdf5e6; border-bottom: 2px solid #8b0000; padding: 25px 20px; text-align: center;">
+            <div style="font-size:35px; color:#8b0000; line-height: 1;">ॐ</div>
+            <h2 style="margin: 10px 0 0; font-size: 24px; font-weight: bold; color: #5c3a21;">প্ৰাথমিক জ্যোতিষিক গণনা</h2>
+            <p style="margin: 5px 0 0; font-size: 14px; color: #8b0000; font-weight: bold;">(FREE PREVIEW 30%)</p>
+        </div>
+        
+        <div style="padding: 25px;">
+            <!-- 1. Real Astrology Data -->
+            <div style="background: rgba(219, 190, 146, 0.2); border: 1px solid #c9a961; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>👤 গ্ৰাহকৰ নাম:</strong> <span id="tsrName"></span></p>
+                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🌟 জন্ম ৰাশি (চন্দ্ৰ ৰাশি):</strong> <span id="tsrRashi" style="color: #8b0000; font-weight: bold;">গণনা চলি আছে...</span></p>
+                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🎯 জন্ম লগ্ন:</strong> <span id="tsrLagna" style="color: #8b0000; font-weight: bold;">অপেক্ষা কৰক...</span></p>
+            </div>
+
+            <!-- 2. Actual Kundali SVG Container -->
+            <div id="tsrKundali" style="text-align: center; margin-bottom: 20px;">
+                <p style="color: #8b0000; font-size: 15px; font-weight: bold;">আপোনাৰ কুণ্ডলী প্ৰস্তুত কৰা হৈ আছে... ⏳</p>
             </div>
             
-            <div style="padding: 25px;">
-                <div style="background: rgba(219, 190, 146, 0.2); border: 1px solid #c9a961; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                    <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>👤 গ্ৰাহকৰ নাম:</strong> <span id="tsrName"></span></p>
-                    <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🌟 জন্ম ৰাশি (চন্দ্ৰ ৰাশি):</strong> <span id="tsrRashi" style="color: #8b0000; font-weight: bold;">গণনা চলি আছে...</span></p>
-                    <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🎯 জন্ম লগ্ন:</strong> <span id="tsrLagna" style="color: #8b0000; font-weight: bold;"></span></p>
-                </div>
+            <!-- 3. Real Unblurred Prediction Text (Persuasive Hook) -->
+            <div style="background: rgba(219, 190, 146, 0.3); border-left: 5px solid #8b0000; padding: 18px; margin-bottom: 20px; border-radius: 4px;">
+                <p style="margin:0; font-size: 15.5px; color: #3e2723; line-height: 1.7;"><strong>প্ৰাথমিক বিশ্লেষণ:</strong> বৈদিক গণনা অনুসৰি আপোনাৰ কুণ্ডলীত <strong>ৰাজযোগ আৰু বিশেষ ধনযোগৰ</strong> প্ৰবল সম্ভাৱনা দেখা গৈছে! অহা কেইটামান মাহ আপোনাৰ কৰ্মজীৱন আৰু প্ৰেম/বিবাহৰ ক্ষেত্ৰত এক অতি গুৰুত্বপূৰ্ণ পৰিৱৰ্তনৰ সময়। কিন্তু আপোনাৰ কুণ্ডলীত এটা বিশেষ গ্ৰহৰ অৱস্থানে এটা ডাঙৰ বাধাৰো সৃষ্টি কৰিছে যিটোৰ প্ৰতিকাৰ কৰাটো জৰুৰী...</p>
+            </div>
 
-                <div id="tsrKundali" style="text-align: center; margin-bottom: 20px;">
-                    <p style="color: #64748b; font-size: 14px;">আপোনাৰ কুণ্ডলী প্ৰস্তুত কৰা হৈ আছে... ⏳</p>
+            <!-- 4. Blurred Premium Content -->
+            <div style="position: relative; margin-bottom: 20px;">
+                <div class="blur-section" style="background:#fff; color: #475569; font-size: 14.5px; line-height: 1.7; filter: blur(6px); opacity: 0.6; user-select: none; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <p><strong>১. কৰ্ম আৰু অৰ্থ:</strong> আপোনাৰ জীৱনত অহা ২ বছৰত আৰ্থিক দিশত এক ডাঙৰ পৰিৱৰ্তন আহিব...</p>
+                    <p><strong>২. প্ৰেম আৰু বিবাহ:</strong> আপোনাৰ ভৱিষ্যত জীৱন সংগীৰ বৃত্তি আৰু স্বভাৱ হ'ব...</p>
+                    <p><strong>৩. ভাগ্যৱান ৰত্ন:</strong> আপোনাৰ সফলতাৰ বাবে কোনটো ৰত্ন আটাইতকৈ উপযুক্ত...</p>
+                    <p><strong>৪. ভৱিষ্যৎ বাণী:</strong> ২০২৬ ৰ পৰা ২০৩১ লৈকে আপোনাৰ বাৰ্ষিক গতিধাৰা...</p>
                 </div>
+            </div>
+
+            <!-- Yellow Locked Box -->
+            <div style="background: #fffbeb; border: 1px solid #fde047; border-radius: 12px; padding: 25px 20px; text-align: center; box-shadow: 0 4px 15px rgba(253, 224, 71, 0.2);">
+                <div style="font-size: 28px; margin-bottom: 10px; color: #000;">🔒</div>
+                <h3 style="color: #000; font-size: 18px; margin-bottom: 8px; font-weight: 700;">সম্পূৰ্ণ ৰিপোৰ্ট আনলক কৰি PDF ডাউনলোড কৰক!</h3>
+                <p style="color: #475569; font-size: 13px; margin-bottom: 15px; line-height: 1.5;">তলৰ বুটামত ক্লিক কৰি Razorpay যোগে মাত্ৰ <strong>₹<span id="tsrPriceText"></span></strong> পেমেন্ট কৰাৰ লগে লগে সম্পূৰ্ণ ৰিপোৰ্ট স্বয়ংক্ৰিয়ভাৱে আনলক হৈ যাব।</p>
                 
-                <div style="background: rgba(219, 190, 146, 0.2); border-left: 4px solid #8b0000; padding: 15px; margin-bottom: 20px;">
-                    <p style="margin:0; font-size: 14.5px; color: #3e2723; line-height: 1.6;"><strong>প্ৰাথমিক বিশ্লেষণ:</strong> বৈদিক গণনা অনুসৰি আপোনাৰ কুণ্ডলীত কিছুমান শক্তিশালী গ্ৰহ যোগ নিৰ্মাণ হৈছে। জীৱনৰ প্ৰথমভাগত কিছু সংগ্ৰাম থাকিলেও নিজৰ একাগ্ৰতাৰ বলত আপুনি সফলতা অৰ্জন কৰিব...</p>
-                </div>
-
-                <div style="position: relative; margin-bottom: 20px;">
-                    <div class="blur-section" style="background:#fff; color: #475569; font-size: 14.5px; line-height: 1.7; filter: blur(6px); opacity: 0.6; user-select: none; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <p><strong>১. কৰ্ম আৰু অৰ্থ:</strong> আপোনাৰ জীৱনত অহা ২ বছৰত আৰ্থিক দিশত এক ডাঙৰ পৰিৱৰ্তন আহিব...</p>
-                        <p><strong>২. প্ৰেম আৰু বিবাহ:</strong> আপোনাৰ ভৱিষ্যত জীৱন সংগীৰ বৃত্তি আৰু স্বভাৱ হ'ব...</p>
-                        <p><strong>৩. ভাগ্যৱান ৰত্ন:</strong> আপোনাৰ সফলতাৰ বাবে কোনটো ৰত্ন আটাইতকৈ উপযুক্ত...</p>
-                        <p><strong>৪. ভৱিষ্যৎ বাণী:</strong> ২০২৬ ৰ পৰা ২০৩১ লৈকে আপোনাৰ বাৰ্ষিক গতিধাৰা...</p>
-                    </div>
-                </div>
-
-                <div style="background: #fffbeb; border: 1px solid #fde047; border-radius: 12px; padding: 25px 20px; text-align: center; box-shadow: 0 4px 15px rgba(253, 224, 71, 0.2);">
-                    <div style="font-size: 28px; margin-bottom: 10px; color: #000;">🔒</div>
-                    <h3 style="color: #000; font-size: 18px; margin-bottom: 8px; font-weight: 700;">সম্পূৰ্ণ ৰিপোৰ্ট আনলক কৰি PDF ডাউনলোড কৰক!</h3>
-                    <p style="color: #475569; font-size: 13px; margin-bottom: 15px; line-height: 1.5;">তলৰ বুটামত ক্লিক কৰি Razorpay যোগে মাত্ৰ <strong>₹<span id="tsrPriceText"></span></strong> পেমেন্ট কৰাৰ লগে লগে সম্পূৰ্ণ ৰিপোৰ্ট স্বয়ংক্ৰিয়ভাৱে আনলক হৈ যাব।</p>
-                    
-                    <button onclick="initiatePayment()" style="background: #2563eb; color: white; border: none; padding: 14px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: 0.3s;">
-                        🛡️ Pay ₹<span id="tsrPriceBtn"></span> with Razorpay
-                    </button>
-                </div>
-                
-                <div style="text-align: center; margin-top: 15px;">
-                    <span style="color: #64748b; font-size: 13px; cursor: pointer; text-decoration: underline;" onclick="document.getElementById('teaserModal').classList.remove('active')">Cancel / Close</span>
-                </div>
+                <button onclick="initiatePayment()" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 15px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: 0.3s;">
+                    🛡️ Pay ₹<span id="tsrPriceBtn"></span> with Razorpay
+                </button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="document.getElementById('teaserModal').classList.remove('active')" style="background: #475569; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer;">বন্ধ কৰক (Close)</button>
             </div>
         </div>
     </div>
-
+</div>
     <!-- Report Render Area -->
     <div id="jaReportModal">
         <div class="ja-modal-topbar">
@@ -956,7 +964,7 @@ function checkLuckyGem() {
             document.getElementById('orderForm').reset();
         }
 
-        // --- Step 1: Generate Teaser (30% Free) - 100% ACCURATE API VERSION ---
+        // --- Step 1: Generate Teaser (30% Free) - STRICTLY API BASED ---
         async function generateTeaser(e) {
             e.preventDefault();
             const btn = document.getElementById('payBtn');
@@ -977,7 +985,7 @@ function checkLuckyGem() {
             pendingOrderData = { name, email, service: curServiceCode, birth_date: dob, birth_time: tob, birth_place: place };
 
             try {
-                // ১. ফেচবুক/ইনষ্টাগ্ৰাম ব্ৰাউজাৰৰ বাবে Local Storage ত চেভ কৰা (Crash Fix)
+                // ১. ফেচবুক ব্ৰাউজাৰৰ বাবে Local Storage ত চেভ কৰা
                 localStorage.setItem('ja_pending_customer', JSON.stringify(pendingOrderData));
 
                 // ২. Supabase ত pending order বনোৱা
@@ -995,13 +1003,20 @@ function checkLuckyGem() {
                     }
                 }
 
-                // ৩. ১০০% শুদ্ধ API কল (Real Calculate Chart)
+                // UI টো লগে লগে দেখুৱাই দিছোঁ যাতে গ্ৰাহকে অপেক্ষা কৰিবলগীয়া নহয়
+                document.getElementById('tsrName').innerText = name;
+                document.getElementById('tsrPriceText').innerText = curServicePrice;
+                document.getElementById('tsrPriceBtn').innerText = curServicePrice;
+                document.getElementById('orderModal').classList.remove('active');
+                document.getElementById('teaserModal').classList.add('active');
+
+                // ৩. আচল API কল (Real Calculate Chart)
                 const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         orderId: tempOrderId,
-                        tempOrder: pendingOrderData // যদি orderId নাপায়, তেন্তে পোনে পোনে ডাটা পঠিয়াব
+                        tempOrder: pendingOrderData
                     })
                 });
                 const apiResult = await response.json();
@@ -1047,36 +1062,20 @@ function checkLuckyGem() {
                         <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+10)%12+1}</text>
                     </svg>`;
 
-                    const rashiElem = document.getElementById('tsrRashi');
-                    const lagnaElem = document.getElementById('tsrLagna');
-                    const kundaliElem = document.getElementById('tsrKundali');
-                    
-                    if(rashiElem) rashiElem.innerText = `${rashiAsMap[moonRashi]} (${moonNak} নক্ষত্ৰ)`;
-                    if(lagnaElem) lagnaElem.innerText = `${rashiAsMap[lagnaRashi]} লগ্ন`;
-                    if(kundaliElem) kundaliElem.innerHTML = svgHtml;
+                    document.getElementById('tsrRashi').innerText = `${rashiAsMap[moonRashi]} (${moonNak} নক্ষত্ৰ)`;
+                    document.getElementById('tsrLagna').innerText = `${rashiAsMap[lagnaRashi]} লগ্ন`;
+                    document.getElementById('tsrKundali').innerHTML = svgHtml;
                 } else {
-                    throw new Error("API Calculation failed");
+                    throw new Error("API failed");
                 }
 
             } catch (e) {
                 console.error("Teaser error:", e);
-                document.getElementById('tsrRashi').innerText = "গণনা সম্পন্ন হৈছে";
-                document.getElementById('tsrLagna').innerText = "অপেক্ষা কৰক";
-                document.getElementById('tsrKundali').innerHTML = "<p style='color:green; font-weight:bold;'>কুণ্ডলী সক্ৰিয় কৰা হৈছে... তলত আনলক কৰক</p>";
+                document.getElementById('tsrRashi').innerText = "অপেক্ষা কৰক...";
+                document.getElementById('tsrLagna').innerText = "অপেক্ষা কৰক...";
+                document.getElementById('tsrKundali').innerHTML = "<p style='color:#8b0000; font-weight:bold; padding:20px;'>আপোনাৰ কুণ্ডলী বেকগ্ৰাউণ্ডত প্ৰস্তুত হৈ আছে। তলত আনলক কৰক 👇</p>";
             }
 
-            // ৪. HTML আপডেট
-            const nameElem = document.getElementById('tsrName');
-            const priceTextElem = document.getElementById('tsrPriceText');
-            const priceBtnElem = document.getElementById('tsrPriceBtn');
-            
-            if(nameElem) nameElem.innerText = name;
-            if(priceTextElem) priceTextElem.innerText = curServicePrice;
-            if(priceBtnElem) priceBtnElem.innerText = curServicePrice;
-            
-            document.getElementById('orderModal').classList.remove('active');
-            document.getElementById('teaserModal').classList.add('active');
-            
             btn.innerText = "প্ৰাথমিক ৰিপোৰ্ট (30% Free) চাওক"; 
             btn.disabled = false;
         }
