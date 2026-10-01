@@ -915,27 +915,33 @@ function checkLuckyGem() {
             }
         }
 
-        function openOrderModal(serviceCode, price) {
+       function openOrderModal(serviceCode, price) {
     curServiceCode = serviceCode;
+    curServicePrice = price;
     
-    // মূল্যৰ ওপৰত ভিত্তি কৰি সেৱাৰ নামটো নিৰ্ধাৰণ কৰা হৈছে
     if(price === 299) { curServiceCode = 'birth'; curServiceTitle = 'সম্পূৰ্ণ জন্ম কুণ্ডলী'; }
     else if(price === 99) { curServiceCode = 'love'; curServiceTitle = 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ'; }
     else if(price === 199) { curServiceCode = 'career'; curServiceTitle = 'কেৰিয়াৰ আৰু ব্যৱসায়'; }
     else if(price === 19) { curServiceCode = 'monthly'; curServiceTitle = 'মাহেকীয়া ৰাশিফল'; }
     else if(price === 49) { curServiceCode = 'yearly'; curServiceTitle = 'বাৰ্ষিক ৰাশিফল'; }
     
-    curServicePrice = price;
+    // Error-proof code: HTML ত ID নাপালেও ক্ৰেছ নহয়!
+    var titleElem = document.getElementById('orderTitle');
+    if (titleElem) { 
+        titleElem.innerText = curServiceTitle; 
+    }
     
-    // ফৰ্মৰ একেবাৰে ওপৰত সেৱাৰ নামটো (যেনে: মাহেকীয়া ৰাশিফল) বহুৱাবলৈ
-    document.getElementById('orderTitle').innerText = curServiceTitle; 
-    
-    // তাৰ ঠিক তলতে 'অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক' লিখিবলৈ
-    document.getElementById('orderSubtitle').innerText = "অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক";
+    var subElem = document.getElementById('orderSubtitle');
+    if (subElem) { 
+        subElem.innerText = "অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক"; 
+    } else {
+        // যদি orderSubtitle বিচাৰি নাপায়, তেন্তে orderModal ৰ ভিতৰৰ প্ৰথম <p> টেগটোত লিখিব
+        var pElem = document.querySelector('#orderModal p');
+        if(pElem) pElem.innerText = "অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক";
+    }
     
     document.getElementById('orderModal').classList.add('active');
 }
-
         function closeOrderModal() {
             document.getElementById('orderModal').classList.remove('active');
             document.getElementById('orderForm').reset();
