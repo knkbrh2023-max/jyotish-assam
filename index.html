@@ -1,1924 +1,786 @@
 <!DOCTYPE html>
 <html lang="as">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-7CX40FND93"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-7CX40FND93');
-</script>
-  
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Primary SEO Meta Tags -->
-    <title>জ্যোতিষ অসম - Jyotish Assam | নিখুঁত বৈদিক কুণ্ডলী, সোঁৱৰণী আৰু দৈনিক ৰাশিফল</title>
-    <meta name="description" content="জ্যোতিষ অসম (Jyotish Assam) - 100% নিখুঁত বৈদিক জ্যোতিষ, অসমীয়া জন্ম কুণ্ডলী (Kundali PDF), যুটীয়া ৰাশিফল, প্ৰেমৰ ৰিপোৰ্ট আৰু বিনামূলীয়া দৈনিক ৰাশিফল। অসমীয়া ভাষাত আপোনাৰ ভৱিষ্যৎ জানক।">
-   <meta name="keywords" content="Jyotish Assam, জ্যোতিষ অসম, Assamese Rashifal, Ajir Rashifal Assamese, Ajir Rakhifal, Axomiya Rashifal Today, অসমীয়া ৰাশিফল, আজিৰ ৰাশিফল, দৈনিক ৰাশিফল, Assamese Kundali PDF, জন্ম কুণ্ডলী, সোঁৱৰণী, Assamese Suworoni, Xuworoni, জন্ম পত্ৰিকা, যুটীয়া ৰাশিফল, Jutiya Rashifal, Biyarilon, বিবাহ মিলন, কুণ্ডলী মিলন, Assamese Horoscope Today, Online Kundali Assam, Janma Patrika Assamese, Laluk Astrologer, Best Astrologer in Assam">
-    <meta name="author" content="Jyotish Assam">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://jyotishassam.com/">
-
-    <!-- Browser Tab Icon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%2306152d%22 stroke=%22%23ffd700%22 stroke-width=%226%22/><text x=%2250%22 y=%2276%22 font-family=%22Georgia, serif%22 font-size=%2276%22 font-weight=%22900%22 text-anchor=%22middle%22 fill=%22%23ffd700%22>JA</text><line x1=%2215%22 y1=%2288%22 x2=%2285%22 y2=%2288%22 stroke=%22%23e61919%22 stroke-width=%228%22 stroke-linecap=%22round%22/></svg>">
-    <link rel="apple-touch-icon" href="https://jyotishassam.com/icon.png">
-    
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুণ্ডলী আৰু ৰাশিফল">
-    <meta property="og:description" content="অসমীয়া ভাষাত বিনামূলীয়া দৈনিক ৰাশিফল, যুটীয়া ৰাশিফল আৰু নিমিষতে সম্পূৰ্ণ বৈদিক জন্ম কুণ্ডলী (PDF) লাভ কৰক।">
-    <meta property="og:url" content="https://jyotishassam.com/">
-    <meta property="og:site_name" content="জ্যোতিষ অসম (Jyotish Assam)">
-    <meta property="og:image" content="https://jyotishassam.com/icon.png">
-
-    <!-- Schema Markup -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "জ্যোতিষ অসম (Jyotish Assam)",
-      "url": "https://jyotishassam.com/",
-      "logo": "https://jyotishassam.com/icon.png",
-      "image": "https://jyotishassam.com/icon.png",
-      "description": "100% নিখুঁত বৈদিক জন্ম কুণ্ডলী (PDF), যুটীয়া ৰাশিফল আৰু দৈনিক অসমীয়া ৰাশিফল সেৱা।",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Laluk, Lakhimpur",
-        "addressRegion": "Assam",
-        "addressCountry": "IN"
-      },
-      "priceRange": "₹19 - ₹299",
-      "areaServed": "Assam",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "bestRating": "5",
-        "ratingCount": "156"
-      }
-    }
-    </script>
-    
-    <!-- Supabase আৰু Razorpay -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>অসম এক্সাম হাব | Assamese Exam & Mock-Test Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Noto Sans Assamese -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        /* --- Hamburger Menu Fix --- */
-        .nav-content { display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; }
-        .logo { margin: 0 !important; text-align: left !important; flex: 1 !important; }
-        .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 5px; z-index: 1001; margin-left: auto !important; }
-        .hamburger span { width: 25px; height: 3px; background-color: white; border-radius: 3px; }
-
-        @media (max-width: 768px) {
-            .hamburger { display: flex !important; }
-            .nav-links { display: none !important; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: #4c1d95; padding: 0; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 1000; }
-            .nav-links.active { display: flex !important; }
-            .nav-links a { text-align: left; padding: 15px 25px; margin: 0; border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 0; display: block; }
+        body {
+            font-family: 'Noto Sans Assamese', sans-serif;
+            background-color: #f8fafc;
+            scroll-behavior: smooth;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --primary-color: #6D28D9; --secondary-color: #DB2777; --dark-bg: #0f172a; --light-bg: #f8fafc; --text-dark: #1e293b; --text-light: #64748b; --border-color: #e2e8f0; --success-color: #10B981; --warning-color: #e11d48; }
-        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        nav { background: linear-gradient(135deg, #4c1d95, #6D28D9); box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
-        .logo { font-size: 26px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
-        .nav-links { display: flex; gap: 20px; align-items: center; overflow-x: auto; white-space: nowrap; }
-        .nav-links::-webkit-scrollbar { display: none; }
-        .nav-links a { text-decoration: none; color: #f8fafc; font-weight: 600; font-size: 15px; transition: 0.3s; padding: 6px 12px; border-radius: 6px; }
-        .nav-links a:hover { color: #fde68a; background: rgba(255, 255, 255, 0.15); }
-        @media (max-width: 768px) { .nav-content { flex-direction: column; gap: 12px; } .nav-links { width: 100%; justify-content: flex-start; padding-bottom: 5px; } }
-        
-        .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
-        .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; }
-        .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 16px; color: var(--text-light); max-width: 700px; margin: 20px auto; }
-        .trust-badges { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin: 20px 0; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
-        .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #475569; }
-        .trust-item span { color: var(--success-color); font-size: 15px; }
-
-        .panchang-box { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; border-radius: 16px; padding: 25px; margin: 30px 0; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.1); }
-        .panchang-header { text-align: center; margin-bottom: 20px; }
-        .panchang-header h3 { color: #b45309; font-size: 22px; }
-        .panchang-date { font-weight: 600; color: #92400e; font-size: 15px; margin-top: 5px; }
-        .panchang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: white; padding: 20px; border-radius: 12px; }
-        .p-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px; border-radius: 8px; background: #fdf8f6; border: 1px solid #ffedd5; }
-        .p-label { font-size: 13px; color: var(--text-light); font-weight: 600; margin-bottom: 5px; }
-        .p-value { font-size: 16px; color: var(--text-dark); font-weight: 700; }
-
-        /* Free Tools CSS */
-        .free-tools-section { padding: 40px 20px; background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .tools-header { text-align: center; margin-bottom: 40px; }
-        .tools-header h2 { font-size: 28px; color: #1e293b; margin-bottom: 10px; }
-        .tools-header p { color: #64748b; font-size: 15px; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
-        .tool-card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; position: relative; overflow: hidden; }
-        .tool-card.personal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #8B5CF6, #6D28D9); }
-        .tool-card.couple::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #F43F5E, #E11D48); }
-        .tool-title { text-align: center; margin-bottom: 25px; }
-        .tool-title h3 { font-size: 20px; margin-bottom: 5px; }
-        .tool-title.personal h3 { color: #6D28D9; }
-        .tool-title.couple h3 { color: #E11D48; }
-        .tool-title p { font-size: 13px; color: #64748b; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px; }
-        .form-control { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s; box-sizing: border-box; }
-        .form-control:focus { border-color: #8B5CF6; }
-        .couple-row { display: flex; gap: 15px; }
-        .btn-submit { width: 100%; padding: 14px; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 10px; }
-        .btn-personal { background: linear-gradient(90deg, #8B5CF6, #6D28D9); box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
-        .btn-couple { background: linear-gradient(90deg, #F43F5E, #E11D48); box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3); }
-
-        .rashi-section { margin: 50px 0; text-align: center; }
-        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 25px; }
-        .rashi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .rashi-card:hover { border-color: var(--primary-color); transform: translateY(-5px); }
-        .rashi-icon { font-size: 32px; background: #f3e8ff; width: 60px; height: 60px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary-color); }
-        .rashi-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-        .rashi-card p { font-size: 13px; color: var(--text-light); }
-
-        .section { margin: 50px 0; }
-        .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
-        .section-subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 15px; }
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .service-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; overflow: hidden; transition: 0.3s;}
-        .service-card:hover { border-color: #8b0000; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(139,0,0,0.15); }
-        .service-icon { font-size: 45px; margin-bottom: 20px; }
-        .service-price { font-size: 32px; font-weight: 700; color: var(--primary-color); margin: 20px 0; }
-        .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); transition: 0.3s; }
-        .service-btn:hover { opacity: 0.9; }
-
-        .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
-        
-        /* General Modals */
-        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; padding: 20px; }
-        .modal.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 550px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;}
-        .close-modal { position: absolute; right: 20px; top: 15px; font-size: 26px; cursor: pointer; color: #666; }
-
-        /* Report Modal (Bulletproof System FB/Insta Fix) */
-        #jaReportModal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #e8dcc4; z-index: 999999; overflow-y: auto; padding: 15px; }
-        .ja-modal-topbar { position: sticky; top: 0; z-index: 1000000; max-width: 850px; margin: 0 auto 15px; background: #8b0000; color: #fff; padding: 12px 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); border: 2px solid #fbbf24; }
-        .ja-btn-download { background: #fbbf24; color: #1e1b4b; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit; }
-        .ja-btn-close { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
-        #jaRecoveryBanner { display: none; position: fixed; bottom: 15px; left: 15px; right: 15px; max-width: 550px; margin: 0 auto; background: linear-gradient(90deg, #065f46, #047857); color: #fff; padding: 14px 18px; border-radius: 14px; z-index: 99998; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid #34d399; justify-content: space-between; align-items: center; gap: 12px; }
-        @media print { body > *:not(#jaReportModal) { display: none !important; } #jaReportModal { position: static !important; background: #fdf5e6 !important; padding: 0 !important; overflow: visible !important; } .ja-modal-topbar { display: none !important; } }
-        
-        /* 30% Teaser Blur CSS */
-        .blur-section { filter: blur(5px); opacity: 0.5; user-select: none; pointer-events: none; }
-        .unlock-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center; z-index: 10; }
-        
-        /* Customer Support Chatbot CSS (Left Side) */
-        #support-chat-launcher { position: fixed; bottom: 20px; left: 16px; z-index: 99990; background: linear-gradient(135deg, #10B981, #047857); color: white; border: 2.5px solid #fff; border-radius: 50px; padding: 12px 18px; font-weight: 700; font-size: 14.5px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        #support-chat-window { position: fixed; bottom: 80px; left: 16px; width: 340px; max-width: 90vw; height: 450px; max-height: 70vh; background: #f8fafc; border: 2px solid #10B981; border-radius: 16px; z-index: 99999; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.3); font-family: inherit; }
-        .sup-chat-header { background: #047857; padding: 12px; color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #10B981;}
-        .sup-close-btn { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 14px; display: flex; justify-content: center; align-items: center;}
-        #sup-chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fdf5e6; }
-        .sup-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
-        .sup-bot { background: #fff; color: #1e293b; align-self: flex-start; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .sup-user { background: #10B981; color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .sup-input-bar { padding: 10px; background: #fff; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; }
-        .sup-input-bar input { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; }
-        .sup-input-bar button { background: #10B981; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-
-        /* Acharya Chat Window CSS (No floating button) */
-        #ja-chat-window { position: fixed !important; bottom: 50%; left: 50%; transform: translate(-50%, 50%); width: 370px !important; max-width: 94vw !important; height: 540px !important; max-height: 80vh !important; background: #0b141a !important; border: 2px solid #ffd700 !important; border-radius: 18px !important; z-index: 99999 !important; display: none; flex-direction: column !important; overflow: hidden !important; box-shadow: 0 15px 50px rgba(0,0,0,0.85) !important; transition: all 0.25s ease !important; }
-        #ja-chat-window.ja-maximized { top: 10px !important; left: 10px !important; right: 10px !important; bottom: 10px !important; width: calc(100vw - 20px) !important; max-width: 900px !important; height: calc(100vh - 20px) !important; max-height: calc(100vh - 20px) !important; margin: auto !important; border-radius: 16px !important; transform: none; }
-        .ja-chat-header { background: #075e54; padding: 10px 12px; color: #fff; border-bottom: 1.5px solid #ffd700; display: flex; justify-content: space-between; align-items: center; }
-        .ja-hdr-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,215,0,0.5); border-radius: 6px; padding: 4px 7px; font-size: 13.5px; font-weight: bold; cursor: pointer; line-height: 1; }
-        .ja-hdr-btn:hover { background: #ffd700; color: #075e54; }
-        .ja-timer-badge { background: #ffd700; color: #111; padding: 4px 8px; border-radius: 20px; font-weight: 900; font-size: 12.5px; display: none; }
-        #ja-chat-messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0b141a; }
-        .ja-msg { max-width: 86%; padding: 10px 13px; border-radius: 12px; font-size: 14.5px; line-height: 1.55; word-wrap: break-word; }
-        .ja-bot { background: #202c33; color: #f1f5f9; align-self: flex-start; border-top-left-radius: 2px; border: 1px solid #374151; }
-        .ja-user { background: #005c4b; color: #ffffff; align-self: flex-end; border-top-right-radius: 2px; }
-        .ja-msg-time { font-size: 10px; color: #94a3b8; text-align: right; margin-top: 4px; }
-        .ja-typing-bar { font-size: 12px; color: #4ade80; padding: 6px 14px; background: #111b21; display: none; font-style: italic; }
-        .ja-pay-box { background: linear-gradient(180deg, #3b0764, #1e1b4b); border: 2px solid #ffd700; border-radius: 12px; padding: 13px; color: #fff; text-align: center; margin-top: 6px; align-self: center; width: 95%; }
-        .ja-rzp-btn { display: block; width: 100%; background: linear-gradient(135deg, #22c55e, #15803d); color: #fff; border: 1.5px solid #ffd700; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer !important; margin: 7px 0; transition: transform 0.15s; }
-        .ja-rzp-btn:hover { transform: scale(1.02); }
-        .ja-plan-popular { background: linear-gradient(135deg, #d97706, #b45309) !important; border: 2px solid #fde047 !important; }
-        .ja-plan-vip { background: linear-gradient(135deg, #7c3aed, #4c1d95) !important; border: 2px solid #ffd700 !important; }
-        .ja-input-bar { padding: 10px; background: #202c33; display: flex; gap: 8px; align-items: center; }
-        .ja-input-bar input { flex: 1; padding: 10px 14px; border-radius: 25px; border: 1px solid #475569; background: #2a3942; color: #fff; font-size: 14px; outline: none; }
-        .ja-input-bar button { background: #00a884; color: #fff; border: none; width: 42px; height: 42px; border-radius: 50%; font-weight: 900; cursor: pointer !important; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-    /* Free Horoscope Modal Scrolling & UI Fix */
-        .horoscope-modal-overlay { display: none; position: fixed; z-index: 1000000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; padding: 15px; }
-        .horoscope-modal-content { background: #fffdf5; padding: 25px; border-radius: 16px; width: 100%; max-width: 600px; position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 2px solid #8b0000; }
-        .close-horoscope-btn { position: absolute; right: 15px; top: 15px; background: #fecaca; color: #991b1b; border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; z-index: 10; }
-        .close-horoscope-btn:hover { background: #ef4444; color: white; transform: scale(1.1); }
+        .gradient-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+        }
+        .option-btn.selected {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            font-weight: 700;
+        }
     </style>
-    <script src="config.js"></script>
 </head>
-<body>
-    <!-- ==========================================
-         MAINTENANCE MODE (WITH SECRET ADMIN BYPASS)
-    =========================================== -->
-    <div id="maintenance-mode" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(135deg, #0f172a, #1e1b4b); z-index: 99999999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px; font-family: 'Noto Sans Assamese', sans-serif;">
-        
-        <!-- Secret Bypass: ৩ বাৰ ক্লিক কৰিলে স্ক্ৰীণখন আঁতৰি যাব -->
-        <div id="magic-gear" style="font-size: 70px; margin-bottom: 20px; animation: spin 4s linear infinite; cursor: pointer;" title="Admin Access">⚙️</div>
-        
-        <h1 style="color: #fde047; font-size: 32px; font-weight: bold; margin-bottom: 15px;">ৱেবছাইটৰ উন্নীতকৰণ চলি আছে</h1>
-        <p style="font-size: 16px; color: #cbd5e1; max-width: 500px; line-height: 1.6; margin-bottom: 30px;">আমাৰ গ্ৰাহকসকলক আৰু অধিক উন্নত সেৱা প্ৰদান কৰিবলৈ ৱেবছাইটত বৰ্তমান কিছু নতুন সুবিধা সংযোগ কৰাৰ কাম চলি আছে। আমি অতি সোনকালেই নতুন ৰূপত ঘূৰি আহিম!</p>
-        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">যিকোনো জৰুৰী প্ৰয়োজনত আমাৰ লগত পোনপটীয়াকৈ যোগাযোগ কৰক:</p>
-        <a href="https://wa.me/91XXXXXXXXXX" style="background: #25D366; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);">🎧 হোৱাটছএপত মেছেজ কৰক</a>
-        
-        <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
-        <script>
-            let gearClickCount = 0;
-            document.getElementById('magic-gear').onclick = function() {
-                gearClickCount++;
-                if(gearClickCount >= 3) {
-                    document.getElementById('maintenance-mode').style.display = 'none'; // ৩ বাৰ ক্লিক কৰিলে নাইকিয়া হ'ব
-                }
-            };
-        </script>
-    </div>
-    <!-- ========================================== -->
-   <nav>
-        <div class="container nav-content">
-   <div class="logo" style="margin: 0; display: flex; align-items: center; gap: 10px;">
-    <img src="icon.png" alt="Jyotish Assam Icon" style="height: 90px; width: auto;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%2306152d%22 stroke=%22%23ffd700%22 stroke-width=%226%22/><text x=%2250%22 y=%2276%22 font-family=%22Georgia, serif%22 font-size=%2276%22 font-weight=%22900%22 text-anchor=%22middle%22 fill=%22%23ffd700%22>JA</text></svg>'">
-    <span>জ্যোতিষ অসম</span>
-</div>
-    
-    <!-- Hamburger Icon -->
-    <div class="hamburger" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+<body class="text-slate-800">
 
-    <div class="nav-links" id="navLinks">
-        <a href="#" style="color: #fde68a; background: rgba(255,255,255,0.15);" onclick="toggleMenu()">প্ৰধান পৃষ্ঠা</a>
-        <a href="#free-tools-section" onclick="toggleMenu(); document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
-        <a href="#premium-services" onclick="toggleMenu(); document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
-        <a href="#reviews" onclick="toggleMenu(); document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
-        <a href="contact.html">যোগাযোগ</a>
-    </div>
-</div>
-    </nav>
-    <div class="container">
-        <!-- Hero Banner Section -->
-<style>
-  .hero-banner { background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(45, 10, 80, 0.8)), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat; padding: 60px 20px; text-align: center; border-radius: 0 0 25px 25px; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-  .hero-title { color: #ffffff; font-size: 28px; font-weight: bold; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); margin-bottom: 15px; line-height: 1.4; }
-  .hero-subtitle { color: #fde68a; font-size: 16px; max-width: 650px; margin: 0 auto 25px auto; line-height: 1.7; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-  .hero-badges { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-  .hero-badge { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px 20px; border-radius: 50px; color: #ffffff; font-size: 14px; font-weight: 500; }
-</style>
-
-<div class="hero-banner">
-  <h1 class="hero-title">আপোনাৰ ভৱিষ্যৎ আজি সঠিকভাৱে জানি লওক</h1>
-  <p class="hero-subtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
-  <div class="hero-badges">
-    <span class="hero-badge">✔️ ১০০% বৈদিক শুদ্ধতা</span>
-    <span class="hero-badge">🔒 নিৰাপদ পেমেন্ট (Razorpay)</span>
-  </div>
-</div>
-
-<p style="text-align: center; color: #475569; font-size: 15px; max-width: 700px; margin: 10px auto 25px auto; line-height: 1.6;">
-    প্ৰতিটো নতুন দিন একোটা নতুন সম্ভাৱনাৰ দুৱাৰ মুকলি কৰে। আপোনাৰ দিনটোৰ আৰম্ভণি সঠিক আৰু সুপৰিকল্পিত কৰিবলৈ আমি আগবঢ়াইছোঁ কিছুমান প্ৰয়োজনীয় সঁজুলি। পঞ্জিকাৰ পৰা আৰম্ভ কৰি শুভ সময়লৈকে— সকলো তথ্য এতিয়া বিনামূলীয়াকৈ আপোনাৰ হাতৰ মুঠিতে।
-</p>
-
-<!-- Love Calculator Promo Box -->
-<div style="max-width: 700px; margin: 30px auto; padding: 25px 20px; background: linear-gradient(135deg, #3b0764 0%, #831843 100%); border: 2px solid #fbbf24; border-radius: 20px; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.4);">
-    <span style="background: #ec4899; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; margin-bottom: 10px; display: inline-block;">✨ নতুন বিনামূলীয়া আকৰ্ষণ ✨</span>
-    <h3 style="color: #fde047; font-size: 23px; margin-bottom: 10px;">💖 বৈদিক প্ৰেম আৰু নাম মিলন কেলকুলেটৰ</h3>
-    <p style="color: #fce7f3; font-size: 15px; margin-bottom: 18px; line-height: 1.6;">আপোনাৰ আৰু আপোনাৰ প্ৰিয়জনৰ নাম লিখি জানক আপোনালোকৰ আত্মিক সংযোগ, ৰোমান্স আৰু ভৱিষ্যৎ বিবাহৰ সম্ভাৱনা কিমান শতাংশ!</p>
-    <a href="love-calculator.html" style="display: inline-block; background: linear-gradient(90deg, #fbbf24, #f59e0b); color: #1e1b4b; font-weight: 700; font-size: 15.5px; padding: 12px 28px; border-radius: 30px; text-decoration: none; box-shadow: 0 5px 15px rgba(251, 191, 36, 0.45); transition: 0.3s;">🔮 এতিয়াই নাম মিলাই চাওক 👉</a>
-</div>
-
-        <!-- Panchang -->
-        <section class="panchang-box">
-            <div class="panchang-header">
-                <h3>📅 আজিৰ পঞ্জিকা</h3>
-                <p class="panchang-date" id="p-date">তাৰিখ: আপডেট হৈ আছে...</p>
-            </div>
-            <div class="panchang-grid">
-                <div class="p-item"><span class="p-label">🌅 সূৰ্যোদয়</span><span class="p-value">05:25 AM</span></div>
-                <div class="p-item"><span class="p-label">🌇 সূৰ্যাস্ত</span><span class="p-value">05:45 PM</span></div>
-                <div class="p-item"><span class="p-label">🌙 আজিৰ তিথি</span><span class="p-value">দশমী / একাদশী</span></div>
-            </div>
-        </section>
-        
-        <!-- Free Daily Tools -->
-        <div class="free-tools-section" id="free-tools-section">
-            <div class="tools-header">
-                <h2>🎁 বিনামূলীয়া দৈনিক সঁজুলি</h2>
-                <p>জন্ম তাৰিখ আৰু ৰাশিৰ সহায়ত আপোনাৰ আৰু আপোনাৰ সংগীৰ যুটীয়া ভৱিষ্যদ্বাণী চাওক</p>
-            </div>
-            <div class="tools-grid">
-                
-                <!-- Personal Form -->
-                <div class="tool-card personal">
-                    <div class="tool-title personal">
-                        <h3>আপোনাৰ বিশদ দৈনিক ৰাশিফল চাওক</h3>
-                        <p>আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক</p>
-                    </div>
-                    <div class="input-group">
-                        <label>🎂 জন্ম তাৰিখ (DOB):</label>
-                        <input type="date" id="personal-dob" class="form-control">
-                    </div>
-                    <div class="input-group">
-                        <label>🌟 আপোনাৰ ৰাশি:</label>
-                        <select id="personal-rashi" class="form-control">
-                            <option value="">ৰাশি বাছনি কৰক...</option>
-                            <option value="মেষ">মেষ (Aries)</option><option value="বৃষ">বৃষ (Taurus)</option>
-                            <option value="মিথুন">মিথুন (Gemini)</option><option value="কৰ্কট">কৰ্কট (Cancer)</option>
-                            <option value="সিংহ">সিংহ (Leo)</option><option value="কন্যা">কন্যা (Virgo)</option>
-                            <option value="তুলা">তুলা (Libra)</option><option value="বৃশ্চিক">বৃশ্চিক (Scorpio)</option>
-                            <option value="ধনু">ধনু (Sagittarius)</option><option value="মকৰ">মকৰ (Capricorn)</option>
-                            <option value="কুম্ভ">কুম্ভ (Aquarius)</option><option value="মীন">মীন (Pisces)</option>
-                        </select>
-                    </div>
-                    <button id="btn-personal" class="btn-submit btn-personal">ৰাশিফল চাওক</button>
+    <!-- ================= 1. NAVIGATION BAR ================= -->
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2.5">
+                <div class="w-10 h-10 rounded-xl bg-blue-700 flex items-center justify-center text-white font-extrabold text-xl shadow-sm">
+                    অ
                 </div>
-
-                <!-- Couple Form -->
-                <div class="tool-card couple">
-                    <div class="tool-title couple">
-                        <h3>যুটীয়া ৰাশিফল (Couple Horoscope)</h3>
-                        <p>দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক</p>
-                    </div>
-                    <div class="input-group">
-                        <label>👦 ল'ৰাৰ বিৱৰণ:</label>
-                        <div class="couple-row">
-                            <input type="date" id="boy-dob" class="form-control" style="width: 50%;">
-                            <select id="boy-rashi" class="form-control" style="width: 50%;">
-                                <option value="">ৰাশি...</option>
-                                <option value="মেষ">মেষ</option><option value="বৃষ">বৃষ</option><option value="মিথুন">মিথুন</option>
-                                <option value="কৰ্কট">কৰ্কট</option><option value="সিংহ">সিংহ</option><option value="কন্যা">কন্যা</option>
-                                <option value="তুলা">তুলা</option><option value="বৃশ্চিক">বৃশ্চিক</option><option value="ধনু">ধনু</option>
-                                <option value="মকৰ">মকৰ</option><option value="কুম্ভ">কুম্ভ</option><option value="মীন">মীন</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>👧 ছোৱালীৰ বিৱৰণ:</label>
-                        <div class="couple-row">
-                            <input type="date" id="girl-dob" class="form-control" style="width: 50%;">
-                            <select id="girl-rashi" class="form-control" style="width: 50%;">
-                                <option value="">ৰাশি...</option>
-                                <option value="মেষ">মেষ</option><option value="বৃষ">বৃষ</option><option value="মিথুন">মিথুন</option>
-                                <option value="কৰ্কট">কৰ্কট</option><option value="সিংহ">সিংহ</option><option value="কন্যা">কন্যা</option>
-                                <option value="তুলা">তুলা</option><option value="বৃশ্চিক">বৃশ্চিক</option><option value="ধনু">ধনু</option>
-                                <option value="মকৰ">মকৰ</option><option value="কুম্ভ">কুম্ভ</option><option value="মীন">মীন</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button id="btn-couple" class="btn-submit btn-couple">যুটীয়া ৰাশিফল চাওক</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Couple Horoscope WhatsApp Share Button -->
-<div style="text-align: center; margin-top: 18px; margin-bottom: 10px;">
-  <a href="https://api.whatsapp.com/send?text=❤️%20*চোৱাচোন,%20মই%20আমাৰ%20দুয়োৰে%20আজিৰ%20যুটীয়া%20ৰাশিফল%20আৰু%20ৰাশি%20মিলন%20চালোঁ!*%20✨%0A%0Aতুমিও%20আমাৰ%20যোৰাটোৰ%20ফলাফল%20চাবলৈ%20তলৰ%20লিংকত%20ক্লিক%20কৰা%20👇%0Ahttps://jyotishassam.com" 
-     target="_blank" 
-     style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #25D366, #128C7E); color: #ffffff; padding: 10px 22px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35); border: 1px solid rgba(255,255,255,0.3);">
-    <span>💌 প্ৰিয়জনক WhatsApp-ত পঠিয়াওক</span>
-  </a>
-</div>
-        <!-- Free Lucky Gemstone & Numerology Hook Section Start -->
-<section style="max-width: 900px; margin: 35px auto; padding: 28px 20px; background: linear-gradient(145deg, #fffdf7, #fff6e0); border: 2px solid #d4af37; border-radius: 16px; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.18); text-align: center; font-family: inherit;">
-  <h2 style="color: #8b0000; font-size: 22px; margin-bottom: 8px; font-weight: bold;">💍 আপোনাৰ শুভ ৰত্ন আৰু ভাগ্যশালী সংখ্যা জানক (বিনামূলীয়া)</h2>
-  <p style="color: #555; font-size: 14px; margin-bottom: 20px;">আপোনাৰ জন্ম তাৰিখটো নিৰ্বাচন কৰি আপোনাৰ অধিপতি গ্ৰহ আৰু কোনটো ৰত্ন (Gemstone) আপোনাৰ বাবে সৌভাগ্যশালী চাওক:</p>
-
-  <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
-    <input type="date" id="gem-dob" style="padding: 11px 16px; border: 1.5px solid #c99e32; border-radius: 8px; font-size: 15px; outline: none; background: #fff; color: #222;">
-    <button onclick="checkLuckyGem()" style="background: linear-gradient(135deg, #8b0000, #b30000); color: #ffd700; border: 1px solid #ffd700; padding: 11px 24px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(139, 0, 0, 0.25);">
-      🔍 মোৰ শুভ ৰত্ন চাওক
-    </button>
-  </div>
-
-  <!-- Result Box -->
-  <div id="gem-result-box" style="display: none; margin-top: 22px; padding: 20px; background: #ffffff; border: 1px solid #e6c875; border-radius: 12px; text-align: left; box-shadow: inset 0 0 10px rgba(212,175,55,0.1);">
-    <div id="gem-output" style="font-size: 15px; line-height: 1.8; color: #222;"></div>
-    
-    <div style="margin-top: 16px; padding: 14px; background: #fff3cd; border-left: 4px solid #d9534f; border-radius: 6px; font-size: 13.5px; color: #664d03; line-height: 1.6;">
-      ⚠️ <strong>জ্যোতিষীয় সতৰ্কবাণী:</strong> এইটো আপোনাৰ জন্ম তাৰিখ (মূলাংক) অনুসৰি ওলোৱা প্ৰাথমিক ৰত্নহে। কিন্তু যিকোনো ৰত্ন আঙঠিত ধাৰণ কৰাৰ আগতে আপোনাৰ <strong>লগ্ন কুণ্ডলী, ৰাশি চক্ৰ আৰু বৰ্তমান চলি থকা মহাদশা</strong> পৰীক্ষা কৰাটো অত্যন্ত জৰুৰী— নহ'লে ভুল ৰত্নই বিপৰীত ফল দিব পাৰে! 
-      <br><strong style="color: #8b0000;">👉 আপোনাৰ বাবে ১০০% উপযুক্ত শুভ ৰত্ন, গ্ৰহ দোষৰ প্ৰতিকাৰ আৰু ভৱিষ্যৎ জানিবলৈ আমাৰ সম্পূৰ্ণ জন্ম কুণ্ডলী (PDF) ডাউনলোড কৰক।</strong>
-    </div>
-  </div>
-</section>
-
-<script>
-function checkLuckyGem() {
-  const dobInput = document.getElementById("gem-dob").value;
-  if (!dobInput) { alert("অনুগ্ৰহ কৰি প্ৰথমে আপোনাৰ জন্ম তাৰিখটো নিৰ্বাচন কৰক!"); return; }
-
-  const day = new Date(dobInput).getDate();
-  let mulank = day;
-  while (mulank > 9) { mulank = Math.floor(mulank / 10) + (mulank % 10); }
-
-  const gemData = {
-    1: { planet: "সূৰ্য (Sun)", gem: "মাণিক (Ruby)", color: "সোণালী, কমলা আৰু ৰঙা", day: "দেওবাৰ", nature: "আপুনি নেতৃত্ব দিব পৰা, আত্মবিশ্বাসী আৰু স্বাধীনচেতীয়া স্বভাৱৰ ব্যক্তি।" },
-    2: { planet: "চন্দ্ৰ (Moon)", gem: "মুকুতা (Natural Pearl)", color: "বগা আৰু পাতল সেউজীয়া", day: "সোমবাৰ", nature: "আপুনি শান্তিপ্ৰিয়, আৱেগিক, কল্পনাপ্ৰৱণ আৰু কোমল অন্তৰৰ ব্যক্তি।" },
-    3: { planet: "বৃহস্পতি (Jupiter)", gem: "পোখৰাজ (Yellow Sapphire)", color: "হালধীয়া আৰু কেশৰীয়া", day: "বৃহস্পতিবাৰ", nature: "আপুনি জ্ঞানী, ধৰ্মপৰায়ণ, উচ্চাকাংক্ষী আৰু সমাজত সন্মান লাভ কৰা ব্যক্তি।" },
-    4: { planet: "ৰাহু (Rahu / Uranus)", gem: "গোমেদ (Hessonite)", color: "নীলা আৰু ছাই ৰং", day: "শনিবাৰ আৰু দেওবাৰ", nature: "আপুনি ব্যতিক্ৰমী চিন্তাধাৰাৰ, সাহসী আৰু হঠাৎ জীৱনত ডাঙৰ পৰিৱৰ্তন অনা ব্যক্তি।" },
-    5: { planet: "বুধ (Mercury)", gem: "পান্না (Emerald)", color: "সেউজীয়া আৰু বগা", day: "বুধবাৰ", nature: "আপুনি অত্যন্ত তীক্ষ্ণ বুদ্ধিৰ, ব্যৱসায়িক মনৰ আৰু যিকোনো কামত চতুৰ ব্যক্তি।" },
-    6: { planet: "শুক্ৰ (Venus)", gem: "বগা ওপাল (White Opal) বা হীৰা", color: "বগা, আকাশী নীলা আৰু গোলাপী", day: "শুক্ৰবাৰ", nature: "আপুনি আকৰ্ষণীয় ব্যক্তিত্বৰ, শিল্প-সৌন্দৰ্যপ্ৰিয় আৰু বিলাসী জীৱন ভাল পোৱা ব্যক্তি।" },
-    7: { planet: "কেতু (Ketu / Neptune)", gem: "বৈদূৰ্য মণি (Cat's Eye)", color: "পাতল হালধীয়া আৰু বগা", day: "সোমবাৰ আৰু দেওবাৰ", nature: "আপুনি গভীৰ চিন্তাবিদ, আধ্যাত্মিক আৰু গোপন ৰহস্য উদঘাটনত পাৰ্গত ব্যক্তি।" },
-    8: { planet: "শনি (Saturn)", gem: "নীলা (Blue Sapphire / Neelam) বা এমেথিষ্ট", color: "গাঢ় নীলা আৰু ক'লা", day: "শনিবাৰ", nature: "আপুনি কঠোৰ পৰিশ্ৰমী, ন্যায়প্ৰিয় আৰু ধৈৰ্যৰে জীৱনত স্থায়ী সফলতা লাভ কৰা ব্যক্তি।" },
-    9: { planet: "মঙ্গল (Mars)", gem: "ৰঙা প্ৰবাল (Red Coral / Moonga)", color: "ৰঙা আৰু গোলাপী", day: "মঙ্গলবাৰ", nature: "আপুনি অত্যন্ত সাহসী, শক্তিশালী মনোবলৰ আৰু কোনো বাধালৈ ভয় নকৰা ব্যক্তি।" }
-  };
-
-  const info = gemData[mulank];
-  const outputDiv = document.getElementById("gem-output");
-  outputDiv.innerHTML = `
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px;">
-      <div>🔢 <strong>আপোনাৰ মূলাংক:</strong> ${mulank}</div>
-      <div>🪐 <strong>অধিপতি গ্ৰহ:</strong> ${info.planet}</div>
-      <div>💎 <strong>প্ৰাথমিক শুভ ৰত্ন:</strong> <span style="color: #8b0000; font-weight: bold;">${info.gem}</span></div>
-      <div>🎨 <strong>শুভ ৰং:</strong> ${info.color}</div>
-      <div>📅 <strong>শুভ বাৰ:</strong> ${info.day}</div>
-    </div>
-    <div style="padding-top: 8px; border-top: 1px dashed #ddd;">✨ <strong>আপোনাৰ স্বভাৱ:</strong> ${info.nature}</div>
-  `;
-  document.getElementById("gem-result-box").style.display = "block";
-}
-</script>
-
-        <!-- 12 Rashi Grid -->
-        <section class="rashi-section">
-            <h2 class="section-title">🌟 আজিৰ ১২ টা ৰাশিফল</h2>
-            <div class="rashi-grid" id="rashiGridContainer"></div>
-        </section>
-        
-<div style="text-align: center; margin: 25px auto 15px auto;">
-  <a href="https://api.whatsapp.com/send?text=🔮%20*আজিৰ%20অসমীয়া%20দৈনিক%20ৰাশিফল%20আৰু%20ভাগ্য%20গণনা%20আপডেট%20হৈছে!*%20✨%0A%0Aতোমাৰ%20ৰাশিত%20আজি%20কি%20শুভ%20যোগ%20লিখা%20আছে%20বিনামূলীয়াকৈ%20চাবলৈ%20তলৰ%20লিংকত%20ক্লিক%20কৰা%20👇%0Ahttps://jyotishassam.com" 
-     target="_blank" 
-     style="display: inline-flex; align-items: center; gap: 8px; background: #128C7E; color: #ffffff; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
-    <span>📲 বন্ধু বা পৰিয়ালক আজিৰ ৰাশিফল পঠিয়াওক</span>
-  </a>
-</div>
-        <!-- Auto Daily Assamese Shubha Muhurat & Rahu Kaal Widget Start -->
-<section style="max-width: 1050px; margin: 25px auto; padding: 20px; background: linear-gradient(135deg, #1a0505, #3d0c0c); color: #fff; border: 2px solid #d4af37; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); font-family: inherit;">
-  <div style="text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 12px; margin-bottom: 16px;">
-    <span style="background: #d4af37; color: #1a0505; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; letter-spacing: 0.5px;">🕉️ দৈনিক বৈদিক সময়সূচী</span>
-    <h2 style="color: #ffd700; font-size: 20px; margin: 8px 0 4px 0; font-weight: bold;">⏳ আজিৰ শুভ মুহূৰ্ত, ৰাহুকাল আৰু যাত্ৰা বিধি</h2>
-    <div id="panchang-date-bar" style="font-size: 13.5px; color: #f5deb3;"></div>
-  </div>
-
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; text-align: left;">
-    <!-- শুভ মুহূৰ্ত -->
-    <div style="background: rgba(255, 255, 255, 0.07); padding: 14px; border-radius: 10px; border-left: 4px solid #25D366;">
-      <div style="font-size: 13px; color: #a3e6be; font-weight: bold;">✅ আজিৰ অভিজিৎ শুভ মুহূৰ্ত</div>
-      <div id="shubha-time" style="font-size: 15.5px; font-weight: bold; color: #fff; margin: 5px 0;"></div>
-      <div style="font-size: 11.5px; color: #ddd;">নতুন কাম, লেনদেন আৰু শুভ কাৰ্যৰ বাবে উত্তম সময়।</div>
-    </div>
-
-    <!-- ৰাহুকাল -->
-    <div style="background: rgba(255, 255, 255, 0.07); padding: 14px; border-radius: 10px; border-left: 4px solid #ff4d4d;">
-      <div style="font-size: 13px; color: #ffb3b3; font-weight: bold;">⛔ আজিৰ ৰাহুকাল (অশুভ সময়)</div>
-      <div id="rahu-time" style="font-size: 15.5px; font-weight: bold; color: #fff; margin: 5px 0;"></div>
-      <div style="font-size: 11.5px; color: #ddd;">এই সময়খিনিত নতুন বা মাঙ্গলিক কাৰ্য আৰম্ভ নকৰিব।</div>
-    </div>
-
-    <!-- দিকশূল আৰু যাত্ৰা বিধি -->
-    <div style="background: rgba(255, 255, 255, 0.07); padding: 14px; border-radius: 10px; border-left: 4px solid #ffd700;">
-      <div style="font-size: 13px; color: #ffe680; font-weight: bold;">🧭 আজিৰ যাত্ৰা বিধি (দিকশূল)</div>
-      <div id="disha-info" style="font-size: 14px; font-weight: bold; color: #fff; margin: 5px 0;"></div>
-      <div id="disha-remedy" style="font-size: 11.5px; color: #f5deb3;"></div>
-    </div>
-  </div>
-</section>
-
-<script>
-(function() {
-  const now = new Date();
-  const dayIndex = now.getDay(); 
-
-  const assameseDays = ["দেওবাৰ (Sunday)", "সোমবাৰ (Monday)", "মঙ্গলবাৰ (Tuesday)", "বুধবাৰ (Wednesday)", "বৃহস্পতিবাৰ (Thursday)", "শুক্ৰবাৰ (Friday)", "শনিবাৰ (Saturday)"];
-  const assameseMonths = ["জানুৱাৰী", "ফেব্ৰুৱাৰী", "মাৰ্চ", "এপ্ৰিল", "মে'", "জুন", "জুলাই", "আগষ্ট", "ছেপ্টেম্বৰ", "অক্টোবৰ", "নৱেম্বৰ", "ডিচেম্বৰ"];
-  
-  function toAssameseNum(num) {
-    const map = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
-    return String(num).replace(/[0-9]/g, m => map[m]);
-  }
-
-  const panchangData = [
-    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ", rahu: "বিয়লি ০৪:০০ বজাৰ পৰা ০৫:৩০ বজালৈ", disha: "পশ্চিম দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: જৰুৰী যাত্ৰাত পাণ বা ঘিউ খাই ওলাব।" },
-    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ", rahu: "পুৱা ০৭:০০ বজাৰ পৰা ০৮:৩০ বজালৈ", disha: "পূব দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: দাপোনত মুখ চাই বা গাখীৰ খাই ওলাব।" },
-    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ", rahu: "আবেলি ০২:৩০ বজাৰ পৰা ০৪:০০ বজালৈ", disha: "উত্তৰ দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: গুড় খাই ইষ্ট দেৱতাক স্মৰণ কৰি ওলাব।" },
-    { shubha: "পুৱা ০৭:০০ ৰ পৰা ০৯:০০ লৈ", rahu: "দুপৰীয়া ১১:৩০ বজাৰ পৰা ০১:০০ বজালৈ", disha: "উত্তৰ দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: ধনীয়া বা তিল খাই ঘৰৰ পৰা ওলাব।" },
-    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ", rahu: "দুপৰীয়া ০১:০০ বজাৰ পৰা ০২:৩০ বজালৈ", disha: "দক্ষিণ দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: দৈ বা জিৰা খাই ঘৰৰ পৰা ওলাব।" },
-    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ", rahu: "পুৱা ১০:০০ বজাৰ পৰা ১১:৩০ বজালৈ", disha: "পশ্চিম দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: দৈ বা মিঠা বস্তু খাই ঘৰৰ পৰা ওলাব।" },
-    { shubha: "দিন ১১:১৫ ৰ পৰা ১২:০৫ লৈ", rahu: "পুৱা ০৮:৩০ বজাৰ পৰা ১০:০০ বজালৈ", disha: "পূব দিশে যাত্ৰা নিষেধ", remedy: "প্ৰতিকাৰ: আদা বা মাটিমাহ স্পৰ্শ কৰি ঘৰৰ পৰা ওলাব।" }
-  ];
-
-  const todayInfo = panchangData[dayIndex];
-  const dateStr = `📅 আজি: ${toAssameseNum(now.getDate())} ${assameseMonths[now.getMonth()]}, ${toAssameseNum(now.getFullYear())} | ${assameseDays[dayIndex]}`;
-
-  document.getElementById("panchang-date-bar").innerText = dateStr;
-  document.getElementById("shubha-time").innerText = todayInfo.shubha;
-  document.getElementById("rahu-time").innerText = todayInfo.rahu;
-  document.getElementById("disha-info").innerText = todayInfo.disha;
-  document.getElementById("disha-remedy").innerText = todayInfo.remedy;
-})();
-</script>
-
-<p style="text-align: center; color: #475569; font-size: 15px; max-width: 700px; margin: 10px auto 30px auto; line-height: 1.6;">
-    জীৱনৰ গুৰুত্বপূৰ্ণ সিদ্ধান্তবোৰ কেতিয়াও কেৱল অনুমানৰ ওপৰত নিৰ্ভৰ কৰি ল'ব নালাগে। কেৰিয়াৰ, বিবাহ, বা আৰ্থিক সমস্যাৰ নিখুঁত আৰু ব্যক্তিগত সমাধানৰ বাবে আমাৰ প্ৰিমিয়াম সেৱাসমূহ গ্ৰহণ কৰক।
-</p>
-        
-<!-- Premium Services Section -->
-<section class="section" id="premium-services">
-    <h2 class="section-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
-    <p class="section-subtitle">প্ৰথমে আপোনাৰ বিনামূলীয়া নমুনা (Free Preview) চাওক আৰু তাৰ পিছতহে ৰিপোৰ্ট আনলক কৰক</p>
-    <div class="services-grid">
-        
-        <div class="service-card">
-            <div class="service-icon">📅</div>
-            <h3>মাহেকীয়া ৰাশিফল</h3>
-            <p>অহা ৩০ দিনৰ বাবে আপোনাৰ স্বাস্থ্য, অৰ্থ, আৰু কৰ্মৰ বিস্তাৰিত জ্যোতিষীয় ভৱিষ্যদ্বাণী।</p>
-            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="openOrderModal('Monthly Horoscope', 19)">প্ৰথমে বিনামূলীয়া নমুনা চাওক</button>
-        </div>
-
-        <div class="service-card">
-            <div class="service-icon">📜</div>
-            <h3>বাৰ্ষিক ৰাশিফল</h3>
-            <p>সম্পূৰ্ণ এবছৰৰ বাবে আপোনাৰ জীৱনৰ গুৰুত্বপূৰ্ণ পৰিৱৰ্তন আৰু সাৱধানতাৰ নিৰ্দেশনা।</p>
-            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="openOrderModal('Yearly Horoscope', 49)">প্ৰথমে বিনামূলীয়া নমুনা চাওক</button>
-        </div>
-
-        <div class="service-card" style="border-color: #10B981;">
-            <div class="service-icon">💬</div>
-            <h3 style="color: #047857;">আচাৰ্যৰ সৈতে পোনপটীয়া কথা</h3>
-            <p>আপোনাৰ মনৰ যিকোনো প্ৰশ্ন পোনপটীয়াকৈ আচাৰ্যক সুধিবলৈ লাইভ ব্যক্তিগত চেট কৰক।</p>
-            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="window.toggleJaChat()">লাইভ চেট আৰম্ভ কৰক</button>
-        </div>
-
-        <div class="service-card" style="border-color: #ec4899;">
-            <div class="service-icon">❤</div>
-            <h3 style="color: #be185d;">প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
-            <p>প্ৰেম কেতিয়া হ'ব, সংগীৰ বৃত্তি, স্বভাৱ আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
-            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="openOrderModal('Love & Relationship Reading', 99)">প্ৰথমে বিনামূলীয়া নমুনা চাওক</button>
-        </div>
-        
-        <div class="service-card">
-            <div class="service-icon">💼</div>
-            <h3>কেৰিয়াৰ আৰু ব্যৱসায়</h3>
-            <p>চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
-            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="openOrderModal('Career & Business Forecast', 199)">প্ৰথমে বিনামূলীয়া নমুনা চাওক</button>
-        </div>
-        
-        <div class="service-card" style="border-color: #fbbf24; background: #fffbeb;">
-            <div class="service-icon">🔮</div>
-            <h3>সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
-            <p>নৱগ্ৰহৰ অৱস্থান, লগ্ন আৰু বিংশোত্তৰী মহা দশাৰ বিস্তৃত বৈদিক বিশ্লেষণ।</p>
-            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="openOrderModal('Complete Birth Chart', 299)">প্ৰথমে বিনামূলীয়া নমুনা চাওক</button>
-        </div>
-    </div>
-</section>
-        
-        <div class="secure-banner">
-            <h4>🔒 ১০০% সুৰক্ষিত আৰু নিৰাপদ পেমেন্ট গেটৱে</h4>
-            <p>আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।</p>
-        </div>
-    </div>
-<!-- Reviews Section -->
-        <section class="section" id="reviews">
-            <h2 class="section-title">গ্ৰাহকৰ মতামত (Customer Reviews)</h2>
-            <p class="section-subtitle">আমাৰ সেৱা গ্ৰহণ কৰা গ্ৰাহকসকলৰ অনুভৱ</p>
-            
-            <div class="review-container" style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
-                
-                <div id="reviewsList" style="margin-bottom: 20px; max-height: 500px; overflow-y: auto;">
-                    <p style="text-align: center; color: #64748b;">মতামত লোড হৈ আছে...</p>
-                </div>
-                
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <button id="viewMoreBtn" onclick="loadMoreReviews()" class="service-btn" style="display: none; width: auto; padding: 8px 20px; font-size: 14px; background: #475569; margin: 0 auto; box-shadow: none;">আৰু মতামত চাওক (View More) ⬇</button>
-                </div>
-
-                <div id="reviewFormContainer" style="padding-top: 20px; border-top: 1px dashed #e2e8f0;">
-                    <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px;">আপোনাৰ মতামত দিয়ক</h3>
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                        <input type="text" id="reviewerName" class="form-control" placeholder="আপোনাৰ নাম" required style="flex: 1;">
-                        <select id="reviewRating" class="form-control" required style="flex: 1;">
-                            <option value="5">⭐⭐⭐⭐⭐ (অতিকৈ ভাল)</option>
-                            <option value="4">⭐⭐⭐⭐ (ভাল)</option>
-                            <option value="3">⭐⭐⭐ (ঠিকে আছে)</option>
-                            <option value="2">⭐⭐ (বেয়া)</option>
-                            <option value="1">⭐ (অতিকৈ বেয়া)</option>
-                        </select>
-                    </div>
-                    <textarea id="reviewComment" class="form-control" rows="3" placeholder="আপোনাৰ অনুভৱ লিখক..." style="margin-bottom: 15px;" required></textarea>
-                    <button onclick="submitReview()" class="service-btn" style="width: auto; padding: 10px 25px;">মতামত পঠিয়াওক</button>
-                </div>
-            </div>
-        </section>
-<!-- Google 1st Rank SEO Booster & Clean FAQ Section Start -->
-<section style="max-width: 1100px; margin: 40px auto 20px auto; padding: 25px; background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 14px; font-family: inherit;">
-  <h2 style="font-size: 20px; color: #8b0000; margin-bottom: 18px; text-align: center; font-weight: bold;">✨ সঘনাই সোধা প্ৰশ্নসমূহ (FAQ)</h2>
-  
-  <div style="font-size: 14px; line-height: 1.8; color: #333;">
-    <p style="margin-bottom: 14px;"><strong>১. আজিৰ অসমীয়া দৈনিক ৰাশিফল কেনেকৈ চাব পাৰি?</strong><br>
-    উত্তৰ: <strong>জ্যোতিষ অসম (Jyotish Assam)</strong> প'ৰ্টেলত প্ৰতিদিনে ৰাতি ১২ বজাত বৈদিক গণনা অনুসৰি মেষৰ পৰা মীন ৰাশিলৈকে ১২টা ৰাশিৰ আজিৰ দৈনিক ৰাশিফল স্বয়ংক্ৰিয়ভাৱে আপডেট হয়। আপুনি বিনামূলীয়াকৈ নিজৰ ৰাশি আৰু নক্ষত্ৰৰ ফলাফল ইয়াত চাব পাৰে।</p>
-
-    <p style="margin-bottom: 14px;"><strong>২. অসমীয়া ভাষাত জন্ম কুণ্ডলী বা সোঁৱৰণী (PDF) কেনেকৈ ডাউনলোড কৰিব?</strong><br>
-    উত্তৰ: আমাৰ ৱেবছাইটত আপোনাৰ নাম, জন্ম তাৰিখ, জন্ম সময় আৰু জন্ম স্থান দি নিমিষতে ১০০% নিখুঁত বৈদিক জন্ম কুণ্ডলী বা সোঁৱৰণী পি.ডি.এফ. (Assamese Kundali PDF) ডাউনলোড কৰিব পাৰিব। ইয়াত লগ্ন চক্ৰ, ৰাশি চক্ৰ, বিংশোত্তৰী মহাদশা, মাঙ্গলিক দোষ, কেৰিয়াৰ, বিবাহ আৰু শুভ ৰত্নৰ সম্পূৰ্ণ বিৱৰণ পাব।</p>
-
-    <p style="margin-bottom: 5px;"><strong>৩. বিবাহ মিলন বা যুটীয়া ৰাশিফল কিয় চাব লাগে?</strong><br>
-    উত্তৰ: সুখী দাম্পত্য জীৱন আৰু প্ৰেমৰ সম্পৰ্কৰ বাবে ল'ৰা-ছোৱালীৰ ৰাশি মিলন, অষ্টকূট ৩৬ গুণ মিলন আৰু নাড়ী দোষ বা মাঙ্গলিক দোষ পৰীক্ষা কৰাটো অত্যন্ত জৰুৰী। ইয়াত আপুনি বিনামূলীয়া যুটীয়া ৰাশিফল আৰু প্ৰিমিয়াম কুণ্ডলী মিলন ৰিপোৰ্ট লাভ কৰিব।</p>
-  </div>
-</section>
-
-<!-- Google FAQ Schema Markup -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [{
-    "@type": "Question",
-    "name": "আজিৰ অসমীয়া দৈনিক ৰাশিফল (Ajir Assamese Rashifal Today) ক'ত চাব পাৰি?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Jyotish Assam (jyotishassam.com) ৱেবছাইটত প্ৰতিদিনে বিনামূলীয়াকৈ অসমীয়া দৈনিক ৰাশিফল (Axomiya Rashifal), যুটীয়া ৰাশিফল আৰু নক্ষত্ৰ গণনা চাব পাৰি।"
-    }
-  }, {
-    "@type": "Question",
-    "name": "অনলাইনত অসমীয়া জন্ম কুণ্ডলী বা সোঁৱৰণী (Assamese Kundali PDF / Suworoni) কেনেকৈ বনাব পাৰি?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Jyotish Assam প'ৰ্টেলত আপোনাৰ জন্ম তাৰিখ, সময় আৰু স্থান দি লগে লগে সম্পূৰ্ণ বৈদিক অসমীয়া জন্ম কুণ্ডলী বা সোঁৱৰণী পি.ডি.এফ. (PDF) ডাউনলোড কৰিব পাৰি।"
-    }
-  }]
-}
-</script>
-
-    <!-- AdSense Friendly Footer -->
-    <footer style="background: var(--dark-bg); color: white; text-align: center; padding: 40px 20px; font-size: 14px;">
-        <div class="footer-links" style="margin-bottom: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-            <a href="about.html" style="color: #cbd5e1; text-decoration: none; transition: 0.3s;">আমাৰ বিষয়ে (About Us)</a>
-            <a href="contact.html" style="color: #cbd5e1; text-decoration: none; transition: 0.3s;">যোগাযোগ (Contact)</a>
-            <a href="privacy-policy.html" style="color: #cbd5e1; text-decoration: none; transition: 0.3s;">গোপনীয়তা নীতি (Privacy Policy)</a>
-            <a href="terms.html" style="color: #cbd5e1; text-decoration: none; transition: 0.3s;">চৰ্তাৱলী (Terms & Conditions)</a>
-            <a href="disclaimer.html" style="color: #cbd5e1; text-decoration: none; transition: 0.3s;">অস্বীকাৰকৰণ (Disclaimer)</a>
-            <a href="refund.html" style="color: #cbd5e1; text-decoration: none; transition: 0.3s;">ধন ঘূৰাই দিয়াৰ নীতি (Refund & Cancellation Policy)</a>
-        </div>
-        <p style="color: #94a3b8;">সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম</p>
-    </footer>
-
-    <!-- 🎧 NEW CUSTOMER SUPPORT CHATBOT (Left Side) -->
-    <div id="support-chat-launcher" onclick="toggleSupportChat()">
-        🎧 সহায় (Support)
-    </div>
-
-    <div id="support-chat-window">
-        <div class="sup-chat-header">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:20px;">🎧</span>
                 <div>
-                    <div style="font-weight:700; font-size:14px;">গ্ৰাহক সাহায্য (Support)</div>
-                    <div style="font-size:10.5px; color:#a7f3d0;">● 24/7 Automated System</div>
+                    <h1 class="font-extrabold text-lg text-slate-900 leading-none">অসম এক্সাম হাব</h1>
+                    <span class="text-[11px] text-blue-600 font-semibold">Assamese Mock-Test Portal</span>
                 </div>
-            </div>
-            <button type="button" class="sup-close-btn" onclick="toggleSupportChat()">✖</button>
+            </a>
+            <nav class="hidden md:flex space-x-6 text-sm font-semibold text-slate-600">
+                <a href="#daily-test" class="hover:text-blue-600 transition">ডেইলী টেষ্ট</a>
+                <a href="#mock-packs" class="hover:text-blue-600 transition">মক টেষ্ট পেক</a>
+                <a href="#ebooks" class="hover:text-blue-600 transition">ই-বুক ষ্ট’ৰ</a>
+                <a href="#question-bank" class="hover:text-blue-600 transition">প্রশ্নবেংক</a>
+                <a href="#leaderboard" class="hover:text-blue-600 transition">লিডাৰব’ৰ্ড</a>
+            </nav>
+            <button onclick="startDemoTest()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-bold px-4 py-2.5 rounded-xl shadow-sm transition whitespace-nowrap">
+                <i class="fa-solid fa-bolt mr-1"></i> ফ্ৰী টেষ্ট দিয়ক
+            </button>
         </div>
-        <div id="sup-chat-messages"></div>
-        <div class="sup-input-bar">
-            <input type="text" id="sup-user-input" placeholder="ইয়াত লিখক..." onkeypress="if(event.key==='Enter') handleSupportSend()">
-            <button type="button" onclick="handleSupportSend()">➤</button>
-        </div>
-    </div>
+    </header>
 
-    <!-- 💬 ACHARYA CHAT WINDOW -->
-    <div id="ja-chat-window">
-        <div class="ja-chat-header">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <img src="icon.png" onerror="this.src='https://jyotishassam.com/icon.png'" style="width:34px; height:34px; border-radius:50%; border:1.5px solid #ffd700; background:#fff;">
+    <!-- ================= 2. HERO SECTION ================= -->
+    <section class="gradient-hero text-white pt-12 pb-20 px-4">
+        <div class="max-w-5xl mx-auto text-center">
+            <span class="inline-block bg-blue-500/30 border border-blue-400/40 text-amber-300 text-xs font-bold px-4 py-1.5 rounded-full mb-4">
+                🎯 ADRE 3.0 • Assam Police • APSC • Assam TET • HSLC / HS
+            </span>
+            <h2 class="text-2xl md:text-4xl font-extrabold mb-4 leading-snug">
+                প্ৰতিদিনে ১০ মিনিট অসমীয়াত অনুশীলন কৰক আৰু নিজৰ চৰকাৰী চাকৰিৰ প্ৰস্তুতি জোখক!
+            </h2>
+            <p class="text-blue-100 text-sm md:text-base max-w-2xl mx-auto mb-8">
+                প্ৰতিদিনে পুৱা স্বয়ংক্ৰিয়ভাৱে আপডেট হোৱা অসমীয়া মক টেষ্ট, নিজৰ দুৰ্বল বিষয় চিনাক্তকৰণ (Weak-Topic Detection), প্রশ্নবেংক আৰু নিৰ্বাচিত পিডিএফ ই-বুক।
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="startDemoTest()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl shadow-lg flex items-center transition text-sm">
+                    <i class="fa-solid fa-circle-play mr-2 text-base"></i> আজিৰ নতুন MCQ টেষ্ট দিয়ক
+                </button>
+                <a href="#mock-packs" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold px-6 py-3.5 rounded-xl transition text-sm">
+                    সকলো মক পেকেজ চাওক
+                </a>
+            </div>
+
+            <!-- Live Auto Stats -->
+            <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto mt-10 pt-6 border-t border-white/15 text-center">
                 <div>
-                    <div style="font-weight:700; font-size:14px; color:#ffd700;">আচাৰ্য জ্যোতিষ অসম</div>
-                    <div id="ja-status-text" style="font-size:10.5px; color:#86efac;">● Online (১০০% ব্যক্তিগত)</div>
+                    <p id="stat-total-q" class="text-lg md:text-2xl font-extrabold text-amber-300">35+ টা MCQ</p>
+                    <p class="text-[11px] text-blue-200">মুঠ লাইভ প্রশ্নবেংক</p>
+                </div>
+                <div>
+                    <p id="stat-last-updated" class="text-base md:text-xl font-extrabold text-green-300">আজি আপডেটেড</p>
+                    <p class="text-[11px] text-blue-200">অট’মেটিক ডেইলী আপডেট</p>
+                </div>
+                <div>
+                    <p class="text-lg md:text-2xl font-extrabold text-amber-300">₹৪৯ ৰ পৰা</p>
+                    <p class="text-[11px] text-blue-200">মক পেক আৰু ই-বুক</p>
                 </div>
             </div>
-            <div style="display:flex; align-items:center; gap:5px;">
-                <span id="ja-timer" class="ja-timer-badge">⏳ 05:00</span>
-                <button type="button" class="ja-hdr-btn" onclick="window.downloadJaChatHistory()" title="চেট ডাউনলোড কৰক">📥</button>
-                <button type="button" class="ja-hdr-btn" onclick="window.resetJaChat()" title="নতুন চেট আৰম্ভ কৰক">🔄</button>
-                <button type="button" id="ja-max-btn" class="ja-hdr-btn" onclick="window.toggleMaximizeJaChat()" title="ডাঙৰ বা সৰু কৰক">⛶</button>
-                <button type="button" class="ja-hdr-btn" onclick="window.toggleJaChat()" title="বন্ধ কৰক">✖</button>
-            </div>
         </div>
+    </section>
 
-        <div id="ja-chat-messages"></div>
-        <div id="ja-typing" class="ja-typing-bar">✍️ আচাৰ্যই আপোনাৰ কুণ্ডলীখন চাই লিখি আছে...</div>
-
-        <div class="ja-input-bar">
-            <input type="text" id="ja-user-input" placeholder="ইয়াত মেছেজ লিখক..." onkeypress="if(event.key==='Enter') window.handleJaSend()">
-            <button type="button" onclick="window.handleJaSend()">➤</button>
-        </div>
-    </div>
-
-    <!-- Rashi Detail Modal -->
-    <div class="modal" id="rashiModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="document.getElementById('rashiModal').classList.remove('active')">&times;</span>
-            <h2 id="modalRashiTitle" style="color: var(--primary-color); margin-bottom: 10px;">ৰাশিফল</h2>
-            <div id="modalRashiBody" style="font-size: 15px; color: #334155; line-height: 1.7;"></div>
-        </div>
-    </div>
-
-    <!-- Order Form Modal (Starts with Teaser 30%) -->
-    <div class="modal" id="orderModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeOrderModal()">&times;</span>
-            <h2 id="orderTitle" style="color: #047857; margin-bottom: 5px; text-align: center; font-size: 22px; font-weight: bold;">সেৱা বুকিং ফৰ্ম</h2>
-            <p id="orderSubtitle" style="text-align: center; color: #64748b; font-size: 14px; margin-bottom: 20px;">অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক</p>
+    <!-- ================= 3. SERVICE 1: AUTO DAILY MOCK TEST ================= -->
+    <section id="daily-test" class="max-w-5xl mx-auto px-4 -mt-10 relative z-10">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 md:p-8">
             
-            <form id="orderForm" onsubmit="generateTeaser(event)">
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
-                    <input type="text" id="custName" class="form-control" required>
-                </div>
-               <div style="margin-bottom: 15px;">
-    <label style="font-size: 14px; font-weight: 600;">ইমেইল (Email):</label>
-    <input type="email" id="custEmail" class="form-control" placeholder="example@gmail.com" required>
-</div>
-                <div style="margin-bottom: 15px; display: flex; gap: 15px;">
-                    <div style="flex: 1;">
-                        <label style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
-                        <input type="date" id="custDate" class="form-control" required>
+            <!-- Test Intro Banner -->
+            <div id="test-intro-view" class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                        <span class="bg-green-100 text-green-700 text-xs font-extrabold px-2.5 py-1 rounded-md flex items-center">
+                            <span class="w-2 h-2 bg-green-600 rounded-full animate-ping mr-1.5"></span> LIVE DAILY TEST • FREE
+                        </span>
+                        <span id="daily-test-meta" class="text-xs text-slate-500 font-semibold">সময়: ৫ মিনিট | মুঠ প্রশ্ন: ১০ টা</span>
                     </div>
-                    <div style="flex: 2;">
-                        <label style="font-size: 14px; font-weight: 600;">জন্মৰ সময়:</label>
-                        <div style="display: flex; gap: 5px;">
-                            <input type="number" id="custHour" class="form-control" placeholder="HR" min="1" max="12" required>
-                            <span style="font-size: 20px; font-weight: bold; margin-top: 5px;">:</span>
-                            <input type="number" id="custMin" class="form-control" placeholder="MIN" min="0" max="59" required>
-                            <select id="custAmPm" class="form-control">
-                                <option value="AM">AM</option><option value="PM">PM</option>
-                            </select>
-                        </div>
-                    </div>
+                    <h3 class="text-xl font-extrabold text-slate-900">আজিৰ দৈনিক অসমীয়া মক টেষ্ট (Latest Questions)</h3>
+                    <p class="text-xs md:text-sm text-slate-600 mt-1">
+                        প্রশ্নবেংকত শেহতীয়াকৈ যোগ হোৱা নতুন প্রশ্নসমূহৰ তাৎক্ষণিক মক টেষ্ট। শেষত আপোনাৰ Weak-Topic আৰু ব্যাখ্যা দেখুৱাই দিয়া হ'ব।
+                    </p>
                 </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 14px; font-weight: 600;">জন্মৰ স্থান:</label>
-                    <input type="text" id="custPlace" class="form-control" required>
-                </div>
-                <button type="submit" id="payBtn" class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857);">প্ৰাথমিক ৰিপোৰ্ট (30% Free) চাওক</button>
-            </form>
-        </div>
-    </div>
-
-   <!-- Teaser (30% Free) Modal - API Version with Scroll & Close Button -->
-<div class="modal" id="teaserModal">
-    <div class="modal-content" style="max-width: 650px; padding: 0; overflow-y: auto; max-height: 90vh; border: none; background: #e8dcc4; position: relative;">
-        
-        <!-- Close (X) Button -->
-        <span style="position: absolute; right: 15px; top: 15px; font-size: 26px; cursor: pointer; color: #8b0000; z-index: 10; font-weight: bold; background: rgba(255,255,255,0.8); width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="document.getElementById('teaserModal').classList.remove('active')">&times;</span>
-        
-        <!-- Real Report Header -->
-        <div style="background: #fdf5e6; border-bottom: 2px solid #8b0000; padding: 25px 20px; text-align: center;">
-            <div style="font-size:35px; color:#8b0000; line-height: 1;">ॐ</div>
-            <h2 style="margin: 10px 0 0; font-size: 24px; font-weight: bold; color: #5c3a21;">প্ৰাথমিক জ্যোতিষিক গণনা</h2>
-            <p style="margin: 5px 0 0; font-size: 14px; color: #8b0000; font-weight: bold;">(FREE PREVIEW 30%)</p>
-        </div>
-        
-        <div style="padding: 25px;">
-            <!-- 1. Real Astrology Data -->
-            <div style="background: rgba(219, 190, 146, 0.2); border: 1px solid #c9a961; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>👤 গ্ৰাহকৰ নাম:</strong> <span id="tsrName"></span></p>
-                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🌟 জন্ম ৰাশি (চন্দ্ৰ ৰাশি):</strong> <span id="tsrRashi" style="color: #8b0000; font-weight: bold;">গণনা চলি আছে...</span></p>
-                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🎯 জন্ম লগ্ন:</strong> <span id="tsrLagna" style="color: #8b0000; font-weight: bold;">অপেক্ষা কৰক...</span></p>
-            </div>
-
-            <!-- 2. Actual Kundali SVG Container -->
-            <div id="tsrKundali" style="text-align: center; margin-bottom: 20px;">
-                <p style="color: #8b0000; font-size: 15px; font-weight: bold;">আপোনাৰ কুণ্ডলী প্ৰস্তুত কৰা হৈ আছে... ⏳</p>
-            </div>
-            
-            <!-- 3. Real Unblurred Prediction Text (Persuasive Hook) -->
-            <div style="background: rgba(219, 190, 146, 0.3); border-left: 5px solid #8b0000; padding: 18px; margin-bottom: 20px; border-radius: 4px;">
-                <p style="margin:0; font-size: 15.5px; color: #3e2723; line-height: 1.7;"><strong>প্ৰাথমিক বিশ্লেষণ:</strong> বৈদিক গণনা অনুসৰি আপোনাৰ কুণ্ডলীত <strong>ৰাজযোগ আৰু বিশেষ ধনযোগৰ</strong> প্ৰবল সম্ভাৱনা দেখা গৈছে! অহা কেইটামান মাহ আপোনাৰ কৰ্মজীৱন আৰু প্ৰেম/বিবাহৰ ক্ষেত্ৰত এক অতি গুৰুত্বপূৰ্ণ পৰিৱৰ্তনৰ সময়। কিন্তু আপোনাৰ কুণ্ডলীত এটা বিশেষ গ্ৰহৰ অৱস্থানে এটা ডাঙৰ বাধাৰো সৃষ্টি কৰিছে যিটোৰ প্ৰতিকাৰ কৰাটো জৰুৰী...</p>
-            </div>
-
-            <!-- 4. Blurred Premium Content -->
-            <div style="position: relative; margin-bottom: 20px;">
-                <div class="blur-section" style="background:#fff; color: #475569; font-size: 14.5px; line-height: 1.7; filter: blur(6px); opacity: 0.6; user-select: none; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    <p><strong>১. কৰ্ম আৰু অৰ্থ:</strong> আপোনাৰ জীৱনত অহা ২ বছৰত আৰ্থিক দিশত এক ডাঙৰ পৰিৱৰ্তন আহিব...</p>
-                    <p><strong>২. প্ৰেম আৰু বিবাহ:</strong> আপোনাৰ ভৱিষ্যত জীৱন সংগীৰ বৃত্তি আৰু স্বভাৱ হ'ব...</p>
-                    <p><strong>৩. ভাগ্যৱান ৰত্ন:</strong> আপোনাৰ সফলতাৰ বাবে কোনটো ৰত্ন আটাইতকৈ উপযুক্ত...</p>
-                    <p><strong>৪. ভৱিষ্যৎ বাণী:</strong> ২০২৬ ৰ পৰা ২০৩১ লৈকে আপোনাৰ বাৰ্ষিক গতিধাৰা...</p>
-                </div>
-            </div>
-
-            <!-- Yellow Locked Box -->
-            <div style="background: #fffbeb; border: 1px solid #fde047; border-radius: 12px; padding: 25px 20px; text-align: center; box-shadow: 0 4px 15px rgba(253, 224, 71, 0.2);">
-                <div style="font-size: 28px; margin-bottom: 10px; color: #000;">🔒</div>
-                <h3 style="color: #000; font-size: 18px; margin-bottom: 8px; font-weight: 700;">সম্পূৰ্ণ ৰিপোৰ্ট আনলক কৰি PDF ডাউনলোড কৰক!</h3>
-                <p style="color: #475569; font-size: 13px; margin-bottom: 15px; line-height: 1.5;">তলৰ বুটামত ক্লিক কৰি Razorpay যোগে মাত্ৰ <strong>₹<span id="tsrPriceText"></span></strong> পেমেন্ট কৰাৰ লগে লগে সম্পূৰ্ণ ৰিপোৰ্ট স্বয়ংক্ৰিয়ভাৱে আনলক হৈ যাব।</p>
-                
-                <button onclick="initiatePayment()" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 15px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: 0.3s;">
-                    🛡️ Pay ₹<span id="tsrPriceBtn"></span> with Razorpay
+                <button onclick="startDemoTest()" class="w-full md:w-auto shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-extrabold px-6 py-3.5 rounded-xl shadow-md transition whitespace-nowrap">
+                    এতিয়াই টেষ্ট দিয়ক <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </div>
+
+            <!-- Active Quiz Screen -->
+            <div id="quiz-active-view" class="hidden">
+                <div class="flex justify-between items-center pb-4 mb-4 border-b border-slate-200">
+                    <div>
+                        <span id="q-category-badge" class="text-xs bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded">Subject</span>
+                        <p class="text-xs text-slate-500 mt-1">প্রশ্ন <span id="q-current-num" class="font-bold text-slate-800">1</span> / <span id="q-total-num">10</span></p>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center">
+                        <i class="fa-regular fa-clock mr-1.5"></i> <span id="quiz-timer">05:00</span>
+                    </div>
+                </div>
+
+                <h4 id="q-text" class="text-base md:text-lg font-bold text-slate-900 mb-5 leading-relaxed">প্রশ্ন লোড হৈ আছে...</h4>
+                <div id="q-options" class="space-y-3 mb-6"></div>
+
+                <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                    <button id="prev-btn" onclick="prevQuestion()" class="px-4 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">
+                        পূর্ববৰ্তী
+                    </button>
+                    <button id="next-btn" onclick="nextQuestion()" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow">
+                        পৰৱৰ্তী প্রশ্ন
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result View -->
+            <div id="quiz-result-view" class="hidden">
+                <div class="text-center pb-6 border-b border-slate-200">
+                    <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 text-green-600 text-2xl mb-2">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-slate-900">আপোনাৰ ফলাফল সাজু!</h3>
+                    <div class="grid grid-cols-3 gap-3 max-w-md mx-auto mt-4">
+                        <div class="bg-slate-50 p-3 rounded-xl border">
+                            <p class="text-[11px] text-slate-500">মুঠ স্ক’ৰ</p>
+                            <p id="res-score" class="text-lg font-extrabold text-blue-600">0 / 0</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border">
+                            <p class="text-[11px] text-slate-500">শুদ্ধতা</p>
+                            <p id="res-accuracy" class="text-lg font-extrabold text-green-600">0%</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border">
+                            <p class="text-[11px] text-slate-500">জিলা ৰেংক</p>
+                            <p id="res-rank" class="text-lg font-extrabold text-amber-600">#12</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-5 bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h4 class="text-xs font-bold text-amber-900 flex items-center">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-2"></i>
+                            Weak-Topic চিনাক্তকৰণ (অধিক অনুশীলনৰ প্ৰয়োজন):
+                        </h4>
+                        <p id="weak-topic-list" class="text-xs text-amber-800 mt-1 font-medium"></p>
+                    </div>
+                    <a href="ebook_gk.html" class="shrink-0 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-sm whitespace-nowrap">
+                        ₹49-ৰ সমাধান ই-বুক লওক
+                    </a>
+                </div>
+
+                <h4 class="font-bold text-sm text-slate-800 mb-3">উত্তৰ আৰু বিতং অসমীয়া ব্যাখ্যা:</h4>
+                <div id="res-explanations" class="space-y-3 mb-6 max-h-72 overflow-y-auto pr-1"></div>
+
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="shareOnWhatsApp()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl flex items-center shadow">
+                        <i class="fa-brands fa-whatsapp mr-2 text-base"></i> হোৱাটছএপত স্ক’ৰ শ্বেয়াৰ কৰক
+                    </button>
+                    <button onclick="resetDemoTest()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-5 py-2.5 rounded-xl">
+                        পুনৰ চেষ্টা কৰক
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= 4. SERVICE 2: EXAM-WISE MOCK TEST PACKS (PERFECT 6-CARD GRID) ================= -->
+    <section id="mock-packs" class="max-w-6xl mx-auto px-4 py-16">
+        <div class="text-center mb-8">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">PREMIUM PREPARATION</span>
+            <h3 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-2">পৰীক্ষা অনুসৰি সম্পূৰ্ণ মক টেষ্ট পেকসমূহ</h3>
+            <p class="text-sm text-slate-600 mt-1">আপোনাৰ লক্ষ্য পৰীক্ষাটো বাছি লওক — প্ৰতিটো পেকেজৰ ১ নং মক টেষ্টটো সম্পূৰ্ণ ফ্ৰী!</p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap justify-center gap-2 mb-10" id="pack-filter-tabs">
+            <button onclick="filterPacks('all', this)" class="pack-tab bg-blue-600 text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-sm transition">সকলো পৰীক্ষা</button>
+            <button onclick="filterPacks('adre', this)" class="pack-tab bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-100 transition">ADRE 3.0</button>
+            <button onclick="filterPacks('police', this)" class="pack-tab bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-100 transition">Assam Police</button>
+            <button onclick="filterPacks('apsc', this)" class="pack-tab bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-100 transition">APSC Prelims</button>
+            <button onclick="filterPacks('tet', this)" class="pack-tab bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-100 transition">Assam TET</button>
+            <button onclick="filterPacks('school', this)" class="pack-tab bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-100 transition">HSLC & HS</button>
+        </div>
+
+        <!-- Symmetrical 3x2 Grid (6 Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            <div style="text-align: center; margin-top: 20px;">
-                <button onclick="document.getElementById('teaserModal').classList.remove('active')" style="background: #475569; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer;">বন্ধ কৰক (Close)</button>
+            <!-- Card 1: ADRE -->
+            <div data-cat="adre" class="pack-card bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-md">ADRE Grade III & IV</span>
+                        <span class="bg-amber-100 text-amber-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded">Bestseller</span>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900">ADRE সম্পূৰ্ণ মক টেষ্ট বাণ্ডিল</h4>
+                    <ul class="text-xs text-slate-600 space-y-2.5 my-4">
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>২০ টা Full-Length মক টেষ্ট (OMR)</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>অসম জি.কে., গণিত, ৰিজনিং আৰু ইংৰাজী</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>Weak-Topic ৰিপ'ৰ্ট + ফ্ৰী ই-বুক</span></li>
+                    </ul>
+                </div>
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center gap-2">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-2xl font-extrabold text-slate-900">₹99</span>
+                        <span class="text-xs text-slate-400 line-through">₹299</span>
+                    </div>
+                    <a href="adre.html" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-sm transition whitespace-nowrap">
+                        টেষ্টসমূহ চাওক <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 2: Assam Police -->
+            <div data-cat="police" class="pack-card bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">Assam Police AB/UB & SI</span>
+                        <span class="bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2 py-0.5 rounded">SLPRB</span>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900">অসম পুলিচ টাৰ্গেট পেকেজ</h4>
+                    <ul class="text-xs text-slate-600 space-y-2.5 my-4">
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>১৫ টা সম্পূৰ্ণ মক টেষ্ট</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>অসম বুৰঞ্জী আৰু ভাৰতীয় সংবিধান স্পেচিয়েল</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>সহজ গণিত আৰু ৰিজনিং চৰ্টকাট শ্বীট</span></li>
+                    </ul>
+                </div>
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center gap-2">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-2xl font-extrabold text-slate-900">₹79</span>
+                        <span class="text-xs text-slate-400 line-through">₹249</span>
+                    </div>
+                    <a href="police.html" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-sm transition whitespace-nowrap">
+                        টেষ্টসমূহ চাওক <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 3: APSC Prelims -->
+            <div data-cat="apsc" class="pack-card bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-1 rounded-md">APSC CCE Prelims</span>
+                        <span class="bg-purple-50 text-purple-700 text-[11px] font-bold px-2 py-0.5 rounded">Officer Pack</span>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900">APSC প্ৰিলিম্ছ ফাউণ্ডেশ্যন ছিৰিজ</h4>
+                    <ul class="text-xs text-slate-600 space-y-2.5 my-4">
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>১২ টা Statement-Based GS মক টেষ্ট</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>অসম অধ্যয়ন, ভাৰতীয় ৰাজনীতি আৰু অৰ্থনীতি</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>অসম কাৰেণ্ট এফেয়াৰ্ছ আৰু বাজেট নোটছ</span></li>
+                    </ul>
+                </div>
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center gap-2">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-2xl font-extrabold text-slate-900">₹199</span>
+                        <span class="text-xs text-slate-400 line-through">₹499</span>
+                    </div>
+                    <a href="apsc.html" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-sm transition whitespace-nowrap">
+                        টেষ্টসমূহ চাওক <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 4: Assam TET -->
+            <div data-cat="tet" class="pack-card bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-1 rounded-md">Assam TET & GT/PGT</span>
+                        <span class="bg-rose-50 text-rose-700 text-[11px] font-bold px-2 py-0.5 rounded">Teaching</span>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900">অসম TET আৰু পেডাগ’জি পেক</h4>
+                    <ul class="text-xs text-slate-600 space-y-2.5 my-4">
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>১৫ টা সম্পূৰ্ণ মক টেষ্ট (LP, UP & Secondary)</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>শিশু বিকাশ আৰু শিক্ষণ শৈলী (CDP) স্পেচিয়েল</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>অসমীয়া ব্যাকৰণ, ইংৰাজী আৰু পৰিৱেশ বিজ্ঞান</span></li>
+                    </ul>
+                </div>
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center gap-2">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-2xl font-extrabold text-slate-900">₹129</span>
+                        <span class="text-xs text-slate-400 line-through">₹299</span>
+                    </div>
+                    <a href="tet.html" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-sm transition whitespace-nowrap">
+                        টেষ্টসমূহ চাওক <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 5: HSLC & HS -->
+            <div data-cat="school" class="pack-card bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-2.5 py-1 rounded-md">SEBA HSLC & AHSEC HS</span>
+                        <span class="bg-cyan-50 text-cyan-700 text-[11px] font-bold px-2 py-0.5 rounded">50% OMR</span>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-slate-900">HSLC & HS OMR মাষ্টাৰ পেক</h4>
+                    <ul class="text-xs text-slate-600 space-y-2.5 my-4">
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>২০ টা অধ্যায়ভিত্তিক ৫০% OMR মক টেষ্ট</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>সাধাৰণ বিজ্ঞান, গণিত, সমাজ বিজ্ঞান আৰু ইংৰাজী</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-green-600 mr-2 mt-0.5"></i><span>বিগত ১০ বছৰৰ প্রশ্নকাকত + ফৰ্মুলা শ্বীট</span></li>
+                    </ul>
+                </div>
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center gap-2">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-2xl font-extrabold text-slate-900">₹49</span>
+                        <span class="text-xs text-slate-400 line-through">₹199</span>
+                    </div>
+                    <a href="hslc.html" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-sm transition whitespace-nowrap">
+                        টেষ্টসমূহ চাওক <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 6: All-in-One VIP Combo Pass (Fills the 6th grid slot cleanly!) -->
+            <div data-cat="adre police apsc tet school" class="pack-card bg-gradient-to-br from-slate-900 to-blue-950 text-white rounded-2xl border border-blue-800 shadow-md hover:shadow-xl transition p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2.5 py-1 rounded-md">ALL-IN-ONE VIP PASS</span>
+                        <span class="text-amber-300 text-[11px] font-bold">১ বছৰৰ বৈধতা</span>
+                    </div>
+                    <h4 class="text-lg font-extrabold text-white">অল-ইন-ৱান অসম মেগা পাছ</h4>
+                    <ul class="text-xs text-blue-100 space-y-2.5 my-4">
+                        <li class="flex items-start"><i class="fa-solid fa-circle-check text-amber-400 mr-2 mt-0.5"></i><span>ওপৰৰ আটাইকেইটা পৰীক্ষাৰ ৮০+ মক টেষ্ট</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-circle-check text-amber-400 mr-2 mt-0.5"></i><span>৩ খন পেইড অসমীয়া ই-বুক সম্পূর্ণ বিনামূলীয়া</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-circle-check text-amber-400 mr-2 mt-0.5"></i><span>সাপ্তাহিক নতুন টেষ্ট আৰু হোৱাটছএপ গাইডেন্স</span></li>
+                    </ul>
+                </div>
+                <div class="pt-4 border-t border-white/15 flex justify-between items-center gap-2">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-2xl font-extrabold text-amber-400">₹249</span>
+                        <span class="text-xs text-slate-400 line-through">₹699</span>
+                    </div>
+                    <a href="adre.html" class="bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition whitespace-nowrap">
+                        এতিয়াই লওক <i class="fa-solid fa-bolt ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= 5. SERVICE 3: ASSAMESE EBOOK STORE ================= -->
+    <section id="ebooks" class="bg-slate-900 text-white py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-10">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full">INSTANT PDF STORE</span>
+                <h3 class="text-2xl md:text-3xl font-extrabold mt-2">অসমীয়া ই-বুক আৰু ৰিভিজন নোটছ ষ্ট’ৰ</h3>
+                <p class="text-sm text-slate-300 mt-1">কম সময়ত সম্পূৰ্ণ ছিলেবাছ ৰিভিজন কৰিবলৈ নিৰ্বাচিত পিডিএফ সংগ্ৰহ (বিনামূলীয়া নমুনাসহ)</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Ebook 1 -->
+                <div class="bg-slate-800 border border-slate-700 hover:border-amber-400/60 transition rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-amber-400/20 text-amber-300 text-xs font-bold px-2.5 py-1 rounded">PDF E-Book</span>
+                        <h4 class="text-lg font-bold mt-3">অসম সাধাৰণ জ্ঞান ১০০০+ নিৰ্বাচিত প্রশ্নোত্তৰ</h4>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">অসম বুৰঞ্জী, ভূগোল, সাহিত্য আৰু কলা-সংস্কৃতিৰ সম্পূৰ্ণ প্রশ্নবেংক ব্যাখ্যাসহ।</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-700 flex justify-between items-center">
+                        <span class="text-2xl font-extrabold text-amber-400">₹49</span>
+                        <a href="ebook_gk.html" class="bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition flex items-center whitespace-nowrap">
+                            <i class="fa-solid fa-download mr-1.5"></i> এতিয়াই কিনক
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ebook 2 -->
+                <div class="bg-slate-800 border border-slate-700 hover:border-amber-400/60 transition rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-amber-400/20 text-amber-300 text-xs font-bold px-2.5 py-1 rounded">PDF E-Book</span>
+                        <h4 class="text-lg font-bold mt-3">অসমীয়া কাৰেণ্ট এফেয়াৰ্ছ ২০২৬ (বিগত ৬ মাহ)</h4>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">চৰকাৰী আঁচনি, বঁটা-বাহন, নিযুক্তি আৰু অসমৰ শেহতীয়া গুৰুত্বপূৰ্ণ ঘটনাসমূহ।</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-700 flex justify-between items-center">
+                        <span class="text-2xl font-extrabold text-amber-400">₹39</span>
+                        <a href="ebook_ca.html" class="bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition flex items-center whitespace-nowrap">
+                            <i class="fa-solid fa-download mr-1.5"></i> এতিয়াই কিনক
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ebook 3 -->
+                <div class="bg-slate-800 border border-slate-700 hover:border-amber-400/60 transition rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-amber-400/20 text-amber-300 text-xs font-bold px-2.5 py-1 rounded">PDF E-Book</span>
+                        <h4 class="text-lg font-bold mt-3">গণিত আৰু ৰিজনিং সহজ অসমীয়া চৰ্টকাট</h4>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">ADRE আৰু Assam Police-ত অহা গণিতৰ প্রশ্নসমূহ কম সময়ত সমাধান কৰাৰ সহজ কৌশল।</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-700 flex justify-between items-center">
+                        <span class="text-2xl font-extrabold text-amber-400">₹59</span>
+                        <a href="ebook_maths.html" class="bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition flex items-center whitespace-nowrap">
+                            <i class="fa-solid fa-download mr-1.5"></i> এতিয়াই কিনক
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</div>
-    <!-- Report Render Area -->
-    <div id="jaReportModal">
-        <div class="ja-modal-topbar">
+    </section>
+
+    <!-- ================= 6. SERVICE 4: COMPACT 2-COLUMN QUESTION BANK ================= -->
+    <section id="question-bank" class="max-w-6xl mx-auto px-4 py-16">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
             <div>
-                <strong style="font-size: 16px; color: #fde047;">🎉 অভিনন্দন! আপোনাৰ ৰিপোৰ্টখন প্ৰস্তুত হৈ গ'ল</strong>
-                <div style="font-size: 12px; color: #fecaca;">তললৈ স্ক্ৰ'ল কৰি পঢ়ক বা PDF হিচাপে ছেভ কৰি ৰাখক</div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">AUTO-GROWING ARCHIVE</span>
+                <h3 class="text-2xl font-extrabold text-slate-900 mt-2">অসমীয়া প্রশ্নবেংক (Daily Question Bank)</h3>
+                <p class="text-sm text-slate-600 mt-1">প্ৰতিদিনে জমা হোৱা সকলো প্রশ্ন ইয়াত বিষয় অনুসৰি বিনামূলীয়াকৈ অনুশীলন কৰক</p>
             </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="ja-btn-download" onclick="window.print()">📥 PDF ছেভ / প্ৰিন্ট</button>
-                <button class="ja-btn-close" onclick="document.getElementById('jaReportModal').style.display='none'">✕ বন্ধ কৰক</button>
-            </div>
-        </div>
-        <div id="jaReportContentArea"></div>
-    </div>
-
-    <div id="jaRecoveryBanner">
-        <div style="font-size: 14px; line-height: 1.4;">
-            <strong>✅ আপোনাৰ পেমেন্ট সফল হৈছে!</strong><br>
-            <span style="font-size: 12.5px; color: #d1fae5;">আপোনাৰ প্রস্তুত হোৱা ৰিপোৰ্টখন চাবলৈ সোঁফালৰ বুটামত টিপক</span>
-        </div>
-        <button onclick="reopenLastPaidReport()" style="background: #fbbf24; color: #0f172a; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; white-space: nowrap;">📥 ৰিপোৰ্ট চাওক</button>
-    </div>
-
-   <!-- Free Daily Horoscope Popup Modal (Scrollable & Clear UI) -->
-    <div id="horoscope-modal" class="horoscope-modal-overlay">
-        <div class="horoscope-modal-content">
-            <!-- Top Right Close Button -->
-            <button class="close-horoscope-btn" onclick="closeHoroscopeModal()">✖</button>
-            
-            <!-- Clear Title -->
-            <h2 style="color: #8b0000; font-size: 22px; margin-bottom: 15px; text-align: center; border-bottom: 2px solid #fde047; padding-bottom: 10px;">🌙 চন্দ্ৰ ৰাশিৰ আধাৰত ফলাফল</h2>
-            
-            <div id="horoscope-modal-body"></div>
-            
-            <!-- Bottom Close Button -->
-            <div style="text-align: center; margin-top: 20px;">
-                <button onclick="closeHoroscopeModal()" style="background: #475569; color: white; padding: 10px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">বন্ধ কৰক (Close)</button>
+            <div class="w-full md:w-64">
+                <label class="text-xs font-bold text-slate-500 block mb-1">বিষয় বাছি লওক (Filter by Subject):</label>
+                <select id="qb-subject-filter" onchange="renderQuestionBank(true)" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 shadow-sm focus:outline-none focus:border-blue-600">
+                    <option value="all">সকলো বিষয় (All Subjects)</option>
+                </select>
             </div>
         </div>
-    </div>
 
-    <!-- JavaScript -->
+        <!-- Clean 2-Column Grid for Question Bank -->
+        <div id="qb-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+        <div class="text-center mt-8">
+            <button id="qb-load-more-btn" onclick="loadMoreBankQuestions()" class="hidden bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 text-xs font-extrabold px-6 py-3 rounded-xl shadow-sm transition">
+                আৰু অধিক প্রশ্ন চাওক (Load More) <i class="fa-solid fa-chevron-down ml-1"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- ================= 7. SERVICE 5: DISTRICT LEADERBOARD ================= -->
+    <section id="leaderboard" class="max-w-4xl mx-auto px-4 pb-16">
+        <div class="text-center mb-8">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">LIVE COMPETITION</span>
+            <h3 class="text-2xl font-extrabold text-slate-900 mt-2">আজিৰ জিলাভিত্তিক শীৰ্ষ স্থানপ্ৰাপ্ত শিক্ষাৰ্থী</h3>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                    <tr class="bg-slate-100 text-slate-700 border-b text-xs">
+                        <th class="py-3.5 px-4">ৰেংক</th>
+                        <th class="py-3.5 px-4">শিক্ষাৰ্থীৰ নাম</th>
+                        <th class="py-3.5 px-4">জিলা</th>
+                        <th class="py-3.5 px-4 text-right">স্ক’ৰ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-xs md:text-sm">
+                    <tr>
+                        <td class="py-3.5 px-4 font-bold text-amber-600">🥇 #1</td>
+                        <td class="py-3.5 px-4 font-bold">প্ৰাণজিৎ শইকীয়া</td>
+                        <td class="py-3.5 px-4 text-slate-500">লখিমপুৰ</td>
+                        <td class="py-3.5 px-4 text-right font-extrabold text-green-600">9.5 / 10</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 px-4 font-bold text-slate-500">🥈 #2</td>
+                        <td class="py-3.5 px-4 font-bold">মৌচুমী বৰা</td>
+                        <td class="py-3.5 px-4 text-slate-500">যোৰহাট</td>
+                        <td class="py-3.5 px-4 text-right font-extrabold text-green-600">9.0 / 10</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 px-4 font-bold text-amber-700">🥉 #3</td>
+                        <td class="py-3.5 px-4 font-bold">দেৱাশীষ কলিতা</td>
+                        <td class="py-3.5 px-4 text-slate-500">নগাঁও</td>
+                        <td class="py-3.5 px-4 text-right font-extrabold text-green-600">8.5 / 10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-slate-950 text-slate-400 py-8 px-4 text-center text-xs">
+        <p class="font-bold text-white text-sm mb-1">অসম এক্সাম হাব (Assam Exam Hub)</p>
+        <p>অসমৰ প্ৰতিগৰাকী শিক্ষাৰ্থীৰ চৰকাৰী চাকৰি আৰু ব’ৰ্ড পৰীক্ষাৰ বিশ্বাসযোগ্য ডিজিটেল সংগী।</p>
+        <p class="mt-4 text-slate-600">© ২০২৬ সৰ্বস্বত্ব সংৰক্ষিত।</p>
+    </footer>
+
+    <!-- ================= JAVASCRIPT ENGINE ================= -->
     <script>
-        let pendingOrderData = null;
-        let curServiceCode = '';
-        let curServicePrice = 0;
-        let curServiceTitle = '';
-
-        // SUPABASE CONNECTION
-        const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
-        const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; 
-        window.sbClient = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-
-        // --- ON-SITE SUPPORT CHATBOT LOGIC ---
-        let supState = "WAIT_EMAIL";
-        let supEmail = "";
-
-        function toggleSupportChat() {
-            const win = document.getElementById('support-chat-window');
-            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
-            if(win.style.display === 'flex' && document.getElementById('sup-chat-messages').innerHTML === '') {
-                addSupBotMsg("নমস্কাৰ! জ্যোতিষ অসমলৈ স্বাগতম। আপোনাৰ পেমেন্ট বা ৰিপোৰ্টক লৈ কিবা সমস্যা হৈছে নেকি? অনুগ্ৰহ কৰি প্ৰথমে আপোনাৰ <b>ইমেইল (Email)</b> টো দিয়ক, যাতে আমি যোগাযোগ কৰিব পাৰোঁ।");
+        const fallbackQuestions = [
+            {
+                subject: "অসম বুৰঞ্জী (Assam History)",
+                q: "শৰাইঘাটৰ যুদ্ধ কোন চনত সংঘটিত হৈছিল?",
+                options: ["১৬৬২ চনত", "১৬৭১ চনত", "১৬৮২ চনত", "১৬১৫ চনত"],
+                ans: 1,
+                exp: "১৬৭১ চনত লাচিত বৰফুকনৰ নেতৃত্বত আহোম সৈন্য আৰু মোগল সৈন্যৰ মাজত শৰাইঘাটৰ ঐতিহাসিক যুদ্ধ হৈছিল।"
+            },
+            {
+                subject: "অসমৰ ভূগোল (Assam Geography)",
+                q: "মাটিকালিৰ ফালৰ পৰা অসমৰ আটাইতকৈ ডাঙৰ ৰাষ্ট্ৰীয় উদ্যানখনৰ নাম কি?",
+                options: ["মানস ৰাষ্ট্ৰীয় উদ্যান", "ডিব্ৰু-চৈখোৱা ৰাষ্ট্ৰীয় উদ্যান", "কাজিৰঙা ৰাষ্ট্ৰীয় উদ্যান", "নামেৰি ৰাষ্ট্ৰীয় উদ্যান"],
+                ans: 2,
+                exp: "কাজিৰঙা ৰাষ্ট্ৰীয় উদ্যান মাটিকালিৰ ফালৰ পৰা অসমৰ সৰ্ববৃহৎ ৰাষ্ট্ৰীয় উদ্যান।"
+            },
+            {
+                subject: "অসমীয়া সাহিত্য (Assamese Literature)",
+                q: "অসমীয়া ভাষাৰ প্ৰথমখন ছপা উপন্যাস কোনখন?",
+                options: ["মিৰি জীয়ৰী", "ভানুমতী", "মনোমতী", "এলান্ধু"],
+                ans: 1,
+                exp: "পদ্মনাথ গোহাঞিবৰুৱাৰ 'ভানুমতী' (১৮৯০) প্ৰথম অসমীয়া উপন্যাস হিচাপে জনাজাত।"
+            },
+            {
+                subject: "গণিত (Mathematics)",
+                q: "যদি এখন কিতাপ ₹২০০ টকাত কিনি ₹২৫০ টকাত বিক্ৰী কৰা হয়, তেন্তে লাভৰ শতকৰা হাৰ কিমান হ'ব?",
+                options: ["২০%", "২৫%", "৩০%", "১৫%"],
+                ans: 1,
+                exp: "লাভ = ৫০ টকা। শতকৰা লাভ = (৫০ / ২০০) × ১০০ = ২৫%।"
             }
-        }
+        ];
 
-        function addSupBotMsg(text) {
-            const box = document.getElementById('sup-chat-messages');
-            const div = document.createElement('div');
-            div.className = "sup-msg sup-bot"; div.innerHTML = text;
-            box.appendChild(div); box.scrollTop = box.scrollHeight;
-        }
+        let allBankQuestions = [];
+        let dailyQuestions = [];
+        let qbVisibleCount = 4; // হোমপেজটো পৰিষ্কাৰ ৰাখিবলৈ ২-কলামত প্ৰথমে ৪ টা প্রশ্ন দেখুৱাব
 
-        function addSupUserMsg(text) {
-            const box = document.getElementById('sup-chat-messages');
-            const div = document.createElement('div');
-            div.className = "sup-msg sup-user"; div.innerText = text;
-            box.appendChild(div); box.scrollTop = box.scrollHeight;
-        }
-
-        async function handleSupportSend() {
-            const inp = document.getElementById('sup-user-input');
-            const text = inp.value.trim();
-            if(!text) return;
-
-            inp.value = "";
-            addSupUserMsg(text);
-
-            if(supState === "WAIT_EMAIL") {
-                if(text.includes('@') && text.includes('.')) {
-                    supEmail = text;
-                    supState = "WAIT_ISSUE";
-                    setTimeout(() => addSupBotMsg("ধন্যবাদ! এতিয়া আপোনাৰ <b>সমস্যাটো বা প্ৰশ্নটো</b> বহলাই লিখক।"), 600);
-                } else {
-                    setTimeout(() => addSupBotMsg("অনুগ্ৰহ কৰি এটা সঠিক ইমেইল (যেনে: name@gmail.com) প্ৰদান কৰক।"), 600);
-                }
-            } else if(supState === "WAIT_ISSUE") {
-                supState = "SAVING";
-                setTimeout(async () => {
-                    try {
-                        await window.sbClient.from('support_tickets').insert([{ email: supEmail, message: text }]);
-                    } catch(e) {}
-                    addSupBotMsg("✅ আপোনাৰ মেছেজটো সফলতাৰে জমা হ'ল! আমাৰ টীমে ইয়াক পৰীক্ষা কৰি অতি সোনকালেই আপোনাৰ ইমেইলত যোগাযোগ কৰিব। ধন্যবাদ! 🙏");
-                    supState = "DONE";
-                }, 800);
-            } else if(supState === "DONE") {
-                setTimeout(() => addSupBotMsg("আপোনাৰ মেছেজ ইতিমধ্যে আমাৰ ওচৰ পাইছে। আমি সোনকালেই আপোনাক ইমেইল যোগে যোগাযোগ কৰিম।"), 600);
-            }
-        }
-
-        function openOrderModal(serviceCode, price) {
-            curServiceCode = serviceCode;
-            curServicePrice = price;
-            
-            if(price === 299) { curServiceCode = 'birth'; curServiceTitle = 'সম্পূৰ্ণ জন্ম কুণ্ডলী'; }
-            else if(price === 99) { curServiceCode = 'love'; curServiceTitle = 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ'; }
-            else if(price === 199) { curServiceCode = 'career'; curServiceTitle = 'কেৰিয়াৰ আৰু ব্যৱসায়'; }
-            else if(price === 19) { curServiceCode = 'monthly'; curServiceTitle = 'মাহেকীয়া ৰাশিফল'; }
-            else if(price === 49) { curServiceCode = 'yearly'; curServiceTitle = 'বাৰ্ষিক ৰাশিফল'; }
-            
-            var titleElem = document.getElementById('orderTitle');
-            if (titleElem) titleElem.innerText = curServiceTitle; 
-            
-            var subElem = document.getElementById('orderSubtitle');
-            if (subElem) { 
-                subElem.innerText = "অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক"; 
-            } else {
-                var pElem = document.querySelector('#orderModal p');
-                if(pElem) pElem.innerText = "অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক";
-            }
-            
-            document.getElementById('orderModal').classList.add('active');
-        }
-
-        function closeOrderModal() {
-            document.getElementById('orderModal').classList.remove('active');
-            document.getElementById('orderForm').reset();
-        }
-
-        // --- Step 1: Generate Teaser (30% Free) - STRICTLY API BASED ---
-        async function generateTeaser(e) {
-            e.preventDefault();
-            const btn = document.getElementById('payBtn');
-            btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳"; btn.disabled = true;
-            
-            const name = document.getElementById('custName').value.trim();
-            const email = document.getElementById('custEmail').value.trim();
-            const dob = document.getElementById('custDate').value;
-            const place = document.getElementById('custPlace').value.trim();
-            
-            let h = parseInt(document.getElementById('custHour').value);
-            let m = document.getElementById('custMin').value.padStart(2, '0');
-            let ampm = document.getElementById('custAmPm').value;
-            if (ampm === 'PM' && h < 12) h += 12;
-            if (ampm === 'AM' && h === 12) h = 0;
-            let tob = h.toString().padStart(2, '0') + ":" + m + ":00";
-            
-            pendingOrderData = { name, email, service: curServiceCode, birth_date: dob, birth_time: tob, birth_place: place };
-
+        async function loadAutoQuestions() {
             try {
-                // ১. ফেচবুক ব্ৰাউজাৰৰ বাবে Local Storage ত চেভ কৰা
-                localStorage.setItem('ja_pending_customer', JSON.stringify(pendingOrderData));
-
-                // ২. Supabase ত pending order বনোৱা
-                let tempOrderId = null;
-                if (window.sbClient) {
-                    const { data, error } = await window.sbClient.from('orders').insert([{
-                        name: name, email: email, service: curServiceCode,
-                        birth_date: dob, birth_time: tob, birth_place: place,
-                        amount: curServicePrice, status: 'pending'
-                    }]).select();
-                    
-                    if (!error && data && data.length > 0) {
-                        tempOrderId = data[0].id;
-                        localStorage.setItem('ja_last_order_id', tempOrderId);
-                    }
-                }
-
-                // UI টো লগে লগে দেখুৱাই দিছোঁ যাতে গ্ৰাহকে অপেক্ষা কৰিবলগীয়া নহয়
-                document.getElementById('tsrName').innerText = name;
-                document.getElementById('tsrPriceText').innerText = curServicePrice;
-                document.getElementById('tsrPriceBtn').innerText = curServicePrice;
-                document.getElementById('orderModal').classList.remove('active');
-                document.getElementById('teaserModal').classList.add('active');
-
-                // ৩. আচল API কল (Real Calculate Chart)
-                const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        orderId: tempOrderId,
-                        tempOrder: pendingOrderData
-                    })
-                });
-                const apiResult = await response.json();
-                
-                if (apiResult.success && apiResult.chart) {
-                    const chart = apiResult.chart;
-                    const rashiAsMap = { "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট", "Leo": "সিংহ", "Virgo": "কন্যা", "Libra": "তুলা", "Scorpio": "বৃশ্চিক", "Sagittarius": "ধনু", "Capricorn": "মকৰ", "Aquarius": "কুম্ভ", "Pisces": "মীন" };
-                    
-                    const moonRashi = chart.planets.Moon.rashi;
-                    const moonNak = chart.planets.Moon.nakshatra;
-                    const lagnaRashi = chart.ascendant.rashi;
-                    const ascRashiNo = chart.ascendant.rashi_no;
-                    
-                    // আচল কুণ্ডলীৰ মেপ (SVG) বনোৱা
-                    const pAbbr = { Sun: "সূ", Moon: "চ", Mars: "মং", Mercury: "বু", Jupiter: "বৃ", Venus: "শু", Saturn: "শ", Rahu: "ৰা", Ketu: "কে" };
-                    let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
-                    for(const [pName, pData] of Object.entries(chart.planets)) {
-                        let hNum = (pData.rashi_no - ascRashiNo + 12) % 12 + 1;
-                        hC[hNum].push(pAbbr[pName] || pName);
-                    }
-                    
-                    let svgHtml = `
-                    <svg viewBox="0 0 300 300" width="220" height="220" style="background: #fdf5e6; border: 2px solid #8b0000; margin: 0 auto; display: block;">
-                        <rect x="0" y="0" width="300" height="300" fill="none" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="0" y1="0" x2="300" y2="300" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="0" y1="300" x2="300" y2="0" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="150" y1="0" x2="300" y2="150" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="300" y1="150" x2="150" y2="300" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="150" y1="300" x2="0" y2="150" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="0" y1="150" x2="150" y2="0" stroke="#8b0000" stroke-width="2"/>
-                        
-                        <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${ascRashiNo}</text>
-                        <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo)%12+1}</text>
-                        <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+1)%12+1}</text>
-                        <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+2)%12+1}</text>
-                        <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+3)%12+1}</text>
-                        <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+4)%12+1}</text>
-                        <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+5)%12+1}</text>
-                        <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+6)%12+1}</text>
-                        <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+7)%12+1}</text>
-                        <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+8)%12+1}</text>
-                        <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+9)%12+1}</text>
-                        <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+10)%12+1}</text>
-                    </svg>`;
-
-                    document.getElementById('tsrRashi').innerText = `${rashiAsMap[moonRashi]} (${moonNak} নক্ষত্ৰ)`;
-                    document.getElementById('tsrLagna').innerText = `${rashiAsMap[lagnaRashi]} লগ্ন`;
-                    document.getElementById('tsrKundali').innerHTML = svgHtml;
-                } else {
-                    throw new Error("API failed");
-                }
-
-            } catch (e) {
-                console.error("Teaser error:", e);
-                document.getElementById('tsrRashi').innerText = "অপেক্ষা কৰক...";
-                document.getElementById('tsrLagna').innerText = "অপেক্ষা কৰক...";
-                document.getElementById('tsrKundali').innerHTML = "<p style='color:#8b0000; font-weight:bold; padding:20px;'>আপোনাৰ কুণ্ডলী বেকগ্ৰাউণ্ডত প্ৰস্তুত হৈ আছে। তলত আনলক কৰক 👇</p>";
-            }
-
-            btn.innerText = "প্ৰাথমিক ৰিপোৰ্ট (30% Free) চাওক"; 
-            btn.disabled = false;
-        }
-
-        // --- Step 2: Pay & Unlock Full Report ---
-        function initiatePayment() {
-            if(!pendingOrderData) return alert("অনুগ্ৰহ কৰি ফৰ্মখন আকৌ পূৰণ কৰক।");
-
-            var options = {
-                // ⚠️ CRITICAL: Replace the key below with your actual Razorpay Key ID
-                "key": "YOUR_RAZORPAY_KEY_HERE", 
-                
-                "amount": curServicePrice * 100, 
-                "currency": "INR",
-                "name": "জ্যোতিষ অসম",
-                "description": curServiceTitle,
-                "handler": function (response) {
-                    document.getElementById('teaserModal').classList.remove('active');
-                    handlePaymentSuccessGuaranteed(window.sbClient, response.razorpay_payment_id, pendingOrderData);
-                },
-                "prefill": { "name": pendingOrderData.name, "email": pendingOrderData.email, "contact": pendingOrderData.email },
-                "theme": { "color": "#8b0000" }
-            };
-
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
-        }
-
-        // ==========================================
-        // BULLETPROOF AUTO-REPORT SYSTEM (FB/Insta Recovery Fix)
-        // ==========================================
-        
-        async function saveOrderGuaranteed(sbClientInstance, orderPayload) {
-            localStorage.setItem('ja_pending_customer', JSON.stringify(orderPayload));
-            const calcAmount = curServicePrice || 49;
-
-            for (let attempt = 1; attempt <= 3; attempt++) {
-                try {
-                    const { data, error } = await sbClientInstance.from('orders').insert([{
-                        name: orderPayload.name,
-                        email: orderPayload.email || 'Customer',
-                        service: orderPayload.service,
-                        birth_date: orderPayload.birth_date,
-                        birth_time: orderPayload.birth_time || '10:30',
-                        birth_place: orderPayload.birth_place || 'অসম',
-                        amount: calcAmount,
-                        razorpay_payment_id: orderPayload.razorpay_payment_id || null
-                    }]).select();
-
-                    if (!error && data && data.length > 0) {
-                        localStorage.setItem('ja_last_order_id', data[0].id);
-                        return data[0];
-                    }
-                } catch (e) {
-                    await new Promise(r => setTimeout(r, 600)); 
-                }
-            }
-            return null;
-        }
-
-        async function handlePaymentSuccessGuaranteed(sbClientInstance, paymentId, customerData) {
-            const savedPending = JSON.parse(localStorage.getItem('ja_pending_customer') || '{}');
-            const finalData = { ...savedPending, ...customerData, razorpay_payment_id: paymentId };
-            const lastOrderId = localStorage.getItem('ja_last_order_id');
-
-            try {
-                if (lastOrderId && sbClientInstance) {
-                    await sbClientInstance.from('orders').update({
-                        razorpay_payment_id: paymentId,
-                        payment_status: 'paid',
-                        status: 'paid'
-                    }).eq('id', lastOrderId);
-                } else if (sbClientInstance) {
-                    await saveOrderGuaranteed(sbClientInstance, finalData);
-                }
-            } catch (e) {}
-
-            localStorage.setItem('ja_paid_customer_data', JSON.stringify(finalData));
-            document.getElementById('jaRecoveryBanner').style.display = 'flex';
-            renderCustomerReportOnScreen(finalData);
-        }
-
-        function reopenLastPaidReport() {
-            const saved = JSON.parse(localStorage.getItem('ja_paid_customer_data') || 'null');
-            if (saved) renderCustomerReportOnScreen(saved);
-        }
-
-        // --- FULL DETAILED PREMIUM REPORT (5-6 PAGES) ---
-        async function renderCustomerReportOnScreen(order) {
-            const serviceTitles = { 'monthly': 'মাহেকীয়া ৰাশিফল', 'yearly': 'বাৰ্ষিক ৰাশিফল', 'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ', 'career': 'কেৰিয়াৰ আৰু ব্যৱসায়', 'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী' };
-            const srvTitle = serviceTitles[order.service] || 'প্ৰিমিয়াম বৈদিক জন্ম-কুণ্ডলী';
-
-            document.getElementById('jaReportContentArea').innerHTML = `<p style="text-align:center; padding:50px; font-size:18px; color:#8b0000; font-weight:bold;">আপোনাৰ সম্পূৰ্ণ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈ আছে... ⏳</p>`;
-            document.getElementById('jaReportModal').style.display = 'block';
-
-            try {
-                const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ orderId: order.id || order.public_order_id || localStorage.getItem('ja_last_order_id') })
-                });
-                
-                const apiResult = await response.json();
-                if (!apiResult.success || !apiResult.chart) throw new Error("Chart data missing");
-
-                const chart = apiResult.chart;
-                const rashiAsMap = { "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট", "Leo": "সিংহ", "Virgo": "কন্যা", "Libra": "তুলা", "Scorpio": "বৃশ্চিক", "Sagittarius": "ধনু", "Capricorn": "মকৰ", "Aquarius": "কুম্ভ", "Pisces": "মীন" };
-                const planetNames = { Sun: "সূৰ্য", Moon: "চন্দ্ৰ", Mars: "মংগল", Mercury: "বুধ", Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু" };
-                const pAbbr = { Sun: "সূ", Moon: "চ", Mars: "মং", Mercury: "বু", Jupiter: "বৃ", Venus: "শু", Saturn: "শ", Rahu: "ৰা", Ketu: "কে" };
-
-                const moonRashi = chart.planets.Moon.rashi;
-                const moonNak = chart.planets.Moon.nakshatra;
-                const lagnaRashi = chart.ascendant.rashi;
-                const ascRashiNo = chart.ascendant.rashi_no;
-
-                let currentDasha = "অজ্ঞাত";
-                let today = new Date();
-                chart.dashas.forEach(d => {
-                    if(today >= new Date(d.start_date) && today <= new Date(d.end_date)) currentDasha = d.lord;
-                });
-
-                let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
-                let hFull = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
-                for(const [pName, pData] of Object.entries(chart.planets)) {
-                    let hNum = (pData.rashi_no - ascRashiNo + 12) % 12 + 1;
-                    hC[hNum].push(pAbbr[pName] || pName);
-                    hFull[hNum].push(planetNames[pName] || pName);
-                }
-
-                // --- PAGE 1: BASIC DETAILS & SVG KUNDALI ---
-                let planetsHtml = `<table class="vedic-table"><thead><tr><th>গ্ৰহ</th><th>ৰাশি</th><th>ঘৰ (House)</th><th>নক্ষত্ৰ</th><th>পদ</th></tr></thead><tbody>`;
-                for(const key in chart.planets) {
-                    let hNum = (chart.planets[key].rashi_no - ascRashiNo + 12) % 12 + 1;
-                    planetsHtml += `<tr><td><strong>${planetNames[key] || key}</strong></td><td>${rashiAsMap[chart.planets[key].rashi]}</td><td>${hNum}</td><td>${chart.planets[key].nakshatra}</td><td>${chart.planets[key].pada}</td></tr>`;
-                }
-                planetsHtml += `</tbody></table>`;
-
-                let dashaHtml = `<table class="vedic-table"><thead><tr><th>মহা দশা</th><th>আৰম্ভণি (Start)</th><th>অন্ত (End)</th></tr></thead><tbody>`;
-                chart.dashas.forEach(d => { dashaHtml += `<tr><td><strong>${planetNames[d.lord] || d.lord}</strong></td><td>${d.start_date}</td><td>${d.end_date}</td></tr>`; });
-                dashaHtml += `</tbody></table>`;
-
-                let svgHtml = `
-                <div class="kundali-wrapper">
-                    <svg viewBox="0 0 300 300" width="280" height="280" style="background: #fdf5e6; border: 3px solid #8b0000;">
-                        <rect x="0" y="0" width="300" height="300" fill="none" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="0" y1="0" x2="300" y2="300" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="0" y1="300" x2="300" y2="0" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="150" y1="0" x2="300" y2="150" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="300" y1="150" x2="150" y2="300" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="150" y1="300" x2="0" y2="150" stroke="#8b0000" stroke-width="2"/>
-                        <line x1="0" y1="150" x2="150" y2="0" stroke="#8b0000" stroke-width="2"/>
-                        <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${ascRashiNo}</text>
-                        <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo)%12+1}</text>
-                        <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+1)%12+1}</text>
-                        <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+2)%12+1}</text>
-                        <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+3)%12+1}</text>
-                        <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+4)%12+1}</text>
-                        <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+5)%12+1}</text>
-                        <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+6)%12+1}</text>
-                        <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+7)%12+1}</text>
-                        <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+8)%12+1}</text>
-                        <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+9)%12+1}</text>
-                        <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashiNo+10)%12+1}</text>
-                    </svg>
-                </div>`;
-
-                // --- PAGE 2 & 3: 12 HOUSES ANALYSIS ---
-                const houseNames = [
-                    "১ম ঘৰ (লগ্ন ভাৱ - ব্যক্তিত্ব, দেহ আৰু আত্মা)", "২য় ঘৰ (ধন ভাৱ - সঞ্চয়, বাণী আৰু কুটুম্ব)", "৩য় ঘৰ (সহজ ভাৱ - সাহস, পৰাক্ৰম আৰু ভাতৃ-ভগ্নী)",
-                    "৪ৰ্থ ঘৰ (সুখ ভাৱ - মাতৃ, গৃহ, বাহন আৰু সম্পত্তি)", "৫ম ঘৰ (সন্তান ভাৱ - বিদ্যা, বুদ্ধি, প্ৰেম আৰু পূৰ্বপুণ্য)", "৬ষ্ঠ ঘৰ (ৰিপু ভাৱ - ৰোগ, ঋণ, শত্ৰু আৰু প্ৰতিযোগিতা)",
-                    "৭ম ঘৰ (জায়া ভাৱ - বিবাহ, জীৱনসংগী আৰু অংশীদাৰীত্ব)", "৮ম ঘৰ (আয়ু ভাৱ - দীৰ্ঘায়ু, গুপ্ত বিদ্যা আৰু আকস্মিক পৰিৱৰ্তন)", "৯ম ঘৰ (ভাগ্য ভাৱ - ধৰ্ম, পিতৃ, উচ্চ শিক্ষা আৰু সৌভাগ্য)",
-                    "১০ম ঘৰ (কৰ্ম ভাৱ - বৃত্তি, পদবী, সন্মান আৰু সামাজিক খ্যাতি)", "১১তম ঘৰ (লাভ ভাৱ - আয়, ইচ্ছাপূৰণ আৰু জ্যেষ্ঠ ভাতৃ-মিত্ৰ)", "১২তম ঘৰ (ব্যয় ভাৱ - খৰচ, বিদেশ যাত্ৰা, শয্যাসুখ আৰু মোক্ষ)"
-                ];
-                
-                const buildHouseCards = (start, end) => {
-                    let html = "";
-                    for (let i = start; i <= end; i++) {
-                        const rEn = chart.houses[i - 1].rashi;
-                        const pInH = hFull[i].length > 0 ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই";
-                        html += `<div class="info-card"><div class="card-title">${houseNames[i-1]}</div><div class="card-content"><strong>উদিত ৰাশি:</strong> ${rashiAsMap[rEn]} &nbsp;|&nbsp; <strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}<br><br>এই ভাৱত ${rashiAsMap[rEn]} ৰাশিৰ প্ৰভাৱ থকাৰ বাবে আপোনাৰ জীৱনৰ এই ক্ষেত্ৰটোত এক বিশেষ ইতিবাচক পৰিৱৰ্তন দেখা যাব।</div></div>`;
-                    }
-                    return html;
-                };
-
-                let housesAnalysisPage = `
-                <div class="page page-break">
-                    <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (১ম - ৬ষ্ঠ ঘৰ) ❁</h2>
-                    ${buildHouseCards(1, 6)}
-                </div>
-                <div class="page page-break">
-                    <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (৭ম - ১২তম ঘৰ) ❁</h2>
-                    ${buildHouseCards(7, 12)}
-                </div>`;
-
-                // --- PAGE 4: CAREER & FINANCE (2026-2031) ---
-                let careerAnalysisPage = `
-                <div class="page page-break">
-                    <h2 class="section-title">❁ কৰ্মজীৱন, ব্যৱসায় আৰু অৰ্থ বিশ্লেষণ ❁</h2>
-                    <div class="sub-heading">১. দশম ভাৱ আৰু কৰ্মজীৱনৰ মূল দিশ (Career Direction)</div>
-                    <div class="info-card"><div class="card-content">আপোনাৰ কুণ্ডলীৰ দশম ভাৱত <strong>${rashiAsMap[chart.houses[9].rashi]}</strong> ৰাশি উদিত হৈছে। বৰ্তমান চলি থকা <strong>${planetNames[currentDasha] || currentDasha} মহাদশা</strong>ৰ প্ৰভাৱত বয়স বঢ়াৰ লগে লগে আপোনাৰ কৰ্মদক্ষতা, আৰ্থিক সঞ্চয় আৰু সামাজিক প্ৰতিপত্তি বৃদ্ধি পাব। চাকৰিৰ সমান্তৰালকৈ নিজা ব্যৱসায় বা চুক্তিভিত্তিক কামতো আপুনি সফল হ'ব।</div></div>
-                    
-                    <div class="sub-heading">২. ২০২৬ – ২০৩১ বৰ্ষৰ কেৰিয়াৰ আৰু আৰ্থিক সময়ৰেখা</div>
-                    <div class="info-card"><div class="card-content">
-                        <strong>📅 ২০২৬ – ২০২৭ বৰ্ষ:</strong> কৰ্মক্ষেত্ৰত নতুন দায়িত্ব, আৰ্থিক স্থিৰতা আৰু পুৰণি বাধাৰ অৱসান।<br><br>
-                        <strong>📅 ২০২৮ – ২০২৯ বৰ্ষ:</strong> পদোন্নতি, ব্যৱসায় সম্প্ৰসাৰণ আৰু নতুন আয়ৰ পথ মুকলি হোৱাৰ প্রবল যোগ।<br><br>
-                        <strong>📅 ২০৩০ – ২০৩১ বৰ্ষ:</strong> স্থায়ী সম্পত্তি, ভূমি বা বাহন ক্ৰয় আৰু দীর্ঘম্যাদী বিনিয়োগৰ পৰা বিশেষ লাভ।
-                    </div></div>
-                </div>`;
-
-                // --- PAGE 5: LOVE & MARRIAGE ---
-                let loveAnalysisPage = `
-                <div class="page page-break">
-                    <h2 class="section-title">❁ প্ৰেম, বিবাহ আৰু সম্পৰ্ক বিশ্লেষণ ❁</h2>
-                    <div class="sub-heading">১. আপোনাৰ প্ৰেমৰ স্বভাৱ আৰু মানসিকতা</div>
-                    <div class="info-card"><div class="card-content">আপোনাৰ চন্দ্ৰ ৰাশি হৈছে <strong>${rashiAsMap[moonRashi]} (${moonNak} নক্ষত্ৰ)</strong>। আপুনি প্ৰেমৰ সম্পৰ্কত অত্যন্ত যত্নশীল, উদাৰ আৰু বিশ্বস্ত। কাৰোবাক আপোন কৰি ল'লে তেওঁৰ প্ৰতি ১০০% সমৰ্পিত হৈ পৰে।</div></div>
-                    
-                    <div class="sub-heading">২. ভৱিষ্যত সংগীৰ স্বভাৱ আৰু বৃত্তি</div>
-                    <div class="info-card"><div class="card-content">আপোনাৰ কুণ্ডলীৰ সপ্তম ভাৱত <strong>${rashiAsMap[chart.houses[6].rashi]}</strong> ৰাশি থকা বাবে আপোনাৰ সংগী অত্যন্ত দায়িত্বশীল আৰু আকৰ্ষণীয় ব্যক্তিত্বৰ হ'ব। তেওঁ প্ৰশাসন, শিক্ষা বা নিজা ব্যৱসায়ৰ লগত জড়িত হোৱাৰ পূৰ্ণ সম্ভাৱনা আছে।</div></div>
-
-                    <div class="sub-heading">৩. বিবাহৰ যোগ আৰু সময়ৰেখা</div>
-                    <div class="info-card"><div class="card-content">
-                        <strong>📅 ২০২৬ – ২০২৭ বৰ্ষ:</strong> সম্পৰ্কত বিশ্বাস আৰু গভীৰতা বৃদ্ধি পাব।<br><br>
-                        <strong>📅 ২০২৮ – ২০২৯ বৰ্ষ:</strong> অবিবাহিতসকলৰ বিবাহ সম্পন্ন হোৱাৰ প্ৰবল যোগ আৰু পৰিয়ালৰ অনুমোদন লাভ।<br><br>
-                        <strong>📅 ২০৩০ – ২০৩১ বৰ্ষ:</strong> দাম্পত্য জীৱনত সুখ-শান্তি আৰু সংগীৰ সৈতে সুন্দৰ ভ্ৰমণৰ যোগ।
-                    </div></div>
-                </div>`;
-
-                // --- PAGE 6: REMEDIES & GEMSTONES ---
-                const gemstoneGuide = {
-                    "Aries": { gem: "ৰক্ত প্ৰবাল (Red Coral)", finger: "অনামিকা", lord: "মংগল" },
-                    "Taurus": { gem: "বগা ওপাল (White Opal)", finger: "মাজু আঙুলি", lord: "শুক্ৰ" },
-                    "Gemini": { gem: "পান্না (Emerald)", finger: "কনিষ্ঠা", lord: "বুধ" },
-                    "Cancer": { gem: "মুকুতা (Pearl)", finger: "কনিষ্ঠা", lord: "চন্দ্ৰ" },
-                    "Leo": { gem: "মাণিক্য (Ruby)", finger: "অনামিকা", lord: "সূৰ্য" },
-                    "Virgo": { gem: "পান্না (Emerald)", finger: "কনিষ্ঠা", lord: "বুধ" },
-                    "Libra": { gem: "বগা ওপাল (White Opal)", finger: "মাজু আঙুলি", lord: "শুক্ৰ" },
-                    "Scorpio": { gem: "ৰক্ত প্ৰবাল (Red Coral)", finger: "অনামিকা", lord: "মংগল" },
-                    "Sagittarius": { gem: "পীত পোখৰাজ (Yellow Sapphire)", finger: "তৰ্জনী", lord: "বৃহস্পতি" },
-                    "Capricorn": { gem: "নীলা (Blue Sapphire)", finger: "মাজু আঙুলি", lord: "শনি" },
-                    "Aquarius": { gem: "নীলা (Blue Sapphire)", finger: "মাজু আঙুলি", lord: "শনি" },
-                    "Pisces": { gem: "পীত পোখৰাজ (Yellow Sapphire)", finger: "তৰ্জনী", lord: "বৃহস্পতি" }
-                };
-                const gemInfo = gemstoneGuide[lagnaRashi] || { gem: "উপযুক্ত ৰত্ন", finger: "আঙুলি", lord: "লগ্নেশ" };
-
-                let remediesPage = `
-                <div class="page">
-                    <h2 class="section-title">❁ বৈদিক নিদান আৰু জ্যোতিষীয় প্ৰতিকাৰ ❁</h2>
-                    <div class="info-card remedy-card">
-                        <div class="card-title">💎 শুভ ৰত্ন আৰু ধাৰণ বিধি (Lucky Gemstone Guide)</div>
-                        <div class="card-content">
-                            আপোনাৰ <strong>${rashiAsMap[lagnaRashi]}</strong> লগ্নৰ অধিপতি গ্ৰহ (${gemInfo.lord}) ৰ শক্তি বৃদ্ধিৰ বাবে সৰ্বোত্তম ৰত্ন হৈছে <strong>${gemInfo.gem}</strong>। ইয়াক সোঁহাতৰ <strong>${gemInfo.finger}ত</strong> ধাৰণ কৰিব।
-                        </div>
-                    </div>
-                    <div class="info-card remedy-card">
-                        <div class="card-title">🕉️ বিশেষ বৈদিক উপায়</div>
-                        <div class="card-content">
-                            • প্ৰতিদিনে পুৱা গা ধুই সূৰ্য দেৱতাক জল অৰ্পণ কৰিব।<br>
-                            • সোমবাৰে শিৱলিংগত জল অৰ্পণ কৰিব, ই মানসিক অশান্তি আৰু গ্ৰহৰ বাধা দূৰ কৰিব।
-                        </div>
-                    </div>
-                    <div class="disclaimer">
-                        <strong>⚠️ অস্বীকাৰকৰণ (Disclaimer):</strong><br>
-                        এই ৰিপোৰ্টখন লাহিৰী অয়নাংশ আৰু বৈদিক জ্যোতিষৰ সূত্ৰৰ আধাৰত প্ৰস্তুত কৰা হৈছে। ইয়াক জীৱনৰ গুৰুত্বপূৰ্ণ সিদ্ধান্ত লোৱাৰ সহায়ক মাৰ্গদৰ্শন হিচাপে গ্ৰহণ কৰিব।
-                    </div>
-                    <div class="footer-seal">
-                        ॥ ইতি জ্যোতিষ অসম ॥<br>
-                        <small>"আপোনাৰ জন্ম-কুণ্ডলী • আপোনাৰ সময় • আপোনাৰ সম্ভাৱনা"</small>
-                    </div>
-                </div>`;
-
-                // --- COMBINE ALL PAGES ---
-                const reportContentHtml = `
-                    <style>
-                        .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 50px 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px solid double #8b0000; position: relative; color: #3e2723; font-family: 'Noto Sans Assamese', serif; line-height: 1.8; text-align: left; }
-                        .page::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #8b0000; pointer-events: none; }
-                        .page-break { page-break-after: always; }
-                        .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
-                        .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; text-align: center; }
-                        .section-title { font-size: 26px; font-weight: bold; color: #8b0000; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #8b0000; padding-bottom: 10px; }
-                        .sub-heading { font-size: 20px; color: #5c3a21; margin-top: 30px; margin-bottom: 15px; border-left: 4px solid #8b0000; padding-left: 10px; font-weight: bold;}
-                        .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 20px; margin: 15px 0; border-radius: 3px; }
-                        .card-title { font-weight: bold; color: #8b0000; margin-bottom: 10px; font-size: 18px; }
-                        .vedic-table { width: 100%; border-collapse: collapse; margin: 25px 0; border: 2px solid #8b0000; }
-                        .vedic-table th { background: #8b0000; color: #fdf5e6; padding: 12px; text-align: center; border: 1px solid #5c3a21; }
-                        .vedic-table td { padding: 12px; border: 1px solid #a67b5b; text-align: center; }
-                        .disclaimer { background: rgba(139, 0, 0, 0.05); padding: 15px; margin-top: 40px; font-size: 14px; border: 1px solid #8b0000; text-align: justify; }
-                        .footer-seal { text-align: center; margin-top: 50px; color: #8b0000; font-size: 18px; font-weight: bold; border-top: 2px dashed #8b0000; padding-top: 20px; }
-                        @media print { .page { box-shadow: none; margin: 0; } }
-                    </style>
-
-                    <div class="page page-break cover">
-                        <div class="om-symbol">ॐ</div>
-                        <h1 style="font-size: 45px; color: #5c3a21; margin: 0 0 10px 0; border-bottom: 2px solid #8b0000; display: inline-block; padding-bottom: 10px;">জ্যোতিষ অসম</h1>
-                        <div style="font-size: 24px; color: #8b0000; margin-bottom: 40px; font-weight: bold;">${srvTitle}</div>
-                        <div style="background: rgba(219, 190, 146, 0.2); padding: 30px; border: 1px solid #c9a961; text-align: left; font-size: 18px;">
-                            <p style="margin-bottom: 10px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px;"><strong>গ্ৰাহকৰ নাম:</strong> ${order.name}</p>
-                            <p style="margin-bottom: 10px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px;"><strong>জন্ম তাৰিখ:</strong> ${order.birth_date}</p>
-                            <p style="margin-bottom: 10px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px;"><strong>জন্মৰ সময়:</strong> ${order.birth_time}</p>
-                            <p style="margin-bottom: 10px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px;"><strong>জন্ম স্থান:</strong> ${order.birth_place}</p>
-                        </div>
-                    </div>
-
-                    <div class="page page-break">
-                        <h2 class="section-title">❁ মূল জ্যোতিষিক পৰিচয় ❁</h2>
-                        <div class="info-card">
-                            <div class="card-title">লগ্ন (Ascendant): <strong>${rashiAsMap[lagnaRashi]}</strong></div>
-                            <div class="card-title">চন্দ্ৰ ৰাশি (Moon Sign): <strong>${rashiAsMap[moonRashi]} (${moonNak} নক্ষত্ৰ)</strong></div>
-                            <div class="card-title">বৰ্তমান মহাদশা: <strong>${planetNames[currentDasha] || currentDasha} মহাদশা</strong></div>
-                        </div>
-                        <h2 class="section-title" style="margin-top:40px;">❁ জন্ম কুণ্ডলী আৰু গ্ৰহ স্থিতি ❁</h2>
-                        ${svgHtml}
-                        <h3 class="sub-heading">গ্ৰহৰ স্পষ্ট অৱস্থান</h3>
-                        ${planetsHtml}
-                        <h3 class="sub-heading">বিংশোত্তৰী মহা দশা</h3>
-                        ${dashaHtml}
-                    </div>
-
-                    ${housesAnalysisPage}
-                    ${careerAnalysisPage}
-                    ${loveAnalysisPage}
-                    ${remediesPage}
-                `;
-
-                document.getElementById('jaReportContentArea').innerHTML = reportContentHtml;
-
+                const res = await fetch('questions.json?t=' + new Date().getTime());
+                if (!res.ok) throw new Error("JSON not found");
+                const data = await res.json();
+                allBankQuestions = (data.questions && data.questions.length > 0) ? data.questions : fallbackQuestions;
+                document.getElementById('stat-last-updated').innerText = data.last_updated || "আজি আপডেটেড";
             } catch (err) {
-                console.error("Full report error:", err);
-                document.getElementById('jaReportContentArea').innerHTML = `<p style="text-align:center; padding:50px; color:red;">ৰিপোৰ্ট সৃষ্টি কৰাত সমস্যা হৈছে। অনুগ্ৰহ কৰি 'Support' ত মেছেজ কৰক।</p>`;
+                allBankQuestions = fallbackQuestions;
+            }
+
+            dailyQuestions = allBankQuestions.slice(0, 10);
+            document.getElementById('stat-total-q').innerText = `${allBankQuestions.length}+ টা MCQ`;
+            document.getElementById('q-total-num').innerText = dailyQuestions.length;
+            document.getElementById('daily-test-meta').innerText = `সময়: ৫ মিনিট | মুঠ প্রশ্ন: ${dailyQuestions.length} টা`;
+
+            populateSubjectFilter();
+            renderQuestionBank(true);
+        }
+
+        function populateSubjectFilter() {
+            const select = document.getElementById('qb-subject-filter');
+            const subjects = [...new Set(allBankQuestions.map(item => item.subject))];
+            select.innerHTML = '<option value="all">সকলো বিষয় (All Subjects)</option>';
+            subjects.forEach(sub => {
+                select.innerHTML += `<option value="${sub}">${sub}</option>`;
+            });
+        }
+
+        function renderQuestionBank(resetCount = false) {
+            if (resetCount) qbVisibleCount = 4;
+            const selectedSub = document.getElementById('qb-subject-filter').value;
+            const filtered = selectedSub === 'all' 
+                ? allBankQuestions 
+                : allBankQuestions.filter(q => q.subject === selectedSub);
+
+            const container = document.getElementById('qb-list-container');
+            container.innerHTML = '';
+
+            const labels = ['ক', 'খ', 'গ', 'ঘ'];
+            const itemsToShow = filtered.slice(0, qbVisibleCount);
+
+            itemsToShow.forEach((qObj, index) => {
+                const optionsHtml = qObj.options.map((opt, oIdx) => `
+                    <div class="px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-700">
+                        <span class="font-bold text-slate-900 mr-1">${labels[oIdx]})</span> ${opt}
+                    </div>
+                `).join('');
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[11px] font-bold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded">${qObj.subject}</span>
+                                <span class="text-xs text-slate-400 font-bold">Q #${index + 1}</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-3 leading-relaxed">${qObj.q}</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                                ${optionsHtml}
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="toggleBankAnswer(${index})" class="text-xs font-extrabold text-blue-600 hover:text-blue-800 flex items-center">
+                                <i class="fa-regular fa-eye mr-1.5"></i> উত্তৰ আৰু ব্যাখ্যা চাওক
+                            </button>
+                            <div id="qb-ans-${index}" class="hidden mt-3 p-3 rounded-xl bg-green-50 border border-green-200 text-xs">
+                                <p class="font-bold text-green-800 mb-1">✔ শুদ্ধ উত্তৰ: (${labels[qObj.ans]}) ${qObj.options[qObj.ans]}</p>
+                                <p class="text-slate-700"><strong>ব্যাখ্যা:</strong> ${qObj.exp}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const loadMoreBtn = document.getElementById('qb-load-more-btn');
+            if (filtered.length > qbVisibleCount) {
+                loadMoreBtn.classList.remove('hidden');
+            } else {
+                loadMoreBtn.classList.add('hidden');
             }
         }
 
-// --- Free Daily Horoscope Popup Logic ---
-const FREE_API_URL = window.JA_CONFIG ? window.JA_CONFIG.apiBaseUrl + "/free-daily-horoscope" : "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1/free-daily-horoscope";
-const horoModal = document.getElementById('horoscope-modal');
-const horoModalBody = document.getElementById('horoscope-modal-body');
-
-function openHoroscopeModal(content) { horoModalBody.innerHTML = content; horoModal.style.display = 'flex'; }
-function closeHoroscopeModal() { horoModal.style.display = 'none'; horoModalBody.innerHTML = ''; }
-window.addEventListener('click', function(e) { if (e.target === horoModal) closeHoroscopeModal(); });
-
-document.getElementById('btn-personal').addEventListener('click', async function() {
-    const dob = document.getElementById('personal-dob').value;
-    const rashi = document.getElementById('personal-rashi').value;
-    const btn = this;
-    if (!dob || !rashi) return alert("অনুগ্ৰহ কৰি জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক।");
-    
-    btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳"; btn.disabled = true;
-    try {
-        const todayStr = new Date().toISOString().split('T')[0];
-        const cacheBuster = new Date().getTime();
-        const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
-            method: "POST", 
-            headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ type: "personal", dob, rashi, date: todayStr }) 
-        });
-        const data = await response.json();
-        if (data.success) {
-            openHoroscopeModal(data.report); 
-        } else {
-            alert("সমস্যা হৈছে: " + (data.error || "অজ্ঞাত কাৰণ"));
+        function toggleBankAnswer(idx) {
+            document.getElementById(`qb-ans-${idx}`).classList.toggle('hidden');
         }
-    } catch (err) { 
-        alert("চাৰ্ভাৰৰ সৈতে সংযোগ হোৱা নাই।"); 
-    } finally { 
-        btn.innerText = "ৰাশিফল চাওক"; btn.disabled = false; 
-    }
-});
 
-document.getElementById('btn-couple').addEventListener('click', async function() {
-    const boyDob = document.getElementById('boy-dob').value;
-    const boyRashi = document.getElementById('boy-rashi').value;
-    const girlDob = document.getElementById('girl-dob').value;
-    const girlRashi = document.getElementById('girl-rashi').value;
-    const btn = this;
-    
-    if (!boyDob || !boyRashi || !girlDob || !girlRashi) return alert("দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি সম্পূৰ্ণকৈ বাছনি কৰক।");
-    
-    btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳"; btn.disabled = true;
-    try {
-        const todayStr = new Date().toISOString().split('T')[0];
-        const cacheBuster = new Date().getTime();
-        const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
-            method: "POST", 
-            headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ type: "couple", boyDob, boyRashi, girlDob, girlRashi, date: todayStr }) 
-        });
-        const data = await response.json();
-        if (data.success) {
-            openHoroscopeModal(data.report); 
-        } else {
-            alert("সমস্যা হৈছে: " + (data.error || "অজ্ঞাত কাৰণ"));
+        function loadMoreBankQuestions() {
+            qbVisibleCount += 4;
+            renderQuestionBank(false);
         }
-    } catch (err) { 
-        alert("চাৰ্ভাৰৰ সৈতে সংযোগ হোৱা নাই।"); 
-    } finally { 
-        btn.innerText = "যুটীয়া ৰাশিফল চাওক"; btn.disabled = false; 
-    }
-});
-        // Hamburger Menu Toggle Logic
-function toggleMenu() {
-    const nav = document.getElementById('navLinks');
-    nav.classList.toggle('active');
-}
-// --- Review System Logic ---
-let allFetchedReviews = [];
-let currentlyShowingReviews = 5;
 
-async function fetchReviews() {
-    const list = document.getElementById('reviewsList');
-    try {
-        const { data, error } = await window.sbClient.from('reviews').select('*').order('created_at', { ascending: false }).limit(50);
-        if (error) throw error;
-        
-        if (!data || data.length === 0) {
-            list.innerHTML = "<p style='text-align:center;'>এতিয়ালৈকে কোনো মতামত অহা নাই। প্ৰথম মতামত আপুনিয়েই দিয়ক!</p>";
-            return;
+        // Daily Test Engine
+        let currentIdx = 0;
+        let userAnswers = [];
+        let timerInterval;
+        let timeLeft = 300;
+
+        function startDemoTest() {
+            document.getElementById('daily-test').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('test-intro-view').classList.add('hidden');
+            document.getElementById('quiz-result-view').classList.add('hidden');
+            document.getElementById('quiz-active-view').classList.remove('hidden');
+            
+            currentIdx = 0;
+            userAnswers = new Array(dailyQuestions.length).fill(null);
+            timeLeft = 300;
+            renderQuestion();
+            startTimer();
         }
-        
-        allFetchedReviews = data;
-        currentlyShowingReviews = 5; 
-        renderReviewsDisplay();
-    } catch (err) {
-        list.innerHTML = "<p style='text-align:center; color: red;'>মতামত লোড কৰাত সমস্যা হৈছে।</p>";
-    }
-}
 
-function renderReviewsDisplay() {
-    const list = document.getElementById('reviewsList');
-    const btn = document.getElementById('viewMoreBtn');
-    
-    const reviewsToShow = allFetchedReviews.slice(0, currentlyShowingReviews);
-    
-    list.innerHTML = reviewsToShow.map(r => `
-        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #10B981;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <strong style="color: #1e293b;">${r.customer_name}</strong>
-                <span>${'⭐'.repeat(r.rating)}</span>
-            </div>
-            <p style="margin: 0; color: #475569; font-size: 14.5px;">"${r.comment}"</p>
-        </div>
-    `).join('');
-
-    if (allFetchedReviews.length > currentlyShowingReviews) {
-        if(btn) btn.style.display = 'block';
-    } else {
-        if(btn) btn.style.display = 'none';
-    }
-}
-
-function loadMoreReviews() {
-    currentlyShowingReviews += 5; 
-    renderReviewsDisplay();
-}
-
-async function submitReview() {
-    const name = document.getElementById('reviewerName').value;
-    const rating = document.getElementById('reviewRating').value;
-    const comment = document.getElementById('reviewComment').value;
-    
-    if(!name || !comment) return alert("অনুগ্ৰহ কৰি আপোনাৰ নাম আৰু মতামত লিখক।");
-    
-    const btn = document.querySelector('#reviewFormContainer button');
-    btn.innerText = "পঠিওৱা হৈছে..."; btn.disabled = true;
-    
-    try {
-        const { error } = await window.sbClient.from('reviews').insert([
-            { customer_name: name, rating: parseInt(rating), comment: comment }
-        ]);
-        
-        if (error) throw error;
-        
-        alert("আপোনাৰ মূল্যৱান মতামতৰ বাবে ধন্যবাদ!");
-        document.getElementById('reviewerName').value = '';
-        document.getElementById('reviewComment').value = '';
-        fetchReviews(); 
-    } catch (err) {
-        alert("মতামত পঠোৱাত সমস্যা হৈছে।");
-    } finally {
-        btn.innerText = "মতামত পঠিয়াওক"; btn.disabled = false;
-    }
-}
-
-// 12 Rashi Grid Logic
-let dynamicRashiData = [];
-function updateDate() { 
-    document.getElementById('p-date').innerText = "তাৰিখ: " + new Date().toLocaleDateString('as-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
-}
-
-async function fetchDailyRashi() {
-    const container = document.getElementById('rashiGridContainer');
-    if(container) container.innerHTML = "<p style='text-align:center; color:#6D28D9; font-weight:bold;'>আজিৰ ৰাশিফল লোড হৈ আছে... ⏳</p>";
-    try {
-        const todayStr = new Date().toISOString().split('T')[0]; 
-        const cacheBuster = new Date().getTime();
-        const response = await fetch(FREE_API_URL + '?v=' + cacheBuster, { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: "all", date: todayStr }) 
-        });
-        const result = await response.json();
-        if (result.success) {
-            dynamicRashiData = result.data;
-            renderRashiGrid();
-        } else {
-            if(container) container.innerHTML = "<p style='color:red;'>ৰাশিফল লোড কৰাত সমস্যা হৈছে।</p>";
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+                const secs = String(timeLeft % 60).padStart(2, '0');
+                document.getElementById('quiz-timer').innerText = `${mins}:${secs}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuiz();
+                }
+            }, 1000);
         }
-    } catch (error) {
-        if(container) container.innerHTML = "<p style='color:red;'>চাৰ্ভাৰৰ সৈতে সংযোগ হোৱা নাই।</p>";
-    }
-}
 
-function renderRashiGrid() {
-    if (!dynamicRashiData || dynamicRashiData.length === 0) return;
-    document.getElementById('rashiGridContainer').innerHTML = dynamicRashiData.map(r => `
-        <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
-            <div class="rashi-icon">${r.symbol}</div><h3>${r.name}</h3><p>${r.short}</p>
-        </div>`).join('');
-}
+        function renderQuestion() {
+            const qObj = dailyQuestions[currentIdx];
+            document.getElementById('q-category-badge').innerText = qObj.subject;
+            document.getElementById('q-current-num').innerText = currentIdx + 1;
+            document.getElementById('q-total-num').innerText = dailyQuestions.length;
+            document.getElementById('q-text').innerText = `${currentIdx + 1}. ${qObj.q}`;
 
-function openRashiDetail(id) {
-    const r = dynamicRashiData.find(x => x.id === id);
-    if(!r) return;
-    document.getElementById('modalRashiTitle').innerText = r.name + " ৰাশিফল";
-    
-    document.getElementById('modalRashiBody').innerHTML = `
-        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #6D28D9;">
-            <p style="margin:0; font-size: 15px; color: #1e293b;"><strong>🌟 সামগ্ৰিক ফল:</strong> ${r.overall}</p>
-        </div>
-        <div style="display: grid; gap: 15px;">
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                <h4 style="color: #475569; margin-bottom: 8px; font-size: 16px;">💼 কৰ্মক্ষেত্ৰ আৰু অৰ্থ</h4>
-                <p style="margin:0; font-size: 14.5px; color: #334155;">${r.career}</p>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                <h4 style="color: #e11d48; margin-bottom: 8px; font-size: 16px;">❤️ প্ৰেম আৰু সম্পৰ্ক</h4>
-                <p style="margin:0; font-size: 14.5px; color: #334155;">${r.love}</p>
-            </div>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 140px; background: #ecfdf5; padding: 12px; border-radius: 8px; border: 1px solid #a7f3d0;">
-                    <h4 style="color: #047857; margin-bottom: 5px; font-size: 14px;">🧘 স্বাস্থ্য</h4>
-                    <p style="margin:0; font-size: 13.5px; color: #064e3b;">${r.health}</p>
-                </div>
-                <div style="flex: 1; min-width: 140px; background: #fffbeb; padding: 12px; border-radius: 8px; border: 1px solid #fde68a;">
-                    <h4 style="color: #b45309; margin-bottom: 5px; font-size: 14px;">🍀 শুভ ৰং আৰু সংখ্যা</h4>
-                    <p style="margin:0; font-size: 14px; font-weight: 600; color: #78350f;">${r.lucky}</p>
-                </div>
-            </div>
-        </div>
-    `;
-    document.getElementById('rashiModal').classList.add('active');
-}
+            const optsDiv = document.getElementById('q-options');
+            optsDiv.innerHTML = '';
+            const labels = ['ক', 'খ', 'গ', 'ঘ'];
 
-window.addEventListener('DOMContentLoaded', () => { 
-    updateDate(); 
-    fetchDailyRashi();
-    fetchReviews();
-    if (localStorage.getItem('ja_paid_customer_data')) {
-        document.getElementById('jaRecoveryBanner').style.display = 'flex';
-    }
-});
+            qObj.options.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentIdx] === idx ? 'selected' : '';
+                optsDiv.innerHTML += `
+                    <button onclick="selectOption(${idx})" class="option-btn ${isSelected} w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-400 transition flex items-center">
+                        <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center mr-3">${labels[idx]}</span>
+                        <span class="text-sm text-slate-800">${opt}</span>
+                    </button>
+                `;
+            });
 
-// ==========================================
-// ACHARYA CHAT JAVASCRIPT LOGIC
-// ==========================================
-var JA_STORAGE_KEY = "jyotish_assam_saved_chat_v1";
-var jaState = "WAIT_BIRTH_DETAILS";
-var jaChatHistory = [];
-var jaSavedUIList = [];
-var jaUserTopic = "";
-var jaParsedBirth = { raw: "", dob: "", tob: "10:30", pob: "Assam", year: 1996, month: 4, day: 24 };
-var jaHasPaidOnce = false;
-var jaTimeLeft = 300;
-var jaTimerInterval = null;
+            document.getElementById('prev-btn').disabled = currentIdx === 0;
+            document.getElementById('next-btn').innerText = (currentIdx === dailyQuestions.length - 1) ? 'টেষ্ট চাবমিট কৰক' : 'পৰৱৰ্তী প্রশ্ন';
+        }
 
-function getNowTime() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
-function saveJaChatState() { try { localStorage.setItem(JA_STORAGE_KEY, JSON.stringify({ state: jaState === "PAID_ACTIVE" ? "WAIT_PAYMENT" : jaState, history: jaChatHistory, uiList: jaSavedUIList, topic: jaUserTopic, birth: jaParsedBirth, hasPaidOnce: jaHasPaidOnce })); } catch (e) {} }
+        function selectOption(optIdx) {
+            userAnswers[currentIdx] = optIdx;
+            renderQuestion();
+        }
 
-function loadJaChatState() {
-  try {
-    var raw = localStorage.getItem(JA_STORAGE_KEY); if (!raw) return false;
-    var saved = JSON.parse(raw); if (!saved || !saved.uiList || saved.uiList.length === 0) return false;
-    jaState = saved.state || "WAIT_BIRTH_DETAILS"; jaChatHistory = saved.history || []; jaSavedUIList = saved.uiList || []; jaUserTopic = saved.topic || ""; jaParsedBirth = saved.birth || jaParsedBirth; jaHasPaidOnce = !!saved.hasPaidOnce;
-    var box = document.getElementById("ja-chat-messages"); box.innerHTML = "";
-    for (var i = 0; i < jaSavedUIList.length; i++) {
-      var item = jaSavedUIList[i]; var div = document.createElement("div"); div.className = "ja-msg " + (item.sender === "user" ? "ja-user" : "ja-bot");
-      div.innerHTML = item.html + '<div class="ja-msg-time">' + item.time + (item.sender === "user" ? " ✓✓" : "") + '</div>'; box.appendChild(div);
-    }
-    if (jaState === "WAIT_PAYMENT") showJaPaywallCard();
-    box.scrollTop = box.scrollHeight; return true;
-  } catch (e) { return false; }
-}
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                renderQuestion();
+            }
+        }
 
-window.downloadJaChatHistory = function() {
-  if (jaSavedUIList.length === 0) { alert("ডাউনলোড কৰিবলৈ এতিয়াও কোনো কথোপকথন হোৱা নাই।"); return; }
-  var txt = "==========================================\n🕉️ জ্যোতিষ অসম (Jyotish Assam) - আচাৰ্যৰ পৰামৰ্শ\nৱেবছাইট: https://jyotishassam.com\n";
-  if (jaParsedBirth.dob) txt += "জন্ম তাৰিখ: " + jaParsedBirth.dob + "\n";
-  txt += "==========================================\n\n";
-  for (var i = 0; i < jaSavedUIList.length; i++) {
-    var m = jaSavedUIList[i]; var cleanText = m.html.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "");
-    var who = m.sender === "user" ? "👤 আপুনি" : "🔮 আচাৰ্য জ্যোতিষ অসম";
-    txt += who + " (" + m.time + "):\n" + cleanText + "\n------------------------------------------\n";
-  }
-  var blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
-  var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "Jyotish_Assam_Chat.txt"; a.click();
-};
+        function nextQuestion() {
+            if (currentIdx < dailyQuestions.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
 
-window.resetJaChat = function() {
-  if (!confirm("আপুনি পুৰণি চেটখিনি মচি নতুনকৈ কথা পাতিব বিচাৰিছে নেকি?")) return;
-  localStorage.removeItem(JA_STORAGE_KEY); if (jaTimerInterval) clearInterval(jaTimerInterval);
-  document.getElementById("ja-timer").style.display = "none";
-  jaState = "WAIT_BIRTH_DETAILS"; jaChatHistory = []; jaSavedUIList = []; jaUserTopic = ""; jaHasPaidOnce = false;
-  document.getElementById("ja-chat-messages").innerHTML = "";
-  addJaBotMsg("নমস্কাৰ! 🙏 মই আচাৰ্যই কৈছোঁ। আপোনাৰ মনত কি কথাই অশান্তি দি আছে বা আপুনি কোনটো বিষয়ত জানিব বিচাৰিছে মোক কওকচোন?<br><br>লগতে পঞ্জিকাখন চাবলৈ আপোনাৰ <b>নাম, জন্ম তাৰিখ (DOB), সময় আৰু ঠাইখন</b> তলত লিখি পঠিয়াওক...");
-};
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-active-view').classList.add('hidden');
+            document.getElementById('quiz-result-view').classList.remove('hidden');
 
-window.toggleMaximizeJaChat = function() {
-  var win = document.getElementById("ja-chat-window"); var maxBtn = document.getElementById("ja-max-btn");
-  win.classList.toggle("ja-maximized"); maxBtn.innerHTML = win.classList.contains("ja-maximized") ? "🗗" : "⛶";
-  var box = document.getElementById("ja-chat-messages"); box.scrollTop = box.scrollHeight;
-};
+            let score = 0;
+            let weakSubjects = [];
+            const expContainer = document.getElementById('res-explanations');
+            expContainer.innerHTML = '';
 
-window.toggleJaChat = function() {
-  var win = document.getElementById("ja-chat-window");
-  if (win.style.display === "flex") { win.style.display = "none"; } else {
-    win.style.display = "flex";
-    if (document.getElementById("ja-chat-messages").innerHTML === "") {
-      if (!loadJaChatState()) {
-        showJaTyping(true);
-        setTimeout(function() {
-          showJaTyping(false);
-          addJaBotMsg("নমস্কাৰ! 🙏 মই আচাৰ্যই কৈছোঁ। আপোনাৰ মনত কি কথাই অশান্তি দি আছে বা আপুনি কোনটো বিষয়ত জানিব বিচাৰিছে মোক কওকচোন?<br><br>লগতে পঞ্জিকাখন চাবলৈ আপোনাৰ <b>নাম, জন্ম তাৰিখ (DOB), সময় আৰু ঠাইখন</b> তলত লিখি পঠিয়াওক...");
-        }, 600);
-      }
-    }
-  }
-};
+            dailyQuestions.forEach((qObj, idx) => {
+                const userPick = userAnswers[idx];
+                const isCorrect = userPick === qObj.ans;
+                if (isCorrect) {
+                    score++;
+                } else if (!weakSubjects.includes(qObj.subject)) {
+                    weakSubjects.push(qObj.subject);
+                }
 
-function showJaTyping(show) {
-  document.getElementById("ja-typing").style.display = show ? "block" : "none";
-  document.getElementById("ja-status-text").innerText = show ? "✍️ আচাৰ্যই লিখি আছে..." : "● Online (১০০% ব্যক্তিগত)";
-  var box = document.getElementById("ja-chat-messages"); box.scrollTop = box.scrollHeight;
-}
+                const statusBadge = isCorrect 
+                    ? `<span class="text-xs font-bold text-green-600">✔ শুদ্ধ</span>` 
+                    : `<span class="text-xs font-bold text-red-600">✖ অশুদ্ধ (শুদ্ধ: ${qObj.options[qObj.ans]})</span>`;
 
-function addJaBotMsg(html) {
-  var box = document.getElementById("ja-chat-messages"); var t = getNowTime(); var div = document.createElement("div");
-  div.className = "ja-msg ja-bot"; div.innerHTML = html + '<div class="ja-msg-time">' + t + '</div>';
-  box.appendChild(div); box.scrollTop = box.scrollHeight; jaSavedUIList.push({ sender: "bot", html: html, time: t }); saveJaChatState();
-}
+                expContainer.innerHTML += `
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-slate-800">প্রশ্ন ${idx + 1}: ${qObj.q}</span>
+                            ${statusBadge}
+                        </div>
+                        <p class="text-slate-600 mt-1"><strong>ব্যাখ্যা:</strong> ${qObj.exp}</p>
+                    </div>
+                `;
+            });
 
-function addJaUserMsg(text) {
-  var box = document.getElementById("ja-chat-messages"); var t = getNowTime(); var div = document.createElement("div");
-  div.className = "ja-msg ja-user"; div.innerHTML = text + '<div class="ja-msg-time">' + t + ' ✓✓</div>';
-  box.appendChild(div); box.scrollTop = box.scrollHeight; jaSavedUIList.push({ sender: "user", html: text, time: t }); saveJaChatState();
-}
+            const accuracy = Math.round((score / dailyQuestions.length) * 100);
+            document.getElementById('res-score').innerText = `${score} / ${dailyQuestions.length}`;
+            document.getElementById('res-accuracy').innerText = `${accuracy}%`;
+            document.getElementById('res-rank').innerText = `#${Math.max(1, (dailyQuestions.length - score) * 5 + 1)}`;
 
-function showJaPaywallCard() {
-  var box = document.getElementById("ja-chat-messages");
-  var oldCards = box.querySelectorAll(".ja-pay-box"); for (var i = 0; i < oldCards.length; i++) oldCards[i].remove();
-  var div = document.createElement("div"); div.className = "ja-pay-box";
+            const weakBox = document.getElementById('weak-topic-list');
+            weakBox.innerText = weakSubjects.length === 0 
+                ? "অভিনন্দন! আজিৰ টেষ্টত আপোনাৰ কোনো দুৰ্বল বিষয় ধৰা পৰা নাই।" 
+                : weakSubjects.join(" • ");
+        }
 
-  if (!jaHasPaidOnce) {
-    div.innerHTML = '<div style="color:#ffd700; font-weight:700; font-size:15px;">🕉️ আচাৰ্যৰ সৈতে পোনপটীয়া বাৰ্তালাপ</div>' +
-      '<div style="font-size:12px; margin:5px 0 10px 0; color:#e2e8f0; line-height:1.4;">আপোনাৰ সমস্যাৰ সমাধান জানিবলৈ তলৰ যিকোনো এটা প্লেন বাছি লওক:</div>' +
-      '<button type="button" class="ja-rzp-btn" onclick="window.payWithRazorpayPlan(49, 5)">⏱️ ৫ মিনিট কথা পাতক — ₹৪৯</button>' +
-      '<button type="button" class="ja-rzp-btn ja-plan-popular" onclick="window.payWithRazorpayPlan(79, 10)">🔥 ১০ মিনিট কথা পাতক — ₹৭৯ (জনপ্ৰিয়)</button>' +
-      '<button type="button" class="ja-rzp-btn ja-plan-vip" onclick="window.payWithRazorpayPlan(129, 15)">👑 ১৫ মিনিট কথা পাতক — ₹১২৯ (Best Value)</button>' +
-      '<div style="font-size:11px; color:#86efac; margin-top:4px;">🔒 ১০০% গোপনীয় | এই চেট কেৱল আপোনাৰ ফোনতহে থাকিব</div>';
-  } else {
-    div.innerHTML = '<div style="color:#ffd700; font-weight:700; font-size:15px;">⏳ আলোচনা আগবঢ়াই নিবলৈ সময় বাছনি কৰক</div>' +
-      '<div style="font-size:12px; margin:5px 0 10px 0; color:#e2e8f0; line-height:1.4;">আপোনাৰ পুৰণি কথোপকথন ওপৰত সুৰক্ষিত আছে। অতিৰিক্ত প্ৰশ্ন সুধিবলৈ তলৰ প্লেন বাছি লওক:</div>' +
-      '<button type="button" class="ja-rzp-btn" onclick="window.payWithRazorpayPlan(75, 5)">⏱️ ৫ মিনিট বঢ়াওক — ₹৭৫</button>' +
-      '<button type="button" class="ja-rzp-btn ja-plan-popular" onclick="window.payWithRazorpayPlan(99, 10)">🔥 ১০ মিনিট বঢ়াওক — ₹৯৯ (জনপ্ৰিয়)</button>' +
-      '<button type="button" class="ja-rzp-btn ja-plan-vip" onclick="window.payWithRazorpayPlan(149, 15)">👑 ১৫ মিনিট বঢ়াওক — ₹১৪৯ (Best Value)</button>';
-  }
-  box.appendChild(div); box.scrollTop = box.scrollHeight;
-}
+        function resetDemoTest() {
+            startDemoTest();
+        }
 
-function extractDobFromText(rawText) {
-  var norm = String(rawText).replace(/[০-৯]/g, function(m) { return {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'}[m] || m; });
-  var nums = norm.match(/\d+/g); if (!nums || nums.length < 2) return { valid: false };
-  var year = null, month = 4, day = 15;
-  for (var i = 0; i < nums.length; i++) { var n = parseInt(nums[i], 10); if (n >= 1940 && n <= 2026) year = n; }
-  if (!year) return { valid: false };
-  if (nums.length >= 3) { var n0 = parseInt(nums[0], 10); var n1 = parseInt(nums[1], 10); var n2 = parseInt(nums[2], 10);
-    if (n0 > 1900) { month = (n1 >= 1 && n1 <= 12) ? n1 : 4; day = (n2 >= 1 && n2 <= 31) ? n2 : 15; }
-    else { day = (n0 >= 1 && n0 <= 31) ? n0 : 15; month = (n1 >= 1 && n1 <= 12) ? n1 : 4; }
-  } else { var firstNum = parseInt(nums[0], 10); day = (firstNum >= 1 && firstNum <= 31) ? firstNum : 15; }
-  return { valid: true, dob: year + "-" + String(month).padStart(2, '0') + "-" + String(day).padStart(2, '0'), day: day, month: month, year: year };
-}
+        function shareOnWhatsApp() {
+            const scoreText = document.getElementById('res-score').innerText;
+            const msg = `মই আজিৰ 'অসম এক্সাম হাব'ৰ ডেইলী অসমীয়া মক টেষ্টত ${scoreText} স্ক’ৰ পালোঁ! আপুনি কেইটা শুদ্ধকৈ দিব পাৰিব? এতিয়াই বিনামূলীয়াকৈ টেষ্ট দি চাওক: ` + window.location.href;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
 
-window.handleJaSend = async function() {
-  var inp = document.getElementById("ja-user-input"); var text = inp.value.trim(); if (!text) return;
-  inp.value = ""; addJaUserMsg(text); jaChatHistory.push({ role: "user", content: text });
+        function filterPacks(cat, clickedBtn) {
+            if (clickedBtn) {
+                document.querySelectorAll('#pack-filter-tabs .pack-tab').forEach(btn => {
+                    btn.className = "pack-tab bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-100 transition";
+                });
+                clickedBtn.className = "pack-tab bg-blue-600 text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-sm transition";
+            }
+            document.querySelectorAll('.pack-card').forEach(card => {
+                const cardCats = card.getAttribute('data-cat');
+                if (cat === 'all' || cardCats.includes(cat)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
 
-  if (jaState === "WAIT_PAYMENT") {
-    showJaTyping(true);
-    setTimeout(function() {
-      showJaTyping(false);
-      if (!jaHasPaidOnce) addJaBotMsg("মই আপোনাৰ প্ৰশ্নটো বুজি পাইছোঁ। অনুগ্ৰহ কৰি তলৰ <b>৫ মিনিট (₹৪৯), ১০ মিনিট (₹৭৯) বা ১৫ মিনিট (₹১২৯)</b> ৰ যিকোনো এটা প্লেন বাছি লৈ চেশ্যনটো খুলি লওক...");
-      else addJaBotMsg("নতুন প্ৰশ্নটোৰ উত্তৰ দিবলৈ মই সাজু আছোঁ। অনুগ্ৰহ কৰি সময় বঢ়াবলৈ তলৰ যিকোনো এটা প্লেন বাছি লওক...");
-      showJaPaywallCard();
-    }, 800);
-    return;
-  }
-
-  if (jaState === "WAIT_BIRTH_DETAILS") {
-    var dobCheck = extractDobFromText(text);
-    if (!dobCheck.valid) {
-      if (!jaUserTopic) jaUserTopic = text;
-      showJaTyping(true);
-      setTimeout(function() {
-        showJaTyping(false);
-        var s = text.toLowerCase(); var topicAck = "আপোনাৰ কথাটো মই বুজি পাইছোঁ।";
-        if (s.indexOf("career") !== -1 || s.indexOf("job") !== -1 || s.indexOf("চাকৰি") !== -1 || s.indexOf("ব্যৱসায়") !== -1) topicAck = "আপুনি আপোনাৰ <b>কেৰিয়াৰ আৰু কৰ্মজীৱনৰ</b> বিষয়ে জানিব বিচাৰিছে।";
-        else if (s.indexOf("love") !== -1 || s.indexOf("marriage") !== -1 || s.indexOf("বিয়া") !== -1 || s.indexOf("বিবাহ") !== -1 || s.indexOf("প্ৰেম") !== -1) topicAck = "আপুনি আপোনাৰ <b>প্ৰেম আৰু বিবাহ জীৱনৰ</b> বিষয়ে জানিব বিচাৰিছে।";
-        addJaBotMsg(topicAck + " 🙏<br><br>কিন্তু আপোনাৰ গ্ৰহ-নক্ষত্ৰ গণনা কৰিবলৈ মোক প্ৰথমে আপোনাৰ <b>জন্ম তাৰিখ (Date of Birth), জন্মৰ সময় আৰু ঠাইখন</b> লাগিব।<br><br>অনুগ্ৰহ কৰি তলত লিখি পঠিয়াওকচোন <i>(যেনে: 24/04/1996, পুৱা 10:30, লখিমপুৰ)</i>:");
-      }, 800);
-      return;
-    }
-
-    jaParsedBirth = { raw: jaUserTopic ? (jaUserTopic + " | " + text) : text, dob: dobCheck.dob, day: dobCheck.day, month: dobCheck.month, year: dobCheck.year, tob: "10:30", pob: "Assam" };
-    showJaTyping(true);
-    var firstReply = await askAcharyaEngine(jaParsedBirth.raw, true);
-    showJaTyping(false);
-    jaChatHistory.push({ role: "assistant", content: firstReply });
-    addJaBotMsg(firstReply);
-    jaState = "WAIT_PAYMENT"; saveJaChatState(); setTimeout(showJaPaywallCard, 500);
-  } 
-  else if (jaState === "PAID_ACTIVE") {
-    showJaTyping(true);
-    var reply = await askAcharyaEngine(text, false);
-    showJaTyping(false);
-    jaChatHistory.push({ role: "assistant", content: reply });
-    addJaBotMsg(reply);
-  }
-};
-
-async function askAcharyaEngine(userMessage, isTeaser) {
-  var apiBase = "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1";
-  var payload = { message: userMessage, question: userMessage, birthDate: jaParsedBirth.dob, dob: jaParsedBirth.dob, birthTime: jaParsedBirth.tob, birthPlace: jaParsedBirth.pob, birthContext: jaParsedBirth.raw, history: jaChatHistory, lang: "as", mode: isTeaser ? "teaser" : "full_human_chat" };
-  try {
-    var res = await fetch(apiBase + "/calculate-chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    if (res.ok) { var data = await res.json(); var txt = data.reply || data.answer || data.response || data.message || data.text || data.report; if (txt) return txt; }
-  } catch (e) {}
-
-  var vedicPairs = [{ rashi: "মেষ", nak: "অশ্বিনী" }, { rashi: "বৃষ", nak: "ৰোহিণী" }, { rashi: "মিথুন", nak: "মৃগশিৰা" }, { rashi: "কৰ্কট", nak: "পুষ্যা" }, { rashi: "সিংহ", nak: "মঘা" }, { rashi: "কন্যা", nak: "হস্তা" }, { rashi: "তুলা", nak: "স্বাতী" }, { rashi: "বৃশ্চিক", nak: "অনুৰাধা" }, { rashi: "ধনু", nak: "মূলা" }, { rashi: "মকৰ", nak: "শ্ৰৱণা" }, { rashi: "কুম্ভ", nak: "শতভিষা" }, { rashi: "মীন", nak: "ৰেৱতী" }];
-  var seed = jaParsedBirth.day + (jaParsedBirth.month * 31) + jaParsedBirth.year;
-  var pair = vedicPairs[seed % 12]; var lagna = vedicPairs[(seed + 3) % 12].rashi;
-  var mulank = jaParsedBirth.day; while (mulank > 9) mulank = Math.floor(mulank / 10) + (mulank % 10);
-
-  if (isTeaser) return "মই আপোনাৰ জন্ম তাৰিখ (<b>" + jaParsedBirth.dob + "</b>) মিলাই চালোঁ। আপোনাৰ <b>" + pair.rashi + " ৰাশি</b> আৰু <b>" + lagna + " লগ্ন</b>ৰ প্ৰভাৱ স্পষ্টকৈ ওলাইছে।<br><br>অহা কিছু দিনৰ ভিতৰতে বৃহস্পতিৰ এটা ডাঙৰ ৰাজযোগ খোল খাইছে! তলত আপোনাৰ সুবিধা অনুসৰি যিকোনো এটা প্লেন বাছি লৈ চেশ্যনটো আনলক কৰক, মই আপোনাৰ প্ৰশ্নটোৰ সম্পূৰ্ণ সমাধান আৰু ঘৰুৱা উপায়টো কৈ দিছোঁ...";
-
-  return "আপোনাৰ প্ৰশ্নটোৰ ওপৰত মই আপোনাৰ " + pair.rashi + " ৰাশি (" + pair.nak + " নক্ষত্ৰ) আৰু বৰ্তমান চলি থকা অন্তৰ্দশাটো মিলাই চালোঁ। অহা ৪৫ দিনৰ ভিতৰত গ্ৰহৰ স্থান সলনি হ'লেই পৰিস্থিতি সম্পূর্ণ আপোনাৰ পক্ষলৈ আহিব। প্রতিদিনে পুৱা সূৰ্য দেৱতাক তামৰ পাত্ৰত জল অৰ্পণ কৰিব। আপুনি আৰু কিবা বিশেষ কথা জানিব বিচাৰে নেকি কওকচোন...";
-}
-
-window.payWithRazorpayPlan = async function(amountRupees, minutesCount) {
-  // ⚠️ CRITICAL: Replace YOUR_RAZORPAY_KEY_HERE with actual key
-  var options = {
-    key: "YOUR_RAZORPAY_KEY_HERE",
-    amount: amountRupees * 100,
-    currency: "INR",
-    name: "জ্যোতিষ অসম",
-    description: "আচাৰ্যৰ সৈতে " + minutesCount + " মিনিটৰ লাইভ কুণ্ডলী পৰামৰ্শ",
-    image: "https://jyotishassam.com/icon.png",
-    handler: function (response) {
-      startPaidHumanSession(response.razorpay_payment_id, minutesCount);
-    },
-    theme: { color: "#075e54" }
-  };
-  var rzp = new Razorpay(options);
-  rzp.open();
-};
-
-function startPaidHumanSession(paymentId, minutesCount) {
-  var isFirstUnlock = !jaHasPaidOnce; jaHasPaidOnce = true; jaState = "PAID_ACTIVE"; jaTimeLeft = (minutesCount || 5) * 60; saveJaChatState();
-  var box = document.getElementById("ja-chat-messages");
-  var oldCards = box.querySelectorAll(".ja-pay-box"); for (var i = 0; i < oldCards.length; i++) oldCards[i].remove();
-  var timerBadge = document.getElementById("ja-timer"); timerBadge.style.display = "inline-block";
-  document.getElementById("ja-user-input").focus();
-
-  showJaTyping(true);
-  setTimeout(async function() {
-    if (isFirstUnlock) {
-      var firstFull = await askAcharyaEngine(jaParsedBirth.raw, false);
-      showJaTyping(false); addJaBotMsg("🙏 ধন্যবাদ, আপোনাৰ দক্ষিণা গ্ৰহণ কৰিলোঁ। আমাৰ " + minutesCount + " মিনিটৰ ব্যক্তিগত আলোচনা আৰম্ভ হৈছে। শুনক আপোনাৰ কুণ্ডলীয়ে কি কয়—<br><br>" + firstFull);
-    } else {
-      showJaTyping(false); addJaBotMsg("🙏 ধন্যবাদ! আপোনাৰ অতিৰিক্ত <b>" + minutesCount + " মিনিটৰ চেশ্যন</b> সক্ৰিয় হ'ল। আপোনাৰ মনত থকা পৰৱৰ্তী প্ৰশ্নটো এতিয়া মোক সোধকচোন...");
-    }
-  }, 800);
-
-  if (jaTimerInterval) clearInterval(jaTimerInterval);
-  jaTimerInterval = setInterval(function() {
-    jaTimeLeft--;
-    var m = String(Math.floor(jaTimeLeft / 60)).padStart(2, "0"); var s = String(jaTimeLeft % 60).padStart(2, "0");
-    timerBadge.innerText = "⏳ " + m + ":" + s;
-    if (jaTimeLeft <= 0) {
-      clearInterval(jaTimerInterval); jaState = "WAIT_PAYMENT"; timerBadge.style.display = "none"; saveJaChatState();
-      addJaBotMsg("🙏 আমাৰ নিৰ্ধাৰিত সময় সমাপ্ত হ'ল। আপোনাৰ এই গোটেই কথোপকথনটো ইয়াত সুৰক্ষিতভাৱে চেভ হৈ আছে। যদি আৰু কথা পাতিব বিচাৰে, তেন্তে তলৰ প্লেন বাছি লওক:");
-      showJaPaywallCard();
-    }
-  }, 1000);
-}
-</script>
-
-<!-- Live Customer Trust Notification (Social Proof) Start -->
-<div id="astro-live-toast" style="position: fixed; bottom: 18px; left: 18px; background: #ffffff; border-left: 4px solid #25D366; padding: 10px 15px; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.18); display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #222; z-index: 9999; transform: translateY(150%); transition: transform 0.5s ease-in-out; max-width: 300px; font-family: inherit;">
-  <span style="font-size: 18px;">✅</span>
-  <div>
-    <div id="toast-text" style="font-weight: 600; line-height: 1.4;">গুৱাহাটীৰ পৰা অংকিতা বৰাই এইমাত্ৰ জন্ম কুণ্ডলী (PDF) ডাউনলোড কৰিলে।</div>
-    <div style="font-size: 10.5px; color: #128C7E; margin-top: 2px;">⚡ এইমাত্ৰ ভেৰিফাইড পেমেন্ট সম্পন্ন</div>
-  </div>
-</div>
-
-<script>
-  (function() {
-    const messages = [
-      "গুৱাহাটীৰ পৰা অংকিতা বৰাই এইমাত্ৰ জন্ম কুণ্ডলী (PDF) ডাউনলোড কৰিলে।",
-      "যোৰহাটৰ পৰা প্ৰাঞ্জল শইকীয়াই সম্পূর্ণ সোঁৱৰণী ডাউনলোড কৰিলে।",
-      "ডিব্ৰুগড়ৰ পৰা পল্লৱী গগৈয়ে বিবাহ কুণ্ডলী মিলন কৰিলে।",
-      "তেজপুৰৰ পৰা বিকাশ কলিতাই এইমাত্ৰ জন্ম পত্ৰিকা লাভ কৰিলে।",
-      "লখিমপুৰৰ পৰা মণিষা দত্তই প্ৰিমিয়াম কুণ্ডলী ডাউনলোড কৰিলে।",
-      "নগাঁৱৰ পৰা সৌৰভ শৰ্মাই যুটীয়া ৰাশিফল ৰিপোৰ্ট ডাউনলোড কৰিলে।",
-      "শিৱসাগৰৰ পৰা দেৱাশীষ ফুকনে এইমাত্ৰ সোঁৱৰণী (PDF) লাভ কৰিলে।"
-    ];
-    let index = 0;
-    const toast = document.getElementById("astro-live-toast");
-    const toastText = document.getElementById("toast-text");
-
-    function showToast() {
-      toastText.innerText = messages[index];
-      toast.style.transform = "translateY(0)";
-      setTimeout(() => {
-        toast.style.transform = "translateY(150%)";
-      }, 4500); 
-      index = (index + 1) % messages.length;
-    }
-
-    setTimeout(() => {
-      showToast();
-      setInterval(showToast, 22000);
-    }, 8000);
-  })();
-</script>
-
+        window.onload = loadAutoQuestions;
+    </script>
 </body>
 </html>
