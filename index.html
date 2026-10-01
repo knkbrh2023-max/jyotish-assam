@@ -781,29 +781,38 @@ function checkLuckyGem() {
 
     <!-- Teaser (30% Free) Modal -->
     <!-- Teaser (Free Preview) Modal -->
+<!-- Teaser (30% Free) Modal - Premium API Version -->
 <div class="modal" id="teaserModal">
-    <div class="modal-content" style="max-width: 650px; padding: 0; overflow: hidden; border: none;">
-        <!-- Header (Blue Professional Look) -->
-        <div style="background: #1e3a8a; color: white; padding: 25px 20px; text-align: center;">
-            <h2 style="margin: 0; font-size: 24px; font-weight: bold;">প্ৰাথমিক জ্যোতিষিক গণনা</h2>
-            <p style="margin: 5px 0 0; font-size: 14px; color: #bfdbfe;">আপোনাৰ গ্ৰহ-নক্ষত্ৰৰ বিনামূলীয়া নমুনা (Free Preview)</p>
+    <div class="modal-content" style="max-width: 650px; padding: 0; overflow: hidden; border: none; background: #e8dcc4;">
+        
+        <!-- Real Report Header -->
+        <div style="background: #fdf5e6; border-bottom: 2px solid #8b0000; padding: 25px 20px; text-align: center;">
+            <div style="font-size:35px; color:#8b0000;">ॐ</div>
+            <h2 style="margin: 0; font-size: 24px; font-weight: bold; color: #5c3a21;">প্ৰাথমিক জ্যোতিষিক গণনা</h2>
+            <p style="margin: 5px 0 0; font-size: 14px; color: #8b0000; font-weight: bold;">(FREE PREVIEW 30%)</p>
         </div>
         
         <div style="padding: 25px;">
-            <!-- Basic Info (Clear) -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 10px;">
-                    <span style="font-weight: bold; color: #0f172a; font-size: 16px;">👤 গ্ৰাহকৰ বিৱৰণ</span>
-                    <span style="background: #dcfce7; color: #16a34a; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">FREE PREVIEW</span>
-                </div>
-                <p style="margin: 5px 0; color: #334155; font-size: 14.5px;"><strong>নাম:</strong> <span id="tsrName"></span></p>
-                <p style="margin: 5px 0; color: #334155; font-size: 14.5px;"><strong>জন্ম ৰাশি:</strong> <span id="tsrRashi"></span></p>
-                <p style="margin: 5px 0 0; color: #16a34a; font-size: 14px; font-weight: bold;">✓ আপোনাৰ কুণ্ডলীত গুৰুত্বপূৰ্ণ পৰিৱৰ্তনৰ সংকেত পোৱা গৈছে!</p>
+            <!-- 1. Real Astrology Data -->
+            <div style="background: rgba(219, 190, 146, 0.2); border: 1px solid #c9a961; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>👤 গ্ৰাহকৰ নাম:</strong> <span id="tsrName"></span></p>
+                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🌟 জন্ম ৰাশি:</strong> <span id="tsrRashi" style="color: #8b0000; font-weight: bold;">গণনা চলি আছে...</span></p>
+                <p style="margin: 5px 0; color: #334155; font-size: 15px;"><strong>🎯 জন্ম লগ্ন:</strong> <span id="tsrLagna" style="color: #8b0000; font-weight: bold;"></span></p>
             </div>
 
-            <!-- Blurred Premium Content -->
+            <!-- 2. Actual Kundali SVG Container -->
+            <div id="tsrKundali" style="text-align: center; margin-bottom: 20px;">
+                <p style="color: #64748b; font-size: 14px;">আপোনাৰ কুণ্ডলী প্ৰস্তুত কৰা হৈ আছে... ⏳</p>
+            </div>
+            
+            <!-- 3. Real Unblurred Prediction Text -->
+            <div style="background: rgba(219, 190, 146, 0.2); border-left: 4px solid #8b0000; padding: 15px; margin-bottom: 20px;">
+                <p style="margin:0; font-size: 14.5px; color: #3e2723; line-height: 1.6;"><strong>প্ৰাথমিক বিশ্লেষণ:</strong> বৈদিক গণনা অনুসৰি আপোনাৰ কুণ্ডলীত কিছুমান শক্তিশালী গ্ৰহ যোগ নিৰ্মাণ হৈছে। জীৱনৰ প্ৰথমভাগত কিছু সংগ্ৰাম থাকিলেও নিজৰ একাগ্ৰতাৰ বলত আপুনি সফলতা অৰ্জন কৰিব...</p>
+            </div>
+
+            <!-- 4. Blurred Premium Content -->
             <div style="position: relative; margin-bottom: 20px;">
-                <div class="blur-section" style="color: #475569; font-size: 14.5px; line-height: 1.7; filter: blur(5px); opacity: 0.5; user-select: none;">
+                <div class="blur-section" style="background:#fff; color: #475569; font-size: 14.5px; line-height: 1.7; filter: blur(6px); opacity: 0.6; user-select: none; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
                     <p><strong>১. কৰ্ম আৰু অৰ্থ:</strong> আপোনাৰ জীৱনত অহা ২ বছৰত আৰ্থিক দিশত এক ডাঙৰ পৰিৱৰ্তন আহিব...</p>
                     <p><strong>২. প্ৰেম আৰু বিবাহ:</strong> আপোনাৰ ভৱিষ্যত জীৱন সংগীৰ বৃত্তি আৰু স্বভাৱ হ'ব...</p>
                     <p><strong>৩. ভাগ্যৱান ৰত্ন:</strong> আপোনাৰ সফলতাৰ বাবে কোনটো ৰত্ন আটাইতকৈ উপযুক্ত...</p>
@@ -811,24 +820,23 @@ function checkLuckyGem() {
                 </div>
             </div>
 
-            <!-- Yellow Locked Box (Matching your exact screenshot) -->
+            <!-- Yellow Locked Box -->
             <div style="background: #fffbeb; border: 1px solid #fde047; border-radius: 12px; padding: 25px 20px; text-align: center; box-shadow: 0 4px 15px rgba(253, 224, 71, 0.2);">
                 <div style="font-size: 28px; margin-bottom: 10px; color: #000;">🔒</div>
                 <h3 style="color: #000; font-size: 18px; margin-bottom: 8px; font-weight: 700;">সম্পূৰ্ণ ৰিপোৰ্ট আনলক কৰি PDF ডাউনলোড কৰক!</h3>
-                <p style="color: #475569; font-size: 13px; margin-bottom: 15px; line-height: 1.5;">তলৰ বুটামত ক্লিক কৰি Razorpay (UPI / GPay / PhonePe / Card) যোগে মাত্ৰ <strong>₹<span id="tsrPriceText"></span></strong> পেমেন্ট কৰাৰ লগে লগে সম্পূৰ্ণ ৰিপোৰ্ট স্বয়ংক্ৰিয়ভাৱে আনলক হৈ যাব।</p>
+                <p style="color: #475569; font-size: 13px; margin-bottom: 15px; line-height: 1.5;">তলৰ বুটামত ক্লিক কৰি Razorpay যোগে মাত্ৰ <strong>₹<span id="tsrPriceText"></span></strong> পেমেন্ট কৰাৰ লগে লগে সম্পূৰ্ণ ৰিপোৰ্ট স্বয়ংক্ৰিয়ভাৱে আনলক হৈ যাব।</p>
                 
                 <button onclick="initiatePayment()" style="background: #2563eb; color: white; border: none; padding: 14px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: 0.3s;">
-                    🛡️ Pay ₹<span id="tsrPriceBtn"></span> with Razorpay (Instant Unlock)
+                    🛡️ Pay ₹<span id="tsrPriceBtn"></span> with Razorpay
                 </button>
             </div>
             
             <div style="text-align: center; margin-top: 15px;">
-                <span style="color: #94a3b8; font-size: 13px; cursor: pointer; text-decoration: underline;" onclick="document.getElementById('teaserModal').classList.remove('active')">Cancel / Close</span>
+                <span style="color: #64748b; font-size: 13px; cursor: pointer; text-decoration: underline;" onclick="document.getElementById('teaserModal').classList.remove('active')">Cancel / Close</span>
             </div>
         </div>
     </div>
 </div>
-
             <button onclick="initiatePayment()" class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); font-size: 17px; box-shadow: 0 5px 15px rgba(16,185,129,0.4);">
                 🔓 সম্পূৰ্ণ ৰিপোৰ্ট আনলক কৰক (Pay ₹<span id="tsrPrice"></span>)
             </button>
