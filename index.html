@@ -542,7 +542,7 @@ function checkLuckyGem() {
             <div class="p-icon">📅</div>
             <h3 class="p-title">মাহেকীয়া ৰাশিফল</h3>
             <p class="p-desc">অহা ৩০ দিনৰ বাবে আপোনাৰ স্বাস্থ্য, অৰ্থ, আৰু কৰ্মৰ বিস্তাৰিত জ্যোতিষীয় ভৱিষ্যদ্বাণী।</p>
-            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="openOrderModal('Monthly Horoscope',অনুগ্ৰহ কৰি ফৰ্মখন ফিলআপ কৰক')">ৰিপোৰ্ট চাওক</button>
+            <button class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);" onclick="openOrderModal('Monthly Horoscope',)">ৰিপোৰ্ট চাওক</button>
         </div>
 
         <!-- 2. Yearly -->
@@ -916,18 +916,25 @@ function checkLuckyGem() {
         }
 
         function openOrderModal(serviceCode, price) {
-            curServiceCode = serviceCode;
-            
-            if(price === 299) { curServiceCode = 'birth'; curServiceTitle = 'সম্পূৰ্ণ জন্ম কুণ্ডলী'; }
-            else if(price === 99) { curServiceCode = 'love'; curServiceTitle = 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ'; }
-            else if(price === 199) { curServiceCode = 'career'; curServiceTitle = 'কেৰিয়াৰ আৰু ব্যৱসায়'; }
-            else if(price === 19) { curServiceCode = 'monthly'; curServiceTitle = 'মাহেকীয়া ৰাশিফল'; }
-            else if(price === 49) { curServiceCode = 'yearly'; curServiceTitle = 'বাৰ্ষিক ৰাশিফল'; }
-            
-            curServicePrice = price;
-            document.getElementById('orderTitle').innerText = curServiceTitle + " (₹" + price + ")";
-            document.getElementById('orderModal').classList.add('active');
-        }
+    curServiceCode = serviceCode;
+    
+    // মূল্যৰ ওপৰত ভিত্তি কৰি সেৱাৰ নামটো নিৰ্ধাৰণ কৰা হৈছে
+    if(price === 299) { curServiceCode = 'birth'; curServiceTitle = 'সম্পূৰ্ণ জন্ম কুণ্ডলী'; }
+    else if(price === 99) { curServiceCode = 'love'; curServiceTitle = 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ'; }
+    else if(price === 199) { curServiceCode = 'career'; curServiceTitle = 'কেৰিয়াৰ আৰু ব্যৱসায়'; }
+    else if(price === 19) { curServiceCode = 'monthly'; curServiceTitle = 'মাহেকীয়া ৰাশিফল'; }
+    else if(price === 49) { curServiceCode = 'yearly'; curServiceTitle = 'বাৰ্ষিক ৰাশিফল'; }
+    
+    curServicePrice = price;
+    
+    // ফৰ্মৰ একেবাৰে ওপৰত সেৱাৰ নামটো (যেনে: মাহেকীয়া ৰাশিফল) বহুৱাবলৈ
+    document.getElementById('orderTitle').innerText = curServiceTitle; 
+    
+    // তাৰ ঠিক তলতে 'অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক' লিখিবলৈ
+    document.getElementById('orderSubtitle').innerText = "অনুগ্ৰহ কৰি ফৰ্মখন পূৰণ কৰক";
+    
+    document.getElementById('orderModal').classList.add('active');
+}
 
         function closeOrderModal() {
             document.getElementById('orderModal').classList.remove('active');
