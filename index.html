@@ -2229,5 +2229,124 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 </script>
+    <!-- ========================================== -->
+<!-- Customer Support Chatbot (Supabase Database) -->
+<!-- ========================================== -->
+
+<!-- বাওঁফালে থকা ফ্লোটিং সহায় বুটাম -->
+<div id="support-widget-btn" onclick="toggleSupportChat()">
+    🎧 সহায় (Support)
+</div>
+
+<!-- চেট উইণ্ড' (Form) -->
+<div id="support-chat-window">
+    <div class="support-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="font-size: 24px;">👨‍💻</div>
+            <div>
+                <strong style="font-size: 14px;">জ্যোতিষ অসম সহায়ক</strong>
+                <div style="font-size: 11px; color: #a7f3d0;">আপোনাৰ সমস্যা আমাক জনাওক</div>
+            </div>
+        </div>
+        <span onclick="toggleSupportChat()" style="cursor: pointer; font-size: 24px; font-weight: bold; line-height: 1;">×</span>
+    </div>
+    
+    <div class="support-body">
+        <div class="support-msg">
+            নমস্কাৰ! 🙏 পেমেন্ট বা ৰিপোৰ্ট সম্পৰ্কীয় যিকোনো সমস্যা তলত লিখক। আমাৰ টীমে চেক কৰি লগে লগে সমাধান কৰিব।
+        </div>
+        
+        <input type="text" id="sup-name" placeholder="আপোনাৰ নাম *" class="sup-input" required>
+        <input type="text" id="sup-contact" placeholder="ফোন নম্বৰ বা ইমেইল (ঐচ্ছিক)" class="sup-input">
+        <textarea id="sup-msg" placeholder="আপোনাৰ সমস্যাটো বহলাই লিখক... *" class="sup-input" rows="3" required></textarea>
+    </div>
+    
+    <div class="support-footer">
+        <button id="sup-send-btn" onclick="sendSupportMessageToDB()">ছাবমিট কৰক (Submit)</button>
+    </div>
+</div>
+
+<style>
+    /* Support Button Design */
+    #support-widget-btn {
+        position: fixed; bottom: 25px; left: 25px; 
+        background: linear-gradient(135deg, #10B981, #047857); color: white;
+        padding: 12px 22px; border-radius: 50px; font-size: 15px; font-weight: 700;
+        cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); z-index: 9999;
+        transition: transform 0.3s, box-shadow 0.3s; display: flex; align-items: center; gap: 8px; border: 2px solid #a7f3d0;
+    }
+    #support-widget-btn:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6); }
+
+    /* Chat Window Design */
+    #support-chat-window {
+        position: fixed; bottom: 85px; left: 25px; width: 320px; max-width: 90vw;
+        background: #f8fafc; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        z-index: 10000; display: none; flex-direction: column; overflow: hidden; border: 2px solid #e2e8f0; font-family: inherit;
+    }
+    .support-header { background: #047857; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .support-body { padding: 15px; }
+    .support-msg {
+        background: white; padding: 12px; border-radius: 10px; border-top-left-radius: 2px;
+        font-size: 13.5px; color: #334155; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border-left: 4px solid #10B981; margin-bottom: 15px; line-height: 1.5;
+    }
+    .sup-input {
+        width: 100%; padding: 10px 12px; margin-bottom: 10px; border: 1px solid #cbd5e1;
+        border-radius: 8px; font-family: inherit; font-size: 13.5px; outline: none; box-sizing: border-box; background: #fff;
+    }
+    .sup-input:focus { border-color: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+    .support-footer { padding: 0 15px 15px 15px; }
+    #sup-send-btn {
+        width: 100%; background: #10B981; color: white; border: none; padding: 12px;
+        border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 15px;
+    }
+    #sup-send-btn:hover { background: #047857; }
+</style>
+
+<script>
+    function toggleSupportChat() {
+        const chatWin = document.getElementById('support-chat-window');
+        chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    async function sendSupportMessageToDB() {
+        const name = document.getElementById('sup-name').value.trim();
+        const contact = document.getElementById('sup-contact').value.trim();
+        const msg = document.getElementById('sup-msg').value.trim();
+        
+        if (!name || !msg) {
+            alert("অনুগ্ৰহ কৰি আপোনাৰ নাম আৰু সমস্যাটো লিখক!");
+            return;
+        }
+
+        const btn = document.getElementById('sup-send-btn');
+        btn.innerText = "পঠিওৱা হৈছে... ⏳";
+        btn.disabled = true;
+
+        try {
+            // index.html ত ইতিমধ্যে থকা sbClient ব্যৱহাৰ কৰা হৈছে
+            const { error } = await sbClient.from('support_messages').insert([
+                { name: name, contact: contact, message: msg }
+            ]);
+            
+            if (error) throw error;
+            
+            alert("ধন্যবাদ! আপোনাৰ সমস্যাটো সফলতাৰে পঠিওৱা হৈছে। আমি ডাটাবেছ চেক কৰি সোনকালেই ব্যৱস্থা গ্ৰহণ কৰিম।");
+            
+            document.getElementById('sup-name').value = "";
+            document.getElementById('sup-contact').value = "";
+            document.getElementById('sup-msg').value = "";
+            toggleSupportChat();
+            
+        } catch (err) {
+            console.error("Support Error:", err);
+            alert("চাৰ্ভাৰৰ সৈতে সংযোগ হোৱা নাই। পুনৰ চেষ্টা কৰক।");
+        } finally {
+            btn.innerText = "ছাবমিট কৰক (Submit)";
+            btn.disabled = false;
+        }
+    }
+</script>
+<!-- ========================================== -->
 </body>
 </html>
