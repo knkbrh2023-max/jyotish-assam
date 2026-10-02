@@ -878,6 +878,49 @@ async function processPayment(e) {
     };
     
     try {
+        // 🔥 আচাৰ্য চেটৰ বাবে সুপাবেছ (Supabase) ব্যৱহাৰ কৰি নিখুঁত পেমেন্ট 🔥
+        if (selectedService === 'chat') {
+            
+            // ১. পেমেন্টৰ আগতে সুপাবেছৰ ডাটাবেছত 'pending' হিচাপে ছেভ কৰা
+            const { data, error } = await sbClient.from('orders').insert([{
+                name: orderData.name,
+                email: orderData.email,
+                service: 'chat',
+                birth_date: orderData.birthDate,
+                birth_time: orderData.birthTime,
+                birth_place: orderData.birthPlace,
+                amount: 21,
+                payment_status: 'pending',
+                status: 'pending'
+            }]).select();
+
+            if (data && data.length > 0) {
+                localStorage.setItem('ja_last_order_id', data[0].id); // অৰ্ডাৰ ID ছেভ ৰখা হ'ল
+            }
+
+            // ২. Razorpay পেমেন্ট খোলা
+            var chatOptions = {
+                "key": window.JA_CONFIG.razorpayKeyId,
+                "amount": 2100, // ₹21 টকা
+                "currency": "INR",
+                "name": window.JA_CONFIG.brand,
+                "description": "আচাৰ্যৰ লগত কথা পাতক (৫ মিনিট)",
+                "theme": { "color": "#10B981" },
+                "handler": function (response) {
+                    // পেমেন্ট হোৱাৰ লগে লগে সুপাবেছ আপডেট হ'ব আৰু চেট পেজ খোল খাব
+                    handlePaymentSuccessGuaranteed(sbClient, response.razorpay_payment_id, orderData);
+                }
+            };
+            var rzpChat = new Razorpay(chatOptions);
+            rzpChat.on('payment.failed', function (r){
+                alert("Failed: " + r.error.description);
+                btn.innerText = "Pay Now"; btn.disabled = false;
+            });
+            rzpChat.open();
+            return; 
+        }
+
+        // বাকী পুৰণি সেৱাবোৰৰ বাবে আগৰ দৰেই (Edge Function)
         const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
         const responseData = await createRes.json();
         if (!responseData.success) throw new Error(responseData.error || "Order failed");
@@ -889,13 +932,12 @@ async function processPayment(e) {
             "name": window.JA_CONFIG.brand, 
             "description": responseData.serviceName, 
             "order_id": responseData.razorpayOrderId,
-          "theme": { "color": "#6D28D9" },
+            "theme": { "color": "#6D28D9" },
             "handler": async function (response) {
                 alert("পেমেন্ট সফল হৈছে! অনুগ্ৰহ কৰি অপেক্ষা কৰক।");
                 btn.innerText = "Verifying...";
 
                 try {
-                    // ১. প্ৰথমে পেমেন্ট ভেৰিফাই কৰক
                     const verifyRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
                         method: 'POST', 
                         headers: { 'Content-Type': 'application/json' },
@@ -910,21 +952,6 @@ async function processPayment(e) {
                     const verifyData = await verifyRes.json();
                     
                     if(verifyRes.ok) {
-                        // 🔄 UPDATE 2: Redirect to chat.html if service is 'chat'
-                        if (selectedService === 'chat') {
-                            // Save required details for chat UI before redirecting
-                            localStorage.setItem('ja_paid_customer_data', JSON.stringify({
-                                service: 'chat',
-                                name: orderData.name,
-                                birth_date: orderData.birthDate,
-                                birth_time: orderData.birthTime,
-                                birth_place: orderData.birthPlace
-                            }));
-                            window.location.href = 'chat.html';
-                            return; // Stop further execution, skip showing PDF
-                        }
-                        
-                        // Otherwise, show the PDF report as usual
                         await showReportToCustomer(responseData.orderId); 
                     } else {
                         alert("পেমেন্ট ভেৰিফিকেচনত সমস্যা হৈছে: " + (verifyData.error || "Unknown"));
