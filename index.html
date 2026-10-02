@@ -857,6 +857,30 @@
         
         alert("✅ আপোনাৰ ৰিডিংটো ভৱিষ্যতে চাব পৰাকৈ সফলতাৰে ছেভ কৰা হ'ল!");
     }
+    // 🔥 প্ৰিমিয়াম টেৰট পেমেন্ট লজিক 🔥
+    function buyPremiumTarot() {
+        // যদি গ্ৰাহকে কাৰ্ড বাছনি নকৰাকৈয়ে টিপে
+        if (!fetchedCards || fetchedCards.length === 0) {
+            alert("অনুগ্ৰহ কৰি প্ৰথমে কাৰ্ড বাছনি কৰক!");
+            return;
+        }
+
+        // গ্ৰাহকৰ প্ৰশ্ন আৰু কাৰ্ডৰ তথ্যখিনি গোটোৱা
+        const question = document.getElementById('t-question').value || "কোনো প্ৰশ্ন নাই";
+        const cardsStr = fetchedCards.map(c => `${c.name} (${c.orientation === 'upright' ? 'পোন' : 'ওলোটা'})`).join(', ');
+        
+        // পেমেন্ট ফৰ্মলৈ ডাটা পঠিয়াবলৈ Session ত ছেভ কৰা
+        sessionStorage.setItem('temp_tarot_topic', tTopic);
+        sessionStorage.setItem('temp_tarot_question', question);
+        sessionStorage.setItem('temp_tarot_cards', cardsStr);
+
+        // আপোনাৰ আগৰ পেমেন্ট ফৰ্মটো খোল খাব
+        if(typeof openOrderForm === 'function') {
+            openOrderForm('premium_tarot', 99, 'প্ৰিমিয়াম AI টেৰট ৰিপোৰ্ট (PDF)');
+        } else {
+            alert("পেমেন্ট ফৰ্ম লোড হোৱা নাই! অনুগ্ৰহ কৰি পেজটো ৰিফ্ৰেছ কৰক।");
+        }
+    }
 </script>
 <!-- ======================================================= -->
         <!-- Free Lucky Gemstone & Numerology Hook Section Start -->
