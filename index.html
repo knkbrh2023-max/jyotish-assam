@@ -572,11 +572,13 @@
   </a>
 </div>
         <!-- ========================================= -->
-<!-- 3D TAROT CARD READING SYSTEM START        -->
+<!-- ========================================= -->
+<!-- FREE 3D TAROT CARD READING SYSTEM START   -->
 <!-- ========================================= -->
 <style>
-    .tarot-section { margin: 40px auto; max-width: 950px; background: linear-gradient(135deg, #0f172a, #312e81); padding: 40px 20px; border-radius: 20px; color: white; border: 2px solid #fbbf24; box-shadow: 0 15px 40px rgba(0,0,0,0.4); text-align: center; font-family: inherit; position: relative; overflow: hidden; }
+    .tarot-section { margin: 40px auto; max-width: 950px; background: linear-gradient(135deg, #0f172a, #312e81); padding: 40px 20px; border-radius: 20px; color: white; border: 2px solid #10B981; box-shadow: 0 15px 40px rgba(0,0,0,0.4); text-align: center; font-family: inherit; position: relative; overflow: hidden; }
     .tarot-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.3; pointer-events: none; }
+    .tarot-badge { background: #10B981; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; display: inline-block; position: relative; z-index: 2; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
     .tarot-section h2 { color: #fde047; font-size: 28px; margin-bottom: 10px; position: relative; z-index: 2; }
     .tarot-categories { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 30px; position: relative; z-index: 2; }
     .tarot-categories button { background: #1e293b; color: #fde047; border: 2px solid #fbbf24; padding: 12px 25px; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2); font-family: inherit; }
@@ -592,8 +594,9 @@
     .t-card-front::after { content: '🔮'; }
     .t-card-back { background-color: #fff; transform: rotateY(180deg); background-size: cover; background-position: center; }
 
-    .tarot-result-box { margin-top: 40px; background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; border-left: 5px solid #fbbf24; text-align: left; display: none; animation: fadeIn 0.5s; position: relative; z-index: 2; backdrop-filter: blur(5px); }
-    .tarot-result-box h3 { color: #fde047; margin-bottom: 12px; font-size: 22px; border-bottom: 1px dashed rgba(253, 224, 71, 0.4); padding-bottom: 10px; }
+    .tarot-result-box { margin-top: 40px; background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; border-left: 5px solid #10B981; text-align: left; display: none; animation: fadeIn 0.5s; position: relative; z-index: 2; backdrop-filter: blur(5px); }
+    .tarot-result-box h3 { color: #fde047; margin-bottom: 5px; font-size: 22px; }
+    .tarot-result-box .t-keywords { font-size: 13px; color: #a7f3d0; margin-bottom: 12px; border-bottom: 1px dashed rgba(253, 224, 71, 0.4); padding-bottom: 10px; }
     .tarot-result-box p { color: #f8fafc; font-size: 16px; line-height: 1.7; }
 
     @keyframes shuffle-anim {
@@ -607,19 +610,20 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 
-<section class="tarot-section" id="tarot-section">
-    <h2>🔮 3D টেৰট কাৰ্ড ৰিডিং (Tarot Reading)</h2>
+<section class="tarot-section" id="free-tarot-section">
+    <span class="tarot-badge">🎁 সম্পূৰ্ণ বিনামূলীয়া</span>
+    <h2>🔮 বিনামূলীয়া 3D টেৰট কাৰ্ড ৰিডিং</h2>
     <p style="color: #cbd5e1; font-size: 15px; margin-bottom: 25px; position: relative; z-index: 2;">আপোনাৰ প্ৰশ্নৰ শিতান বাছনি কৰক আৰু যিকোনো এখন কাৰ্ডত টিপক</p>
     
     <div class="tarot-categories" id="tarot-categories">
         <button onclick="startTarot('Love', this)">Love ❤️</button>
         <button onclick="startTarot('Career', this)">Career 💼</button>
         <button onclick="startTarot('Finance', this)">Finance 💰</button>
-        <button onclick="startTarot('General', this)">General 🌙</button>
+        <button onclick="startTarot('Yes/No', this)">Yes/No 🌙</button>
     </div>
 
     <div id="tarot-table" style="display: none;">
-        <p id="tarot-instruction" style="color: #4ade80; font-size: 16px; font-weight: bold; position: relative; z-index: 2; margin-bottom: 15px;">কাৰ্ডসমূহ চাফোল (Shuffle) হৈ আছে...</p>
+        <p id="tarot-instruction" style="color: #4ade80; font-size: 16px; font-weight: bold; position: relative; z-index: 2; margin-bottom: 15px;">চাৰ্ভাৰৰ পৰা কাৰ্ড চাফোল (Shuffle) হৈ আছে...</p>
         
         <div class="tarot-grid" id="tarot-grid">
             <div class="t-card-wrapper" onclick="flipTarotCard(0)">
@@ -644,6 +648,7 @@
 
         <div id="tarot-result" class="tarot-result-box">
             <h3 id="tarot-card-name"></h3>
+            <div id="tarot-card-keywords" class="t-keywords"></div>
             <p id="tarot-card-meaning"></p>
         </div>
     </div>
@@ -658,12 +663,10 @@
         currentTarotCategory = category;
         isCardFlipped = false;
 
-        // Button styling
         const buttons = document.querySelectorAll('#tarot-categories button');
         buttons.forEach(b => b.classList.remove('active'));
         btnElement.classList.add('active');
 
-        // Reset UI
         document.getElementById('tarot-table').style.display = 'block';
         document.getElementById('tarot-result').style.display = 'none';
         document.getElementById('tarot-instruction').innerText = "চাৰ্ভাৰৰ পৰা কাৰ্ড চাফোল (Shuffle) হৈ আছে... ⏳";
@@ -672,34 +675,39 @@
         const grid = document.getElementById('tarot-grid');
         grid.classList.add('shuffling');
 
-        // Reset Flips
         for(let i=0; i<3; i++) {
             document.getElementById(`t-card-inner-${i}`).parentElement.classList.remove('flipped');
         }
 
         try {
-            // 🔥 API Call to Tarot Engine (Supabase Edge Function) 🔥
+            // 🔥 API Call to Secure Tarot Engine 🔥
             const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/tarot-engine', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ category: category })
+                body: JSON.stringify({ spread_type: '3_card', topic: category })
             });
             
             const data = await response.json();
             
             if(data.success) {
-                currentCards = data.cards; // চাৰ্ভাৰৰ পৰা অহা ৩ খন কাৰ্ড
+                currentCards = data.cards; 
                 
-                // কাৰ্ডৰ ছবিবোৰ ছেট কৰক
                 for(let i=0; i<3; i++) {
-                    document.getElementById(`t-card-img-${i}`).style.backgroundImage = `url('${currentCards[i].img}')`;
+                    // কাৰ্ডৰ ছবি আৰু orientation (ওভটা নে পোন) ছেট কৰা
+                    const imgElem = document.getElementById(`t-card-img-${i}`);
+                    imgElem.style.backgroundImage = `url('${currentCards[i].image_url}')`;
+                    if(currentCards[i].orientation === 'reversed') {
+                        imgElem.style.transform = 'rotateY(180deg) rotate(180deg)'; // ওভটাকৈ দেখুৱাব
+                    } else {
+                        imgElem.style.transform = 'rotateY(180deg)';
+                    }
                 }
 
                 setTimeout(() => {
                     grid.classList.remove('shuffling');
                     document.getElementById('tarot-instruction').innerText = "✨ এতিয়া যিকোনো এখন কাৰ্ডত টিপক ✨";
                     document.getElementById('tarot-instruction').style.color = "#fde047";
-                }, 800);
+                }, 1000);
             } else {
                 throw new Error(data.error);
             }
@@ -711,29 +719,28 @@
         }
     }
 
-    async function flipTarotCard(index) {
+    function flipTarotCard(index) {
         if(isCardFlipped || currentCards.length === 0) return; 
         isCardFlipped = true;
 
-        // 3D Flip animation
         document.getElementById(`t-card-inner-${index}`).parentElement.classList.add('flipped');
         document.getElementById('tarot-instruction').innerText = "";
 
         const selectedCard = currentCards[index];
+        const orientationText = selectedCard.orientation === 'upright' ? 'পোন (Upright)' : 'ওভটা (Reversed)';
 
-        // Show result
         setTimeout(() => {
-            document.getElementById('tarot-card-name').innerText = `কাৰ্ড: ${selectedCard.name}`;
+            document.getElementById('tarot-card-name').innerText = `কাৰ্ড: ${selectedCard.name} [${orientationText}]`;
+            document.getElementById('tarot-card-keywords').innerText = `মূল শব্দ: ${selectedCard.keywords}`;
             document.getElementById('tarot-card-meaning').innerHTML = `<strong>${currentTarotCategory} ৰ ফলাফল:</strong> <br>${selectedCard.meaning}`;
             document.getElementById('tarot-result').style.display = 'block';
             
-            // Scroll to result smoothly
             document.getElementById('tarot-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 600);
     }
 </script>
 <!-- ========================================= -->
-<!-- 3D TAROT CARD READING SYSTEM END          -->
+<!-- FREE 3D TAROT CARD READING SYSTEM END     -->
 <!-- ========================================= -->
         <!-- Free Lucky Gemstone & Numerology Hook Section Start -->
 <section style="max-width: 900px; margin: 35px auto; padding: 28px 20px; background: linear-gradient(145deg, #fffdf7, #fff6e0); border: 2px solid #d4af37; border-radius: 16px; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.18); text-align: center; font-family: inherit;">
