@@ -860,6 +860,11 @@ async function processPayment(e) {
     const btn = document.getElementById('payBtn');
     btn.innerText = "Processing..."; btn.disabled = true;
     
+    // 🔥 ১. সুপাবেছৰ কানেকচন ইয়াতেই বনাই দিয়া হ'ল (Error টো ইয়াৰ পৰাই আঁতৰিব) 🔥
+    const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
+    const mySbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     let h = parseInt(document.getElementById('custHour').value);
     let m = document.getElementById('custMin').value.padStart(2, '0');
     let ampm = document.getElementById('custAmPm').value;
@@ -878,11 +883,11 @@ async function processPayment(e) {
     };
     
     try {
-        // 🔥 আচাৰ্য চেটৰ বাবে সুপাবেছ (Supabase) ব্যৱহাৰ কৰি নিখুঁত পেমেন্ট 🔥
+        // 🔥 ২. আচাৰ্য চেটৰ বাবে সুপাবেছ ব্যৱহাৰ কৰি নিখুঁত পেমেন্ট 🔥
         if (selectedService === 'chat') {
             
-            // ১. পেমেন্টৰ আগতে সুপাবেছৰ ডাটাবেছত 'pending' হিচাপে ছেভ কৰা
-            const { data, error } = await sbClient.from('orders').insert([{
+            // পেমেন্টৰ আগতে সুপাবেছৰ ডাটাবেছত 'pending' হিচাপে ছেভ কৰা
+            const { data, error } = await mySbClient.from('orders').insert([{
                 name: orderData.name,
                 email: orderData.email,
                 service: 'chat',
@@ -895,10 +900,10 @@ async function processPayment(e) {
             }]).select();
 
             if (data && data.length > 0) {
-                localStorage.setItem('ja_last_order_id', data[0].id); // অৰ্ডাৰ ID ছেভ ৰখা হ'ল
+                localStorage.setItem('ja_last_order_id', data[0].id);
             }
 
-            // ২. Razorpay পেমেন্ট খোলা
+            // Razorpay পেমেন্ট খোলা
             var chatOptions = {
                 "key": window.JA_CONFIG.razorpayKeyId,
                 "amount": 2100, // ₹21 টকা
@@ -908,7 +913,7 @@ async function processPayment(e) {
                 "theme": { "color": "#10B981" },
                 "handler": function (response) {
                     // পেমেন্ট হোৱাৰ লগে লগে সুপাবেছ আপডেট হ'ব আৰু চেট পেজ খোল খাব
-                    handlePaymentSuccessGuaranteed(sbClient, response.razorpay_payment_id, orderData);
+                    handlePaymentSuccessGuaranteed(mySbClient, response.razorpay_payment_id, orderData);
                 }
             };
             var rzpChat = new Razorpay(chatOptions);
@@ -920,7 +925,7 @@ async function processPayment(e) {
             return; 
         }
 
-        // বাকী পুৰণি সেৱাবোৰৰ বাবে আগৰ দৰেই (Edge Function)
+        // বাকী পুৰণি সেৱাবোৰৰ বাবে আগৰ দৰেই
         const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
         const responseData = await createRes.json();
         if (!responseData.success) throw new Error(responseData.error || "Order failed");
