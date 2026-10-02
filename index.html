@@ -222,6 +222,38 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
         .close-horoscope-btn { position: absolute; top: 15px; right: 20px; background: #f1f5f9; border: none; font-size: 20px; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; color: #475569; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
         .close-horoscope-btn:hover { background: #fee2e2; color: #dc2626; }
+
+        /* ========================================= */
+/* 3D TAROT CARD ENGINE CSS */
+/* ========================================= */
+.tarot-section { margin: 40px auto; max-width: 900px; background: linear-gradient(135deg, #1e1b4b, #4c1d95); padding: 35px 20px; border-radius: 16px; color: white; border: 2px solid #fbbf24; box-shadow: 0 15px 40px rgba(0,0,0,0.4); text-align: center; font-family: inherit; }
+.tarot-section h2 { color: #fde047; font-size: 26px; margin-bottom: 10px; }
+.tarot-categories { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 25px; }
+.tarot-categories button { background: #1f2937; color: #fde047; border: 1px solid #fbbf24; padding: 10px 20px; border-radius: 30px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(251, 191, 36, 0.2); font-family: inherit; }
+.tarot-categories button:hover, .tarot-categories button.active { background: #fbbf24; color: #1e1b4b; transform: translateY(-3px); }
+
+.tarot-grid { display: flex; justify-content: center; gap: 20px; margin-top: 20px; perspective: 1000px; }
+.t-card-wrapper { width: 110px; height: 180px; cursor: pointer; position: relative; }
+.t-card-inner { position: absolute; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+.t-card-wrapper.flipped .t-card-inner { transform: rotateY(180deg); }
+
+.t-card-front, .t-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; border: 2px solid #fbbf24; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.t-card-front { background: repeating-linear-gradient(45deg, #312e81, #312e81 10px, #4338ca 10px, #4338ca 20px); display: flex; align-items: center; justify-content: center; font-size: 35px; }
+.t-card-back { background-color: #fff; transform: rotateY(180deg); background-size: cover; background-position: center; }
+
+.tarot-result-box { margin-top: 30px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #fbbf24; text-align: left; display: none; animation: fadeIn 0.5s; }
+.tarot-result-box h3 { color: #fde047; margin-bottom: 10px; font-size: 20px; }
+.tarot-result-box p { color: #e2e8f0; font-size: 15px; line-height: 1.6; }
+
+@keyframes shuffle-anim {
+    0% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(-20px) translateY(-10px) rotate(-5deg); }
+    50% { transform: translateX(20px) translateY(10px) rotate(5deg); }
+    75% { transform: translateX(-10px) translateY(-5px) rotate(-2deg); }
+    100% { transform: translateX(0) translateY(0) rotate(0deg); }
+}
+.shuffling .t-card-wrapper { animation: shuffle-anim 0.5s infinite; pointer-events: none; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
     <script src="config.js"></script>
 </head>
@@ -452,6 +484,129 @@
                 </div>
             </div>
         </div>
+        <!-- ========================================= -->
+<!-- 3D TAROT CARD READING SYSTEM -->
+<!-- ========================================= -->
+<section class="tarot-section" id="tarot-section">
+    <h2>🔮 3D টেৰট কাৰ্ড ৰিডিং (Tarot Reading)</h2>
+    <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 20px;">আপোনাৰ প্ৰশ্নৰ শিতান বাছনি কৰক আৰু যিকোনো এখন কাৰ্ডত টিপক</p>
+    
+    <div class="tarot-categories" id="tarot-categories">
+        <button onclick="startTarot('Love', this)">Love ❤️</button>
+        <button onclick="startTarot('Career', this)">Career 💼</button>
+        <button onclick="startTarot('Finance', this)">Finance 💰</button>
+        <button onclick="startTarot('General', this)">General 🌙</button>
+    </div>
+
+    <div id="tarot-table" style="display: none;">
+        <p id="tarot-instruction" style="color: #4ade80; font-size: 14px; font-weight: bold;">কাৰ্ডসমূহ চাফোল (Shuffle) হৈ আছে...</p>
+        
+        <div class="tarot-grid" id="tarot-grid">
+            <!-- ৩ খন কাৰ্ড -->
+            <div class="t-card-wrapper" onclick="flipTarotCard(0)">
+                <div class="t-card-inner" id="t-card-inner-0">
+                    <div class="t-card-front">🌌</div>
+                    <div class="t-card-back" id="t-card-img-0"></div>
+                </div>
+            </div>
+            <div class="t-card-wrapper" onclick="flipTarotCard(1)">
+                <div class="t-card-inner" id="t-card-inner-1">
+                    <div class="t-card-front">🌌</div>
+                    <div class="t-card-back" id="t-card-img-1"></div>
+                </div>
+            </div>
+            <div class="t-card-wrapper" onclick="flipTarotCard(2)">
+                <div class="t-card-inner" id="t-card-inner-2">
+                    <div class="t-card-front">🌌</div>
+                    <div class="t-card-back" id="t-card-img-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tarot-result" class="tarot-result-box">
+            <h3 id="tarot-card-name"></h3>
+            <p id="tarot-card-meaning"></p>
+        </div>
+    </div>
+</section>
+
+<script>
+    // টেৰট কাৰ্ডৰ ডাইনামিক ডাটাবেছ (Engine)
+    const TAROT_DECK = [
+        { name: "The Sun (সূৰ্য)", img: "https://upload.wikimedia.org/wikipedia/en/1/17/RWS_Tarot_19_Sun.jpg", love: "প্ৰেমত এক নতুন আৰু আনন্দময় আৰম্ভণি হ'ব। পাৰস্পৰিক বুজাবুজি বৃদ্ধি পাব।", career: "কৰ্মক্ষেত্ৰত বৃহৎ সফলতা আৰু পদোন্নতিৰ যোগ। সকলোৱে আপোনাৰ কামৰ প্ৰশংসা কৰিব।", finance: "আৰ্থিক স্থিতি অতি সুদৃঢ় হ'ব। বিনিয়োগৰ পৰা ভাল লাভ পাব।", general: "দিনটো অতি ইতিবাচক আৰু শক্তিৰে ভৰা হ'ব। যি কামেই হাতত ল'ব, সফল হ'ব।" },
+        { name: "The Lovers (প্ৰেমিক-প্ৰেমিকা)", img: "https://upload.wikimedia.org/wikipedia/en/d/db/RWS_Tarot_06_Lovers.jpg", love: "সম্পৰ্কত গভীৰতা আৰু পাৰস্পৰিক বিশ্বাস বাঢ়িব। অবিবাহিতসকলৰ বিবাহৰ যোগ আছে।", career: "কৰ্মস্থলীত কাৰোবাৰ সৈতে সুন্দৰ অংশীদাৰীত্ব (Partnership) হ'ব যি লাভজনক হ'ব।", finance: "অযথা খৰচ নকৰি সঠিক আৰ্থিক সিদ্ধান্ত লোৱাৰ সময়।", general: "যিকোনো গুৰুত্বপূৰ্ণ সিদ্ধান্ত লোৱাৰ বাবে দিনটো শুভ।" },
+        { name: "Wheel of Fortune (ভাগ্যৰ চকা)", img: "https://upload.wikimedia.org/wikipedia/en/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg", love: "প্ৰেমৰ সম্পৰ্কত এক বৃহৎ যোগাত্মক পৰিৱৰ্তন আহিব।", career: "হঠাৎ চাকৰি বা ব্যৱসায়ত নতুন ডাঙৰ সুযোগ আহিব পাৰে।", finance: "অকস্মাৎ ধন লাভ বা আৰ্থিক সমস্যা দূৰ হোৱাৰ সম্ভাৱনা।", general: "ভাগ্যই আপোনাক সংগ দিব। বেয়া সময় পাৰ হৈ ভাল সময় আহিছে।" },
+        { name: "The Star (তৰা)", img: "https://upload.wikimedia.org/wikipedia/en/c/cd/RWS_Tarot_17_Star.jpg", love: "সম্পৰ্কলৈ আশা আৰু নতুন পোহৰ আহিব। পুৰণি ভুল বুজাবুজি আঁতৰিব।", career: "আপোনাৰ প্ৰতিভা আৰু পৰিশ্ৰমৰ স্বীকৃতি পাব। নতুন আইডিয়াই কাম দিব।", finance: "ভৱিষ্যতৰ আৰ্থিক সুৰক্ষাৰ বাবে সঠিক পথ দেখা পাব।", general: "মনলৈ শান্তি আহিব আৰু আধ্যাত্মিক শক্তি বৃদ্ধি পাব।" },
+        { name: "The Magician (যাদুকৰ)", img: "https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg", love: "আপোনাৰ আকৰ্ষণ শক্তি বাঢ়িব। সংগীক সহজে বুজিব পাৰিব।", career: "আপোনাৰ হাতত সফল হোৱাৰ সকলো সমল আছে, মাত্ৰ তাক ব্যৱহাৰ কৰক।", finance: "নতুন কৌশল বা বুদ্ধিৰে ধন ঘটাৰ সুযোগ পাব।", general: "আপুনি বিচৰা বস্তুটো নিজৰ প্ৰচেষ্টাৰে লাভ কৰিবলৈ সক্ষম হ'ব।" }
+    ];
+
+    let currentTarotCategory = '';
+    let currentCards = [];
+    let isCardFlipped = false;
+
+    function startTarot(category, btnElement) {
+        currentTarotCategory = category;
+        isCardFlipped = false;
+
+        // Button styling
+        const buttons = document.querySelectorAll('#tarot-categories button');
+        buttons.forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+
+        // Reset UI
+        document.getElementById('tarot-table').style.display = 'block';
+        document.getElementById('tarot-result').style.display = 'none';
+        document.getElementById('tarot-instruction').innerText = "কাৰ্ডসমূহ চাফোল (Shuffle) হৈ আছে...";
+        
+        // Randomly pick 3 cards for this session
+        let shuffledDeck = TAROT_DECK.sort(() => 0.5 - Math.random());
+        currentCards = shuffledDeck.slice(0, 3);
+
+        // Reset Flips & Start Shuffle Animation
+        const grid = document.getElementById('tarot-grid');
+        grid.classList.add('shuffling');
+
+        for(let i=0; i<3; i++) {
+            document.getElementById(`t-card-inner-${i}`).parentElement.classList.remove('flipped');
+            document.getElementById(`t-card-img-${i}`).style.backgroundImage = `url('${currentCards[i].img}')`;
+        }
+
+        // Stop shuffle after 1.5s
+        setTimeout(() => {
+            grid.classList.remove('shuffling');
+            document.getElementById('tarot-instruction').innerText = "✨ এতিয়া যিকোনো এখন কাৰ্ডত টিপক ✨";
+        }, 1500);
+    }
+
+    async function flipTarotCard(index) {
+        if(isCardFlipped) return; // Only allow one card to be flipped per session
+        isCardFlipped = true;
+
+        // Flip animation
+        document.getElementById(`t-card-inner-${index}`).parentElement.classList.add('flipped');
+        document.getElementById('tarot-instruction').innerText = "";
+
+        const selectedCard = currentCards[index];
+        const meaning = selectedCard[currentTarotCategory.toLowerCase()];
+
+        // Show result
+        setTimeout(() => {
+            document.getElementById('tarot-card-name').innerText = `কাৰ্ড: ${selectedCard.name}`;
+            document.getElementById('tarot-card-meaning').innerHTML = `<strong>${currentTarotCategory} ৰ ফলাফল:</strong> <br>${meaning}`;
+            document.getElementById('tarot-result').style.display = 'block';
+        }, 600); // Show result after flip finishes
+
+        // 🔥 Save to Supabase Engine 🔥
+        try {
+            if(window.sbClient) {
+                await window.sbClient.from('tarot_readings').insert([
+                    { category: currentTarotCategory, card_drawn: selectedCard.name }
+                ]);
+            }
+        } catch(e) { console.log("Tarot DB Log Error", e); }
+    }
+</script>
+<!-- ========================================= -->
         <!-- Couple Horoscope WhatsApp Share Button -->
 <div style="text-align: center; margin-top: 18px; margin-bottom: 10px;">
   <a href="https://api.whatsapp.com/send?text=❤️%20*চোৱাচোন,%20মই%20আমাৰ%20দুয়োৰে%20আজিৰ%20যুটীয়া%20ৰাশিফল%20আৰু%20ৰাশি%20মিলন%20চালোঁ!*%20✨%0A%0Aতুমিও%20আমাৰ%20যোৰাটোৰ%20ফলাফল%20চাবলৈ%20তলৰ%20লিংকত%20ক্লিক%20কৰা%20👇%0Ahttps://jyotishassam.com" 
