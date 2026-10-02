@@ -615,6 +615,24 @@
     .shuffling { animation: shuffle-anim 0.6s infinite; pointer-events: none; }
     @keyframes shuffle-anim { 0% {transform: translate(0,0) rotate(0deg);} 25% {transform: translate(-20px,-10px) rotate(-6deg);} 50% {transform: translate(20px,10px) rotate(6deg);} 75% {transform: translate(-10px,5px) rotate(-3deg);} 100% {transform: translate(0,0) rotate(0deg);} }
     @keyframes slideUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
+    // 🔥 নতুন: প্ৰিমিয়াম টেৰট পেমেন্ট লজিক 🔥
+    function buyPremiumTarot() {
+        if (!fetchedCards || fetchedCards.length === 0) {
+            alert("অনুগ্ৰহ কৰি প্ৰথমে কাৰ্ড বাছনি কৰক!");
+            return;
+        }
+
+        const question = document.getElementById('t-question').value || "কোনো প্ৰশ্ন নাই";
+        const cardsStr = fetchedCards.map(c => `${c.name} (${c.orientation === 'upright' ? 'পোন' : 'ওলোটা'})`).join(', ');
+        
+        // পেমেন্ট ফৰ্মলৈ ডাটা পঠিয়াবলৈ Session ত ছেভ কৰি ৰখা হ'ল
+        sessionStorage.setItem('temp_tarot_topic', tTopic);
+        sessionStorage.setItem('temp_tarot_question', question);
+        sessionStorage.setItem('temp_tarot_cards', cardsStr);
+
+        // আপোনাৰ আগৰ পেমেন্ট ফৰ্মটো খোল খাব
+        openOrderForm('premium_tarot', 99, 'প্ৰিমিয়াম AI টেৰট ৰিপোৰ্ট (PDF)');
+    }
 </style>
 
 <div class="tarot-premium-section" id="tarot-box">
@@ -645,23 +663,29 @@
     <div class="t-results" id="t-results"></div>
     <div class="t-results" id="t-results"></div>
 
-    <!-- 🔥 নতুন: Save, Share আৰু Premium AI Action Bar 🔥 -->
+   <!-- 🔥 নতুন: Save, Share আৰু Premium AI Action Bar 🔥 -->
     <div id="t-action-bar" style="display: none; margin-top: 35px; text-align: center; animation: fadeIn 0.8s; position: relative; z-index: 2;">
+        
         <button class="t-btn" style="background: #25D366; color: white; border: none; padding: 12px 20px;" onclick="shareTarotResult()">
             📲 WhatsApp ত পঠিয়াওক
         </button>
+        
         <button class="t-btn" style="background: #3b82f6; color: white; border: none; padding: 12px 20px;" onclick="saveTarotResult()">
             💾 ৰিডিং ছেভ কৰক
         </button>
+        
         <br><br>
+        
         <div style="background: rgba(212,175,55,0.1); border: 1px dashed #d4af37; padding: 20px; border-radius: 12px; display: inline-block; max-width: 500px;">
             <p style="color: #fde047; font-size: 14px; margin-bottom: 15px;">এই কাৰ্ডকেইখনৰ ওপৰত ভিত্তি কৰি AI ৰ জৰিয়তে আপোনাৰ জীৱনৰ এক বিতং আৰু ব্যক্তিগতকৃত (Personalized) ভৱিষ্যৎবাণী জানিব বিচাৰে নেকি?</p>
-            <button class="t-draw-btn" style="padding: 12px 25px; font-size: 16px; margin: 0;" onclick="openOrderForm('premium_tarot', 99, 'প্ৰিমিয়াম AI টেৰট ৰিপোৰ্ট (PDF)')">
+            
+            <!-- আপডেট কৰা প্ৰিমিয়াম বুটামটো ইয়াত আছে -->
+            <button class="t-draw-btn" style="padding: 12px 25px; font-size: 16px; margin: 0;" onclick="buyPremiumTarot()">
                 ✨ প্ৰিমিয়াম AI ৰিপোৰ্ট লওক (₹99)
             </button>
         </div>
+        
     </div>
-</div>
 
 <script>
     let tTopic = 'General';
