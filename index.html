@@ -1778,13 +1778,7 @@ async function showReportToCustomer(orderId) {
                             : `এই ঘৰত কোনো গ্ৰহ পোনপটীয়াকৈ নাথাকিলেও ইয়াৰ অধিপতি গ্ৰহ <strong>${rInfo.lord}</strong> ৰ অৱস্থান আৰু দৃষ্টিৰ দ্বাৰা এই ঘৰৰ শুভ ফলসমূহ সুন্দৰভাৱে পৰিচালিত হ'ব।`;
 
                         cardsHtml += 
-                            // আপোনাৰ HTML ডিজাইনৰ ভিতৰত য'ত নাম আৰু তাৰিখ আছে, তাত এইদৰে `${}` ব্যৱহাৰ কৰক:
-
-<div class="customer-info">
-    <p>গ্ৰাহকৰ নাম: <strong>${name}</strong></p>
-    <p>জন্ম তাৰিখ: <strong>${birthDate}</strong></p>
-    <p>জন্ম স্থান: <strong>${birthPlace}</strong></p>
-</div>`
+                            
                         <div class="info-card">
                             <div class="card-title">${houseNames[i - 1]}</div>
                             <div class="card-content">
