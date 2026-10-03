@@ -1427,51 +1427,56 @@ function closeOrderModal() {
         };
         
         try {
-            // 🔥 আচাৰ্যৰ সৈতে চেটৰ পেমেন্ট লজিক 🔥
+           // 🔥 আচাৰ্যৰ সৈতে চেটৰ পেমেন্ট লজিক (New Architecture) 🔥
             if (selectedService === 'chat') {
-                // ১. প্ৰথমে ডাটাবেছত এটা অৰ্ডাৰ ক্ৰিয়েট কৰক
-                const { data, error } = await mySbClient.from('orders').insert([{
-                    name: orderData.name,
-                    email: orderData.email,
-                    service: 'chat',
+                // ১. গ্ৰাহকৰ জন্মৰ তথ্য birth_profiles টেবুলত ছেভ কৰা
+                const { data: profileData, error: profileError } = await mySbClient.from('birth_profiles').insert([{
+                    customer_name: orderData.name,
                     birth_date: orderData.birthDate,
                     birth_time: orderData.birthTime,
-                    birth_place: orderData.birthPlace,
-                    amount: 21,
-                    payment_status: 'pending',
-                    status: 'pending'
+                    birth_place: orderData.birthPlace
                 }]).select();
 
-                if (data && data.length > 0) localStorage.setItem('ja_last_order_id', data[0].id);
+                if (profileError || !profileData || profileData.length === 0) {
+                    alert("তথ্য ছেভ কৰাত সমস্যা হৈছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
+                    btn.innerText = "Pay Now"; btn.disabled = false;
+                    return;
+                }
 
-                // ২. Razorpay পেমেন্টৰ অপচনবোৰ ছেট কৰক
+                // নতুনকৈ ক্ৰিয়েট হোৱা গ্ৰাহকৰ ID টো উলিয়াই অনা হ'ল
+                const newProfileId = profileData[0].id;
+
+                // ২. Subscriptions টেবুলত প্ৰাথমিক ৰেকৰ্ড বনোৱা (বৰ্তমান ০ মিনিট)
+                await mySbClient.from('subscriptions').insert([{
+                    profile_id: newProfileId,
+                    available_minutes: 0,
+                    payment_status: 'pending'
+                }]);
+
+                // ৩. Razorpay পেমেন্ট আৰম্ভ কৰা
                 var chatOptions = {
                     "key": window.JA_CONFIG.razorpayKeyId, 
-                    "amount": 2100, // ২১ টকা (পইচাত)
+                    "amount": 2100, // ২১ টকা
                     "currency": "INR",
                     "name": "Jyotish Assam",
                     "description": "আচাৰ্যৰ লগত কথা পাতক (৫ মিনিট)",
                     "prefill": { "name": orderData.name, "email": orderData.email },
                     "theme": { "color": "#10B981" },
                     "handler": async function (response) {
-                        // পেমেন্ট সফল হোৱাৰ পিছত এইখিনি চলিব
                         btn.innerText = "Verifying...";
                         try {
-                            // ডাটাবেছত 'paid' বুলি আপডেট কৰক
-                            if (data && data.length > 0) {
-                                await mySbClient.from('orders').update({
-                                    payment_status: 'paid',
-                                    razorpay_payment_id: response.razorpay_payment_id,
-                                    status: 'active'
-                                }).eq('id', data[0].id);
-                            }
+                            // ৪. পেমেন্ট সফল হ'লে ৫ মিনিট যোগ কৰা হ'ব আৰু 'paid' বুলি আপডেট হ'ব
+                            await mySbClient.from('subscriptions').update({
+                                available_minutes: 5,
+                                payment_status: 'paid'
+                            }).eq('profile_id', newProfileId);
                             
-                            // 🔥 মেজিক: পেমেন্ট সফল হোৱাৰ পিছত পোনপটীয়াকৈ chat.html লৈ যাব 🔥
-                            localStorage.setItem('ja_active_chat', 'true');
-                            window.location.href = "chat.html"; // নতুন চেট পেজখন খোল খাব
+                            // 🌟 ফাইনেল মেজিক: Profile ID টো ব্ৰাউজাৰত ছেভ কৰি চেট পেজলৈ যোৱা
+                            localStorage.setItem('ja_profile_id', newProfileId);
+                            window.location.href = "ai-chat.html"; // (আপুনি নতুন পেজটোৰ যি নাম দিছে, সেয়া দিব। যেনে: chat.html)
                             
                         } catch(err) {
-                            console.error("Chat Payment Error:", err);
+                            console.error("Chat Payment Verification Error:", err);
                             alert("পেমেন্ট ভেৰিফায় কৰাত সমস্যা হৈছে।");
                             btn.innerText = "Pay Now"; btn.disabled = false;
                         }
@@ -1484,7 +1489,7 @@ function closeOrderModal() {
                     btn.innerText = "Pay Now"; btn.disabled = false;
                 });
                 rzpChat.open();
-                return; // চেটৰ বাবে ইয়াতেই ফাংচনটো শেষ হ'ব
+                return; // চেটৰ অৰ্ডাৰ ইয়াতেই সমাপ্ত হ'ব
             }
 
             // 🔥 সাধাৰণ ৰিপোৰ্টসমূহৰ (জন্ম কুণ্ডলী, ৰাশিফল আদি) পেমেন্ট লজিক 🔥
