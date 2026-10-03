@@ -1399,13 +1399,12 @@ function closeOrderModal() {
     document.getElementById('orderForm').reset();
 }
 
-// 🔥 গোটেই ৱেবছাইটৰ পেমেন্টৰ সমস্যা একেবাৰতে ঠিক কৰা মূল ক'ড 🔥
+// 🔥 গোটেই ৱেবছাইটৰ পেমেন্টৰ মূল ক'ড (জ্যোতিষ আৰু চেট দুয়োটাৰে বাবে) 🔥
     window.processPayment = async function(e) {
         e.preventDefault();
         const btn = document.getElementById('payBtn');
         btn.innerText = "Processing..."; btn.disabled = true;
         
-        // সুপাবেছৰ কানেকচন
         const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
         const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
         const mySbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1428,6 +1427,7 @@ function closeOrderModal() {
         };
         
         try {
+            // 🔥 আচাৰ্যৰ সৈতে চেটৰ পেমেন্ট লজিক (Processing এৰৰ ঠিক কৰা হৈছে) 🔥
             if (selectedService === 'chat') {
                 const { data, error } = await mySbClient.from('orders').insert([{
                     name: orderData.name,
@@ -1441,9 +1441,7 @@ function closeOrderModal() {
                     status: 'pending'
                 }]).select();
 
-                if (data && data.length > 0) {
-                    localStorage.setItem('ja_last_order_id', data[0].id);
-                }
+                if (data && data.length > 0) localStorage.setItem('ja_last_order_id', data[0].id);
 
                 var chatOptions = {
                     "key": window.JA_CONFIG.razorpayKeyId, 
@@ -1453,8 +1451,32 @@ function closeOrderModal() {
                     "description": "আচাৰ্যৰ লগত কথা পাতক (৫ মিনিট)",
                     "prefill": { "name": orderData.name, "email": orderData.email },
                     "theme": { "color": "#10B981" },
-                    "handler": function (response) {
-                        handlePaymentSuccessGuaranteed(mySbClient, response.razorpay_payment_id, orderData);
+                    "handler": async function (response) {
+                        btn.innerText = "Verifying...";
+                        try {
+                            // পেমেন্ট হোৱাৰ পিছত ডাটাবেছত 'paid' বুলি আপডেট কৰিব
+                            if (data && data.length > 0) {
+                                await mySbClient.from('orders').update({
+                                    payment_status: 'paid',
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    status: 'active'
+                                }).eq('id', data[0].id);
+                            }
+                            
+                            alert("✅ পেমেন্ট সফল হৈছে! এতিয়া আপুনি আচাৰ্যৰ সৈতে কথা পাতিব পাৰিব।");
+                            
+                            // ফৰ্মখন বন্ধ কৰিব
+                            if (typeof closeOrderModal === 'function') closeOrderModal();
+                            
+                            // লাইভ চেটৰ উইণ্ড'খন আপোনা-আপুনি খুলি দিব
+                            if (typeof toggleSupportChat === 'function') toggleSupportChat();
+                            
+                        } catch(err) {
+                            console.error("Chat Payment Error:", err);
+                            alert("পেমেন্ট ভেৰিফায় কৰাত সমস্যা হৈছে।");
+                        }
+                        // বুটামটো পুনৰ আগৰ দৰে হৈ যাব
+                        btn.innerText = "Pay Now"; btn.disabled = false;
                     }
                 };
                 var rzpChat = new Razorpay(chatOptions);
@@ -1466,23 +1488,19 @@ function closeOrderModal() {
                 return; 
             }
 
+            // 🔥 সাধাৰণ ৰিপোৰ্টসমূহৰ (জন্ম কুণ্ডলী আদি) পেমেন্ট লজিক 🔥
             const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
             const responseData = await createRes.json();
             if (!responseData.success) throw new Error(responseData.error || "Order failed");
             
             var options = {
-                // 🔥 মেজিক: বেকএণ্ডৰ পৰা অহা আচল Key টো ইয়াত ব্যৱহাৰ কৰা হৈছে যাতে অমিল নহয় 🔥
                 "key": responseData.keyId, 
                 "amount": responseData.amount, 
                 "currency": responseData.currency || "INR",
                 "name": "Jyotish Assam", 
                 "description": responseData.serviceName, 
                 "order_id": responseData.razorpayOrderId,
-                // 🔥 Razorpay ক্ৰেচ নহ'বলৈ গ্ৰাহকৰ তথ্য আগৰে পৰা পূৰণ কৰি পঠোৱা হৈছে 🔥
-                "prefill": {
-                    "name": orderData.name,
-                    "email": orderData.email
-                },
+                "prefill": { "name": orderData.name, "email": orderData.email },
                 "theme": { "color": "#6D28D9" },
                 "handler": async function (response) {
                     btn.innerText = "Verifying...";
@@ -1501,13 +1519,12 @@ function closeOrderModal() {
                         const verifyData = await verifyRes.json();
                         
                         if(verifyRes.ok) {
-    await showReportToCustomer(responseData.orderId); // ফৰ্ম খোল খাই থাকোঁতেই ডাটাখিনি লৈ ৰিপোৰ্ট বনিব
-    if (typeof closeOrderModal === 'function') closeOrderModal(); // ৰিপোৰ্ট বনোৱাৰ পিছতহে ফৰ্ম বন্ধ হ'ব
-} else {
+                            await showReportToCustomer(responseData.orderId); 
+                            if (typeof closeOrderModal === 'function') closeOrderModal();
+                        } else {
                             alert("পেমেন্ট ভেৰিফিকেচনত সমস্যা হৈছে: " + (verifyData.error || "Unknown"));
                         }
                     } catch(e) { 
-                        console.error("Verification error:", e); 
                         alert("চাৰ্ভাৰৰ সৈতে সংযোগ কৰিব পৰা নগ'ল।");
                     }
                     btn.innerText = "Pay Now"; btn.disabled = false;
@@ -1525,7 +1542,6 @@ function closeOrderModal() {
             btn.innerText = "Pay Now"; btn.disabled = false; 
         }
     };
-
 async function showReportToCustomer(orderId) {
     const name = document.getElementById('custName') ? document.getElementById('custName').value : 'গ্ৰাহক';
     const email = document.getElementById('custEmail') ? document.getElementById('custEmail').value : 'N/A';
