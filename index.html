@@ -689,9 +689,10 @@
     </div>
 
 <script>
-    let tTopic = 'General';
+   let tTopic = 'General';
     let tSpread = '1_card';
     let fetchedCards = [];
+    let flippedCount = 0; // কাৰ্ড কিমানখন ঘূৰালে তাৰ হিচাপ
 
     function setTarotTopic(topic, btn) {
         tTopic = topic;
@@ -710,15 +711,18 @@
         const grid = document.getElementById('t-grid');
         const results = document.getElementById('t-results');
         const statusMsg = document.getElementById('t-status-msg');
+        const actionBar = document.getElementById('t-action-bar');
         
         drawBtn.disabled = true;
         grid.innerHTML = '';
         results.innerHTML = '';
         fetchedCards = [];
+        flippedCount = 0; // প্ৰতিবাৰ নতুন কাৰ্ড বাছনি কৰোঁতে হিচাপ 0 হ'ব
+        if(actionBar) actionBar.style.display = 'none'; // আগৰ বুটামবোৰ লুকুৱাব
         
         const cardCount = tSpread === '3_card' ? 3 : 1;
         
-        // Render facedown shuffling cards
+        // কাৰ্ড চাফোল হৈ থকাৰ এনিমেচন
         for(let i=0; i<cardCount; i++) {
             grid.innerHTML += `
                 <div class="t-card shuffling" id="t-card-el-${i}">
@@ -731,7 +735,7 @@
         statusMsg.style.color = "#d4af37";
 
         try {
-            // 🔥 API Call to Edge Function (Phase 4 Logic) 🔥
+            // Edge Function লৈ ডাটা পঠোৱা
             const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/tarot-engine', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -742,9 +746,8 @@
             
             if(data.success) {
                 fetchedCards = data.cards;
+                grid.innerHTML = ''; // চাফোল বন্ধ কৰিবলৈ
                 
-                // Stop shuffling and prepare clickable cards
-                grid.innerHTML = '';
                 fetchedCards.forEach((card, i) => {
                     const revClass = card.orientation === 'reversed' ? 'reversed' : '';
                     const badgeText = card.orientation === 'reversed' ? 'Reversed (ওলোটা)' : 'Upright (পোন)';
@@ -759,7 +762,7 @@
                         </div>
                     `;
                     
-                    // Prepare result containers (hidden initially)
+                    // ৰিজাল্টৰ বাকচটো বনাই থোৱা হ'ল (কাৰ্ড ঘূৰালেহে ওলাব)
                     results.innerHTML += `
                         <div class="t-result-item" id="t-res-${i}">
                             <h3>${card.name} <span class="t-pos">${card.position}</span></h3>
@@ -784,48 +787,31 @@
         }
     }
 
-    function revealCard(index) {
-        const cardEl = document.getElementById(`t-card-el-${index}`);
-        const resEl = document.getElementById(`t-res-${index}`);
+    // 🔥 কাৰ্ড ঘূৰোৱা আৰু ৰিজাল্ট দেখুওৱা নিখুঁত ফাংচন 🔥
+    window.revealCard = function(index) {
+        const cardEl = document.getElementById('t-card-el-' + index);
+        const resEl = document.getElementById('t-res-' + index);
         
-        if (!cardEl.classList.contains('flipped')) {
-            cardEl.classList.add('flipped');
-            setTimeout(() => {
-                resEl.style.display = 'block';
-                resEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 600);
-        }
-    }
-    let flippedCount = 0; // কাৰ্ড কিমানখন ঘূৰালে তাৰ হিচাপ
-
-    // (পুৰণি drawTarotCards ফাংচনটোৰ ভিতৰত এই দুটা লাইন যোগ কৰিব লাগিব)
-    // drawTarotCards() ৰ একেবাৰে আৰম্ভণিতে:
-    // flippedCount = 0;
-    // document.getElementById('t-action-bar').style.display = 'none';
-
-    // (পুৰণি revealCard ফাংচনটো অলপ আপডেট কৰক)
-    function revealCard(index) {
-        const cardEl = document.getElementById(`t-card-el-${index}`);
-        const resEl = document.getElementById(`t-res-${index}`);
-        
-        if (!cardEl.classList.contains('flipped')) {
+        if (cardEl && !cardEl.classList.contains('flipped')) {
             cardEl.classList.add('flipped');
             flippedCount++; // কাৰ্ড ঘূৰোৱাৰ হিচাপ বাঢ়িল
             
             setTimeout(() => {
-                resEl.style.display = 'block';
-                resEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                if(resEl) {
+                    resEl.style.display = 'block';
+                    resEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
                 
                 // যদি সকলো কাৰ্ড ঘূৰাই শেষ হ'ল, তেন্তে Action Bar টো দেখুৱাওক
                 if(flippedCount === fetchedCards.length) {
                     setTimeout(() => {
-                        document.getElementById('t-action-bar').style.display = 'block';
+                        const actionBar = document.getElementById('t-action-bar');
+                        if(actionBar) actionBar.style.display = 'block';
                     }, 500);
                 }
             }, 600);
         }
-    }
-
+    };
     // 🔥 নতুন: WhatsApp Share Logic (Phase 13) 🔥
     function shareTarotResult() {
         let shareText = `🔮 *মোৰ আজিৰ টেৰট কাৰ্ড ৰিডিং (${tTopic})* 🔮\n\n`;
