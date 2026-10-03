@@ -58,16 +58,20 @@
 </head>
 <body>
 
-    <header>
+   <header>
         <div class="acharya-info">
-            <div class="avatar">🕉️</div>
+            <div class="avatar">🛕</div>
             <div class="name-status">
-                <h2>আচাৰ্য (জ্যোতিষ অসম)</h2>
+                <h2>আচাৰ্যৰ সৈতে লাইভ চেট</h2>
                 <div class="status" id="acharyaStatus"><span class="status-dot"></span> অনলাইন (Online)</div>
             </div>
         </div>
-        <div class="timer-box" id="timerBox">
-            ⏱️ <span id="timeDisplay">05:00</span>
+        <!-- টাইমাৰ আৰু ৰিচাৰ্জ বুটাম একেলগে ৰখা হৈছে -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="timer-box" id="timerBox">
+                ⏱️ <span id="timeDisplay">00:00</span>
+            </div>
+            <button onclick="document.getElementById('extensionModal').style.display='flex'" style="background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">+ ৰিচাৰ্জ</button>
         </div>
     </header>
 
@@ -106,20 +110,38 @@
 
     <script>
         let timerInterval;
-        let isChatActive = true;
+        let isChatActive = false;
         let timeLeft = 0;
 
-        // পেজটো খোল খোৱাৰ লগে লগে এইখিনি চলিব
+        // ১. পেজ খোল খালে হিষ্ট্ৰী আৰু টাইমাৰ লোড হ'ব
         window.onload = function() {
+            // হিষ্ট্ৰী লোড কৰা
+            let history = JSON.parse(localStorage.getItem('ja_chat_history')) || [];
+            let chatArea = document.getElementById('chatArea');
+            
+            if (history.length > 0) {
+                chatArea.innerHTML = '<div class="system-msg">✅ আপোনাৰ আগৰ চেট হিষ্ট্ৰী (Chat History)</div>';
+                history.forEach(msg => {
+                    let msgDiv = document.createElement('div');
+                    msgDiv.className = `message msg-${msg.sender}`;
+                    if(msg.sender === 'acharya') {
+                        msgDiv.innerHTML = `<div class="msg-astro-name">আচাৰ্য</div>${msg.text} <span class="msg-time">${msg.time}</span>`;
+                    } else {
+                        msgDiv.innerHTML = `${msg.text} <span class="msg-time">${msg.time}</span>`;
+                    }
+                    chatArea.appendChild(msgDiv);
+                });
+                chatArea.innerHTML += `<div class="typing-indicator" id="typingIndicator" style="display: none;">আচাৰ্যই টাইপ কৰি আছে... ⏳</div>`;
+            }
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // টাইমাৰ লোড কৰা
             let expiryTime = localStorage.getItem('ja_chat_expiry');
             
             if (!expiryTime) {
-                // যদি প্ৰথমবাৰ খোল খাইছে
                 if (localStorage.getItem('ja_active_chat') === 'true') {
-                    // বৰ্তমান সময়ৰ পৰা ঠিক ৫ মিনিট (৩০০,০০০ মিলিছেকেণ্ড) যোগ কৰি Expiry Time বনোৱা হ'ল
                     expiryTime = Date.now() + (5 * 60 * 1000);
                     localStorage.setItem('ja_chat_expiry', expiryTime);
-                    // আগৰ সৰল পাছৱৰ্ডটো ডিলিট কৰি দিয়া হ'ল, যাতে ৰিফ্ৰেছ কৰিলে বাইপাছ কৰিব নোৱাৰে
                     localStorage.removeItem('ja_active_chat'); 
                 } else {
                     alert("অনুগ্ৰহ কৰি প্ৰথমে পেমেন্ট সম্পূৰ্ণ কৰক।");
@@ -128,16 +150,15 @@
                 }
             }
 
-            // কিমান সময় বাকী আছে তাৰ আচল হিচাপ (ৰাম-ঠগন দিব নোৱাৰিব)
             timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
 
             if (timeLeft <= 0) {
-                // যদি সময় ইতিমধ্যে পাৰ হৈ গৈছে
+                // সময় শেষ হ'লে কেৱল ইনপুট ব্লক হ'ব, কিন্তু হিষ্ট্ৰী পঢ়িব পাৰিব
                 timeLeft = 0;
                 updateTimerUI();
-                showExtensionModal();
+                endChatUI();
             } else {
-                document.getElementById('initTime').innerText = new Date().toLocaleTimeString('as-IN', { hour: '2-digit', minute: '2-digit' });
+                isChatActive = true;
                 updateTimerUI();
                 startTimer(expiryTime);
             }
@@ -145,14 +166,14 @@
 
         function startTimer(expiryTime) {
             timerInterval = setInterval(() => {
-                // প্ৰতি ছেকেণ্ডত আচল সময়ৰ লগত ৰিজাল্ট মিলোৱা হ'ব
                 timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
                 
                 if(timeLeft <= 0) {
                     timeLeft = 0;
                     clearInterval(timerInterval);
                     updateTimerUI();
-                    showExtensionModal();
+                    document.getElementById('extensionModal').style.display = 'flex'; // পপ-আপ ওলাব
+                    endChatUI();
                 } else {
                     updateTimerUI();
                 }
@@ -167,30 +188,31 @@
 
             const tBox = document.getElementById('timerBox');
             if (timeLeft > 0 && timeLeft <= 60) {
-                tBox.classList.add('timer-warning'); // শেষৰ ১ মিনিটত ৰঙা হৈ ব্লিঙ্ক কৰিব
+                tBox.classList.add('timer-warning'); 
             } else {
                 tBox.classList.remove('timer-warning');
             }
         }
 
-        function showExtensionModal() {
+        // সময় শেষ হ'লে UI সলনি কৰা (কিন্তু চেট ডিলিট নকৰা)
+        function endChatUI() {
             isChatActive = false;
-            document.getElementById('userInput').disabled = true;
+            let inputField = document.getElementById('userInput');
+            inputField.disabled = true;
+            inputField.placeholder = "সময় শেষ! ➕ ৰিচাৰ্জ কৰি কথা পাতক...";
             document.getElementById('sendBtn').disabled = true;
-            document.getElementById('extensionModal').style.display = 'flex';
+            document.getElementById('acharyaStatus').innerHTML = "অফলাইন (Offline) - সময় উকলিছে";
+            document.getElementById('acharyaStatus').style.color = "#fca5a5";
         }
 
         function endChat() {
             document.getElementById('extensionModal').style.display = 'none';
-            appendMessage("acharya", "ধন্যবাদ! আপোনাৰ ভৱিষ্যৎ সুন্দৰ হওক। পুনৰ প্ৰয়োজন হ'লে যোগাযোগ কৰিব। 🙏");
-            document.getElementById('acharyaStatus').innerHTML = "অফলাইন (Offline)";
-            localStorage.removeItem('ja_chat_expiry'); // চেট সামৰণি মাৰিলে গোটেই ৰেকৰ্ড মচি দিয়া হ'ব
         }
 
         // সময় বৃদ্ধি কৰাৰ বাবে পেমেন্ট
         function initiateExtensionPayment(amount, minutesToAdd) {
             var options = {
-                "key": window.JA_CONFIG.razorpayKeyId, // আচল API Key টো config.js ৰ পৰা আহিব
+                "key": window.JA_CONFIG.razorpayKeyId,
                 "amount": amount * 100, 
                 "currency": "INR",
                 "name": "জ্যোতিষ অসম",
@@ -207,30 +229,32 @@
         function extendTimeSuccess(minutes) {
             document.getElementById('extensionModal').style.display = 'none';
             
-            // নতুনকৈ সময় যোগ কৰা
             let currentExpiry = parseInt(localStorage.getItem('ja_chat_expiry')) || Date.now();
-            if (currentExpiry < Date.now()) currentExpiry = Date.now(); // যদি আগতেই শেষ হৈ গৈছে
+            if (currentExpiry < Date.now()) currentExpiry = Date.now(); 
             
             let newExpiry = currentExpiry + (minutes * 60 * 1000);
             localStorage.setItem('ja_chat_expiry', newExpiry);
             
             isChatActive = true;
-            document.getElementById('userInput').disabled = false;
+            let inputField = document.getElementById('userInput');
+            inputField.disabled = false;
+            inputField.placeholder = "আপোনাৰ প্ৰশ্ন ইয়াত লিখক...";
             document.getElementById('sendBtn').disabled = false;
             document.getElementById('timerBox').classList.remove('timer-warning');
+            document.getElementById('acharyaStatus').innerHTML = "<span class='status-dot'></span> অনলাইন (Online)";
+            document.getElementById('acharyaStatus').style.color = "#d1fae5";
             
             startTimer(newExpiry);
-            appendMessage("acharya", `ধন্যবাদ! আপোনাৰ পেমেন্ট সফল হৈছে আৰু সময় ${minutes} মিনিট বৃদ্ধি কৰা হৈছে। আপোনাৰ প্ৰশ্ন সোধক।`);
+            appendMessage("acharya", `ধন্যবাদ! আপোনাৰ পেমেন্ট সফল হৈছে আৰু সময় ${minutes} মিনিট বৃদ্ধি কৰা হৈছে। আপোনাৰ প্ৰশ্ন সোধক।`, true);
         }
 
-        // AI চেটবট ইঞ্জিনলৈ মেছেজ পঠোৱা
         async function sendMessage() {
             if(!isChatActive) return;
             let inputField = document.getElementById('userInput');
             let text = inputField.value.trim();
             if(text === "") return;
 
-            appendMessage("user", text);
+            appendMessage("user", text, true);
             inputField.value = "";
             
             document.getElementById('typingIndicator').style.display = 'block';
@@ -239,45 +263,51 @@
             generateAIResponse(text);
         }
 
-        function appendMessage(sender, text) {
+        // মেছেজ স্ক্ৰীণত দেখুওৱা আৰু হিষ্ট্ৰীত ছেভ কৰা
+        function appendMessage(sender, text, save = true) {
             let chatArea = document.getElementById('chatArea');
             let timeStr = new Date().toLocaleTimeString('as-IN', { hour: '2-digit', minute: '2-digit' });
             
             let msgDiv = document.createElement('div');
             msgDiv.className = `message msg-${sender}`;
-            msgDiv.innerHTML = `${text} <span class="msg-time">${timeStr}</span>`;
+            
+            if(sender === 'acharya') {
+                msgDiv.innerHTML = `<div class="msg-astro-name">আচাৰ্য</div>${text} <span class="msg-time">${timeStr}</span>`;
+            } else {
+                msgDiv.innerHTML = `${text} <span class="msg-time">${timeStr}</span>`;
+            }
             
             chatArea.insertBefore(msgDiv, document.getElementById('typingIndicator'));
             chatArea.scrollTop = chatArea.scrollHeight;
+
+            if (save) {
+                let history = JSON.parse(localStorage.getItem('ja_chat_history')) || [];
+                history.push({ sender: sender, text: text, time: timeStr });
+                localStorage.setItem('ja_chat_history', JSON.stringify(history));
+            }
         }
 
-        // Supabase Edge Function ৰ সৈতে সংযোগ
+        // Supabase AI Connection
         async function generateAIResponse(userText) {
             const orderId = localStorage.getItem('ja_last_order_id');
-            
             try {
                 const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/ai-astrologer-chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        question: userText,
-                        orderId: orderId 
-                    })
+                    body: JSON.stringify({ question: userText, orderId: orderId })
                 });
                 
                 const data = await response.json();
-                
                 document.getElementById('typingIndicator').style.display = 'none';
 
                 if (data.success && data.reply) {
-                    appendMessage("acharya", data.reply);
+                    appendMessage("acharya", data.reply, true);
                 } else {
-                    appendMessage("acharya", "ক্ষমা কৰিব, বৰ্তমান গ্ৰহৰ স্থিতি গণনা কৰাত অলপ অসুবিধা হৈছে। অনুগ্ৰহ কৰি প্ৰশ্নটো পুনৰ সুধিবনে?");
+                    appendMessage("acharya", "ক্ষমা কৰিব, বৰ্তমান গ্ৰহৰ স্থিতি গণনা কৰাত অলপ অসুবিধা হৈছে। অনুগ্ৰহ কৰি প্ৰশ্নটো পুনৰ সুধিবনে?", true);
                 }
             } catch (error) {
-                console.error("AI Chat Error:", error);
                 document.getElementById('typingIndicator').style.display = 'none';
-                appendMessage("acharya", "ইণ্টাৰনেটৰ সংযোগ বিচ্ছিন্ন হৈছে বা চাৰ্ভাৰ ব্যস্ত আছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
+                appendMessage("acharya", "ইণ্টাৰনেটৰ সংযোগ বিচ্ছিন্ন হৈছে বা চাৰ্ভাৰ ব্যস্ত আছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।", false);
             }
         }
     </script>
