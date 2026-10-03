@@ -200,9 +200,12 @@
             document.getElementById('acharyaStatus').style.color = "#fef08a";
         }
 
-        // ৩. AI লৈ মেছেজ পঠোৱা (Edge Function Call)
+       // ৩. AI লৈ মেছেজ পঠোৱা (Edge Function Call) - Fixed Version
         async function sendAIMessage() {
-            if (availableSeconds <= 0) return;
+            if (availableSeconds <= 0) {
+                document.getElementById('extensionModal').style.display = 'flex';
+                return;
+            }
             
             let inputField = document.getElementById('userInput');
             let text = inputField.value.trim();
@@ -227,11 +230,15 @@
                 const data = await response.json();
                 document.getElementById('typingIndicator').style.display = 'none';
 
-                if (data.success && data.reply) {
-                    renderMessage("acharya", data.reply);
-                } else if (data.error === 'time_up') {
+                // কেৱল আচলতে সময় শেষ হ'লেহে পপ-আপ দেখুৱাব
+                if (data.error === 'time_up' || (data.success === false && data.error && data.error.includes('time'))) {
                     lockChat();
                     document.getElementById('extensionModal').style.display = 'flex';
+                    return;
+                }
+
+                if (response.ok && data.success && data.reply) {
+                    renderMessage("acharya", data.reply);
                 } else {
                     renderMessage("acharya", "ক্ষমা কৰিব, চাৰ্ভাৰত অলপ অসুবিধা হৈছে। পুনৰ সুধিবনে?");
                 }
@@ -240,7 +247,6 @@
                 renderMessage("acharya", "ইণ্টাৰনেটৰ সংযোগ বিচ্ছিন্ন হৈছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
             }
         }
-
         function renderMessage(sender, text) {
             let chatArea = document.getElementById('chatArea');
             let msgDiv = document.createElement('div');
