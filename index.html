@@ -1295,14 +1295,12 @@ function openOrderForm(service, price, title) {
         if(tarotBox) tarotBox.style.display = 'none';
     }
 
-    // --- আপোনাৰ পুৰণি openOrderForm ৰ বাকী ক'ডখিনি ইয়াৰ তলত একেই থাকিব ---
-    // (যেনে: document.getElementById('order-service').value = service; ইত্যাদি)
-    selectedService = serviceCode;
+    // 🔥 ভুলটো ইয়াতেই আছিল (serviceCode ৰ সলনি service হ'ব) 🔥
+    selectedService = service;
     selectedPrice = price;
     document.getElementById('orderTitle').innerText = title + " - ₹" + price;
     document.getElementById('orderModal').classList.add('active');
 }
-
 // Keep the old openOrderModal for compatibility with the existing buttons
 function openOrderModal(service, price) {
     if(price === 299) selectedService = 'birth';
