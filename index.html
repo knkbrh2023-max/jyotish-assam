@@ -1517,9 +1517,9 @@ function closeOrderModal() {
                         const verifyData = await verifyRes.json();
                         
                         if(verifyRes.ok) {
-                            if (typeof closeOrderModal === 'function') closeOrderModal();
-                            await showReportToCustomer(responseData.orderId); 
-                        } else {
+    await showReportToCustomer(responseData.orderId); // ফৰ্ম খোল খাই থাকোঁতেই ডাটাখিনি লৈ ৰিপোৰ্ট বনিব
+    if (typeof closeOrderModal === 'function') closeOrderModal(); // ৰিপোৰ্ট বনোৱাৰ পিছতহে ফৰ্ম বন্ধ হ'ব
+} else {
                             alert("পেমেন্ট ভেৰিফিকেচনত সমস্যা হৈছে: " + (verifyData.error || "Unknown"));
                         }
                     } catch(e) { 
