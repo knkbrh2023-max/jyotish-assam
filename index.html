@@ -1345,7 +1345,12 @@ async function processPayment(e) {
         birthDate: document.getElementById('custDate').value,
         birthTime: dbTime,
         birthPlace: document.getElementById('custPlace').value,
-        language: currentLang
+        language: currentLang,
+        
+        // 🔥 টেৰটৰ ডাটাখিনি ইয়াতেই যোগ কৰা হ'ল 🔥
+        tarot_question: document.getElementById('tarot-final-question') ? document.getElementById('tarot-final-question').value : null,
+        tarot_cards: sessionStorage.getItem('temp_tarot_cards'),
+        tarot_topic: sessionStorage.getItem('temp_tarot_topic')
     };
     
     try {
