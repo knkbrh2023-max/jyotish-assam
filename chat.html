@@ -52,6 +52,9 @@
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
     </style>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="config.js"></script> <!-- এই শাৰীটো নতুনকৈ যোগ কৰক -->
+</head>
 </head>
 <body>
 
@@ -102,20 +105,55 @@
     </div>
 
     <script>
-        // ১. টাইমাৰৰ ছেটিংছ (৫ মিনিট = ৩০০ ছেকেণ্ড)
-        let timeLeft = 300; 
         let timerInterval;
         let isChatActive = true;
+        let timeLeft = 0;
 
-        document.getElementById('initTime').innerText = new Date().toLocaleTimeString('as-IN', { hour: '2-digit', minute: '2-digit' });
+        // পেজটো খোল খোৱাৰ লগে লগে এইখিনি চলিব
+        window.onload = function() {
+            let expiryTime = localStorage.getItem('ja_chat_expiry');
+            
+            if (!expiryTime) {
+                // যদি প্ৰথমবাৰ খোল খাইছে
+                if (localStorage.getItem('ja_active_chat') === 'true') {
+                    // বৰ্তমান সময়ৰ পৰা ঠিক ৫ মিনিট (৩০০,০০০ মিলিছেকেণ্ড) যোগ কৰি Expiry Time বনোৱা হ'ল
+                    expiryTime = Date.now() + (5 * 60 * 1000);
+                    localStorage.setItem('ja_chat_expiry', expiryTime);
+                    // আগৰ সৰল পাছৱৰ্ডটো ডিলিট কৰি দিয়া হ'ল, যাতে ৰিফ্ৰেছ কৰিলে বাইপাছ কৰিব নোৱাৰে
+                    localStorage.removeItem('ja_active_chat'); 
+                } else {
+                    alert("অনুগ্ৰহ কৰি প্ৰথমে পেমেন্ট সম্পূৰ্ণ কৰক।");
+                    window.location.href = "index.html";
+                    return;
+                }
+            }
 
-        function startTimer() {
+            // কিমান সময় বাকী আছে তাৰ আচল হিচাপ (ৰাম-ঠগন দিব নোৱাৰিব)
+            timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
+
+            if (timeLeft <= 0) {
+                // যদি সময় ইতিমধ্যে পাৰ হৈ গৈছে
+                timeLeft = 0;
+                updateTimerUI();
+                showExtensionModal();
+            } else {
+                document.getElementById('initTime').innerText = new Date().toLocaleTimeString('as-IN', { hour: '2-digit', minute: '2-digit' });
+                updateTimerUI();
+                startTimer(expiryTime);
+            }
+        };
+
+        function startTimer(expiryTime) {
             timerInterval = setInterval(() => {
+                // প্ৰতি ছেকেণ্ডত আচল সময়ৰ লগত ৰিজাল্ট মিলোৱা হ'ব
+                timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
+                
                 if(timeLeft <= 0) {
+                    timeLeft = 0;
                     clearInterval(timerInterval);
+                    updateTimerUI();
                     showExtensionModal();
                 } else {
-                    timeLeft--;
                     updateTimerUI();
                 }
             }, 1000);
@@ -128,7 +166,7 @@
             document.getElementById('timeDisplay').innerText = display;
 
             const tBox = document.getElementById('timerBox');
-            if (timeLeft <= 60) {
+            if (timeLeft > 0 && timeLeft <= 60) {
                 tBox.classList.add('timer-warning'); // শেষৰ ১ মিনিটত ৰঙা হৈ ব্লিঙ্ক কৰিব
             } else {
                 tBox.classList.remove('timer-warning');
@@ -146,19 +184,18 @@
             document.getElementById('extensionModal').style.display = 'none';
             appendMessage("acharya", "ধন্যবাদ! আপোনাৰ ভৱিষ্যৎ সুন্দৰ হওক। পুনৰ প্ৰয়োজন হ'লে যোগাযোগ কৰিব। 🙏");
             document.getElementById('acharyaStatus').innerHTML = "অফলাইন (Offline)";
+            localStorage.removeItem('ja_chat_expiry'); // চেট সামৰণি মাৰিলে গোটেই ৰেকৰ্ড মচি দিয়া হ'ব
         }
 
-        // ২. ৰেজৰপে' (Razorpay) পেমেন্ট - সময় বৃদ্ধিৰ বাবে
+        // সময় বৃদ্ধি কৰাৰ বাবে পেমেন্ট
         function initiateExtensionPayment(amount, minutesToAdd) {
             var options = {
-                // ⚠️ CRITICAL: Replace with your actual Razorpay Key ID
-                "key": "YOUR_RAZORPAY_KEY_HERE", 
+                "key": window.JA_CONFIG.razorpayKeyId, // আচল API Key টো config.js ৰ পৰা আহিব
                 "amount": amount * 100, 
                 "currency": "INR",
                 "name": "জ্যোতিষ অসম",
                 "description": `আচাৰ্যৰ সৈতে +${minutesToAdd} মিনিট লাইভ চেট`,
                 "handler": function (response) {
-                    // পেমেন্ট সফল হ'লে সময় বঢ়াই দিয়া হ'ব
                     extendTimeSuccess(minutesToAdd);
                 },
                 "theme": { "color": "#075e54" }
@@ -169,18 +206,25 @@
 
         function extendTimeSuccess(minutes) {
             document.getElementById('extensionModal').style.display = 'none';
-            timeLeft += (minutes * 60);
+            
+            // নতুনকৈ সময় যোগ কৰা
+            let currentExpiry = parseInt(localStorage.getItem('ja_chat_expiry')) || Date.now();
+            if (currentExpiry < Date.now()) currentExpiry = Date.now(); // যদি আগতেই শেষ হৈ গৈছে
+            
+            let newExpiry = currentExpiry + (minutes * 60 * 1000);
+            localStorage.setItem('ja_chat_expiry', newExpiry);
+            
             isChatActive = true;
             document.getElementById('userInput').disabled = false;
             document.getElementById('sendBtn').disabled = false;
             document.getElementById('timerBox').classList.remove('timer-warning');
-            updateTimerUI();
-            startTimer();
-            appendMessage("acharya", "ধন্যবাদ! আপোনাৰ পেমেন্ট সফল হৈছে আৰু সময় বৃদ্ধি কৰা হৈছে। আপোনাৰ প্ৰশ্ন সোধক।");
+            
+            startTimer(newExpiry);
+            appendMessage("acharya", `ধন্যবাদ! আপোনাৰ পেমেন্ট সফল হৈছে আৰু সময় ${minutes} মিনিট বৃদ্ধি কৰা হৈছে। আপোনাৰ প্ৰশ্ন সোধক।`);
         }
 
-        // ৩. AI চেটবট ইঞ্জিন (সাধাৰণ প্ৰত্যুত্তৰ)
-        function sendMessage() {
+        // AI চেটবট ইঞ্জিনলৈ মেছেজ পঠোৱা
+        async function sendMessage() {
             if(!isChatActive) return;
             let inputField = document.getElementById('userInput');
             let text = inputField.value.trim();
@@ -189,14 +233,10 @@
             appendMessage("user", text);
             inputField.value = "";
             
-            // AI-ৰ উত্তৰৰ বাবে অলপ সময় লোৱা (টাইপিং ইফেক্ট)
             document.getElementById('typingIndicator').style.display = 'block';
             document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
 
-            setTimeout(() => {
-                document.getElementById('typingIndicator').style.display = 'none';
-                generateAIResponse(text);
-            }, 2500); // ২.৫ ছেকেণ্ডৰ পিছত উত্তৰ দিব
+            generateAIResponse(text);
         }
 
         function appendMessage(sender, text) {
@@ -207,17 +247,15 @@
             msgDiv.className = `message msg-${sender}`;
             msgDiv.innerHTML = `${text} <span class="msg-time">${timeStr}</span>`;
             
-            // টাইপিং ইণ্ডিকেটৰৰ ওপৰত মেছেজটো সুমুৱাব
             chatArea.insertBefore(msgDiv, document.getElementById('typingIndicator'));
             chatArea.scrollTop = chatArea.scrollHeight;
         }
 
-       async function generateAIResponse(userText) {
-            // ১. পেমেন্ট কৰোঁতে ছেভ হোৱা গ্ৰাহকৰ Order ID টো ল'ব (য'ত জন্মৰ তাৰিখ, সময় আদি আছে)
+        // Supabase Edge Function ৰ সৈতে সংযোগ
+        async function generateAIResponse(userText) {
             const orderId = localStorage.getItem('ja_last_order_id');
             
             try {
-                // ২. আপোনাৰ Supabase বেকএণ্ডলৈ প্ৰশ্ন আৰু Order ID পঠিয়াব
                 const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/ai-astrologer-chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -229,7 +267,8 @@
                 
                 const data = await response.json();
                 
-                // ৩. বেকএণ্ডৰ পৰা অহা আচল জ্যোতিষীয় উত্তৰটো গ্ৰাহকক দেখুৱাব
+                document.getElementById('typingIndicator').style.display = 'none';
+
                 if (data.success && data.reply) {
                     appendMessage("acharya", data.reply);
                 } else {
@@ -237,15 +276,10 @@
                 }
             } catch (error) {
                 console.error("AI Chat Error:", error);
+                document.getElementById('typingIndicator').style.display = 'none';
                 appendMessage("acharya", "ইণ্টাৰনেটৰ সংযোগ বিচ্ছিন্ন হৈছে বা চাৰ্ভাৰ ব্যস্ত আছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
             }
         }
-
-        // পেজটো খোল খোৱাৰ লগে লগে টাইমাৰ আৰম্ভ হ'ব
-        window.onload = () => {
-            updateTimerUI();
-            startTimer();
-        };
     </script>
 </body>
 </html>
