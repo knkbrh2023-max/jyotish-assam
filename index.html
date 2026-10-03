@@ -1219,6 +1219,11 @@ function checkLuckyGem() {
     <label style="font-size: 14px; font-weight: 600;">ইমেইল (Email):</label>
     <input type="email" id="custEmail" class="form-control" placeholder="example@gmail.com" required>
 </div>
+                <!-- টেৰটৰ প্ৰশ্নৰ ঘৰ (প্ৰথমে লুকুৱাই ৰখা হ'ব) -->
+<div id="tarot-q-box" style="display: none; margin-top: 15px;">
+    <label style="font-weight: bold; margin-bottom: 5px; display: block; color: #475569;">আপোনাৰ প্ৰশ্ন (Tarot Question)</label>
+    <textarea id="tarot-final-question" rows="2" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: inherit;" placeholder="আপোনাৰ মনৰ প্ৰশ্নটো ইয়াত লিখক..."></textarea>
+</div>
                 <div style="margin-bottom: 15px; display: flex; gap: 15px;">
                     <div style="flex: 1;">
                         <label style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
@@ -1259,7 +1264,39 @@ function checkLuckyGem() {
 let selectedService = '', selectedPrice = 0, currentLang = 'as';
 
 // 🔄 UPDATE 1: openOrderForm (To support AI Chat modal opening)
-function openOrderForm(serviceCode, price, title) {
+function openOrderForm(service, price, title) {
+    
+    // 🔥 নতুন: টেৰটৰ বাবে ফৰ্ম সলনি কৰাৰ মেজিক (Magic) 🔥
+    const dobBox = document.getElementById('birth_date') ? document.getElementById('birth_date').parentElement : null;
+    const timeBox = document.getElementById('birth_time') ? document.getElementById('birth_time').parentElement : null;
+    const placeBox = document.getElementById('birth_place') ? document.getElementById('birth_place').parentElement : null;
+    const phoneBox = document.getElementById('phone') ? document.getElementById('phone').parentElement : null;
+    const tarotBox = document.getElementById('tarot-q-box');
+
+    if (service === 'premium_tarot') {
+        // টেৰটৰ অৰ্ডাৰ হ'লে: জন্মৰ তথ্য আৰু ফোন নম্বৰ লুকুৱাওক
+        if(dobBox) dobBox.style.display = 'none';
+        if(timeBox) timeBox.style.display = 'none';
+        if(placeBox) placeBox.style.display = 'none';
+        if(phoneBox) phoneBox.style.display = 'none';
+        
+        // প্ৰশ্নৰ ঘৰটো দেখুৱাওক আৰু আগতে ভবা প্ৰশ্নটো ইয়াত লিখি দিয়ক
+        if(tarotBox) {
+            tarotBox.style.display = 'block';
+            document.getElementById('tarot-final-question').value = sessionStorage.getItem('temp_tarot_question') || "";
+        }
+    } else {
+        // জ্যোতিষৰ অৰ্ডাৰ হ'লে: সকলোবোৰ পুনৰ দেখুৱাওক
+        if(dobBox) dobBox.style.display = 'block';
+        if(timeBox) timeBox.style.display = 'block';
+        if(placeBox) placeBox.style.display = 'block';
+        if(phoneBox) phoneBox.style.display = 'block';
+        
+        if(tarotBox) tarotBox.style.display = 'none';
+    }
+
+    // --- আপোনাৰ পুৰণি openOrderForm ৰ বাকী ক'ডখিনি ইয়াৰ তলত একেই থাকিব ---
+    // (যেনে: document.getElementById('order-service').value = service; ইত্যাদি)
     selectedService = serviceCode;
     selectedPrice = price;
     document.getElementById('orderTitle').innerText = title + " - ₹" + price;
