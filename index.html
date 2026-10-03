@@ -887,9 +887,13 @@ async function processTarotPayment(e) {
     const btn = document.getElementById('t-payBtn');
     btn.innerText = "Processing..."; btn.disabled = true;
 
+    // 🔥 এইটো অতি প্ৰয়োজনীয়, যাতে পেমেন্টৰ পিছত টেৰট ৰিপোৰ্টখন খোল খায় 🔥
+    selectedService = 'premium_tarot';
+
     // বেকএণ্ডৰ এৰৰ নোহোৱা কৰিবলৈ মনে মনে দিয়া ডামী জন্ম তাৰিখ
     const orderData = {
         service: 'premium_tarot',
+        amount: 99,  // 🔥 Razorpay ৰ বাবে দামটো ইয়াতেই পঠিওৱা হ'ল 🔥
         name: document.getElementById('t-custName').value,
         email: document.getElementById('t-custEmail').value,
         birthDate: "2026-01-01", 
@@ -942,6 +946,17 @@ async function processTarotPayment(e) {
             }
         }; 
 
+        var rzpT = new Razorpay(options);
+        rzpT.on('payment.failed', function (r){ 
+            alert("Failed: " + r.error.description); 
+            btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false; 
+        });
+        rzpT.open();
+    } catch(err) { 
+        alert("Error: " + err.message); 
+        btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false; 
+    }
+}
         var rzpT = new Razorpay(options);
         rzpT.on('payment.failed', function (r){ 
             alert("Failed: " + r.error.description); 
