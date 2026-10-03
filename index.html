@@ -1477,7 +1477,79 @@ async function showReportToCustomer(orderId) {
     const dob = document.getElementById('custDate') ? document.getElementById('custDate').value : 'N/A';
     const place = document.getElementById('custPlace') ? document.getElementById('custPlace').value : 'N/A';
     const service = typeof selectedService !== 'undefined' ? selectedService : 'birth';
+// 🔥 ১. মেজিক: প্ৰিমিয়াম টেৰটৰ বাবে লাইভ AI ৰিপোৰ্ট আৰু PDF ডাওনল'ড 🔥
+    if (service === 'premium_tarot') {
+        // প্ৰথমে এটা ধুনীয়া Loading Screen দেখুৱাওক (যিহেতু AI য়ে ৰিপোৰ্ট লিখিবলৈ ১৫ ছেকেণ্ডমান ল'ব)
+        const loadingHtml = `
+            <!DOCTYPE html>
+            <html lang="as">
+            <head>
+                <meta charset="UTF-8">
+                <title>ৰিপোৰ্ট প্ৰস্তুত হৈ আছে...</title>
+                <style>
+                    body { font-family: 'Noto Sans Assamese', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                    .loader-container { text-align: center; }
+                    .spinner { border: 5px solid rgba(255,255,255,0.1); border-top: 5px solid #d4af37; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+                    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                    h2 { color: #fde047; font-size: 24px; margin-bottom: 10px; }
+                    p { color: #cbd5e1; font-size: 16px; line-height: 1.6; }
+                </style>
+            </head>
+            <body>
+                <div class="loader-container">
+                    <div class="spinner"></div>
+                    <h2>✨ AI য়ে আপোনাৰ ৰিপোৰ্ট লিখি আছে...</h2>
+                    <p>আপোনাৰ কাৰ্ডসমূহ বিশ্লেষণ কৰি এক বিতং ভৱিষ্যৎবাণী প্ৰস্তুত কৰা হৈছে।<br>অনুগ্ৰহ কৰি ১৫-২০ ছেকেণ্ড অপেক্ষা কৰক, পেজটো বন্ধ নকৰিব।</p>
+                </div>
+            </body>
+            </html>
+        `;
+        
+        // নতুন টেবত ল'ডিং স্ক্ৰীণখন খোলক
+        const win = window.open('', '_blank');
+        if(win) {
+            win.document.write(loadingHtml);
+        } else {
+            document.body.innerHTML = loadingHtml;
+        }
 
+        // এতিয়া বেকএণ্ডৰ Edge Function ৰ পৰা AI ৰিপোৰ্টটো বিচাৰি আনক
+        try {
+            // ⚠️ গুৰুত্বপূৰ্ণ: ইয়াত 'generate-tarot-report' ৰ ঠাইত আপোনাৰ Supabase ৰ ফাংচনটোৰ নাম দিব
+            const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/generate-tarot-report', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId: orderId })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success && data.report) {
+                // AI য়ে লিখা সম্পূৰ্ণ HTML ৰিপোৰ্টটো ল'ডিং স্ক্ৰীণৰ ওপৰতে দেখুৱাই দিয়ক
+                if(win) {
+                    win.document.open();
+                    win.document.write(data.report);
+                    win.document.close();
+                } else {
+                    document.body.innerHTML = data.report;
+                }
+            } else {
+                throw new Error(data.error || "ৰিপোৰ্ট প্ৰস্তুত কৰাত সমস্যা হৈছে।");
+            }
+        } catch (error) {
+            const errorHtml = `<div style="text-align:center; padding:50px; font-family:sans-serif; background:#0f172a; color:white; height:100vh;">
+                                <h2 style="color:#ef4444;">⚠️ সমস্যা হৈছে!</h2>
+                                <p>${error.message}</p>
+                               </div>`;
+            if(win) {
+                win.document.body.innerHTML = errorHtml;
+            } else {
+                document.body.innerHTML = errorHtml;
+            }
+        }
+        
+        return; // 🛑 ইয়াৰ পৰাই ঘূৰি যাব, তলৰ পুৰণি কুণ্ডলী বনোৱা ক'ডলৈ নাযায় 🛑
+    }
     const serviceNameMap = {
         'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
         'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
