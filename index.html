@@ -1210,6 +1210,28 @@ function checkLuckyGem() {
     </div>
 
     <!-- Order & Payment Form Modal -->
+   <!-- 🔥 নতুন: কেৱল টেৰটৰ বাবে সুকীয়া ফৰ্ম 🔥 -->
+    <div class="modal" id="tarotOrderModal">
+        <div class="modal-content" style="border: 2px solid #d4af37;">
+            <span class="close-modal" onclick="closeTarotOrderModal()">&times;</span>
+            <h2 style="color: #d4af37; margin-bottom: 15px; text-align: center;">প্ৰিমিয়াম AI টেৰট ৰিপোৰ্ট</h2>
+            <form id="tarotOrderForm" onsubmit="processTarotPayment(event)">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
+                    <input type="text" id="t-custName" class="form-control" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 14px; font-weight: 600;">ইমেইল (Email) - য'ত ৰিপোৰ্ট যাব:</label>
+                    <input type="email" id="t-custEmail" class="form-control" placeholder="example@gmail.com" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 14px; font-weight: 600;">আপোনাৰ প্ৰশ্ন:</label>
+                    <textarea id="t-final-question" rows="2" class="form-control" required></textarea>
+                </div>
+                <button type="submit" id="t-payBtn" class="service-btn" style="background: linear-gradient(135deg, #d4af37, #b48509); color: white;">পেমেন্ট কৰক (Pay ₹99)</button>
+            </form>
+        </div>
+    </div>
     <div class="modal" id="orderModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeOrderModal()">&times;</span>
