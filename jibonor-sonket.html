@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="as">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>জীৱনৰ সংকেত | জ্যোতিষ অসম — লোকবিশ্বাস, সপোন আৰু দৈনন্দিন সংকেত</title>
+<meta name="description" content="জীৱনৰ সৰু সৰু সংকেত, সপোনৰ অৰ্থ, পুৱা-পুৱাৰ বিশ্বাস, চৰাই-পখিলা আৰু পৰম্পৰাগত লোকবিশ্বাস অসমীয়াত জানক।">
+<link rel="canonical" href="https://jyotishassam.com/jibonor-sonket.html">
+<meta property="og:title" content="জীৱনৰ সংকেত | জ্যোতিষ অসম"><meta property="og:description" content="দৈনন্দিন সংকেত, সপোনৰ অৰ্থ আৰু পৰম্পৰাগত লোকবিশ্বাস।"><meta property="og:url" content="https://jyotishassam.com/jibonor-sonket.html">
+<link rel="icon" href="icon.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="jibonor-sonket.css">
+</head><body class="js-body">
+<header class="js-top"><div class="js-container js-top-inner"><a class="js-brand" href="index.html"><img src="icon.png" alt="জ্যোতিষ অসম">জ্যোতিষ অসম</a><a class="js-back" href="index.html">← মূল পৃষ্ঠালৈ উভতি যাওক</a></div></header>
+<section class="js-hero"><div class="js-container"><div class="js-kicker">Jyotish Assam • Traditional Knowledge</div><h1>জীৱনৰ সংকেত</h1><p>চকু লৰা, হাঁচি, পুৱা উঠা, সপোন, চৰাই-পখিলা আৰু ঘৰুৱা ঘটনাক লৈ প্ৰচলিত লোকবিশ্বাসসমূহ সহজ আৰু সুন্দৰভাৱে জানক।</p><div class="js-actions"><a class="js-btn primary" href="#articles">সংকেত বিচাৰক ↓</a><a class="js-btn ghost" href="index.html">আজিৰ ৰাশিফল →</a></div></div></section>
+<main class="js-container" id="articles">
+<div class="js-toolbar"><input id="search" class="js-search" placeholder="🔍  যেনে: চকু, সাপ, পখিলা, হাঁচি..."></div>
+<div class="js-cats" id="cats"></div>
+<section class="js-section"><div class="js-section-head"><div><h2>শুভ-অশুভ সংকেত & লোকবিশ্বাস</h2></div><div class="js-count" id="count"></div></div>
+<div class="js-info">🔮 <strong>মন কৰিব:</strong> এই section-ৰ তথ্যসমূহ পৰম্পৰাগত লোকবিশ্বাস আৰু সাংস্কৃতিক ধাৰণাৰ উপস্থাপন। অঞ্চল আৰু পৰম্পৰা অনুসৰি ব্যাখ্যা বেলেগ হ'ব পাৰে; ইয়াক নিশ্চিত ভৱিষ্যদ্বাণী বা বৈজ্ঞানিক সত্য হিচাপে নল'ব।</div>
+<div class="js-grid" id="grid"></div></section>
+</main>
+<footer class="js-footer"><div class="js-container">© ২০২৬ জ্যোতিষ অসম • <a href="disclaimer.html">Disclaimer</a> • <a href="privacy-policy.html">Privacy Policy</a></div></footer>
+<script src="jibonor-sonket.js"></script>
+<script>
+const data=window.JIBONOR_SONKET||[];let active='all';
+const cats=[['all','সকলো'],...[["body", "শৰীৰৰ সংকেত"], ["morning", "পুৱা আৰু দৈনন্দিন সংকেত"], ["dream", "সপোনৰ অৰ্থ"], ["animals", "চৰাই-পখিলা-জীৱ-জন্তুৰ সংকেত"], ["women", "মহিলা-কেন্দ্ৰিক লোকবিশ্বাস"], ["home", "ঘৰ-সংসাৰ আৰু ধন-সম্পত্তিৰ সংকেত"]]];
+const grid=document.getElementById('grid'),search=document.getElementById('search'),count=document.getElementById('count'),catBox=document.getElementById('cats');
+catBox.innerHTML=cats.map(c=>`<button class="js-cat ${c[0]===active?'active':''}" data-cat="${c[0]}">${c[1]}</button>`).join('');
+catBox.addEventListener('click',e=>{const b=e.target.closest('.js-cat');if(!b)return;active=b.dataset.cat;document.querySelectorAll('.js-cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');render();});
+search.addEventListener('input',render);
+function render(){const q=search.value.trim().toLowerCase();const list=data.filter(x=>(active==='all'||x.category===active)&&(!q||(x.title+x.subtitle).toLowerCase().includes(q)));count.textContent=list.length+'টা লেখা';grid.innerHTML=list.map(x=>`<article class="js-card"><div class="js-icon">${x.icon}</div><div class="js-card-cat">${x.category}</div><h3>${x.title}</h3><p>${x.subtitle}</p><a class="js-read" href="${x.slug}.html">সম্পূৰ্ণকৈ পঢ়ক →</a></article>`).join('')||'<div class="js-empty">আপোনাৰ search-ৰ লগত মিল থকা লেখা পোৱা নগ'ল।</div>';}
+render();
+</script></body></html>
