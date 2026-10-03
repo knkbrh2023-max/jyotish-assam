@@ -212,19 +212,33 @@
             chatArea.scrollTop = chatArea.scrollHeight;
         }
 
-        function generateAIResponse(userText) {
-            // বৰ্তমানৰ বাবে সাধাৰণ AI উত্তৰ (পিছত ইয়াত আপুনি আচল AI API লগাব পাৰিব)
-            const responses = [
-                "গ্ৰহৰ বৰ্তমানৰ অৱস্থান অনুসৰি আপোনাৰ এই সময়ছোৱা কিছু মিশ্ৰিত ফলদায়ক। আপুনি ধৈৰ্যৰে কাম কৰিলে সুফল পাব।",
-                "নিশ্চয়। আপোনাৰ জন্ম কুণ্ডলীৰ দশম ভাৱৰ অধিপতিৰ অৱস্থান শুভ। কেৰিয়াৰ বা ব্যৱসায়ত আগন্তুক ৩ মাহত ভাল খবৰ আহিব।",
-                "এই সমস্যাৰ পৰা পৰিত্ৰাণ পাবলৈ প্ৰতি সোমবাৰে শিৱলিংগত জল অৰ্পণ কৰিব। ই আপোনাৰ মানসিক শান্তি ঘূৰাই আনিব।",
-                "প্ৰেম আৰু সম্পৰ্কৰ ক্ষেত্ৰত বৰ্তমান কিছু সাৱধান হোৱাটো ভাল। খং আৰু আৱেগ নিয়ন্ত্ৰণ কৰিলে সম্পৰ্ক মধুৰ হ'ব।",
-                "আপোনাৰ ভাগ্যস্থানত বৃহস্পতিৰ শুভ দৃষ্টি আছে। যিকোনো নতুন আৰম্ভণি কৰিবলৈ এইটো এটা সুন্দৰ সময়।"
-            ];
+       async function generateAIResponse(userText) {
+            // ১. পেমেন্ট কৰোঁতে ছেভ হোৱা গ্ৰাহকৰ Order ID টো ল'ব (য'ত জন্মৰ তাৰিখ, সময় আদি আছে)
+            const orderId = localStorage.getItem('ja_last_order_id');
             
-            // যাদৃচ্ছিকভাৱে (Random) এটা উত্তৰ বাছি ল'ব
-            let randomReply = responses[Math.floor(Math.random() * responses.length)];
-            appendMessage("acharya", randomReply);
+            try {
+                // ২. আপোনাৰ Supabase বেকএণ্ডলৈ প্ৰশ্ন আৰু Order ID পঠিয়াব
+                const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/ai-astrologer-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        question: userText,
+                        orderId: orderId 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // ৩. বেকএণ্ডৰ পৰা অহা আচল জ্যোতিষীয় উত্তৰটো গ্ৰাহকক দেখুৱাব
+                if (data.success && data.reply) {
+                    appendMessage("acharya", data.reply);
+                } else {
+                    appendMessage("acharya", "ক্ষমা কৰিব, বৰ্তমান গ্ৰহৰ স্থিতি গণনা কৰাত অলপ অসুবিধা হৈছে। অনুগ্ৰহ কৰি প্ৰশ্নটো পুনৰ সুধিবনে?");
+                }
+            } catch (error) {
+                console.error("AI Chat Error:", error);
+                appendMessage("acharya", "ইণ্টাৰনেটৰ সংযোগ বিচ্ছিন্ন হৈছে বা চাৰ্ভাৰ ব্যস্ত আছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
+            }
         }
 
         // পেজটো খোল খোৱাৰ লগে লগে টাইমাৰ আৰম্ভ হ'ব
