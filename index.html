@@ -1258,39 +1258,51 @@ function checkLuckyGem() {
        // --- Premium Payment Logic ---
 let selectedService = '', selectedPrice = 0, currentLang = 'as';
 
-// 🔄 UPDATE 1: openOrderForm (To support AI Chat modal opening)
+// 🔄 UPDATE 1: openOrderForm (To support AI Chat modal opening & Tarot)
 function openOrderForm(service, price, title) {
     
-    // 🔥 নতুন: টেৰটৰ বাবে ফৰ্ম সলনি কৰাৰ মেজিক (Magic) 🔥
-    const dobBox = document.getElementById('birth_date') ? document.getElementById('birth_date').parentElement : null;
-    const timeBox = document.getElementById('birth_time') ? document.getElementById('birth_time').parentElement : null;
-    const placeBox = document.getElementById('birth_place') ? document.getElementById('birth_place').parentElement : null;
-    const phoneBox = document.getElementById('phone') ? document.getElementById('phone').parentElement : null;
+    // আপোনাৰ ফৰ্মৰ আচল ID বোৰ
+    const dateInput = document.getElementById('custDate');
+    const hourInput = document.getElementById('custHour');
+    const minInput = document.getElementById('custMin');
+    const placeInput = document.getElementById('custPlace');
     const tarotBox = document.getElementById('tarot-q-box');
 
+    // ঘৰবোৰক আৱৰি থকা মূল বাকচবোৰ
+    const dateTimeRow = dateInput ? dateInput.parentElement.parentElement : null;
+    const placeRow = placeInput ? placeInput.parentElement : null;
+
     if (service === 'premium_tarot') {
-        // টেৰটৰ অৰ্ডাৰ হ'লে: জন্মৰ তথ্য আৰু ফোন নম্বৰ লুকুৱাওক
-        if(dobBox) dobBox.style.display = 'none';
-        if(timeBox) timeBox.style.display = 'none';
-        if(placeBox) placeBox.style.display = 'none';
-        if(phoneBox) phoneBox.style.display = 'none';
+        // টেৰটৰ অৰ্ডাৰ হ'লে: জন্মৰ তথ্য লুকুৱাওক
+        if(dateTimeRow) dateTimeRow.style.display = 'none';
+        if(placeRow) placeRow.style.display = 'none';
         
-        // প্ৰশ্নৰ ঘৰটো দেখুৱাওক আৰু আগতে ভবা প্ৰশ্নটো ইয়াত লিখি দিয়ক
+        // ফৰ্মখন যাতে চাবমিট হয়, তাৰ বাবে 'required' আঁতৰাই দিয়া হ'ল
+        if(dateInput) dateInput.removeAttribute('required');
+        if(hourInput) hourInput.removeAttribute('required');
+        if(minInput) minInput.removeAttribute('required');
+        if(placeInput) placeInput.removeAttribute('required');
+        
+        // প্ৰশ্নৰ ঘৰটো দেখুৱাওক 
         if(tarotBox) {
             tarotBox.style.display = 'block';
             document.getElementById('tarot-final-question').value = sessionStorage.getItem('temp_tarot_question') || "";
         }
     } else {
         // জ্যোতিষৰ অৰ্ডাৰ হ'লে: সকলোবোৰ পুনৰ দেখুৱাওক
-        if(dobBox) dobBox.style.display = 'block';
-        if(timeBox) timeBox.style.display = 'block';
-        if(placeBox) placeBox.style.display = 'block';
-        if(phoneBox) phoneBox.style.display = 'block';
+        if(dateTimeRow) dateTimeRow.style.display = 'flex'; 
+        if(placeRow) placeRow.style.display = 'block';
         
+        // 'required' পুনৰ লগাই দিয়া হ'ল
+        if(dateInput) dateInput.setAttribute('required', 'true');
+        if(hourInput) hourInput.setAttribute('required', 'true');
+        if(minInput) minInput.setAttribute('required', 'true');
+        if(placeInput) placeInput.setAttribute('required', 'true');
+        
+        // টেৰটৰ প্ৰশ্ন লুকুৱাওক
         if(tarotBox) tarotBox.style.display = 'none';
     }
 
-    // 🔥 ভুলটো ইয়াতেই আছিল (serviceCode ৰ সলনি service হ'ব) 🔥
     selectedService = service;
     selectedPrice = price;
     document.getElementById('orderTitle').innerText = title + " - ₹" + price;
