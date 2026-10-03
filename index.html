@@ -618,22 +618,7 @@
     @keyframes slideUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
     
 
-        const question = document.getElementById('t-question').value || "কোনো প্ৰশ্ন নাই";
-        const cardsStr = fetchedCards.map(c => `${c.name} (${c.orientation === 'upright' ? 'পোন' : 'ওলোটা'})`).join(', ');
-        
-        // পেমেন্ট ফৰ্মলৈ ডাটা পঠিয়াবলৈ Session ত ছেভ কৰি ৰখা হ'ল
-        sessionStorage.setItem('temp_tarot_topic', tTopic);
-        sessionStorage.setItem('temp_tarot_question', question);
-        sessionStorage.setItem('temp_tarot_cards', cardsStr);
-
        
-        // নতুন সুকীয়া ফৰ্মখন খোল খাব
-        document.getElementById('t-final-question').value = question;
-        document.getElementById('tarotOrderModal').classList.add('active');
-    }
-                                                             function closeTarotOrderModal() {
-        document.getElementById('tarotOrderModal').classList.remove('active');
-    }
 </style>
 
 <div class="tarot-premium-section" id="tarot-box">
@@ -2946,7 +2931,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         try {
             // index.html ত ইতিমধ্যে থকা sbClient ব্যৱহাৰ কৰা হৈছে
-            const { error } = await sbClient.from('support_messages').insert([
+            const client = window.supabase.createClient("https://ihbdrtnkfitytklonnel.supabase.co", "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
+        const { error } = await client.from('support_messages').insert([
                 { name: name, contact: contact, message: msg }
             ]);
             
