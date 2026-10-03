@@ -61,3 +61,12 @@ Only add the official AdSense code after approval.
 
 ## Required for final live automation
 Razorpay Secret Key, Supabase service-role key, and AI/astrology provider secrets must be stored only as backend/Edge Function secrets. Never put them in GitHub/frontend files.
+
+
+## Added: জীৱনৰ সংকেত module
+- `jibonor-sonket.html` — searchable category page
+- `jibonor-sonket.css` — premium responsive styling
+- `jibonor-sonket.js` — 105 article dataset
+- 105 static SEO-friendly article pages
+- Main homepage navigation + CTA updated
+- `sitemap.xml` updated with all new URLs
