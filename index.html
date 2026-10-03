@@ -694,17 +694,17 @@
     let fetchedCards = [];
     let flippedCount = 0;
 
-    function setTarotTopic(topic, btn) {
+    window.setTarotTopic = function(topic, btn) {
         tTopic = topic;
         document.querySelectorAll('#topic-btns .t-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-    }
+    };
 
-    function setTarotSpread(spread, btn) {
+    window.setTarotSpread = function(spread, btn) {
         tSpread = spread;
         document.querySelectorAll('#spread-btns .t-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-    }
+    };
 
     window.drawTarotCards = async function() {
         const drawBtn = document.getElementById('t-draw-btn');
@@ -817,6 +817,122 @@
                     }, 500);
                 }
             }, 600);
+        }
+    };
+
+    // 🔥 WhatsApp আৰু Save বুটামৰ ক'ড 🔥
+    window.shareTarotResult = function() {
+        let shareText = `🔮 *মোৰ আজিৰ টেৰট কাৰ্ড ৰিডিং (${tTopic})* 🔮\n\n`;
+        fetchedCards.forEach(card => {
+            const ori = card.orientation === 'upright' ? 'পোন' : 'ওলোটা';
+            shareText += `🃏 *${card.name}* (${ori})\n✨ ${card.meaning}\n\n`;
+        });
+        shareText += `👉 তুমিও নিজৰ ভাগ্য চাবলৈ ইয়াত ক্লিক কৰা: https://jyotishassam.com`;
+        const waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(shareText);
+        window.open(waLink, '_blank');
+    };
+
+    window.saveTarotResult = async function() {
+        const reading = { id: "TR_" + Date.now(), date: new Date().toLocaleDateString('as-IN'), topic: tTopic, cards: fetchedCards };
+        let savedReadings = JSON.parse(localStorage.getItem('ja_saved_tarot') || '[]');
+        savedReadings.push(reading);
+        localStorage.setItem('ja_saved_tarot', JSON.stringify(savedReadings));
+        alert("✅ আপোনাৰ ৰিডিংটো ভৱিষ্যতে চাব পৰাকৈ সফলতাৰে ছেভ কৰা হ'ল!");
+    };
+
+    // 🔥 ৯৯ টকাৰ প্ৰিমিয়াম বুটাম আৰু ফৰ্ম খোলাৰ ক'ড 🔥
+    window.buyPremiumTarot = function() {
+        if (!fetchedCards || fetchedCards.length === 0) {
+            alert("অনুগ্ৰহ কৰি প্ৰথমে কাৰ্ড বাছনি কৰক!");
+            return;
+        }
+        const question = document.getElementById('t-question').value || "কোনো প্ৰশ্ন নাই";
+        const cardsStr = fetchedCards.map(c => `${c.name} (${c.orientation === 'upright' ? 'পোন' : 'ওলোটা'})`).join(', ');
+        
+        sessionStorage.setItem('temp_tarot_topic', tTopic);
+        sessionStorage.setItem('temp_tarot_question', question);
+        sessionStorage.setItem('temp_tarot_cards', cardsStr);
+
+        document.getElementById('t-final-question').value = question;
+        document.getElementById('tarotOrderModal').classList.add('active');
+    };
+
+    window.closeTarotOrderModal = function() {
+        document.getElementById('tarotOrderModal').classList.remove('active');
+    };
+
+    // 🔥 পেমেন্ট প্ৰচেছ আৰু ৰিপোৰ্ট দেখুওৱা ক'ড 🔥
+    window.processTarotPayment = async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('t-payBtn');
+        btn.innerText = "Processing..."; btn.disabled = true;
+
+        selectedService = 'premium_tarot';
+
+        const orderData = {
+            service: 'premium_tarot',
+            amount: 99, 
+            name: document.getElementById('t-custName').value,
+            email: document.getElementById('t-custEmail').value,
+            birthDate: "2026-01-01", 
+            birthTime: "12:00:00",
+            birthPlace: "Tarot Reading",
+            language: 'as',
+            tarot_question: document.getElementById('t-final-question').value,
+            tarot_cards: sessionStorage.getItem('temp_tarot_cards'),
+            tarot_topic: sessionStorage.getItem('temp_tarot_topic')
+        };
+
+        try {
+            const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
+            const responseData = await createRes.json();
+            if (!responseData.success) throw new Error(responseData.error || "Order failed");
+            
+            var options = {
+                "key": window.JA_CONFIG.razorpayKeyId, 
+                "amount": responseData.amount, 
+                "currency": responseData.currency,
+                "name": window.JA_CONFIG.brand, 
+                "description": "Premium AI Tarot Report", 
+                "order_id": responseData.razorpayOrderId,
+                "theme": { "color": "#d4af37" },
+                "handler": async function (response) {
+                    btn.innerText = "Verifying...";
+                    try {
+                        const verifyRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
+                            method: 'POST', 
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                orderId: responseData.orderId, 
+                                razorpay_order_id: response.razorpay_order_id, 
+                                razorpay_payment_id: response.razorpay_payment_id, 
+                                razorpay_signature: response.razorpay_signature 
+                            })
+                        });
+                        
+                        if(verifyRes.ok) {
+                            window.closeTarotOrderModal();
+                            // AI ৰিপোৰ্টৰ Loading Screen খোল খাব
+                            await showReportToCustomer(responseData.orderId); 
+                        } else {
+                            alert("পেমেন্ট ভেৰিফিকেচনত সমস্যা হৈছে!");
+                        }
+                    } catch(e) { 
+                        alert("চাৰ্ভাৰৰ সৈতে সংযোগ কৰিব পৰা নগ'ল।");
+                    }
+                    btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false;
+                }
+            }; 
+
+            var rzpT = new Razorpay(options);
+            rzpT.on('payment.failed', function (r){ 
+                alert("Failed: " + r.error.description); 
+                btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false; 
+            });
+            rzpT.open();
+        } catch(err) { 
+            alert("Error: " + err.message); 
+            btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false; 
         }
     };
 </script>
