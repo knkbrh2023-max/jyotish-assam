@@ -1762,7 +1762,7 @@ async function showReportToCustomer(orderId) {
                     "ধৰ্মীয় বা সৎ কাৰ্যত ধন ব্যয়, দূৰ স্থান বা বিদেশৰ সৈতে সংযোগ আৰু জীৱনৰ অন্তিম পৰ্যায়ত মানসিক তৃপ্তি তথা আধ্যাত্মিক মুক্তিৰ যোগ সূচায়।"
                 ];
 
-                // কাৰ্ড তৈয়াৰ কৰা ফাংচন
+               // কাৰ্ড তৈয়াৰ কৰা ফাংচন
                 const buildHouseCards = (startHouse, endHouse) => {
                     let cardsHtml = "";
                     for (let i = startHouse; i <= endHouse; i++) {
@@ -1776,8 +1776,8 @@ async function showReportToCustomer(orderId) {
                             ? `এই ঘৰত <strong>${pInH}</strong> অৱস্থান কৰাৰ বাবে এই ভাৱৰ কাৰকত্বসমূহ আপোনাৰ জীৱনত অত্যন্ত সক্ৰিয় আৰু প্ৰভাৱশালী হৈ উঠিছে। গ্ৰহৰ এই স্থিতিয়ে আপোনাক এই দিশত বিশেষ অভিজ্ঞতা আৰু ফলাফল প্ৰদান কৰিব।`
                             : `এই ঘৰত কোনো গ্ৰহ পোনপটীয়াকৈ নাথাকিলেও ইয়াৰ অধিপতি গ্ৰহ <strong>${rInfo.lord}</strong> ৰ অৱস্থান আৰু দৃষ্টিৰ দ্বাৰা এই ঘৰৰ শুভ ফলসমূহ সুন্দৰভাৱে পৰিচালিত হ'ব।`;
 
-                        cardsHtml += 
-                            
+                        // 🔥 ইয়াত Backtick টো যোগ কৰা হ'ল 🔥
+                        cardsHtml += `
                         <div class="info-card">
                             <div class="card-title">${houseNames[i - 1]}</div>
                             <div class="card-content">
@@ -1790,7 +1790,6 @@ async function showReportToCustomer(orderId) {
                     }
                     return cardsHtml;
                 };
-
                 // ৩ টা পৃষ্ঠাত বিভক্ত ১২ টা ঘৰৰ বিশ্লেষণ
                 housesAnalysisPage = `
                 <div class="page page-break">
