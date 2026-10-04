@@ -72,63 +72,153 @@
         body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        /* ======================================================= */
-        /* ------------- START: PREMIUM NAVBAR CSS --------------- */
-        /* ======================================================= */
-        .premium-navbar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          background-color: #0d1117;
-          padding: 15px 5%;
-          font-family: sans-serif;
-          border-bottom: 1px solid #1f2937;
-        }
+        <!-- ======================================================= -->
+<!-- ------------- START: PREMIUM NAVBAR ------------------- -->
+<!-- ======================================================= -->
+<style>
+/* Premium Dark Menu Base */
+nav { 
+    background-color: #0d1117; 
+    border-bottom: 1px solid #1f2937;
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
 
-        .nav-left-section {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
+.nav-content { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 12px 20px; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    width: 100%;
+}
 
-        .nav-logo-img {
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
+/* Logo Section */
+.logo { 
+    font-size: 20px; 
+    font-weight: 700; 
+    color: #ffffff; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    text-decoration: none;
+    flex: 1;
+}
 
-        .nav-brand-name {
-          color: #ffffff;
-          font-size: 18px;
-          font-weight: bold;
-        }
+.nav-logo-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
-        .nav-back-link {
-          color: #e5e7eb;
-          text-decoration: none;
-          font-size: 14px;
-          transition: color 0.3s ease;
-        }
+/* Links Section */
+.nav-links { 
+    display: flex; 
+    gap: 20px; 
+    align-items: center; 
+}
 
-        .nav-back-link:hover {
-          color: #ff9800;
-        }
+.nav-links a { 
+    text-decoration: none; 
+    color: #e5e7eb; 
+    font-weight: 600; 
+    font-size: 14.5px; 
+    transition: 0.3s; 
+    padding: 6px 12px; 
+    border-radius: 6px; 
+}
 
-        @media (max-width: 600px) {
-          .premium-navbar {
-            padding: 12px 15px;
-          }
-          .nav-brand-name {
-            font-size: 16px;
-          }
-          .nav-back-link {
-            font-size: 12px;
-          }
-        }
-        /* ======================================================= */
-        /* ------------- END: PREMIUM NAVBAR CSS ----------------- */
-        /* ======================================================= */
+.nav-links a:hover { 
+    color: #ff9800; 
+    background: rgba(255, 152, 0, 0.1); 
+}
+
+.nav-links a.active-link {
+    color: #ffea00;
+}
+
+/* Hamburger Menu for Mobile */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    z-index: 1001;
+    margin-left: auto;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: #ffffff;
+    border-radius: 3px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; 
+        left: 0;
+        width: 100%;
+        background-color: #0d1117;
+        padding: 0;
+        border-bottom: 1px solid #1f2937;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+    .nav-links.active {
+        display: flex; 
+    }
+    .nav-links a {
+        text-align: left;
+        padding: 15px 25px;
+        margin: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-radius: 0;
+        width: 100%;
+        display: block;
+    }
+}
+</style>
+
+<nav>
+    <div class="nav-content">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+            <img src="icon.png" alt="Jyotish Assam Logo" class="nav-logo-img">
+            <span>জ্যোতিষ অসম</span>
+        </a>
+        
+        <!-- Hamburger Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Links -->
+        <div class="nav-links" id="navLinks">
+            <a href="#" class="active-link" onclick="toggleMenu()">প্ৰধান পৃষ্ঠা</a>
+            <a href="#free-tools-section" onclick="toggleMenu(); document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
+            <a href="#premium-services" onclick="toggleMenu(); document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
+            <a href="jibonor-sonket.html" onclick="toggleMenu()">🔮 জীৱনৰ সংকেত</a>
+            <a href="#reviews" onclick="toggleMenu(); document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
+            <a href="contact.html">যোগাযোগ</a>
+        </div>
+    </div>
+</nav>
+<!-- ======================================================= -->
+<!-- ------------- END: PREMIUM NAVBAR --------------------- -->
+<!-- ======================================================= -->
 
         .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
         .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; }
