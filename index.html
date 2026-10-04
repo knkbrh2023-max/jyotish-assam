@@ -1289,6 +1289,82 @@ function checkLuckyGem() {
   color: #666;
   line-height: 1.5;
 }
+    /* ======================================================= */
+/* ------------- PREMIUM REVIEW CARDS CSS ---------------- */
+/* ======================================================= */
+.premium-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.p-review-card {
+    background-color: #0f172a; /* ৱেবছাইটৰ লগত মিলোৱা ডাৰ্ক ৰং */
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+}
+
+.p-review-card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6;
+}
+
+.p-review-stars {
+    color: #fbbf24; /* সোণালী ৰঙৰ তৰা */
+    font-size: 18px;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.p-review-text {
+    color: #cbd5e1;
+    font-size: 14.5px;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.p-reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px dashed #1e293b;
+    padding-top: 15px;
+}
+
+.p-reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6D28D9, #DB2777);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.p-reviewer-details h4 {
+    color: #f8fafc;
+    margin: 0 0 3px 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.p-reviewer-details p {
+    color: #64748b;
+    margin: 0;
+    font-size: 12px;
+}
 </style>
 
 <div class="popular-signals-section">
@@ -1337,40 +1413,40 @@ function checkLuckyGem() {
 <!-- ======================================================= -->
 
 <!-- Reviews Section -->
-        <section class="section">
-            <h2 class="section-title">গ্ৰাহকৰ মতামত (Customer Reviews)</h2>
-            <p class="section-subtitle">আমাৰ সেৱা গ্ৰহণ কৰা গ্ৰাহকসকলৰ অনুভৱ</p>
-            
-            <div class="review-container" style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
-                
-                <!-- Display Reviews -->
-                <div id="reviewsList" style="margin-bottom: 20px; max-height: 500px; overflow-y: auto;">
-                    <p style="text-align: center; color: #64748b;">মতামত লোড হৈ আছে...</p>
-                </div>
-                
-                <!-- View More Button -->
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <button id="viewMoreBtn" onclick="loadMoreReviews()" class="service-btn" style="display: none; width: auto; padding: 8px 20px; font-size: 14px; background: #475569; margin: 0 auto; box-shadow: none;">আৰু মতামত চাওক (View More) ⬇</button>
-                </div>
+<section class="section" id="reviews">
+    <h2 class="section-title">গ্ৰাহকৰ মতামত (Customer Reviews)</h2>
+    <p class="section-subtitle">আমাৰ সেৱা গ্ৰহণ কৰা গ্ৰাহকসকলৰ অনুভৱ</p>
+    
+    <div class="review-container" style="max-width: 1100px; margin: 0 auto; padding: 10px 20px;">
+        
+        <!-- Display Reviews -->
+        <div id="reviewsList">
+            <p style="text-align: center; color: #64748b;">মতামত লোড হৈ আছে...</p>
+        </div>
+        
+        <!-- View More Button -->
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 40px;">
+            <button id="viewMoreBtn" onclick="loadMoreReviews()" class="service-btn" style="display: none; width: auto; padding: 10px 25px; font-size: 14px; background: #1e293b; color: #cbd5e1; border: 1px solid #334155; margin: 0 auto; border-radius: 30px; box-shadow: none;">আৰু মতামত চাওক (View More) ⬇</button>
+        </div>
 
-                <!-- Review Form -->
-                <div id="reviewFormContainer" style="padding-top: 20px; border-top: 1px dashed #e2e8f0;">
-                    <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px;">আপোনাৰ মতামত দিয়ক</h3>
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                        <input type="text" id="reviewerName" class="form-control" placeholder="আপোনাৰ নাম" required style="flex: 1;">
-                        <select id="reviewRating" class="form-control" required style="flex: 1;">
-                            <option value="5">⭐⭐⭐⭐⭐ (অতিকৈ ভাল)</option>
-                            <option value="4">⭐⭐⭐⭐ (ভাল)</option>
-                            <option value="3">⭐⭐⭐ (ঠিকে আছে)</option>
-                            <option value="2">⭐⭐ (বেয়া)</option>
-                            <option value="1">⭐ (অতিকৈ বেয়া)</option>
-                        </select>
-                    </div>
-                    <textarea id="reviewComment" class="form-control" rows="3" placeholder="আপোনাৰ অনুভৱ লিখক..." style="margin-bottom: 15px;" required></textarea>
-                    <button onclick="submitReview()" class="service-btn" style="width: auto; padding: 10px 25px;">মতামত পঠিয়াওক</button>
-                </div>
+        <!-- Review Form -->
+        <div id="reviewFormContainer" style="padding: 25px; background: white; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto;">
+            <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px; text-align: center;">আপোনাৰ মতামত দিয়ক</h3>
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <input type="text" id="reviewerName" class="form-control" placeholder="আপোনাৰ নাম" required style="flex: 1;">
+                <select id="reviewRating" class="form-control" required style="flex: 1;">
+                    <option value="5">⭐⭐⭐⭐⭐ (অতিকৈ ভাল)</option>
+                    <option value="4">⭐⭐⭐⭐ (ভাল)</option>
+                    <option value="3">⭐⭐⭐ (ঠিকে আছে)</option>
+                    <option value="2">⭐⭐ (বেয়া)</option>
+                    <option value="1">⭐ (অতিকৈ বেয়া)</option>
+                </select>
             </div>
-        </section>
+            <textarea id="reviewComment" class="form-control" rows="3" placeholder="আপোনাৰ অনুভৱ লিখক..." style="margin-bottom: 15px;" required></textarea>
+            <button onclick="submitReview()" class="service-btn" style="width: 100%; padding: 12px; border-radius: 8px;">মতামত পঠিয়াওক</button>
+        </div>
+    </div>
+</section>
 <!-- Google 1st Rank SEO Booster & Clean FAQ Section Start -->
 <section style="max-width: 1100px; margin: 40px auto 20px auto; padding: 25px; background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 14px; font-family: inherit;">
   <h2 style="font-size: 20px; color: #8b0000; margin-bottom: 18px; text-align: center; font-weight: bold;">✨ সঘনাই সোধা প্ৰশ্নসমূহ (FAQ)</h2>
@@ -2908,12 +2984,12 @@ document.getElementById('btn-couple').addEventListener('click', async function()
     }
 });
 
-// --- Review System Logic (Updated with View More) ---
+// --- Premium Review System Logic ---
 const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
-const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; // <--- আপোনাৰ আচল Key টো ইয়াত দিব
+const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; 
 
 let allFetchedReviews = [];
-let currentlyShowingReviews = 5;
+let currentlyShowingReviews = 3; // প্ৰথমে ৩ খন দেখুৱাব
 
 async function fetchReviews() {
     const list = document.getElementById('reviewsList');
@@ -2929,7 +3005,7 @@ async function fetchReviews() {
         }
         
         allFetchedReviews = data;
-        currentlyShowingReviews = 5; // প্ৰথমে কেৱল ৫ টা দেখুৱাব
+        currentlyShowingReviews = 3; 
         renderReviewsDisplay();
     } catch (err) {
         console.error("Review Fetch Error:", err);
@@ -2943,27 +3019,46 @@ function renderReviewsDisplay() {
     
     const reviewsToShow = allFetchedReviews.slice(0, currentlyShowingReviews);
     
-    list.innerHTML = reviewsToShow.map(r => `
-        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #10B981;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <strong style="color: #1e293b;">${r.customer_name}</strong>
-                <span>${'⭐'.repeat(r.rating)}</span>
+    // Grid হিচাপে কাৰ্ডবোৰ বনোৱা
+    let htmlContent = '<div class="premium-reviews-grid">';
+    
+    reviewsToShow.forEach(r => {
+        const starString = '⭐'.repeat(r.rating);
+        const initial = r.customer_name ? r.customer_name.charAt(0).toUpperCase() : 'G';
+        
+        htmlContent += `
+            <div class="p-review-card">
+                <div>
+                    <div class="p-review-stars">${starString}</div>
+                    <div class="p-review-text">"${r.comment}"</div>
+                </div>
+                <div class="p-reviewer-info">
+                    <div class="p-reviewer-avatar">${initial}</div>
+                    <div class="p-reviewer-details">
+                        <h4>${r.customer_name}</h4>
+                        <p>ভেৰিফাইড গ্ৰাহক</p>
+                    </div>
+                </div>
             </div>
-            <p style="margin: 0; color: #475569; font-size: 14.5px;">"${r.comment}"</p>
-        </div>
-    `).join('');
+        `;
+    });
+    
+    htmlContent += '</div>';
+    list.innerHTML = htmlContent;
 
+    // View More Button কন্ট্ৰ'ল
     if (allFetchedReviews.length > currentlyShowingReviews) {
-        if(btn) btn.style.display = 'block';
+        if(btn) btn.style.display = 'inline-block';
     } else {
         if(btn) btn.style.display = 'none';
     }
 }
 
 function loadMoreReviews() {
-    currentlyShowingReviews += 5; // ক্লিক কৰিলে আৰু ৫ টা বাঢ়িব
+    currentlyShowingReviews += 3; // ক্লিক কৰিলে আৰু ৩ খন বাঢ়িব
     renderReviewsDisplay();
 }
+
 async function submitReview() {
     const name = document.getElementById('reviewerName').value;
     const rating = document.getElementById('reviewRating').value;
@@ -2985,7 +3080,7 @@ async function submitReview() {
         alert("আপোনাৰ মূল্যৱান মতামতৰ বাবে ধন্যবাদ!");
         document.getElementById('reviewerName').value = '';
         document.getElementById('reviewComment').value = '';
-        fetchReviews(); // নতুন ৰিভিউটো লগে লগে দেখুৱাবলৈ
+        fetchReviews(); 
     } catch (err) {
         console.error("Review Submit Error:", err);
         alert("মতামত পঠোৱাত সমস্যা হৈছে।");
