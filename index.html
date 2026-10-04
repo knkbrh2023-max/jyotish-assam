@@ -10,62 +10,7 @@
 
   gtag('config', 'G-7CX40FND93');
 </script>
-  <!-- ======================================================= -->
-<!-- ------------- START: POPULAR SIGNALS CSS -------------- -->
-<!-- ======================================================= -->
-<style>
-.popular-signals-section {
-  padding: 40px 20px;
-  background-color: #f9f9f9;
-}
-
-.cards-grid-3d {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 25px;
-}
-
-.signal-card-3d {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 25px;
-  text-align: center;
-  text-decoration: none;
-  color: #333;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border-bottom: 5px solid #ff9800;
-  display: block;
-}
-
-.signal-card-3d:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(255, 152, 0, 0.3);
-}
-
-.card-icon {
-  font-size: 45px;
-  margin-bottom: 15px;
-}
-
-.signal-card-3d h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: #d84315;
-}
-
-.signal-card-3d p {
-  font-size: 15px;
-  color: #666;
-  line-height: 1.5;
-}
-</style>
-<!-- ======================================================= -->
-<!-- ------------- END: POPULAR SIGNALS CSS ---------------- -->
-<!-- ======================================================= -->
+  
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -1205,12 +1150,120 @@ function checkLuckyGem() {
     <!-- ======================================================= -->
 <!-- ------------- START: POPULAR SIGNALS 3D CARDS --------- -->
 <!-- ======================================================= -->
+<style>
+.popular-signals-section {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+.section-title {
+  color: #ff9800;
+  margin: 0;
+  font-size: 24px;
+}
+
+.view-all-btn {
+  background-color: #d84315;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.view-all-btn:hover {
+  background-color: #bf360c;
+  transform: translateY(-2px);
+}
+
+/* মোবাইলৰ স্ক্ৰীণত ধুনীয়াকৈ দেখুৱাবলৈ */
+@media (max-width: 600px) {
+  .section-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+.cards-grid-3d {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.signal-card-3d {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border-bottom: 5px solid #ff9800;
+  display: block;
+  position: relative; /* Popular badge ৰ বাবে */
+}
+
+.signal-card-3d:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(255, 152, 0, 0.3);
+}
+
+.popular-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #ffea00;
+  color: #d84315;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.card-icon {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.signal-card-3d h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #d84315;
+}
+
+.signal-card-3d p {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.5;
+}
+</style>
+
 <div class="popular-signals-section">
-  <h2 style="text-align: center; color: #ff9800;">জনপ্ৰিয় জীৱনৰ সংকেত</h2>
+  <div class="section-header">
+    <h2 class="section-title">জনপ্ৰিয় জীৱনৰ সংকেত</h2>
+    <!-- View All বুটাম যিয়ে গ্ৰাহকক মূল পেজলৈ নিব -->
+    <a href="jibonor-sonket.html" class="view-all-btn">সকলোবোৰ চাওক (১০৫ টা) ➔</a>
+  </div>
   
   <div class="cards-grid-3d">
     <!-- Card 1 -->
     <a href="dream-36.html" class="signal-card-3d">
+      <span class="popular-badge">Popular 🔥</span>
       <div class="card-icon">🌙</div>
       <h3>সপোনৰ সংকেত</h3>
       <p>ৰাতি দেখা সপোনবোৰে আপোনাৰ ভৱিষ্যতৰ বিষয়ে কি কয় জানক।</p>
@@ -1218,6 +1271,7 @@ function checkLuckyGem() {
 
     <!-- Card 2 -->
     <a href="morning-21.html" class="signal-card-3d">
+      <span class="popular-badge">Popular 🔥</span>
       <div class="card-icon">🌅</div>
       <h3>ৰাতিপুৱাৰ সংকেত</h3>
       <p>ৰাতিপুৱা সাৰ পোৱাৰ লগে লগে দেখা পোৱা শুভ আৰু অশুভ সংকেত।</p>
@@ -1225,6 +1279,7 @@ function checkLuckyGem() {
 
     <!-- Card 3 -->
     <a href="animals-61.html" class="signal-card-3d">
+      <span class="popular-badge">Popular 🔥</span>
       <div class="card-icon">🐈</div>
       <h3>জীৱ-জন্তুৰ সংকেত</h3>
       <p>কুকুৰ, মেকুৰী বা কাউৰীয়ে দিয়া ভৱিষ্যতৰ আগজাননীসমূহৰ বিষয়ে পঢ়ক।</p>
@@ -1232,6 +1287,7 @@ function checkLuckyGem() {
 
     <!-- Card 4 -->
     <a href="body-1.html" class="signal-card-3d">
+      <span class="popular-badge">Popular 🔥</span>
       <div class="card-icon">👁️</div>
       <h3>শৰীৰৰ অংগৰ সংকেত</h3>
       <p>চকু কঁপিলে বা হাত খজুৱালে কি হয়, তাৰ ৰহস্য জানক।</p>
