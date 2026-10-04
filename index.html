@@ -67,89 +67,69 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Hamburger Menu Fix --- */
-.nav-content {
-    display: flex !important;
-    flex-direction: row !important; /* নাম আৰু বুটাম একেশাৰীত ৰাখিবলৈ */
-    justify-content: space-between !important; /* দুয়োটাকে দুয়োকাষে ঠেলি দিবলৈ */
-    align-items: center !important;
-    width: 100% !important;
-}
-
-.logo {
-    margin: 0 !important;
-    text-align: left !important; /* নামটো বাওঁফালে থাকিব */
-    flex: 1 !important; /* বাওঁফালৰ পৰা ঠাইখিনি ল'ব */
-}
-
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 5px;
-    z-index: 1001;
-    margin-left: auto !important; /* বুটামটোক একেবাৰে সোঁফাললৈ ঠেলিবলৈ */
-}
-
-.hamburger span {
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    border-radius: 3px;
-}
-
-@media (max-width: 768px) {
-    .hamburger {
-        display: flex !important;
-    }
-    
-    .nav-links {
-        display: none !important;
-        flex-direction: column;
-        position: absolute;
-        top: 100%; 
-        left: 0;
-        width: 100%;
-        background: #4c1d95; 
-        padding: 0;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        z-index: 1000;
-    }
-
-    .nav-links.active {
-        display: flex !important; 
-    }
-
-    .nav-links a {
-        text-align: left;
-        padding: 15px 25px;
-        margin: 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        border-radius: 0;
-        display: block;
-    }
-}
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --primary-color: #6D28D9; --secondary-color: #DB2777; --dark-bg: #0f172a; --light-bg: #f8fafc; --text-dark: #1e293b; --text-light: #64748b; --border-color: #e2e8f0; --success-color: #10B981; --warning-color: #e11d48; }
         body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-/* Premium Dark Purple Menu */
-        nav { background: linear-gradient(135deg, #4c1d95, #6D28D9); box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
-        
-        /* White Logo for Dark Background */
-        .logo { font-size: 26px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
-        
-        /* Golden & White Links */
-        .nav-links { display: flex; gap: 20px; align-items: center; overflow-x: auto; white-space: nowrap; }
-        .nav-links::-webkit-scrollbar { display: none; }
-        .nav-links a { text-decoration: none; color: #f8fafc; font-weight: 600; font-size: 15px; transition: 0.3s; padding: 6px 12px; border-radius: 6px; }
-        .nav-links a:hover { color: #fde68a; background: rgba(255, 255, 255, 0.15); }
-        
-        @media (max-width: 768px) {
-            .nav-content { flex-direction: column; gap: 12px; }
-            .nav-links { width: 100%; justify-content: flex-start; padding-bottom: 5px; }
+
+        /* ======================================================= */
+        /* ------------- START: PREMIUM NAVBAR CSS --------------- */
+        /* ======================================================= */
+        .premium-navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #0d1117;
+          padding: 15px 5%;
+          font-family: sans-serif;
+          border-bottom: 1px solid #1f2937;
         }
+
+        .nav-left-section {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .nav-logo-img {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .nav-brand-name {
+          color: #ffffff;
+          font-size: 18px;
+          font-weight: bold;
+        }
+
+        .nav-back-link {
+          color: #e5e7eb;
+          text-decoration: none;
+          font-size: 14px;
+          transition: color 0.3s ease;
+        }
+
+        .nav-back-link:hover {
+          color: #ff9800;
+        }
+
+        @media (max-width: 600px) {
+          .premium-navbar {
+            padding: 12px 15px;
+          }
+          .nav-brand-name {
+            font-size: 16px;
+          }
+          .nav-back-link {
+            font-size: 12px;
+          }
+        }
+        /* ======================================================= */
+        /* ------------- END: PREMIUM NAVBAR CSS ----------------- */
+        /* ======================================================= */
+
         .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
         .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; }
         .hero-title-styled span { background: linear-gradient(135deg, #6D28D9, #DB2777, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -258,30 +238,23 @@
     <script src="config.js"></script>
 </head>
 <body>
-   <nav>
-        <div class="container nav-content">
-   <div class="logo" style="margin: 0; display: flex; align-items: center; gap: 10px;">
-    <img src="icon.png" alt="Jyotish Assam Icon" style="height: 90px; width: auto;">
-    <span>জ্যোতিষ অসম</span>
-</div>
-    
-    <!-- Hamburger Icon -->
-    <div class="hamburger" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-
-    <div class="nav-links" id="navLinks">
-        <a href="#" style="color: #fde68a; background: rgba(255,255,255,0.15);" onclick="toggleMenu()">প্ৰধান পৃষ্ঠা</a>
-        <a href="#free-tools-section" onclick="toggleMenu(); document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
-        <a href="#premium-services" onclick="toggleMenu(); document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
-        <a href="jibonor-sonket.html" onclick="toggleMenu()">🔮 জীৱনৰ সংকেত</a>
-        <a href="#reviews" onclick="toggleMenu(); document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
-        <a href="contact.html">যোগাযোগ</a>
-    </div>
-</div>
-    </nav>
+<!-- ======================================================= -->
+<!-- ------------- START: PREMIUM NAVBAR HTML -------------- -->
+<!-- ======================================================= -->
+<nav class="premium-navbar">
+  <div class="nav-left-section">
+    <!-- আপোনাৰ ল'গ'ৰ ফাইলৰ নামটো ইয়াত দিব -->
+    <img src="icon.png" alt="Jyotish Assam Logo" class="nav-logo-img">
+    <span class="nav-brand-name">জ্যোতিষ অসম</span>
+  </div>
+  
+  <div class="nav-right-section">
+    <a href="jibonor-sonket.html" class="nav-back-link">– মূল পৃষ্ঠালৈ উভতি যাওক</a>
+  </div>
+</nav>
+<!-- ======================================================= -->
+<!-- ------------- END: PREMIUM NAVBAR HTML ---------------- -->
+<!-- ======================================================= -->
     <div class="container">
         <!-- Hero Banner Section -->
 <style>
@@ -336,11 +309,10 @@
   <h1 class="hero-title">আপোনাৰ ভৱিষ্যৎ আজি সঠিকভাৱে জানি লওক</h1>
   <p class="hero-subtitle">বৈদিক জ্যোতিষ আৰু লাহিৰী অয়নাংশৰ নিখুঁত গণনেৰে প্ৰস্তুতকৃত প্ৰামাণিক কুণ্ডলী আৰু ভৱিষ্যদ্বাণী।</p>
   <div class="hero-badges">
-    <span class="hero-badge">✔️️ ১০০% বৈদিক শুদ্ধতা</span>
+    <span class="hero-badge">✔ ১০০% বৈদিক শুদ্ধতা</span>
     <span class="hero-badge">🔒 নিৰাপদ পেমেন্ট (Razorpay)</span>
   </div>
 </div>
-        </section>
         <!-- Glowing Zodiac Grid Section -->
 <style>
   .zodiac-container {
@@ -532,7 +504,7 @@
 
                 setTimeout(() => {
                     grid.classList.remove('shuffling');
-                    document.getElementById('tarot-instruction').innerText = "✨ এতিয়া যিকোনো এখন কাৰ্ডত টিপক ✨";
+                    document.getElementById('tarot-instruction').innerText = "✨ এতিয়া যিকোনো খন কাৰ্ডত টিপক ✨";
                 }, 800);
             } else {
                 throw new Error(data.error);
@@ -646,7 +618,6 @@
     <div id="t-status-msg" style="color: #4ade80; font-size: 15px; font-weight: 600; height: 20px;"></div>
     
     <div class="t-grid" id="t-grid"></div>
-    <div class="t-results" id="t-results"></div>
     <div class="t-results" id="t-results"></div>
 
    <!-- 🔥 নতুন: Save, Share আৰু Premium AI Action Bar 🔥 -->
@@ -1147,7 +1118,8 @@ function checkLuckyGem() {
             <p>আমাৰ পেমেন্ট ব্যৱস্থা ভাৰতৰ সৰ্বোচ্চ নিৰাপদ প্ৰতিষ্ঠান Razorpay দ্বাৰা নিয়ন্ত্রিত।</p>
         </div>
     </div>
-    <!-- ======================================================= -->
+
+<!-- ======================================================= -->
 <!-- ------------- START: POPULAR SIGNALS 3D CARDS --------- -->
 <!-- ======================================================= -->
 <style>
@@ -1297,6 +1269,7 @@ function checkLuckyGem() {
 <!-- ======================================================= -->
 <!-- ------------- END: POPULAR SIGNALS 3D CARDS ----------- -->
 <!-- ======================================================= -->
+
 <!-- Reviews Section -->
         <section class="section">
             <h2 class="section-title">গ্ৰাহকৰ মতামত (Customer Reviews)</h2>
@@ -1344,7 +1317,7 @@ function checkLuckyGem() {
     উত্তৰ: আমাৰ ৱেবছাইটত আপোনাৰ নাম, জন্ম তাৰিখ, জন্ম সময় আৰু জন্ম স্থান দি নিমিষতে ১০০% নিখুঁত বৈদিক জন্ম কুণ্ডলী বা সোঁৱৰণী পি.ডি.এফ. (Assamese Kundali PDF) ডাউনলোড কৰিব পাৰিব। ইয়াত লগ্ন চক্ৰ, ৰাশি চক্ৰ, বিংশোত্তৰী মহাদশা, মাঙ্গলিক দোষ, কেৰিয়াৰ, বিবাহ আৰু শুভ ৰত্নৰ সম্পূৰ্ণ বিৱৰণ পাব。</p>
 
     <p style="margin-bottom: 5px;"><strong>৩. বিবাহ মিলন বা যুটীয়া ৰাশিফল কিয় চাব লাগে?</strong><br>
-    উত্তৰ: সুখী দাম্পত্য জীৱন আৰু প্ৰেমৰ সম্পৰ্কৰ বাবে ল'ৰা-ছোৱালীৰ ৰাশি মিলন, অষ্টকূট ৩৬ গুণ মিলন আৰু নাড়ী দোষ বা মাঙ্গলিক দোষ পৰীক্ষা কৰাটো অত্যন্ত জৰুৰী। ইয়াত আপুনি বিনামূলীয়া যুটীয়া ৰাশিফল আৰু প্ৰিমিয়াম কুণ্ডলী মিলন ৰিপোৰ্ট লাভ কৰিব。</p>
+    উত্তৰ: সুখী দাম্পত্য জীৱন আৰু প্ৰেমৰ সম্পৰ্কৰ বাবে ল'ৰা-ছোৱালীৰ ৰাশি মিলন, অষ্টকূট ৩৬ গুণ মিলন আৰু নাড়ী দোষ বা মাঙ্গলিক দোষ পৰীক্ষা কৰাটো অত্যন্ত জৰুৰী। ইয়াত আপুনি বিনামূলীয় যুটীয়া ৰাশিফল আৰু প্ৰিমিয়াম কুণ্ডলী মিলন ৰিপোৰ্ট লাভ কৰিব。</p>
   </div>
 </section>
 
@@ -1883,7 +1856,7 @@ async function showReportToCustomer(orderId) {
                     "৯ম ঘৰ (ভাগ্য ভাৱ - ধৰ্ম, পিতৃ, উচ্চ শিক্ষা আৰু সৌভাগ্য)",
                     "১০ম ঘৰ (কৰ্ম ভাৱ - বৃত্তি, পদবী, সন্মান আৰু সামাজিক খ্যাতি)",
                     "১১তম ঘৰ (লাভ ভাৱ - আয়, ইচ্ছাপূৰণ আৰু জ্যেষ্ঠ ভাতৃ-মিত্ৰ)",
-                    "১২তম ঘৰ (ব্যয় ভাৱ - খৰচ, বিদেশ যাত্ৰা, শয্যাসুখ আৰু মোক্ষ)"
+                    "১২তম ঘৰ (ব্যয় ভাৱ - খৰচ, বিদেশ যাত্ৰা, શয্যাসুখ আৰু মোক্ষ)"
                 ];
 
                 // ৰাশি অনুযায়ী অধিপতি গ্ৰহ আৰু মূল স্বভাৱ (Dynamic Rashi Data)
@@ -2158,7 +2131,7 @@ async function showReportToCustomer(orderId) {
                     "Sagittarius": "আপুনি মুক্তমনা, সত্যবাদী আৰু ইতিবাচক স্বভাৱৰ। সম্পৰ্কত বিশ্বাস, স্বাধীনতা আৰু পাৰস্পৰিক বিকাশ আপোনাৰ বাবে অতি প্ৰয়োজনীয়।",
                     "Capricorn": "আপুনি প্ৰেমক অতি গম্ভীৰভাৱে লয় আৰু দীর্ঘস্থায়ী সম্পৰ্কত বিশ্বাস কৰে। সময়ৰ লগে লগে আপোনাৰ প্ৰেম অধিক দৃঢ় আৰু গভীৰ হৈ উঠে।",
                     "Aquarius": "আপুনি সংগীৰ মাজত প্ৰথমে এজন সঁচা বন্ধু বিচাৰে। আধুনিক চিন্তা-চৰ্চা আৰু মানসিক বুজাবুজিয়ে আপোনাৰ সম্পৰ্কক বিশেষ মাত্ৰা প্ৰদান কৰে।",
-                    "Pisces": "আপুনি অত্যন্ত আৱেগিক, কল্পনাপ্ৰৱণ আৰু নিঃস্বাৰ্থ প্ৰেমিক। সংগীৰ সুখৰ বাবে আপুনি যিকোনো ত্যাগ কৰিবলৈ সদায় সাজু থাকে।"
+                    "Pisces": "আপুনি অত্যন্ত আৱেগিক, কল্পনাপ্ৰৱণ আৰু নিঃস্বাৰ্থ প্ৰেমিক। সংগীৰ সুখৰ বাবে আপুনি যিকোনো ত্যাগ কৰিবলৈ সদায় সাজু থাকে。"
                 };
                 const specificMoonTrait = moonLoveTraits[moonRashi] || "প্ৰেমৰ ক্ষেত্ৰত আপুনি অত্যন্ত আৱেগিক যদিও বাহ্যিকভাৱে সেয়া সহজে প্ৰকাশ নকৰে।";
 
@@ -2225,7 +2198,7 @@ async function showReportToCustomer(orderId) {
                     <div class="sub-heading">৪. বিবাহৰ দিশ আৰু যোগাযোগ (Direction of Marriage)</div>
                     <div class="info-card">
                         <div class="card-content">
-                            সপ্তম ভাৱৰ ৰাশি <strong>${seventhHouseRashi}</strong> আৰু শুক্ৰৰ অৱস্থানৰ ওপৰত ভিত্তি কৰি, আপোনাৰ ভৱিষ্যত সংগীৰ ঘৰ বা জন্মস্থান আপোনাৰ জন্মস্থানৰ পৰা সাধাৰণতে <strong>পূব বা উত্তৰ দিশত</strong> হোৱাৰ সম্ভাৱনা অধিক। পৰিয়ালৰ মানুহৰ জৰিয়তে বা কৰ্মক্ষেত্ৰৰ কোনো বন্ধুৰ যোগেদি এই বিবাহৰ প্ৰস্তাৱ আহিব পাৰে।
+                            सপ্তম ভাৱৰ ৰাশি <strong>${seventhHouseRashi}</strong> আৰু শুক্ৰৰ অৱস্থানৰ ওপৰত ভিত্তি কৰি, আপোনাৰ ভৱিষ্যত সংগীৰ ঘৰ বা জন্মস্থান আপোনাৰ জন্মস্থানৰ পৰা সাধাৰণতে <strong>পূব বা উত্তৰ দিশত</strong> হোৱাৰ সম্ভাৱনা অধিক। পৰিয়ালৰ মানুহৰ জৰিয়তে বা কৰ্মক্ষেত্ৰৰ কোনো বন্ধুৰ যোগেদি এই বিবাহৰ প্ৰস্তাৱ আহিব পাৰে।
                         </div>
                     </div>
                 </div>
@@ -2523,7 +2496,7 @@ async function showReportToCustomer(orderId) {
                 "Venus": { asName: "শুক্ৰ", mantra: "ওঁ দ্ৰাং দ্ৰীং দ্ৰৌং সঃ শুক্ৰায় নমঃ", dan: "শুক্ৰবাৰে বগা মিঠাই, দৈ বা সুগন্ধি দ্ৰব্য দান কৰক আৰু পৰিষ্কাৰ-পৰিচ্ছন্ন থাকক।" },
                 "Saturn": { asName: "শনি", mantra: "ওঁ প্ৰাং প্ৰীং প্ৰৌং সঃ শনৈশ্চৰায় নমঃ", dan: "শনিবাৰে সন্ধিয়া আঁহত গছৰ তলত মিঠাতেলৰ চাকি জ্বলাওক আৰু দৰিদ্ৰক ভোজন কৰাওক।" },
                 "Rahu": { asName: "ৰাহু", mantra: "ওঁ ভ্ৰাং ভ্ৰীং ভ্ৰৌং সঃ ৰাহৱে নমঃ", dan: "শনিবাৰে বা বুধবাৰে চৰাই-চিৰিকটিক সাতবিধ শস্য দিয়ক আৰু ক'লা তিল বা কম্বল দান কৰক।" },
-                "Ketu": { asName: "কেতু", mantra: "ওঁ স্ত্ৰাং স্ত্ৰীং স্ত্ৰৌং সঃ কেতৱে নমঃ", dan: "মঙলবাৰে গণেশ দেৱতাক দূবৰি বন অৰ্পণ কৰক আৰু কুকুৰক খাদ্য খুৱাওক।" }
+                "Ketu": { asName: "க்கேতু", mantra: "ওঁ স্ত্ৰাং স্ত্ৰীং স্ত্ৰৌং সঃ কেতৱে নমঃ", dan: "মঙলবাৰে গণেশ দেৱতাক দূবৰি বন অৰ্পণ কৰক আৰু কুকুৰক খাদ্য খুৱাওক।" }
             };
 
             const dRemedy = dashaRemedies[currentDasha] || { asName: currentDasha, mantra: "ওঁ নমঃ শিৱায়", dan: "সপ্তাহত এদিন দৰিদ্ৰক সাধ্যানুসৰি অন্ন দান কৰক।" };
@@ -2552,7 +2525,7 @@ async function showReportToCustomer(orderId) {
             <div class="page">
                 <h2 class="section-title">❁ বৈদিক নিদান আৰু জ্যোতিষীয় প্ৰতিকাৰ ❁</h2>
                 <div class="text-section">
-                    বৈদিক জ্যোতিষত প্ৰতিকাৰসমূহ ভয়ৰ আধাৰত নহয়, বৰঞ্চ জন্ম কুণ্ডলীৰ শুভ গ্ৰহৰ যোগাত্মক শক্তি বৃদ্ধি কৰিবলৈ আৰু অশুভ প্ৰভাৱ হ্ৰাস কৰিবলৈ ব্যৱহাৰ কৰা হয়।
+                    বৈদিক জ্যোতিষত প্ৰতিকাৰসমূহ ভয়ৰ আধাৰত নহয়, বৰঞ্চ জন্ম কুণ্ডলীৰ শুভ গ্ৰহৰ যোগাত্মক শক্তি বৃদ্ধি কৰিবলৈ আৰু আৰু অশুভ প্ৰভাৱ হ্ৰাস কৰিবলৈ ব্যৱহাৰ কৰা হয়।
                 </div>
 
                 <div class="info-card remedy-card">
@@ -2864,11 +2837,7 @@ document.getElementById('btn-couple').addEventListener('click', async function()
         btn.innerText = "যুটীয়া ৰাশিফল চাওক"; btn.disabled = false; 
     }
 });
-        // Hamburger Menu Toggle Logic
-function toggleMenu() {
-    const nav = document.getElementById('navLinks');
-    nav.classList.toggle('active');
-}
+
 // --- Review System Logic (Updated with View More) ---
 const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
 const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; // <--- আপোনাৰ আচল Key টো ইয়াত দিব
@@ -3041,13 +3010,9 @@ window.addEventListener('DOMContentLoaded', () => {
     font-size: 20px !important;
     font-weight: bold !important;
   }
-
- 
 </style>
 
-
-</script>
-    <!-- ========================================== -->
+<!-- ========================================== -->
 <!-- Customer Support Chatbot (Supabase Database) -->
 <!-- ========================================== -->
 
@@ -3142,7 +3107,6 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.disabled = true;
 
         try {
-            // index.html ত ইতিমধ্যে থকা sbClient ব্যৱহাৰ কৰা হৈছে
             const client = window.supabase.createClient("https://ihbdrtnkfitytklonnel.supabase.co", "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
         const { error } = await client.from('support_messages').insert([
                 { name: name, contact: contact, message: msg }
