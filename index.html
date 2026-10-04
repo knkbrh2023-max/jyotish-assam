@@ -239,7 +239,23 @@ nav {
         .btn-submit { width: 100%; padding: 14px; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 10px; }
         .btn-personal { background: linear-gradient(90deg, #8B5CF6, #6D28D9); box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
         .btn-couple { background: linear-gradient(90deg, #F43F5E, #E11D48); box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3); }
+/* 12 Rashi Know More Button */
+.know-more-btn {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #6D28D9, #DB2777);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.rashi-card:hover .know-more-btn {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(109, 40, 217, 0.4);
+}
         /* 12 Rashi Grid */
         .rashi-section { margin: 50px 0; text-align: center; }
         .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 25px; }
@@ -2783,7 +2799,11 @@ function renderRashiGrid() {
     if (!dynamicRashiData || dynamicRashiData.length === 0) return;
     document.getElementById('rashiGridContainer').innerHTML = dynamicRashiData.map(r => `
         <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
-            <div class="rashi-icon">${r.symbol}</div><h3>${r.name}</h3><p>${r.short}</p>
+            <div class="rashi-icon">${r.symbol}</div>
+            <h3>${r.name}</h3>
+            <p style="margin-bottom: 10px;">${r.short}</p>
+            <!-- নতুনকৈ যোগ কৰা 'অধিক জানক' বুটাম -->
+            <span class="know-more-btn">অধিক জানক ➔</span>
         </div>`).join('');
 }
 
