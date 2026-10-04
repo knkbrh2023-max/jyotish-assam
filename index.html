@@ -72,10 +72,9 @@
         body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; line-height: 1.7; color: var(--text-dark); background-color: var(--light-bg); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        <!-- ======================================================= -->
-<!-- ------------- START: PREMIUM NAVBAR ------------------- -->
-<!-- ======================================================= -->
-<style>
+       /* ======================================================= */
+/* ------------- START: PREMIUM NAVBAR CSS --------------- */
+/* ======================================================= */
 /* Premium Dark Menu Base */
 nav { 
     background-color: #0d1117; 
@@ -188,37 +187,9 @@ nav {
         display: block;
     }
 }
-</style>
-
-<nav>
-    <div class="nav-content">
-        <!-- Logo -->
-        <a href="index.html" class="logo">
-            <img src="icon.png" alt="Jyotish Assam Logo" class="nav-logo-img">
-            <span>জ্যোতিষ অসম</span>
-        </a>
-        
-        <!-- Hamburger Icon -->
-        <div class="hamburger" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
-        <!-- Links -->
-        <div class="nav-links" id="navLinks">
-            <a href="#" class="active-link" onclick="toggleMenu()">প্ৰধান পৃষ্ঠা</a>
-            <a href="#free-tools-section" onclick="toggleMenu(); document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
-            <a href="#premium-services" onclick="toggleMenu(); document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
-            <a href="jibonor-sonket.html" onclick="toggleMenu()">🔮 জীৱনৰ সংকেত</a>
-            <a href="#reviews" onclick="toggleMenu(); document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
-            <a href="contact.html">যোগাযোগ</a>
-        </div>
-    </div>
-</nav>
-<!-- ======================================================= -->
-<!-- ------------- END: PREMIUM NAVBAR --------------------- -->
-<!-- ======================================================= -->
+/* ======================================================= */
+/* ------------- END: PREMIUM NAVBAR CSS ----------------- */
+/* ======================================================= */
 
         .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(219, 39, 119, 0.08)); border-radius: 20px; margin: 30px 0; border: 1px solid rgba(109, 40, 217, 0.1); }
         .hero-title-styled { font-size: 38px; font-weight: 700; color: #1e293b; margin-bottom: 20px; line-height: 1.3; }
@@ -331,16 +302,31 @@ nav {
 <!-- ======================================================= -->
 <!-- ------------- START: PREMIUM NAVBAR HTML -------------- -->
 <!-- ======================================================= -->
-<nav class="premium-navbar">
-  <div class="nav-left-section">
-    <!-- আপোনাৰ ল'গ'ৰ ফাইলৰ নামটো ইয়াত দিব -->
-    <img src="icon.png" alt="Jyotish Assam Logo" class="nav-logo-img">
-    <span class="nav-brand-name">জ্যোতিষ অসম</span>
-  </div>
-  
-  <div class="nav-right-section">
-    <a href="jibonor-sonket.html" class="nav-back-link">– মূল পৃষ্ঠালৈ উভতি যাওক</a>
-  </div>
+<nav>
+    <div class="nav-content">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+            <img src="icon.png" alt="Jyotish Assam Logo" class="nav-logo-img">
+            <span>জ্যোতিষ অসম</span>
+        </a>
+        
+        <!-- Hamburger Icon -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Links -->
+        <div class="nav-links" id="navLinks">
+            <a href="#" class="active-link" onclick="toggleMenu()">প্ৰধান পৃষ্ঠা</a>
+            <a href="#free-tools-section" onclick="toggleMenu(); document.querySelector('.free-tools-section').scrollIntoView({behavior: 'smooth'})">বিনামূলীয়া সেৱা</a>
+            <a href="#premium-services" onclick="toggleMenu(); document.querySelector('.services-grid').scrollIntoView({behavior: 'smooth'})">প্ৰিমিয়াম ৰিপোৰ্ট</a>
+            <a href="jibonor-sonket.html" onclick="toggleMenu()">🔮 জীৱনৰ সংকেত</a>
+            <a href="#reviews" onclick="toggleMenu(); document.getElementById('reviewFormContainer').scrollIntoView({behavior: 'smooth'})">মতামত</a>
+            <a href="contact.html">যোগাযোগ</a>
+        </div>
+    </div>
 </nav>
 <!-- ======================================================= -->
 <!-- ------------- END: PREMIUM NAVBAR HTML ---------------- -->
