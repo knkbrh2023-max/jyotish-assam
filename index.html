@@ -297,6 +297,7 @@ nav {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
     <script src="config.js"></script>
+    <link rel="stylesheet" href="jyotishassam-2.0.css">
 </head>
 <body>
 <!-- ======================================================= -->
@@ -352,16 +353,14 @@ nav {
     margin-right: -50vw;
 }
   
-  .hero-title {
-    color: #ffffff !important; /* Ekebare sada rong korar jonno */
-    font-size: 32px;
-    font-weight: bold;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9); /* Kalo chhaya jate lekha ta fute othe */
-    margin-bottom: 15px;
-    line-height: 1.4;
-    position: relative;
-    z-index: 10; /* Lekha tike ekebare opore anar jonno */
-}
+  .hero-subtitle {
+    color: #fde68a; /* পাতল সোণালী ৰং */
+    font-size: 16px;
+    max-width: 650px;
+    margin: 0 auto 25px auto;
+    line-height: 1.7;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  }
   
   .hero-badges {
     display: flex;
@@ -390,6 +389,25 @@ nav {
     <span class="hero-badge">🔒 নিৰাপদ পেমেন্ট (Razorpay)</span>
   </div>
 </div>
+
+<section class="ja20-ai-spotlight" aria-label="JyotishAssam AI">
+  <div class="ja20-ai-copy">
+    <div class="ja20-kicker">✦ JYOTISH ASSAM AI</div>
+    <h2>আপোনাৰ ব্যক্তিগত <span>AI জ্যোতিষী</span></h2>
+    <p>জন্ম তথ্য আৰু আপোনাৰ প্ৰশ্নৰ ভিত্তিত প্ৰেম, কেৰিয়াৰ, ধন-সম্পদ আৰু জীৱনৰ গুৰুত্বপূৰ্ণ দিশসমূহৰ বিষয়ে ব্যক্তিগতকৃত জ্যোতিষীয় guidance লাভ কৰক।</p>
+    <div class="ja20-ai-actions">
+      <a href="ai-chat.html" class="ja20-btn ja20-btn-gold">🤖 AI জ্যোতিষীৰ সৈতে কথা পাতক</a>
+      <a href="#premium-services" class="ja20-btn ja20-btn-ghost">প্ৰিমিয়াম Reading চাওক</a>
+    </div>
+    <div class="ja20-trust-row"><span>🔐 Secure</span><span>⚡ Fast response</span><span>🌙 Assamese support</span></div>
+  </div>
+  <div class="ja20-ai-orbit">
+    <div class="ja20-orb">☽</div>
+    <div class="ja20-orbit-card card-a">❤️ Love</div>
+    <div class="ja20-orbit-card card-b">💼 Career</div>
+    <div class="ja20-orbit-card card-c">💰 Finance</div>
+  </div>
+</section>
         <!-- Glowing Zodiac Grid Section -->
 <style>
   .zodiac-container {
@@ -1129,7 +1147,7 @@ function checkLuckyGem() {
 </p>
         
         <!-- Premium Services -->
-        <section class="section">
+        <section class="section" id="premium-services">
             <h2 class="section-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
             <p class="section-subtitle">আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক</p>
             <div class="services-grid">
