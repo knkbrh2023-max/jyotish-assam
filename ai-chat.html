@@ -32,10 +32,9 @@
     line-height: 1.6; 
     position: relative; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    /* এই ৩ টা শাৰীয়ে টেক্সট কটা যোৱা বন্ধ কৰিব */
-    white-space: pre-wrap; 
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    white-space: pre-wrap !important; 
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
 }
         .msg-acharya { background: #fff; color: #333; align-self: flex-start; border-top-left-radius: 2px; border: 1px solid #d4af37; }
         .msg-user { background: linear-gradient(135deg, #d4af37, #b48509); color: white; align-self: flex-end; border-top-right-radius: 2px; }
