@@ -1,0 +1,5 @@
+Tarot frontend upgraded to interactive v2 in index.html.
+Backend: Supabase Edge Function tarot-engine (already deployed by user).
+Supported: 1_card, 3_card, 5_card, love_3, yes_no.
+The old Premium AI Tarot purchase block was removed from the homepage Tarot UI.
+Other website services and payment flows were not intentionally modified.
