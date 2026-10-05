@@ -612,121 +612,174 @@ nav {
 </div>
 <!-- ======================================================= -->
 <!-- ======================================================= -->
-<!-- JYOTISH ASSAM — TAROT 78 CARD 3D EXPERIENCE v3 -->
+<!-- JYOTISH ASSAM — TAROT 78 CARD 3D EXPERIENCE v15 -->
 <style>
 .ja78-wrap{max-width:1120px;margin:45px auto;padding:28px 18px 34px;border-radius:28px;background:radial-gradient(circle at 50% 0%,#30206b 0%,#171132 38%,#080713 100%);color:#fff;box-shadow:0 25px 70px rgba(0,0,0,.35);border:1px solid rgba(244,208,106,.45);overflow:hidden}
 .ja78-head{text-align:center;max-width:760px;margin:0 auto 22px}.ja78-kicker{letter-spacing:3px;color:#e8c96a;font-size:12px;font-weight:800}.ja78-head h2{font-size:32px;margin:8px 0;color:#fff}.ja78-head p{color:#c9c4da;line-height:1.7;margin:0}
 .ja78-controls{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:16px;margin:22px auto;max-width:900px}.ja78-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.ja78-pill{border:1px solid rgba(244,208,106,.45);background:rgba(20,15,43,.75);color:#eee;padding:9px 15px;border-radius:999px;cursor:pointer;font:600 14px inherit}.ja78-pill.active{background:linear-gradient(135deg,#e8c96a,#b58a27);color:#171132;border-color:#ffe8a0}.ja78-question{width:100%;min-height:76px;margin-top:13px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:#0e0b1d;color:#fff;padding:13px;font:inherit;resize:vertical}.ja78-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.ja78-btn{border:0;border-radius:12px;padding:12px 20px;font-weight:800;cursor:pointer;font:inherit}.ja78-primary{background:linear-gradient(135deg,#f2d77e,#b48620);color:#171132}.ja78-secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
 .ja78-status{text-align:center;color:#e8c96a;min-height:24px;margin:16px 0 6px;font-weight:700}.ja78-count{text-align:center;color:#a9a3bd;font-size:13px;margin-bottom:12px}
-.ja78-deck-stage{position:relative;min-height:420px;margin:0 auto;padding:35px 12px 22px;perspective:1400px;display:flex;justify-content:center;align-items:center;overflow:hidden}.ja78-deck{position:relative;width:min(100%,980px);height:360px;transform-style:preserve-3d;transition:transform .8s ease}.ja78-card{position:absolute;left:50%;top:50%;width:72px;height:124px;margin-left:-36px;margin-top:-62px;border:0;background:none;padding:0;cursor:pointer;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.8,.2,1),filter .35s,opacity .35s;z-index:1}.ja78-card:hover{z-index:20;filter:brightness(1.16);transform:var(--base-transform) translateY(-18px) scale(1.08)!important}.ja78-card:focus-visible{outline:2px solid #ffe8a0;outline-offset:5px}.ja78-card.is-selected{z-index:50!important;filter:drop-shadow(0 0 18px rgba(244,208,106,.55));transform:var(--base-transform) translateY(-32px) scale(1.12)!important}.ja78-card.is-used{opacity:.18;pointer-events:none;filter:grayscale(1)}
-.ja78-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.8,.2,1)}.ja78-card.revealed .ja78-inner{transform:rotateY(180deg)}.ja78-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;overflow:hidden}.ja78-back{background:radial-gradient(circle,#5a38a7 0 15%,#21154d 16% 58%,#0c0920 59%);border:2px solid #e8c96a;box-shadow:0 10px 22px rgba(0,0,0,.5)}.ja78-back:before{content:'✦  ✧  ✦';position:absolute;inset:7px;border:1px solid rgba(244,208,106,.6);border-radius:7px;color:#f4d06a;display:flex;align-items:center;justify-content:center;font-size:12px;letter-spacing:4px}.ja78-back:after{content:'☾';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f4d06a;font-size:26px;text-shadow:0 0 12px rgba(244,208,106,.6)}.ja78-front{transform:rotateY(180deg);background:linear-gradient(145deg,#f9f2dd,#d8c28b);border:2px solid #f4d06a;color:#25183d;display:flex;align-items:center;justify-content:center;padding:4px}.ja78-front img{width:100%;height:100%;object-fit:cover}.ja78-front-label{font-size:10px;text-align:center;font-weight:900;line-height:1.25}.ja78-number{position:absolute;top:4px;left:6px;font-size:9px;color:#f4d06a;opacity:.8}
-.ja78-selected-zone{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;min-height:150px;margin:5px auto 20px}.ja78-slot{width:105px;height:145px;border:1px dashed rgba(244,208,106,.5);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#817b98;font-size:11px;text-align:center;background:rgba(255,255,255,.025);position:relative}.ja78-slot.filled{border-style:solid;border-color:#e8c96a;background:rgba(244,208,106,.07)}.ja78-slot .slot-label{position:absolute;bottom:-24px;left:0;right:0;color:#cfc8df;font-size:12px}.ja78-slot .mini-card{width:90px;height:128px;border-radius:9px;overflow:hidden;border:1px solid #e8c96a;background:#21154d}.ja78-slot .mini-card img{width:100%;height:100%;object-fit:cover}.ja78-slot .mini-fallback{height:100%;display:flex;align-items:center;justify-content:center;padding:8px;color:#f8edc9;font-size:10px;font-weight:800;text-align:center}
-.ja78-results{display:none;margin-top:28px}.ja78-results.show{display:block}.ja78-result{background:rgba(255,255,255,.06);border:1px solid rgba(244,208,106,.25);border-radius:18px;padding:18px;margin:12px 0}.ja78-result h3{margin:3px 0 5px;color:#ffe7a0}.ja78-result .pos{color:#e8c96a;font-size:12px;font-weight:800}.ja78-result p{color:#ddd7e8;line-height:1.75;margin:9px 0}.ja78-key{color:#bfb7d2;font-size:13px}.ja78-disclaimer{text-align:center;color:#8f89a4;font-size:11px;line-height:1.6;margin-top:18px}
-@keyframes ja78shuffle{0%,100%{transform:translate(0,0) rotate(0)}20%{transform:translate(-40px,-12px) rotate(-5deg)}40%{transform:translate(36px,10px) rotate(4deg)}60%{transform:translate(-28px,8px) rotate(-3deg)}80%{transform:translate(24px,-7px) rotate(3deg)}}.ja78-shuffling .ja78-card{animation:ja78shuffle .75s infinite ease-in-out}.ja78-shuffling .ja78-card:nth-child(3n){animation-delay:.08s}.ja78-shuffling .ja78-card:nth-child(4n){animation-delay:.16s}.ja78-shuffling .ja78-card:nth-child(5n){animation-delay:.24s}
-@media(max-width:700px){.ja78-wrap{border-radius:18px;padding:22px 10px}.ja78-head h2{font-size:25px}.ja78-deck-stage{min-height:360px;padding:25px 0}.ja78-deck{height:320px;transform:scale(.86)}.ja78-card{width:62px;height:108px;margin-left:-31px;margin-top:-54px}.ja78-slot{width:88px;height:124px}.ja78-slot .mini-card{width:76px;height:110px}}
+/* BUNDLE -> U FAN: same speed for every card, no acceleration */
+.ja78-deck-stage{position:relative;min-height:520px;margin:0 auto;padding:10px 0 30px;perspective:1800px;display:flex;justify-content:center;align-items:flex-start;overflow:visible;isolation:isolate}
+.ja78-deck{position:relative;width:1120px;max-width:none;height:500px;margin:0 auto;transform-style:preserve-3d;filter:drop-shadow(0 30px 38px rgba(0,0,0,.48))}
+.ja78-card{position:absolute;left:50%;top:0;width:142px;height:244px;margin-left:-71px;margin-top:0;padding:0;border:0;background:transparent;cursor:pointer;transform-origin:50% 100%;transform-style:preserve-3d;z-index:var(--z,1);will-change:transform,opacity;transition:transform 700ms cubic-bezier(.22,.78,.18,1),opacity 420ms ease,filter 250ms ease}
+/* compact bundle */
+.ja78-deck.is-bundle .ja78-card{transform:translate3d(calc(var(--bundle-x) * 1px),55px,calc(var(--bundle-z) * 1px)) rotate(calc(var(--bundle-r) * 1deg)) scale(.86);transition-delay:var(--bundle-delay,0ms)}
+/* fan after shuffle: each card starts at a fixed stagger, same duration */
+.ja78-deck.is-fanning .ja78-card{transform:translate3d(calc(var(--x) * 1px),calc(var(--y) * 1px),0) rotate(calc(var(--r) * 1deg));transition-delay:var(--fan-delay,0ms)}
+.ja78-deck.is-fanned .ja78-card{transform:translate3d(calc(var(--x) * 1px),calc(var(--y) * 1px),0) rotate(calc(var(--r) * 1deg));transition-delay:0ms}
+.ja78-card:hover{z-index:900;filter:brightness(1.18) drop-shadow(0 15px 22px rgba(0,0,0,.6));transform:translate3d(calc(var(--x) * 1px),calc((var(--y) - 28px) * 1px),60px) rotate(calc(var(--r) * 1deg)) scale(1.05)!important}
+.ja78-card:focus-visible{outline:2px solid #ffe8a0;outline-offset:4px}
+.ja78-card.is-selected{z-index:1000!important;filter:brightness(1.2) drop-shadow(0 0 24px rgba(244,208,106,.75))}
+.ja78-card.is-moving-to-slot{pointer-events:none!important;transition:transform 850ms cubic-bezier(.18,.82,.18,1),opacity 500ms ease!important;transform:translate3d(calc(var(--slot-x) * 1px),calc(var(--slot-y) * 1px),260px) rotate(0deg) scale(.66)!important}
+.ja78-card.is-hidden{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.ja78-card.is-gathering{pointer-events:none!important;transition:transform 680ms cubic-bezier(.2,.8,.2,1),opacity 350ms ease!important;transition-delay:var(--gather-delay,0ms)!important;transform:translate3d(calc(var(--bundle-x) * 1px),55px,calc(var(--bundle-z) * 1px)) rotate(calc(var(--bundle-r) * 1deg)) scale(.86)!important}
+.ja78-inner{width:100%;height:100%;position:relative;display:block;transform-style:preserve-3d;transition:transform 800ms cubic-bezier(.2,.8,.2,1)}
+.ja78-card.revealed .ja78-inner{transform:rotateY(180deg)}
+.ja78-face{position:absolute;inset:0;display:block;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:13px;overflow:hidden}
+.ja78-back{background:radial-gradient(circle at 50% 45%,#8d63d7 0 5%,#42257e 18%,#24134f 48%,#0d0822 100%);border:1px solid rgba(244,208,106,.72);box-shadow:0 9px 24px rgba(0,0,0,.62),inset 0 0 0 1px rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center}.ja78-back-logo{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:contain;opacity:.94;filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));z-index:1}
+.ja78-back:before{content:'';position:absolute;inset:9px;z-index:2;border:1px solid rgba(244,208,106,.62);border-radius:10px;background:radial-gradient(circle at 50% 50%,transparent 0 28%,rgba(244,208,106,.12) 29% 30%,transparent 31% 100%);box-shadow:inset 0 0 24px rgba(244,208,106,.08)}
+.ja78-back:after{content:'✦';position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border:1px solid rgba(244,208,106,.72);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#f4d06a;font-size:25px;text-shadow:0 0 14px rgba(244,208,106,.7);box-shadow:0 0 18px rgba(244,208,106,.15)}
+.ja78-front{transform:rotateY(180deg);background:linear-gradient(145deg,#f9f2dd,#d8c28b);border:1px solid rgba(244,208,106,.8);color:#25183d;display:flex;align-items:center;justify-content:center;padding:4px}.ja78-front img{width:100%;height:100%;object-fit:cover}.ja78-front-label{font-size:10px;text-align:center;font-weight:900;line-height:1.25;padding:8px}.ja78-number{position:absolute;top:7px;left:8px;z-index:3;font-size:9px;color:#f4d06a;opacity:.9}
+.ja78-selected-zone{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;min-height:210px;margin:5px auto 28px;align-items:flex-start}.ja78-slot-wrap{width:220px;text-align:center}.ja78-slot{width:105px;height:145px;border:1px solid rgba(244,208,106,.5);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#817b98;font-size:11px;text-align:center;background:rgba(255,255,255,.025);position:relative;margin:auto}.ja78-slot.filled{border-color:#e8c96a;background:rgba(244,208,106,.07)}.ja78-slot .slot-label{position:absolute;bottom:-24px;left:0;right:0;color:#cfc8df;font-size:12px}.ja78-slot-card{width:90px;height:128px;border:0;background:transparent;padding:0;cursor:pointer;perspective:900px;position:relative}.ja78-slot-card .slot-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 800ms cubic-bezier(.2,.8,.2,1)}.ja78-slot-card.flipped .slot-inner{transform:rotateY(180deg)}.ja78-slot-face{position:absolute;inset:0;border-radius:9px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}.ja78-slot-back{background:radial-gradient(circle at 50% 45%,#8d63d7 0 5%,#42257e 18%,#24134f 48%,#0d0822 100%);border:1px solid rgba(244,208,106,.72);display:flex;align-items:center;justify-content:center;color:#f4d06a;font-size:22px}.ja78-slot-front{transform:rotateY(180deg);background:#f7efd9;border:1px solid #e8c96a}.ja78-slot-front img{width:100%;height:100%;object-fit:cover}.ja78-slot-card:focus-visible{outline:2px solid #ffe8a0;outline-offset:3px}
+.ja78-card-report{margin-top:32px;background:rgba(255,255,255,.045);border:1px solid rgba(244,208,106,.2);border-radius:14px;padding:12px;text-align:left;min-height:150px}.ja78-card-report strong{color:#ffe7a0;font-size:12px}.ja78-card-report .report-line{margin:5px 0 0;color:#ddd7e8;font-size:12px;line-height:1.55}.ja78-card-report .kw{margin-top:7px;color:#bfb7d2;font-size:11px}
+.ja78-results{display:none;margin-top:28px}.ja78-results.show{display:block}.ja78-result{background:rgba(255,255,255,.06);border:1px solid rgba(244,208,106,.25);border-radius:18px;padding:18px;margin:12px 0}.ja78-result .pos{color:#e8c96a;font-size:12px;font-weight:800}.ja78-result h3{margin:7px 0;color:#fff}.ja78-result p{color:#ddd7e8;line-height:1.7;margin:0}.ja78-result .ja78-key{color:#bfb7d2;font-size:13px}.ja78-disclaimer{text-align:center;color:#8f89a4;font-size:11px;line-height:1.6;margin-top:18px}
+@media(max-width:700px){.ja78-wrap{border-radius:18px;padding:22px 8px}.ja78-head h2{font-size:25px}.ja78-deck-stage{min-height:430px;padding:5px 0 15px;overflow:hidden}.ja78-deck{width:760px;height:350px;transform:scale(.56);transform-origin:50% 0}.ja78-card{width:142px;height:244px;margin-left:-71px}.ja78-slot{width:88px;height:124px}.ja78-slot-card{width:76px;height:110px}}
 </style>
 <section class="ja78-wrap" id="jyotish-tarot-78">
-  <div class="ja78-head">
-    <div class="ja78-kicker">✦ JYOTISH ASSAM TAROT</div>
-    <h2>আপোনাৰ বাবে ৭৮-কাৰ্ড Tarot Reading</h2>
-    <p>প্ৰশ্নটো লিখক, deckটো shuffle কৰক আৰু নিজে নিজৰ card বাছি লওক।</p>
-  </div>
+  <div class="ja78-head"><div class="ja78-kicker">✦ JYOTISH ASSAM TAROT</div><h2>আপোনাৰ বাবে ৭৮-কাৰ্ড Tarot Reading</h2><p>প্ৰথমে deckটো bundle হিচাপে থাকিব। Shuffle কৰিলে cardবোৰ লাহে লাহে U-shape fan হ'ব।</p></div>
   <div class="ja78-controls">
-    <div class="ja78-row" id="ja78-topics">
-      <button class="ja78-pill active" data-topic="General">সাধাৰণ</button>
-      <button class="ja78-pill" data-topic="Love">❤️ প্ৰেম</button>
-      <button class="ja78-pill" data-topic="Career">💼 কেৰিয়াৰ</button>
-      <button class="ja78-pill" data-topic="Finance">💰 ধন</button>
-      <button class="ja78-pill" data-topic="Yes/No">❓ Yes / No</button>
-    </div>
-    <div class="ja78-row" style="margin-top:10px" id="ja78-spreads">
-      <button class="ja78-pill active" data-spread="1_card">১ কাৰ্ড</button>
-      <button class="ja78-pill" data-spread="3_card">৩ কাৰ্ড</button>
-      <button class="ja78-pill" data-spread="5_card">৫ কাৰ্ড</button>
-      <button class="ja78-pill" data-spread="love_3">Love Spread</button>
-      <button class="ja78-pill" data-spread="yes_no">Yes / No</button>
-    </div>
+    <div class="ja78-row" id="ja78-topics"><button class="ja78-pill active" data-topic="General">সাধাৰণ</button><button class="ja78-pill" data-topic="Love">❤️ প্ৰেম</button><button class="ja78-pill" data-topic="Career">💼 কেৰিয়াৰ</button><button class="ja78-pill" data-topic="Finance">💰 ধন</button><button class="ja78-pill" data-topic="Yes/No">❓ Yes / No</button></div>
+    <div class="ja78-row" style="margin-top:10px" id="ja78-spreads"><button class="ja78-pill active" data-spread="1_card">১ কাৰ্ড</button><button class="ja78-pill" data-spread="3_card">৩ কাৰ্ড</button><button class="ja78-pill" data-spread="5_card">৫ কাৰ্ড</button><button class="ja78-pill" data-spread="love_3">Love Spread</button><button class="ja78-pill" data-spread="yes_no">Yes / No</button></div>
     <textarea id="ja78-question" class="ja78-question" placeholder="আপোনাৰ প্ৰশ্নটো লিখক... (উদাহৰণ: মোৰ career-ৰ আগন্তুক ৬ মাহ কেনেকুৱা হ'ব?)"></textarea>
-    <div class="ja78-actions">
-      <button class="ja78-btn ja78-primary" id="ja78-start">🔮 Shuffle & Start Reading</button>
-      <button class="ja78-btn ja78-secondary" id="ja78-new" style="display:none">↻ New Reading</button>
-    </div>
+    <div class="ja78-actions"><button class="ja78-btn ja78-primary" id="ja78-start">🔮 Shuffle</button><button class="ja78-btn ja78-secondary" id="ja78-new" style="display:none">↻ New Reading</button></div>
   </div>
-  <div class="ja78-status" id="ja78-status">প্ৰশ্নটো লিখি “Shuffle & Start” টিপক।</div>
-  <div class="ja78-count" id="ja78-count"></div>
-  <div class="ja78-deck-stage" id="ja78-stage" aria-label="78 card tarot deck">
-    <div class="ja78-deck" id="ja78-deck"></div>
-  </div>
-  <div class="ja78-selected-zone" id="ja78-slots"></div>
-  <div class="ja78-results" id="ja78-results"></div>
+  <div class="ja78-status" id="ja78-status">প্ৰশ্নটো লিখি “Shuffle” টিপক।</div><div class="ja78-count" id="ja78-count"></div>
+  <div class="ja78-deck-stage" id="ja78-stage" aria-label="78 card tarot deck"><div class="ja78-deck is-bundle" id="ja78-deck"></div></div>
+  <div class="ja78-selected-zone" id="ja78-slots"></div><div class="ja78-results" id="ja78-results"></div>
   <div class="ja78-disclaimer">Tarot reading আত্ম-অনুধাৱন/মনোৰঞ্জনৰ বাবে। ই নিশ্চিত ভৱিষ্যদ্বাণী বা চিকিৎসা, আইনগত, আৰ্থিক পৰামৰ্শ নহয়।</div>
 </section>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
-  const deckNames=[
-    'The Fool','The Magician','The High Priestess','The Empress','The Emperor','The Hierophant','The Lovers','The Chariot','Strength','The Hermit','Wheel of Fortune','Justice','The Hanged Man','Death','Temperance','The Devil','The Tower','The Star','The Moon','The Sun','Judgement','The World',
-    'Ace of Wands','Two of Wands','Three of Wands','Four of Wands','Five of Wands','Six of Wands','Seven of Wands','Eight of Wands','Nine of Wands','Ten of Wands','Page of Wands','Knight of Wands','Queen of Wands','King of Wands',
-    'Ace of Cups','Two of Cups','Three of Cups','Four of Cups','Five of Cups','Six of Cups','Seven of Cups','Eight of Cups','Nine of Cups','Ten of Cups','Page of Cups','Knight of Cups','Queen of Cups','King of Cups',
-    'Ace of Swords','Two of Swords','Three of Swords','Four of Swords','Five of Swords','Six of Swords','Seven of Swords','Eight of Swords','Nine of Swords','Ten of Swords','Page of Swords','Knight of Swords','Queen of Swords','King of Swords',
-    'Ace of Pentacles','Two of Pentacles','Three of Pentacles','Four of Pentacles','Five of Pentacles','Six of Pentacles','Seven of Pentacles','Eight of Pentacles','Nine of Pentacles','Ten of Pentacles','Page of Pentacles','Knight of Pentacles','Queen of Pentacles','King of Pentacles'
-  ];
-  const state={topic:'General',spread:'1_card',question:'',selected:[],cards:[]};
+  const deckNames=['The Fool','The Magician','The High Priestess','The Empress','The Emperor','The Hierophant','The Lovers','The Chariot','Strength','The Hermit','Wheel of Fortune','Justice','The Hanged Man','Death','Temperance','The Devil','The Tower','The Star','The Moon','The Sun','Judgement','The World','Ace of Wands','Two of Wands','Three of Wands','Four of Wands','Five of Wands','Six of Wands','Seven of Wands','Eight of Wands','Nine of Wands','Ten of Wands','Page of Wands','Knight of Wands','Queen of Wands','King of Wands','Ace of Cups','Two of Cups','Three of Cups','Four of Cups','Five of Cups','Six of Cups','Seven of Cups','Eight of Cups','Nine of Cups','Ten of Cups','Page of Cups','Knight of Cups','Queen of Cups','King of Cups','Ace of Swords','Two of Swords','Three of Swords','Four of Swords','Five of Swords','Six of Swords','Seven of Swords','Eight of Swords','Nine of Swords','Ten of Swords','Page of Swords','Knight of Swords','Queen of Swords','King of Swords','Ace of Pentacles','Two of Pentacles','Three of Pentacles','Four of Pentacles','Five of Pentacles','Six of Pentacles','Seven of Pentacles','Eight of Pentacles','Nine of Pentacles','Ten of Pentacles','Page of Pentacles','Knight of Pentacles','Queen of Pentacles','King of Pentacles'];
+  const state={topic:'General',spread:'1_card',question:'',selected:[],cards:[],revealed:[],deckOrder:[],phase:'bundle',requestSeq:0};
   const counts={'1_card':1,'3_card':3,'5_card':5,'love_3':3,'yes_no':1};
   const positions={'1_card':['আপোনাৰ বৰ্তমানৰ বাৰ্তা'],'3_card':['অতীত','বৰ্তমান','ভৱিষ্যৎ'],'5_card':['বৰ্তমান অৱস্থা','মূল বাধা','অদৃশ্য প্ৰভাৱ','পৰামৰ্শ','সম্ভাব্য ফলাফল'],'love_3':['আপোনাৰ অনুভৱ','সম্পৰ্কৰ শক্তি','আগন্তুক দিশ'],'yes_no':['উত্তৰ']};
+  const FAN_DURATION=700,FAN_STAGGER=70,GATHER_DURATION=680,GATHER_STAGGER=55;
   function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-  function cardCount(){return counts[state.spread]||1}
+  function cardCount(){return counts[state.spread]||1;}
+  function randomizeDeck(){
+    const a=Array.from({length:deckNames.length},(_,i)=>i);
+    for(let i=a.length-1;i>0;i--){
+      const u=new Uint32Array(1); crypto.getRandomValues(u);
+      const j=u[0]%(i+1); [a[i],a[j]]=[a[j],a[i]];
+    }
+    state.deckOrder=a;
+  }
   function renderDeck(){
+    randomizeDeck();
     const deck=$('ja78-deck');
-    deck.innerHTML=deckNames.map((name,i)=>{
-      const angle=-48+(i/77)*96;
-      const x=(i-38.5)*10.2;
-      const y=Math.abs(i-38.5)*.58;
-      const rot=angle;
-      return `<button class="ja78-card" data-index="${i}" aria-label="Tarot card ${i+1}" style="--base-transform:translateX(${x}px) translateY(${y}px) rotate(${rot}deg)"><span class="ja78-inner"><span class="ja78-face ja78-back"><span class="ja78-number">${i+1}</span></span><span class="ja78-face ja78-front"><span class="ja78-front-label">${esc(name)}</span></span></span></button>`;
+    deck.innerHTML=state.deckOrder.map((cardIndex,pos)=>{
+      const name=deckNames[cardIndex], center=(deckNames.length-1)/2, half=510, topY=52, depth=120, maxAngle=1.02;
+      const t=(pos-center)/center,a=t*maxAngle,x=Math.sin(a)*half,y=topY+(1-Math.cos(a))*depth,r=t*48;
+      const bx=((pos%7)-3)*1.6,br=((pos%5)-2)*.45,bz=Math.round((pos%7)*2);
+      return `<button type="button" class="ja78-card" data-index="${cardIndex}" aria-label="${esc(name)}" style="--x:${x.toFixed(1)};--y:${y.toFixed(1)};--r:${r.toFixed(2)};--z:${200-Math.round(Math.abs(t)*80)};--bundle-x:${bx};--bundle-r:${br};--bundle-z:${bz}"><span class="ja78-inner"><span class="ja78-face ja78-back"><img class="ja78-back-logo" src="logo.jpg" alt="Jyotish Assam"><span class="ja78-number">${pos+1}</span></span><span class="ja78-face ja78-front"><span class="ja78-front-label">${esc(name)}</span></span></span></button>`;
     }).join('');
-    deck.querySelectorAll('.ja78-card').forEach(c=>c.addEventListener('click',()=>selectCard(+c.dataset.index)));
+    deck.className='ja78-deck is-bundle';state.phase='bundle';
+  }
+  function fan(){
+    if(state.phase==='fan' || state.phase==='fanning')return;
+    const deck=$('ja78-deck');state.phase='fanning';deck.classList.remove('is-bundle','is-fanned');deck.classList.add('is-fanning');
+    document.querySelectorAll('.ja78-card:not(.is-hidden)').forEach((c,i)=>c.style.setProperty('--fan-delay',`${i*FAN_STAGGER}ms`));
+    // force layout before switching to final fan state
+    void deck.offsetWidth;
+    setTimeout(()=>{deck.classList.remove('is-fanning');deck.classList.add('is-fanned');state.phase='fan';$('ja78-start').disabled=false;$('ja78-start').textContent='🔀 Shuffle';$('ja78-status').textContent=`${cardCount()-state.selected.length}টা cardৰ পৰা এটা card বাছক।`;},deckNames.length*FAN_STAGGER+FAN_DURATION+80);
+  }
+  function gatherRemaining(){
+    const deck=$('ja78-deck');state.phase='gathering';deck.classList.remove('is-fanned','is-fanning');
+    const rem=[...document.querySelectorAll('.ja78-card:not(.is-hidden):not(.is-moving-to-slot)')];
+    rem.forEach((c,i)=>{c.classList.add('is-gathering');c.style.setProperty('--gather-delay',`${i*GATHER_STAGGER}ms`)});
+    setTimeout(()=>{rem.forEach(c=>c.classList.remove('is-gathering'));deck.classList.remove('is-fanned','is-fanning');deck.classList.add('is-bundle');state.phase='bundle';},rem.length*GATHER_STAGGER+GATHER_DURATION+80);
+  }
+  function makeReport(card,label,idx){
+    if(!card)return '';
+    const name=card.name||deckNames[state.selected[idx]];
+    const ori=card.orientation==='reversed'?'ওলোটা (Reversed)':'পোন (Upright)';
+    const meaning=(card.meaning||'এই কাৰ্ডে আপোনাৰ বৰ্তমান পৰিস্থিতিৰ বিষয়ে এটা গুৰুত্বপূৰ্ণ সংকেত দিছে।').trim();
+    const keys=(card.keywords||'অন্তৰ্দৃষ্টি, সিদ্ধান্ত, আগবঢ়া').trim();
+    const topic=state.topic||'সাধাৰণ';
+    const advice=card.orientation==='reversed'?'খৰখেদা সিদ্ধান্ত নলৈ বাধা বা অস্বস্তিৰ মূল কাৰণটো প্ৰথমে বুজিবলৈ চেষ্টা কৰক।':'এই কাৰ্ডৰ ইতিবাচক শক্তিখিনি সচেতনভাৱে ব্যৱহাৰ কৰি আগৰ পৰ্যায়টোত এটা স্পষ্ট পদক্ষেপ লওক।';
+    const overall=card.orientation==='reversed'?'এই সময়ত ধৈৰ্য, আত্ম-অনুধাৱন আৰু সঠিক দিশ বাছনি কৰাটো বিশেষ গুৰুত্বপূৰ্ণ।':'এই কাৰ্ডে সচেতনতা, সুযোগ আৰু নিজৰ সিদ্ধান্তৰ ওপৰত বিশ্বাস ৰাখিবলৈ উৎসাহ দিয়ে।';
+    return `<div class="ja78-card-report"><strong>${esc(card.position||label)} · ${esc(name)} · ${esc(ori)}</strong><div class="report-line">১. মূল বাৰ্তা: ${esc(meaning)}</div><div class="report-line">২. আপোনাৰ ${esc(topic)} প্ৰশ্নৰ ক্ষেত্ৰত এই কাৰ্ডে বৰ্তমানৰ শক্তি আৰু দিশটো দেখুৱাইছে।</div><div class="report-line">৩. গুৰুত্বপূৰ্ণ সংকেত: ${esc(keys)}।</div><div class="report-line">৪. মনোযোগ দিবলগীয়া বিষয়টো হৈছে নিজৰ পৰিস্থিতি ভালদৰে বুজি সিদ্ধান্ত লোৱা।</div><div class="report-line">৫. পৰামৰ্শ: ${esc(advice)}</div><div class="report-line">৬. এই reading-টো নিশ্চিত ভৱিষ্যদ্বাণী নহয়; নিজৰ বিবেচনাৰে ইয়াক আত্ম-অনুধাৱনৰ সহায়ক হিচাপে লওক।</div><div class="report-line">৭. সামগ্ৰিক দিশ: ${esc(overall)}</div></div>`;
   }
   function renderSlots(){
     const labels=positions[state.spread]||positions['1_card'];
     $('ja78-slots').innerHTML=labels.map((label,i)=>{
-      const card=state.cards[i];
-      const img=card&&card.image_url?`<img src="${esc(card.image_url)}" alt="${esc(card.name||'Tarot card')}">`:`<div class="mini-fallback">${esc(card?.name||'Card selected')}</div>`;
-      return `<div class="ja78-slot ${card?'filled':''}">${card?`<div class="mini-card">${img}</div>`:'✦'}<span class="slot-label">${esc(label)}</span></div>`;
+      const idx=state.selected[i],card=state.cards[i],filled=idx!==undefined;
+      let visual=filled?`<button type="button" class="ja78-slot-card ${state.revealed[i]?'flipped':''}" data-slot="${i}"><span class="slot-inner"><span class="ja78-slot-face ja78-slot-back"><img class="ja78-back-logo" src="logo.jpg" alt="Jyotish Assam"></span><span class="ja78-slot-face ja78-slot-front">${card&&card.image_url?`<img src="${esc(card.image_url)}" alt="${esc(card.name||deckNames[idx])}">`:`<span class="ja78-front-label">${esc(card?.name||deckNames[idx])}</span>`}</span></span></button>`:`<div class="ja78-slot"><span>Card ${i+1}</span></div>`;
+      return `<div class="ja78-slot-wrap"><div class="ja78-slot ${filled?'filled':''}">${visual}<span class="slot-label">${esc(label)}</span></div>${makeReport(card,label,i)}</div>`;
     }).join('');
+    document.querySelectorAll('.ja78-slot-card').forEach(btn=>btn.addEventListener('click',()=>{const i=Number(btn.dataset.slot);state.revealed[i]=!state.revealed[i];renderSlots();}));
   }
-  function setPill(container,value,attr){document.querySelectorAll('#'+container+' .ja78-pill').forEach(b=>b.classList.toggle('active',b.dataset[attr]===value));}
   function selectCard(index){
-    if(state.selected.includes(index)||state.selected.length>=cardCount())return;
-    state.selected.push(index);
-    const el=document.querySelector(`.ja78-card[data-index="${index}"]`); if(el){el.classList.add('is-selected','is-used');}
-    const n=state.selected.length,total=cardCount();
-    $('ja78-count').textContent=`${n}/${total} কাৰ্ড বাছনি কৰা হৈছে`;
-    $('ja78-status').textContent=n<total?`আৰু ${total-n}টা কাৰ্ড বাছক...`:'সকলো কাৰ্ড বাছনি হৈছে — Reading প্ৰস্তুত কৰা হৈছে...';
-    if(n===total) completeReading();
+    if(state.phase!=='fan'||state.selected.length>=cardCount())return;
+    index=Number(index);if(!Number.isInteger(index)||state.selected.includes(index))return;
+    const slot=state.selected.length,el=document.querySelector(`.ja78-card[data-index="${index}"]`);if(!el)return;
+    const total=cardCount(),isFinal=(slot+1)>=total;
+    state.selected.push(index);state.revealed[slot]=false;state.phase='selecting';
+    // Selected card moves to its slot. IMPORTANT: until the final required card,
+    // all remaining cards stay fanned so the user can immediately choose the next card.
+    const slotX=(slot-(total-1)/2)*122;
+    el.style.setProperty('--slot-x',slotX);
+    el.style.setProperty('--slot-y',390);
+    el.classList.add('is-selected','is-moving-to-slot');
+    const moveDelay=900;
+    setTimeout(()=>{
+      el.classList.add('is-hidden');
+      el.classList.remove('is-moving-to-slot','is-selected');
+      renderSlots();
+      const n=state.selected.length;
+      $('ja78-count').textContent=`${n}/${total} কাৰ্ড বাছনি কৰা হৈছে`;
+
+      if(!isFinal){
+        // KEEP THE REMAINING CARDS IN THE U-FAN. No bundle and no reshuffle here.
+        state.phase='fan';
+        $('ja78-start').disabled=true;
+        $('ja78-status').textContent=`${total-n}টা cardৰ পৰা পৰৱৰ্তী card বাছক।`;
+        // Load the selected card's real Tarot image/report immediately, even before the final card is chosen.
+        refreshReading(false);
+      }else{
+        // Only after the complete 1/3/5-card selection, gather the remaining deck.
+        gatherRemaining();
+        $('ja78-status').textContent='✨ সকলো card selection সম্পূৰ্ণ — বাকী cards bundle হৈ আছে...';
+        setTimeout(()=>completeReading(),Math.max(900,(78-n)*GATHER_STAGGER+GATHER_DURATION+120));
+      }
+    },moveDelay);
   }
-  async function completeReading(){
+  async function refreshReading(finalReading=false){
+    const requestId=++state.requestSeq;
+    if(finalReading){ $('ja78-start').disabled=true; $('ja78-status').textContent='✨ Reading তৈয়াৰ কৰা হৈছে...'; }
     try{
       const response=await fetch(window.JA_CONFIG.apiBaseUrl+'/tarot-engine',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({spread_type:state.spread,topic:state.topic,question:state.question,selected_cards:state.selected.map(i=>deckNames[i])})});
-      const data=await response.json(); if(!response.ok||!data.success)throw new Error(data.error||'Tarot engine error');
+      const data=await response.json();
+      if(requestId!==state.requestSeq)return;
+      if(!response.ok||!data.success)throw new Error(data.error||'Tarot engine error');
       state.cards=Array.isArray(data.cards)?data.cards:[];
-      state.cards.forEach((c,i)=>{const idx=state.selected[i];const el=document.querySelector(`.ja78-card[data-index="${idx}"]`);if(!el)return;const front=el.querySelector('.ja78-front');front.innerHTML=c.image_url?`<img src="${esc(c.image_url)}" alt="${esc(c.name||deckNames[idx])}">`:`<span class="ja78-front-label">${esc(c.name||deckNames[idx])}<br><small>${c.orientation==='reversed'?'ওলোটা':'পোন'}</small></span>`;setTimeout(()=>el.classList.add('revealed'),i*220);});
-      setTimeout(()=>renderResults(),Math.max(800,state.cards.length*220+500));
-      $('ja78-status').textContent='✨ আপোনাৰ Reading সম্পূৰ্ণ হৈছে।'; $('ja78-new').style.display='inline-block';
-    }catch(e){console.error(e);$('ja78-status').textContent='⚠️ Reading লোড নহ’ল। আকৌ চেষ্টা কৰক।';}
+      renderSlots();
+      if(finalReading){ $('ja78-status').textContent='✨ Selected cards ready — cardত click কৰি 3D flip কৰক।'; $('ja78-new').style.display='inline-block'; }
+    }catch(e){
+      console.error(e);
+      if(requestId!==state.requestSeq)return;
+      if(finalReading){ $('ja78-status').textContent='⚠️ Reading লোড নহ’ল।'; $('ja78-start').disabled=false; }
+    }
   }
-  function renderResults(){
-    $('ja78-results').innerHTML=state.cards.map((c,i)=>`<article class="ja78-result"><span class="pos">${esc(c.position||positions[state.spread]?.[i]||'Reading')}</span><h3>${esc(c.name||'Tarot Card')} · ${c.orientation==='reversed'?'ওলোটা':'পোন'}</h3><p>${esc(c.meaning||'')}</p>${c.keywords?`<div class="ja78-key">✦ ${esc(c.keywords)}</div>`:''}${state.spread==='yes_no'&&c.yes_no?`<div class="ja78-key" style="margin-top:8px;color:#ffe7a0;font-weight:800">উত্তৰ: ${esc(c.yes_no)}</div>`:''}</article>`).join('');
-    $('ja78-results').classList.add('show'); $('ja78-results').scrollIntoView({behavior:'smooth',block:'start'});
-  }
-  function reset(){state.selected=[];state.cards=[];$('ja78-results').classList.remove('show');$('ja78-results').innerHTML='';$('ja78-new').style.display='none';$('ja78-count').textContent='';renderSlots();renderDeck();}
-  function shuffle(){
-    reset();state.question=$('ja78-question').value.trim().slice(0,500);const stage=$('ja78-stage'),deck=$('ja78-deck');stage.classList.add('ja78-shuffling');$('ja78-start').disabled=true;$('ja78-status').textContent='🔮 ৭৮টা card shuffle হৈ আছে...';
-    setTimeout(()=>{stage.classList.remove('ja78-shuffling');$('ja78-start').disabled=false;$('ja78-status').textContent=`এতিয়া ${cardCount()}টা card নিজে বাছক।`;},1500);
-  }
-  $('ja78-start').addEventListener('click',shuffle);$('ja78-new').addEventListener('click',()=>{reset();$('ja78-status').textContent='প্ৰশ্নটো লিখি “Shuffle & Start” টিপক।';$('ja78-question').focus();});
-  document.querySelectorAll('#ja78-topics .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.topic=b.dataset.topic;setPill('ja78-topics',state.topic,'topic');if(state.topic==='Yes/No'){state.spread='yes_no';setPill('ja78-spreads',state.spread,'spread');}}));
-  document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.spread=b.dataset.spread;setPill('ja78-spreads',state.spread,'spread');if(state.spread==='love_3'){state.topic='Love';setPill('ja78-topics','Love','topic');}if(state.spread==='yes_no'){state.topic='Yes/No';setPill('ja78-topics','Yes/No','topic');}}));
+  async function completeReading(){ await refreshReading(true); }
+  function reset(){state.selected=[];state.cards=[];state.revealed=[];state.deckOrder=[];state.requestSeq++;state.question='';state.phase='bundle';$('ja78-results').classList.remove('show');$('ja78-results').innerHTML='';$('ja78-new').style.display='none';$('ja78-count').textContent='';$('ja78-start').disabled=false;$('ja78-start').textContent='🔮 Shuffle';renderDeck();renderSlots();}
+  function shuffle(){if(state.phase!=='bundle'||state.selected.length>=cardCount())return;if(!$('ja78-question').value.trim()){state.question='';}else state.question=$('ja78-question').value.trim().slice(0,500);$('ja78-start').disabled=true;$('ja78-status').textContent='🔮 Bundle-ৰ পৰা cardবোৰ লাহে লাহে ওলাই U-shape fan হৈ আছে...';fan();}
+  $('ja78-start').addEventListener('click',shuffle);$('ja78-new').addEventListener('click',reset);
+  $('ja78-deck').addEventListener('click',e=>{const card=e.target.closest('.ja78-card');if(!card)return;e.preventDefault();e.stopPropagation();selectCard(card.dataset.index);});
+  document.querySelectorAll('#ja78-topics .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.topic=b.dataset.topic;document.querySelectorAll('#ja78-topics .ja78-pill').forEach(x=>x.classList.toggle('active',x===b));if(state.topic==='Yes/No'){state.spread='yes_no';document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(x=>x.classList.toggle('active',x.dataset.spread==='yes_no'));reset();}}));
+  document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.spread=b.dataset.spread;document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(x=>x.classList.toggle('active',x===b));if(state.spread==='love_3')state.topic='Love';if(state.spread==='yes_no')state.topic='Yes/No';reset();}));
   renderDeck();renderSlots();
 })();
 </script>
