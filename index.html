@@ -611,354 +611,441 @@ nav {
   </a>
 </div>
 <!-- ======================================================= -->
-<!-- PREMIUM 3D TAROT SYSTEM (FRONTEND UI)                   -->
+<!-- ======================================================= -->
+<!-- JYOTISH ASSAM — INTERACTIVE TAROT SYSTEM v2              -->
+<!-- Tarotoo-inspired UX; deterministic Supabase engine       -->
 <!-- ======================================================= -->
 <style>
-    .tarot-premium-section { background: linear-gradient(135deg, #050b14 0%, #0a192f 50%, #1e1b4b 100%); border: 2px solid #d4af37; border-radius: 20px; padding: 40px 20px; text-align: center; color: white; margin: 40px auto; max-width: 1000px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); font-family: inherit; position: relative; overflow: hidden; }
-    .tarot-premium-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.3; pointer-events: none; }
-    
-    .t-title { color: #d4af37; font-size: 28px; margin-bottom: 8px; font-weight: 700; position: relative; z-index: 2; text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3); }
-    .t-subtitle { color: #cbd5e1; font-size: 15px; margin-bottom: 25px; position: relative; z-index: 2; }
-    
-    .t-controls { margin-bottom: 25px; position: relative; z-index: 2; }
-    .t-btn { background: rgba(255,255,255,0.05); color: #f8fafc; border: 1px solid #64748b; padding: 10px 20px; border-radius: 30px; font-size: 14.5px; font-weight: 600; cursor: pointer; transition: 0.3s; margin: 5px; backdrop-filter: blur(5px); }
-    .t-btn:hover { background: rgba(212, 175, 55, 0.2); border-color: #d4af37; }
-    .t-btn.active { background: #d4af37; color: #0f172a; border-color: #d4af37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
-    
-    .t-draw-btn { background: linear-gradient(90deg, #d4af37, #fde047); color: #0f172a; border: none; padding: 14px 35px; border-radius: 30px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4); transition: 0.3s; }
-    .t-draw-btn:hover { transform: scale(1.05); }
-    .t-draw-btn:disabled { background: #64748b; color: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
-
-    .t-grid { display: flex; justify-content: center; gap: 25px; margin-top: 30px; perspective: 1000px; flex-wrap: wrap; position: relative; z-index: 2; min-height: 260px; }
-    .t-card { width: 140px; height: 240px; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .t-card.flipped { transform: rotateY(180deg); }
-    
-    .t-front, .t-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; border: 2px solid #d4af37; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
-    .t-front { background: repeating-linear-gradient(45deg, #1e1b4b, #1e1b4b 10px, #0f172a 10px, #0f172a 20px); display: flex; align-items: center; justify-content: center; font-size: 45px; }
-    .t-back { background-color: #fff; transform: rotateY(180deg); overflow: hidden; position: relative; }
-    
-    .t-back-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: 0.3s; }
-    /* Reversed Card CSS Trick */
-    .t-card.reversed .t-back-img { transform: rotateZ(180deg); }
-    
-    .t-badge { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #d4af37; font-size: 11px; padding: 4px 10px; border-radius: 15px; font-weight: bold; white-space: nowrap; border: 1px solid #d4af37; }
-    .t-card.reversed .t-badge { color: #fca5a5; border-color: #ef4444; }
-
-    .t-results { margin-top: 40px; text-align: left; position: relative; z-index: 2; }
-    .t-result-item { background: rgba(255,255,255,0.05); border-left: 4px solid #d4af37; padding: 20px; border-radius: 10px; margin-bottom: 15px; display: none; animation: slideUp 0.5s; backdrop-filter: blur(5px); }
-    .t-result-item h3 { color: #d4af37; margin-bottom: 8px; font-size: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 10px; }
-    .t-result-item .t-pos { font-size: 13px; background: #d4af37; color: #0f172a; padding: 3px 10px; border-radius: 12px; }
-    .t-result-item p { color: #e2e8f0; font-size: 15px; line-height: 1.7; margin-top: 10px; }
-    .t-result-item .t-key { font-size: 13.5px; color: #94a3b8; font-style: italic; }
-
-    .shuffling { animation: shuffle-anim 0.6s infinite; pointer-events: none; }
-    @keyframes shuffle-anim { 0% {transform: translate(0,0) rotate(0deg);} 25% {transform: translate(-20px,-10px) rotate(-6deg);} 50% {transform: translate(20px,10px) rotate(6deg);} 75% {transform: translate(-10px,5px) rotate(-3deg);} 100% {transform: translate(0,0) rotate(0deg);} }
-    @keyframes slideUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
-    
-
-       
+.ja-tarot-v2 {
+  max-width: 1050px;
+  margin: 40px auto;
+  padding: 36px 18px;
+  border-radius: 24px;
+  color: #f8fafc;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(212,175,55,.18), transparent 38%),
+    linear-gradient(145deg,#050b14,#0b1630 55%,#24164d);
+  border: 1px solid rgba(212,175,55,.75);
+  box-shadow: 0 20px 60px rgba(0,0,0,.32);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ja-tarot-v2:before {
+  content:"";
+  position:absolute; inset:0; pointer-events:none; opacity:.18;
+  background-image: radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+.ja-tarot-v2 > * { position:relative; z-index:1; }
+.ja-tarot-v2-title { margin:0; color:#f1cf61; font-size:30px; }
+.ja-tarot-v2-subtitle { color:#cbd5e1; max-width:760px; margin:9px auto 24px; line-height:1.7; }
+.ja-tarot-v2-group-title { font-size:14px; color:#e2e8f0; margin:16px 0 8px; font-weight:800; }
+.ja-tarot-v2-pills { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
+.ja-tarot-v2-pill {
+  border:1px solid #64748b; background:rgba(255,255,255,.045); color:#f8fafc;
+  padding:9px 14px; border-radius:999px; cursor:pointer; font-weight:700;
+  transition:transform .2s, background .2s, border-color .2s;
+}
+.ja-tarot-v2-pill:hover { transform:translateY(-2px); border-color:#d4af37; }
+.ja-tarot-v2-pill.active { background:#d4af37; color:#111827; border-color:#d4af37; }
+.ja-tarot-v2-question {
+  display:block; width:min(680px,100%); box-sizing:border-box; margin:18px auto 12px;
+  min-height:48px; padding:12px 15px; border-radius:12px; border:1px solid #cbd5e1;
+  outline:0; font-family:inherit; font-size:15px; resize:vertical;
+}
+.ja-tarot-v2-draw {
+  border:0; padding:13px 28px; border-radius:999px; cursor:pointer;
+  background:linear-gradient(90deg,#d4af37,#fde68a); color:#111827;
+  font-weight:900; font-size:16px; box-shadow:0 8px 25px rgba(212,175,55,.25);
+}
+.ja-tarot-v2-draw:disabled { opacity:.55; cursor:wait; }
+.ja-tarot-v2-status { min-height:25px; margin:18px 0 7px; color:#f1cf61; font-weight:800; }
+.ja-tarot-v2-progress { color:#94a3b8; font-size:13px; min-height:20px; }
+.ja-tarot-v2-grid {
+  display:flex; justify-content:center; align-items:flex-start; gap:18px; flex-wrap:wrap;
+  margin:22px auto 0; perspective:1200px; min-height:220px;
+}
+.ja-tarot-v2-card {
+  width:138px; height:230px; border:0; padding:0; background:none; cursor:pointer;
+  position:relative; transform-style:preserve-3d;
+  transition:transform .75s cubic-bezier(.2,.8,.2,1);
+}
+.ja-tarot-v2-card.flipped { transform:rotateY(180deg); }
+.ja-tarot-v2-face {
+  position:absolute; inset:0; border-radius:15px; overflow:hidden; backface-visibility:hidden;
+  border:2px solid #d4af37; box-shadow:0 12px 28px rgba(0,0,0,.52);
+}
+.ja-tarot-v2-front {
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px;
+  color:#e7c85b;
+  background:
+    repeating-linear-gradient(45deg,rgba(212,175,55,.08) 0 8px,transparent 8px 16px),
+    #12183d;
+}
+.ja-tarot-v2-front-symbol { font-size:48px; line-height:1; }
+.ja-tarot-v2-front small { font-size:9px; letter-spacing:1px; color:#cbd5e1; }
+.ja-tarot-v2-back {
+  transform:rotateY(180deg); background:#fff; position:relative;
+}
+.ja-tarot-v2-back img { width:100%; height:100%; object-fit:cover; display:block; }
+.ja-tarot-v2-card.reversed .ja-tarot-v2-back img { transform:rotate(180deg); }
+.ja-tarot-v2-badge {
+  position:absolute; left:50%; bottom:9px; transform:translateX(-50%);
+  background:rgba(0,0,0,.82); color:#f1cf61; border:1px solid #d4af37;
+  padding:4px 9px; border-radius:999px; white-space:nowrap; font-size:10px; font-weight:800;
+}
+.ja-tarot-v2-card.reversed .ja-tarot-v2-badge { color:#fecaca; border-color:#ef4444; }
+.ja-tarot-v2-card.shuffling { animation:jaTarotShuffle .55s infinite; pointer-events:none; }
+@keyframes jaTarotShuffle {
+  0%,100% { transform:translate(0) rotate(0); }
+  25% { transform:translate(-15px,-7px) rotate(-4deg); }
+  50% { transform:translate(15px,7px) rotate(4deg); }
+  75% { transform:translate(-7px,3px) rotate(-2deg); }
+}
+.ja-tarot-v2-result {
+  display:none; margin:13px auto; max-width:850px; padding:19px;
+  border-left:4px solid #d4af37; border-radius:14px; text-align:left;
+  background:rgba(255,255,255,.055); animation:jaTarotUp .45s ease;
+}
+.ja-tarot-v2-result.show { display:block; }
+.ja-tarot-v2-result-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+.ja-tarot-v2-position {
+  display:inline-block; padding:4px 9px; border-radius:999px; background:#d4af37;
+  color:#111827; font-size:11px; font-weight:900;
+}
+.ja-tarot-v2-result h3 { margin:8px 0 2px; color:#f1cf61; font-size:21px; }
+.ja-tarot-v2-result small { color:#94a3b8; }
+.ja-tarot-v2-result p { color:#e2e8f0; line-height:1.8; margin:13px 0 7px; }
+.ja-tarot-v2-key { color:#cbd5e1; font-size:13px; }
+.ja-tarot-v2-yesno {
+  display:inline-block; margin-top:8px; padding:5px 10px; border-radius:999px;
+  background:rgba(212,175,55,.12); color:#fde68a; font-weight:800; font-size:13px;
+}
+.ja-tarot-v2-actions { display:none; margin:24px auto 0; gap:9px; justify-content:center; flex-wrap:wrap; }
+.ja-tarot-v2-actions.show { display:flex; }
+.ja-tarot-v2-action {
+  border:0; border-radius:999px; padding:11px 17px; cursor:pointer; font-weight:800;
+}
+.ja-tarot-v2-wa { background:#25d366; color:#fff; }
+.ja-tarot-v2-save { background:#334155; color:#fff; }
+.ja-tarot-v2-new { background:#d4af37; color:#111827; }
+.ja-tarot-v2-note { margin:20px auto 0; color:#94a3b8; font-size:12px; line-height:1.6; max-width:760px; }
+@keyframes jaTarotUp { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
+@media (max-width:620px) {
+  .ja-tarot-v2 { padding:28px 11px; margin:28px 6px; }
+  .ja-tarot-v2-title { font-size:24px; }
+  .ja-tarot-v2-card { width:105px; height:175px; }
+  .ja-tarot-v2-front-symbol { font-size:38px; }
+  .ja-tarot-v2-grid { gap:10px; }
+}
 </style>
 
-<div class="tarot-premium-section" id="tarot-box">
-    <h2 class="t-title">✨ প্ৰিমিয়াম টেৰট ৰিডিং (Tarot)</h2>
-    <p class="t-subtitle">আপোনাৰ অৱচেতন মনৰ প্ৰশ্নবোৰৰ প্ৰতীকী মাৰ্গদৰ্শন লাভ কৰক</p>
+<section class="ja-tarot-v2" id="tarot-box">
+  <h2 class="ja-tarot-v2-title">🔮 ইণ্টাৰেক্টিভ Tarot Reading</h2>
+  <p class="ja-tarot-v2-subtitle">
+    আপোনাৰ প্ৰশ্ন ভাবক, Reading বাছক আৰু নিজৰ পছন্দমতে কাৰ্ডবোৰ এটা এটাকৈ reveal কৰক।
+    এই Reading-টো জ্যোতিষ অসমৰ deterministic Tarot engine-ৰ ওপৰত চলে।
+  </p>
 
-    <div class="t-controls">
-        <div id="topic-btns" style="margin-bottom: 15px;">
-            <button class="t-btn active" onclick="setTarotTopic('General', this)">General 🌙</button>
-            <button class="t-btn" onclick="setTarotTopic('Love', this)">Love ❤️</button>
-            <button class="t-btn" onclick="setTarotTopic('Career', this)">Career 💼</button>
-            <button class="t-btn" onclick="setTarotTopic('Finance', this)">Finance 💰</button>
-            <button class="t-btn" onclick="setTarotTopic('Yes/No', this)">Yes / No 🔮</button>
-        </div>
-        <div id="spread-btns">
-            <button class="t-btn active" onclick="setTarotSpread('1_card', this)">১-খন কাৰ্ড (Daily)</button>
-            <button class="t-btn" onclick="setTarotSpread('3_card', this)">৩-খন কাৰ্ড (Past, Present, Future)</button>
-        </div>
-        
-        <input type="text" id="t-question" placeholder="আপোনাৰ প্ৰশ্ন মনতে ভাবক বা ইয়াত লিখক (ঐচ্ছিক)..." style="width: 100%; max-width: 400px; padding: 12px 15px; margin-top: 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-family: inherit;">
-        <br>
-        <button class="t-draw-btn" id="t-draw-btn" onclick="drawTarotCards()">কাৰ্ড বাছনি কৰক (Draw)</button>
-    </div>
+  <div class="ja-tarot-v2-group-title">Reading Type</div>
+  <div class="ja-tarot-v2-pills" id="ja-tarot-topics">
+    <button class="ja-tarot-v2-pill active" data-value="General">🌙 সাধাৰণ</button>
+    <button class="ja-tarot-v2-pill" data-value="Love">❤️ প্ৰেম</button>
+    <button class="ja-tarot-v2-pill" data-value="Career">💼 কেৰিয়াৰ</button>
+    <button class="ja-tarot-v2-pill" data-value="Finance">💰 ধন-সম্পদ</button>
+    <button class="ja-tarot-v2-pill" data-value="Yes/No">🔮 Yes / No</button>
+  </div>
 
-    <div id="t-status-msg" style="color: #4ade80; font-size: 15px; font-weight: 600; height: 20px;"></div>
-    
-    <div class="t-grid" id="t-grid"></div>
-    <div class="t-results" id="t-results"></div>
+  <div class="ja-tarot-v2-group-title">Tarot Spread</div>
+  <div class="ja-tarot-v2-pills" id="ja-tarot-spreads">
+    <button class="ja-tarot-v2-pill active" data-value="1_card">🃏 ১ Card</button>
+    <button class="ja-tarot-v2-pill" data-value="3_card">🃏 ৩ Card</button>
+    <button class="ja-tarot-v2-pill" data-value="5_card">🃏 ৫ Card</button>
+    <button class="ja-tarot-v2-pill" data-value="love_3">❤️ Love Spread</button>
+    <button class="ja-tarot-v2-pill" data-value="yes_no">❓ Yes / No</button>
+  </div>
 
-   <!-- 🔥 নতুন: Save, Share আৰু Premium AI Action Bar 🔥 -->
-    <div id="t-action-bar" style="display: none; margin-top: 35px; text-align: center; animation: fadeIn 0.8s; position: relative; z-index: 2;">
-        
-        <button class="t-btn" style="background: #25D366; color: white; border: none; padding: 12px 20px;" onclick="shareTarotResult()">
-            📲 WhatsApp ত পঠিয়াওক
-        </button>
-        
-        <button class="t-btn" style="background: #3b82f6; color: white; border: none; padding: 12px 20px;" onclick="saveTarotResult()">
-            💾 ৰিডিং ছেভ কৰক
-        </button>
-        
-        <br><br>
-        
-        <div style="background: rgba(212,175,55,0.1); border: 1px dashed #d4af37; padding: 20px; border-radius: 12px; display: inline-block; max-width: 500px;">
-            <p style="color: #fde047; font-size: 14px; margin-bottom: 15px;">এই কাৰ্ডকেইখনৰ ওপৰত ভিত্তি কৰি AI ৰ জৰিয়তে আপোনাৰ জীৱনৰ এক বিতং আৰু ব্যক্তিগতকৃত (Personalized) ভৱিষ্যৎবাণী জানিব বিচাৰে নেকি?</p>
-            
-            <!-- আপডেট কৰা প্ৰিমিয়াম বুটামটো ইয়াত আছে -->
-            <button class="t-draw-btn" style="padding: 12px 25px; font-size: 16px; margin: 0;" onclick="buyPremiumTarot()">
-                ✨ প্ৰিমিয়াম AI ৰিপোৰ্ট লওক (₹99)
-            </button>
-        </div>
-        </div>
-    </div>
+  <textarea id="t-question" class="ja-tarot-v2-question" maxlength="500"
+    placeholder="আপোনাৰ প্ৰশ্নটো ইয়াত লিখক (ঐচ্ছিক)"></textarea>
+
+  <button class="ja-tarot-v2-draw" id="t-draw-btn">🔮 Reading আৰম্ভ কৰক</button>
+
+  <div id="t-status-msg" class="ja-tarot-v2-status">আপোনাৰ প্ৰশ্নটো লিখি Reading আৰম্ভ কৰক।</div>
+  <div id="ja-tarot-v2-progress" class="ja-tarot-v2-progress"></div>
+
+  <div class="ja-tarot-v2-grid" id="t-grid"></div>
+  <div id="t-results"></div>
+
+  <div class="ja-tarot-v2-actions" id="t-action-bar">
+    <button class="ja-tarot-v2-action ja-tarot-v2-wa" id="t-share-btn">📲 WhatsApp</button>
+    <button class="ja-tarot-v2-action ja-tarot-v2-save" id="t-save-btn">💾 Save</button>
+    <button class="ja-tarot-v2-action ja-tarot-v2-new" id="t-new-btn">🔄 New Reading</button>
+  </div>
+
+  <p class="ja-tarot-v2-note">
+    Tarot Reading-টো আত্ম-চিন্তা আৰু বিনোদনমূলক guidance হিচাপে ব্যৱহাৰ কৰক।
+    গুৰুত্বপূৰ্ণ চিকিৎসা, আইন বা আৰ্থিক সিদ্ধান্ত কেৱল Tarot-ৰ ওপৰত ভিত্তি কৰি নল'ব।
+  </p>
+</section>
 
 <script>
-    let tTopic = 'General';
-    let tSpread = '1_card';
-    let fetchedCards = [];
-    let flippedCount = 0;
+(() => {
+  "use strict";
 
-    window.setTarotTopic = function(topic, btn) {
-        tTopic = topic;
-        document.querySelectorAll('#topic-btns .t-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+  const state = {
+    topic: "General",
+    spread: "1_card",
+    question: "",
+    cards: [],
+    revealed: new Set()
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  const esc = (value) => String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  }[c]));
+
+  const topicLabel = {
+    General: "সাধাৰণ", Love: "প্ৰেম", Career: "কেৰিয়াৰ",
+    Finance: "ধন-সম্পদ", "Yes/No": "হয় / নহয়"
+  };
+
+  function cardCount() {
+    if (state.spread === "3_card" || state.spread === "love_3") return 3;
+    if (state.spread === "5_card") return 5;
+    return 1;
+  }
+
+  function setActive(containerId, value) {
+    document.querySelectorAll("#" + containerId + " .ja-tarot-v2-pill").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.value === value);
+    });
+  }
+
+  function resetResults() {
+    state.cards = [];
+    state.revealed.clear();
+    $("t-grid").innerHTML = "";
+    $("t-results").innerHTML = "";
+    $("t-action-bar").classList.remove("show");
+    $("ja-tarot-v2-progress").textContent = "";
+  }
+
+  function renderShuffling(count) {
+    $("t-grid").innerHTML = Array.from({length: count}, (_, i) => `
+      <button class="ja-tarot-v2-card shuffling" disabled aria-label="Tarot card ${i + 1}">
+        <span class="ja-tarot-v2-face ja-tarot-v2-front">
+          <span class="ja-tarot-v2-front-symbol">☾</span>
+          <small>জ্যোতিষ অসম</small>
+        </span>
+      </button>
+    `).join("");
+  }
+
+  function renderCards() {
+    $("t-grid").innerHTML = state.cards.map((card, i) => {
+      const reversed = card.orientation === "reversed";
+      return `
+        <button class="ja-tarot-v2-card ${reversed ? "reversed" : ""}"
+                id="ja-tarot-v2-card-${i}" data-index="${i}"
+                aria-label="কাৰ্ড ${i + 1}">
+          <span class="ja-tarot-v2-face ja-tarot-v2-front">
+            <span class="ja-tarot-v2-front-symbol">☾</span>
+            <small>জ্যোতিষ অসম</small>
+          </span>
+          <span class="ja-tarot-v2-face ja-tarot-v2-back">
+            ${card.image_url
+              ? `<img src="${esc(card.image_url)}" alt="${esc(card.name)}" loading="lazy">`
+              : `<span style="font-size:55px;display:flex;height:100%;align-items:center;justify-content:center;">🃏</span>`}
+            <span class="ja-tarot-v2-badge">${reversed ? "ওলোটা" : "পোন"}</span>
+          </span>
+        </button>
+      `;
+    }).join("");
+
+    $("t-grid").querySelectorAll(".ja-tarot-v2-card").forEach(btn => {
+      btn.addEventListener("click", () => revealCard(Number(btn.dataset.index)));
+    });
+
+    $("t-results").innerHTML = state.cards.map((card, i) => `
+      <article class="ja-tarot-v2-result" id="ja-tarot-v2-result-${i}">
+        <div class="ja-tarot-v2-result-head">
+          <div>
+            <span class="ja-tarot-v2-position">${esc(card.position)}</span>
+            <h3>${esc(card.name)}</h3>
+            <small>${esc(card.english_name || "")} · ${card.orientation === "reversed" ? "ওলোটা" : "পোন"}</small>
+          </div>
+        </div>
+        <p>${esc(card.meaning)}</p>
+        ${card.keywords ? `<div class="ja-tarot-v2-key">✦ ${esc(card.keywords)}</div>` : ""}
+        ${state.spread === "yes_no" && card.yes_no
+          ? `<div class="ja-tarot-v2-yesno">উত্তৰ: ${esc(card.yes_no)}</div>` : ""}
+      </article>
+    `).join("");
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = state.cards.length;
+    const done = state.revealed.size;
+    $("ja-tarot-v2-progress").textContent = total
+      ? (done < total ? `✨ ${done}/${total} কাৰ্ড reveal হৈছে` : "✨ সম্পূৰ্ণ Reading প্ৰস্তুত")
+      : "";
+  }
+
+  function revealCard(index) {
+    if (state.revealed.has(index)) return;
+
+    state.revealed.add(index);
+    const card = $("ja-tarot-v2-card-" + index);
+    const result = $("ja-tarot-v2-result-" + index);
+    if (!card || !result) return;
+
+    card.classList.add("flipped");
+
+    setTimeout(() => {
+      result.classList.add("show");
+      result.scrollIntoView({behavior:"smooth", block:"nearest"});
+      updateProgress();
+
+      if (state.revealed.size === state.cards.length) {
+        $("t-action-bar").classList.add("show");
+        $("t-status-msg").textContent = "✨ আপোনাৰ সম্পূৰ্ণ Tarot Reading প্ৰস্তুত।";
+      }
+    }, 650);
+  }
+
+  async function drawTarotCards() {
+    const btn = $("t-draw-btn");
+    const status = $("t-status-msg");
+    const count = cardCount();
+
+    state.question = $("t-question").value.trim().slice(0, 500);
+    resetResults();
+    btn.disabled = true;
+    btn.textContent = "⏳ কাৰ্ড shuffle হৈ আছে...";
+    status.textContent = "🔮 আপোনাৰ বাবে Tarot deck shuffle কৰা হৈছে...";
+    status.style.color = "#f1cf61";
+    renderShuffling(count);
+
+    try {
+      const response = await fetch(window.JA_CONFIG.apiBaseUrl + "/tarot-engine", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+          spread_type: state.spread,
+          topic: state.topic,
+          question: state.question
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Tarot engine error");
+      }
+
+      state.cards = Array.isArray(data.cards) ? data.cards : [];
+      if (state.cards.length !== count) throw new Error("Unexpected card count");
+
+      renderCards();
+      status.textContent = state.cards.length === 1
+        ? "✨ কাৰ্ডখনত টিপি আপোনাৰ reading reveal কৰক"
+        : "✨ কাৰ্ডবোৰ এটা এটাকৈ reveal কৰক";
+    } catch (error) {
+      console.error("Jyotish Assam Tarot:", error);
+      $("t-grid").innerHTML = "";
+      status.textContent = "⚠️ Tarot Reading লোড নহ'ল। অলপ পিছত পুনৰ চেষ্টা কৰক।";
+      status.style.color = "#fca5a5";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "🔮 নতুন Reading আৰম্ভ কৰক";
+    }
+  }
+
+  function shareTarotResult() {
+    if (!state.cards.length) return;
+
+    let text = `🔮 জ্যোতিষ অসম — ${topicLabel[state.topic] || state.topic} Tarot Reading\n`;
+    if (state.question) text += `প্ৰশ্ন: ${state.question}\n\n`;
+
+    state.cards.forEach(card => {
+      const ori = card.orientation === "reversed" ? "ওলোটা" : "পোন";
+      text += `🃏 ${card.name} — ${card.position} (${ori})\n${card.meaning}\n`;
+      if (state.spread === "yes_no" && card.yes_no) text += `উত্তৰ: ${card.yes_no}\n`;
+      text += "\n";
+    });
+
+    text += "👉 https://jyotishassam.com";
+    window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(text), "_blank", "noopener");
+  }
+
+  function saveTarotResult() {
+    if (!state.cards.length) return;
+
+    const reading = {
+      id: "TR_" + Date.now(),
+      date: new Date().toISOString(),
+      topic: state.topic,
+      spread: state.spread,
+      question: state.question,
+      cards: state.cards
     };
 
-    window.setTarotSpread = function(spread, btn) {
-        tSpread = spread;
-        document.querySelectorAll('#spread-btns .t-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    };
+    const saved = JSON.parse(localStorage.getItem("ja_saved_tarot") || "[]");
+    saved.unshift(reading);
+    localStorage.setItem("ja_saved_tarot", JSON.stringify(saved.slice(0, 20)));
+    $("t-status-msg").textContent = "✅ Readingটো device-ত save কৰা হৈছে।";
+  }
 
-    window.drawTarotCards = async function() {
-        const drawBtn = document.getElementById('t-draw-btn');
-        const grid = document.getElementById('t-grid');
-        const results = document.getElementById('t-results');
-        const statusMsg = document.getElementById('t-status-msg');
-        const actionBar = document.getElementById('t-action-bar');
-        
-        if(drawBtn) drawBtn.disabled = true;
-        if(grid) grid.innerHTML = '';
-        if(results) results.innerHTML = '';
-        fetchedCards = [];
-        flippedCount = 0;
-        if(actionBar) actionBar.style.display = 'none';
-        
-        const cardCount = tSpread === '3_card' ? 3 : 1;
-        
-        for(let i=0; i<cardCount; i++) {
-            if(grid) {
-                grid.innerHTML += `
-                    <div class="t-card shuffling" id="t-card-el-${i}">
-                        <div class="t-front">🌌</div>
-                        <div class="t-back"></div>
-                    </div>
-                `;
-            }
+  function initTarot() {
+    document.querySelectorAll("#ja-tarot-topics .ja-tarot-v2-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.topic = btn.dataset.value;
+        setActive("ja-tarot-topics", state.topic);
+
+        // Yes/No topic automatically suggests the Yes/No spread.
+        if (state.topic === "Yes/No") {
+          state.spread = "yes_no";
+          setActive("ja-tarot-spreads", state.spread);
         }
-        if(statusMsg) {
-            statusMsg.innerText = "ব্ৰহ্মাণ্ডৰ পৰা আপোনাৰ বাবে কাৰ্ড চাফোল হৈ আছে... ⏳";
-            statusMsg.style.color = "#d4af37";
+      });
+    });
+
+    document.querySelectorAll("#ja-tarot-spreads .ja-tarot-v2-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.spread = btn.dataset.value;
+        setActive("ja-tarot-spreads", state.spread);
+
+        if (state.spread === "love_3") {
+          state.topic = "Love";
+          setActive("ja-tarot-topics", state.topic);
         }
+      });
+    });
 
-        try {
-            const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/tarot-engine', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ spread_type: tSpread, topic: tTopic, question: document.getElementById('t-question').value })
-            });
-            
-            const data = await response.json();
-            
-            if(data.success) {
-                fetchedCards = data.cards;
-                if(grid) grid.innerHTML = '';
-                
-                fetchedCards.forEach((card, i) => {
-                    const revClass = card.orientation === 'reversed' ? 'reversed' : '';
-                    const badgeText = card.orientation === 'reversed' ? 'Reversed (ওলোটা)' : 'Upright (পোন)';
-                    
-                    if(grid) {
-                        grid.innerHTML += `
-                            <div class="t-card ${revClass}" id="t-card-el-${i}" onclick="revealCard(${i})">
-                                <div class="t-front">🌌</div>
-                                <div class="t-back">
-                                    <div class="t-back-img" style="background-image: url('${card.image_url}')"></div>
-                                    <div class="t-badge">${badgeText}</div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    
-                    if(results) {
-                        results.innerHTML += `
-                            <div class="t-result-item" id="t-res-${i}">
-                                <h3>${card.name} <span class="t-pos">${card.position}</span></h3>
-                                <div class="t-key">মূল শব্দ: ${card.keywords}</div>
-                                <p>${card.meaning}</p>
-                            </div>
-                        `;
-                    }
-                });
+    $("t-draw-btn").addEventListener("click", drawTarotCards);
+    $("t-share-btn").addEventListener("click", shareTarotResult);
+    $("t-save-btn").addEventListener("click", saveTarotResult);
+    $("t-new-btn").addEventListener("click", () => {
+      resetResults();
+      $("t-question").value = "";
+      $("t-status-msg").textContent = "আপোনাৰ প্ৰশ্নটো লিখি Reading আৰম্ভ কৰক।";
+      $("t-question").focus();
+    });
+  }
 
-                if(statusMsg) {
-                    statusMsg.innerText = "✨ এতিয়া ৰিজাল্ট চাবলৈ কাৰ্ডবোৰত টিপক ✨";
-                    statusMsg.style.color = "#4ade80";
-                }
-            } else {
-                throw new Error(data.error);
-            }
-        } catch(e) {
-            if(grid) grid.innerHTML = '';
-            if(statusMsg) {
-                statusMsg.innerText = "⚠️ চাৰ্ভাৰৰ সৈতে সংযোগ হোৱা নাই। পুনৰ চেষ্টা কৰক।";
-                statusMsg.style.color = "#ef4444";
-            }
-            console.error("Tarot API Error:", e);
-        } finally {
-            if(drawBtn) drawBtn.disabled = false;
-        }
-    };
-
-    window.revealCard = function(index) {
-        const cardEl = document.getElementById('t-card-el-' + index);
-        const resEl = document.getElementById('t-res-' + index);
-        
-        if (cardEl && !cardEl.classList.contains('flipped')) {
-            cardEl.classList.add('flipped');
-            flippedCount++;
-            
-            setTimeout(() => {
-                if(resEl) {
-                    resEl.style.display = 'block';
-                    resEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-                
-                if(flippedCount === fetchedCards.length) {
-                    setTimeout(() => {
-                        const actionBar = document.getElementById('t-action-bar');
-                        if(actionBar) actionBar.style.display = 'block';
-                    }, 500);
-                }
-            }, 600);
-        }
-    };
-
-    // 🔥 WhatsApp আৰু Save বুটামৰ ক'ড 🔥
-    window.shareTarotResult = function() {
-        let shareText = `🔮 *মোৰ আজিৰ টেৰট কাৰ্ড ৰিডিং (${tTopic})* 🔮\n\n`;
-        fetchedCards.forEach(card => {
-            const ori = card.orientation === 'upright' ? 'পোন' : 'ওলোটা';
-            shareText += `🃏 *${card.name}* (${ori})\n✨ ${card.meaning}\n\n`;
-        });
-        shareText += `👉 তুমিও নিজৰ ভাগ্য চাবলৈ ইয়াত ক্লিক কৰা: https://jyotishassam.com`;
-        const waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(shareText);
-        window.open(waLink, '_blank');
-    };
-
-    window.saveTarotResult = async function() {
-        const reading = { id: "TR_" + Date.now(), date: new Date().toLocaleDateString('as-IN'), topic: tTopic, cards: fetchedCards };
-        let savedReadings = JSON.parse(localStorage.getItem('ja_saved_tarot') || '[]');
-        savedReadings.push(reading);
-        localStorage.setItem('ja_saved_tarot', JSON.stringify(savedReadings));
-        alert("✅ আপোনাৰ ৰিডিংটো ভৱিষ্যতে চাব পৰাকৈ সফলতাৰে ছেভ কৰা হ'ল!");
-    };
-
-    // 🔥 ৯৯ টকাৰ প্ৰিমিয়াম বুটাম আৰু ফৰ্ম খোলাৰ ক'ড 🔥
-    window.buyPremiumTarot = function() {
-        if (!fetchedCards || fetchedCards.length === 0) {
-            alert("অনুগ্ৰহ কৰি প্ৰথমে কাৰ্ড বাছনি কৰক!");
-            return;
-        }
-        const question = document.getElementById('t-question').value || "কোনো প্ৰশ্ন নাই";
-        const cardsStr = fetchedCards.map(c => `${c.name} (${c.orientation === 'upright' ? 'পোন' : 'ওলোটা'})`).join(', ');
-        
-        sessionStorage.setItem('temp_tarot_topic', tTopic);
-        sessionStorage.setItem('temp_tarot_question', question);
-        sessionStorage.setItem('temp_tarot_cards', cardsStr);
-
-        document.getElementById('t-final-question').value = question;
-        document.getElementById('tarotOrderModal').classList.add('active');
-    };
-
-    window.closeTarotOrderModal = function() {
-        document.getElementById('tarotOrderModal').classList.remove('active');
-    };
-
-    // 🔥 পেমেন্ট প্ৰচেছ আৰু ৰিপোৰ্ট দেখুওৱা ক'ড 🔥
-    window.processTarotPayment = async function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('t-payBtn');
-        btn.innerText = "Processing..."; btn.disabled = true;
-
-        selectedService = 'premium_tarot';
-
-        const orderData = {
-            service: 'premium_tarot',
-            amount: 99, 
-            name: document.getElementById('t-custName').value,
-            email: document.getElementById('t-custEmail').value,
-            birthDate: "2026-01-01", 
-            birthTime: "12:00:00",
-            birthPlace: "Tarot Reading",
-            language: 'as',
-            tarot_question: document.getElementById('t-final-question').value,
-            tarot_cards: sessionStorage.getItem('temp_tarot_cards'),
-            tarot_topic: sessionStorage.getItem('temp_tarot_topic')
-        };
-
-        try {
-            const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
-            const responseData = await createRes.json();
-            if (!responseData.success) throw new Error(responseData.error || "Order failed");
-            
-            var options = {
-                "key": window.JA_CONFIG.razorpayKeyId, 
-                "amount": responseData.amount, 
-                "currency": responseData.currency,
-                "name": window.JA_CONFIG.brand, 
-                "description": "Premium AI Tarot Report", 
-                "order_id": responseData.razorpayOrderId,
-                "theme": { "color": "#d4af37" },
-                "handler": async function (response) {
-                    btn.innerText = "Verifying...";
-                    try {
-                        const verifyRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
-                            method: 'POST', 
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ 
-                                orderId: responseData.orderId, 
-                                razorpay_order_id: response.razorpay_order_id, 
-                                razorpay_payment_id: response.razorpay_payment_id, 
-                                razorpay_signature: response.razorpay_signature 
-                            })
-                        });
-                        
-                        if(verifyRes.ok) {
-    await showReportToCustomer(responseData.orderId); // ফৰ্ম খোল খাই থাকোঁতেই ডাটাখিনি লৈ ৰিপোৰ্ট বনিব
-    if (typeof closeOrderModal === 'function') closeOrderModal(); // ৰিপোৰ্ট বনোৱাৰ পিছতহে ফৰ্ম বন্ধ হ'ব
-} else {
-                            alert("পেমেন্ট ভেৰিফিকেচনত সমস্যা হৈছে!");
-                        }
-                    } catch(e) { 
-                        alert("চাৰ্ভাৰৰ সৈতে সংযোগ কৰিব পৰা নগ'ল।");
-                    }
-                    btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false;
-                }
-            }; 
-
-            var rzpT = new Razorpay(options);
-            rzpT.on('payment.failed', function (r){ 
-                alert("Failed: " + r.error.description); 
-                btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false; 
-            });
-            rzpT.open();
-        } catch(err) { 
-            alert("Error: " + err.message); 
-            btn.innerText = "পেমেন্ট কৰক (Pay ₹99)"; btn.disabled = false; 
-        }
-    };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTarot);
+  } else {
+    initTarot();
+  }
+})();
 </script>
 <!-- ======================================================= -->
-        <!-- Free Lucky Gemstone & Numerology Hook Section Start -->
+<!-- Free Lucky Gemstone & Numerology Hook Section Start -->
 <section style="max-width: 900px; margin: 35px auto; padding: 28px 20px; background: linear-gradient(145deg, #fffdf7, #fff6e0); border: 2px solid #d4af37; border-radius: 16px; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.18); text-align: center; font-family: inherit;">
   <h2 style="color: #8b0000; font-size: 22px; margin-bottom: 8px; font-weight: bold;">💍 আপোনাৰ শুভ ৰত্ন আৰু ভাগ্যশালী সংখ্যা জানক (বিনামূলীয়া)</h2>
   <p style="color: #555; font-size: 14px; margin-bottom: 20px;">আপোনাৰ জন্ম তাৰিখটো নিৰ্বাচন কৰি আপোনাৰ অধিপতি গ্ৰহ আৰু কোনটো ৰত্ন (Gemstone) আপোনাৰ বাবে সৌভাগ্যশালী চাওক:</p>
