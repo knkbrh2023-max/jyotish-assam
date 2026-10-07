@@ -620,14 +620,16 @@ nav {
 .ja78-status{text-align:center;color:#e8c96a;min-height:24px;margin:16px 0 6px;font-weight:700}.ja78-count{text-align:center;color:#a9a3bd;font-size:13px;margin-bottom:12px}
 /* BUNDLE -> U FAN: same speed for every card, no acceleration */
 .ja78-deck-stage{position:relative;min-height:520px;margin:0 auto;padding:10px 0 30px;perspective:1800px;display:flex;justify-content:center;align-items:flex-start;overflow:visible;isolation:isolate}
-.ja78-deck{position:relative;width:1120px;max-width:none;height:500px;margin:0 auto;transform-style:preserve-3d;filter:drop-shadow(0 30px 38px rgba(0,0,0,.48))}
-.ja78-card{position:absolute;left:50%;top:0;width:142px;height:244px;margin-left:-71px;margin-top:0;padding:0;border:0;background:transparent;cursor:pointer;transform-origin:50% 100%;transform-style:preserve-3d;z-index:var(--z,1);will-change:transform,opacity;transition:transform 700ms cubic-bezier(.22,.78,.18,1),opacity 420ms ease,filter 250ms ease}
+.ja78-deck{position:relative;width:1320px;max-width:none;height:500px;margin:0 auto;transform-style:preserve-3d;filter:drop-shadow(0 30px 38px rgba(0,0,0,.48))}
+.ja78-card{position:absolute;left:50%;top:0;width:142px;height:244px;margin-left:-71px;margin-top:0;padding:0;border:0;background:transparent;cursor:pointer;touch-action:manipulation;transform-origin:50% 100%;transform-style:preserve-3d;z-index:var(--z,1);will-change:transform,opacity;transition:transform 700ms cubic-bezier(.22,.78,.18,1),opacity 420ms ease,filter 250ms ease}
 /* compact bundle */
 .ja78-deck.is-bundle .ja78-card{transform:translate3d(calc(var(--bundle-x) * 1px),55px,calc(var(--bundle-z) * 1px)) rotate(calc(var(--bundle-r) * 1deg)) scale(.86);transition-delay:var(--bundle-delay,0ms)}
 /* fan after shuffle: each card starts at a fixed stagger, same duration */
 .ja78-deck.is-fanning .ja78-card{transform:translate3d(calc(var(--x) * 1px),calc(var(--y) * 1px),0) rotate(calc(var(--r) * 1deg));transition-delay:var(--fan-delay,0ms)}
 .ja78-deck.is-fanned .ja78-card{transform:translate3d(calc(var(--x) * 1px),calc(var(--y) * 1px),0) rotate(calc(var(--r) * 1deg));transition-delay:0ms}
-.ja78-card:hover{z-index:900;filter:brightness(1.18) drop-shadow(0 15px 22px rgba(0,0,0,.6));transform:translate3d(calc(var(--x) * 1px),calc((var(--y) - 28px) * 1px),60px) rotate(calc(var(--r) * 1deg)) scale(1.05)!important}
+/* Hover lift: move ONLY the visual inner card, NOT the clickable hit-area. This prevents the card from escaping from under the mouse and causing repeated clicks. */
+.ja78-card:hover,.ja78-card.is-hovered{z-index:5000!important;filter:brightness(1.18) drop-shadow(0 18px 26px rgba(0,0,0,.65))}
+.ja78-card:hover .ja78-inner,.ja78-card.is-hovered .ja78-inner{transform:translate3d(0,-62px,90px) scale(1.06);transition:transform 260ms cubic-bezier(.2,.8,.2,1)!important}
 .ja78-card:focus-visible{outline:2px solid #ffe8a0;outline-offset:4px}
 .ja78-card.is-selected{z-index:1000!important;filter:brightness(1.2) drop-shadow(0 0 24px rgba(244,208,106,.75))}
 .ja78-card.is-moving-to-slot{pointer-events:none!important;transition:transform 850ms cubic-bezier(.18,.82,.18,1),opacity 500ms ease!important;transform:translate3d(calc(var(--slot-x) * 1px),calc(var(--slot-y) * 1px),260px) rotate(0deg) scale(.66)!important}
@@ -680,7 +682,7 @@ nav {
     randomizeDeck();
     const deck=$('ja78-deck');
     deck.innerHTML=state.deckOrder.map((cardIndex,pos)=>{
-      const name=deckNames[cardIndex], center=(deckNames.length-1)/2, half=510, topY=52, depth=120, maxAngle=1.02;
+      const name=deckNames[cardIndex], center=(deckNames.length-1)/2, half=650, topY=52, depth=120, maxAngle=0.98;
       const t=(pos-center)/center,a=t*maxAngle,x=Math.sin(a)*half,y=topY+(1-Math.cos(a))*depth,r=t*48;
       const bx=((pos%7)-3)*1.6,br=((pos%5)-2)*.45,bz=Math.round((pos%7)*2);
       return `<button type="button" class="ja78-card" data-index="${cardIndex}" aria-label="${esc(name)}" style="--x:${x.toFixed(1)};--y:${y.toFixed(1)};--r:${r.toFixed(2)};--z:${200-Math.round(Math.abs(t)*80)};--bundle-x:${bx};--bundle-r:${br};--bundle-z:${bz}"><span class="ja78-inner"><span class="ja78-face ja78-back"><img class="ja78-back-logo" src="logo.jpg" alt="Jyotish Assam"><span class="ja78-number">${pos+1}</span></span><span class="ja78-face ja78-front"><span class="ja78-front-label">${esc(name)}</span></span></span></button>`;
@@ -778,6 +780,8 @@ nav {
   function shuffle(){if(state.phase!=='bundle'||state.selected.length>=cardCount())return;if(!$('ja78-question').value.trim()){state.question='';}else state.question=$('ja78-question').value.trim().slice(0,500);$('ja78-start').disabled=true;$('ja78-status').textContent='🔮 Bundle-ৰ পৰা cardবোৰ লাহে লাহে ওলাই U-shape fan হৈ আছে...';fan();}
   $('ja78-start').addEventListener('click',shuffle);$('ja78-new').addEventListener('click',reset);
   $('ja78-deck').addEventListener('click',e=>{const card=e.target.closest('.ja78-card');if(!card)return;e.preventDefault();e.stopPropagation();selectCard(card.dataset.index);});
+  $('ja78-deck').addEventListener('pointerover',e=>{const card=e.target.closest('.ja78-card');if(!card||state.phase!=='fan')return;document.querySelectorAll('.ja78-card.is-hovered').forEach(c=>c.classList.remove('is-hovered'));card.classList.add('is-hovered');});
+  $('ja78-deck').addEventListener('pointerout',e=>{const card=e.target.closest('.ja78-card');if(!card)return;const to=e.relatedTarget;if(to&&card.contains(to))return;card.classList.remove('is-hovered');});
   document.querySelectorAll('#ja78-topics .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.topic=b.dataset.topic;document.querySelectorAll('#ja78-topics .ja78-pill').forEach(x=>x.classList.toggle('active',x===b));if(state.topic==='Yes/No'){state.spread='yes_no';document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(x=>x.classList.toggle('active',x.dataset.spread==='yes_no'));reset();}}));
   document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.spread=b.dataset.spread;document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(x=>x.classList.toggle('active',x===b));if(state.spread==='love_3')state.topic='Love';if(state.spread==='yes_no')state.topic='Yes/No';reset();}));
   renderDeck();renderSlots();
