@@ -449,6 +449,7 @@
     (function(){
       const $=id=>document.getElementById(id);
       const deckNames=['The Fool','The Magician','The High Priestess','The Empress','The Emperor','The Hierophant','The Lovers','The Chariot','Strength','The Hermit','Wheel of Fortune','Justice','The Hanged Man','Death','Temperance','The Devil','The Tower','The Star','The Moon','The Sun','Judgement','The World','Ace of Wands','Two of Wands','Three of Wands','Four of Wands','Five of Wands','Six of Wands','Seven of Wands','Eight of Wands','Nine of Wands','Ten of Wands','Page of Wands','Knight of Wands','Queen of Wands','King of Wands','Ace of Cups','Two of Cups','Three of Cups','Four of Cups','Five of Cups','Six of Cups','Seven of Cups','Eight of Cups','Nine of Cups','Ten of Cups','Page of Cups','Knight of Cups','Queen of Cups','King of Cups','Ace of Swords','Two of Swords','Three of Swords','Four of Swords','Five of Swords','Six of Swords','Seven of Swords','Eight of Swords','Nine of Swords','Ten of Swords','Page of Swords','Knight of Swords','Queen of Swords','King of Swords','Ace of Pentacles','Two of Pentacles','Three of Pentacles','Four of Pentacles','Five of Pentacles','Six of Pentacles','Seven of Pentacles','Eight of Pentacles','Nine of Pentacles','Ten of Pentacles','Page of Pentacles','Knight of Pentacles','Queen of Pentacles','King of Pentacles'];
+      const TAROT_IMAGE_BASE='./assets/tarot/';
       const state={topic:'General',spread:'1_card',question:'',selected:[],cards:[],revealed:[],deckOrder:[],phase:'bundle',requestSeq:0};
       const counts={'1_card':1,'3_card':3,'5_card':5,'love_3':3,'yes_no':1};
       const positions={'1_card':['আপোনাৰ বৰ্তমানৰ বাৰ্তা'],'3_card':['অতীত','বৰ্তমান','ভৱিষ্যৎ'],'5_card':['বৰ্তমান অৱস্থা','মূল বাধা','অদৃশ্য প্ৰভাৱ','পৰামৰ্শ','সম্ভাব্য ফলাফল'],'love_3':['আপোনাৰ অনুভৱ','সম্পৰ্কৰ শক্তি','আগন্তুক দিশ'],'yes_no':['উত্তৰ']};
@@ -487,6 +488,10 @@
         rem.forEach((c,i)=>{c.classList.add('is-gathering');c.style.setProperty('--gather-delay',`${i*GATHER_STAGGER}ms`)});
         setTimeout(()=>{rem.forEach(c=>c.classList.remove('is-gathering'));deck.classList.remove('is-fanned','is-fanning');deck.classList.add('is-bundle');state.phase='bundle';},rem.length*GATHER_STAGGER+GATHER_DURATION+80);
       }
+      function tarotImagePath(name){
+        const n=String(name||'').trim().toLowerCase().replace(/^the\s+/,'');
+        return './assets/tarot/'+n.replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.webp';
+      }
       function makeReport(card,label,idx){
         if(!card)return '';
         const name=card.name||deckNames[state.selected[idx]];
@@ -502,7 +507,9 @@
         const labels=positions[state.spread]||positions['1_card'];
         $('ja78-slots').innerHTML=labels.map((label,i)=>{
           const idx=state.selected[i],card=state.cards[i],filled=idx!==undefined;
-          let visual=filled?`<button type="button" class="ja78-slot-card ${state.revealed[i]?'flipped':''}" data-slot="${i}"><span class="slot-inner"><span class="ja78-slot-face ja78-slot-back"><img class="ja78-back-logo" src="logo.jpg" alt="Jyotish Assam"></span><span class="ja78-slot-face ja78-slot-front">${card&&card.image_url?`<img src="${esc(card.image_url)}" alt="${esc(card.name||deckNames[idx])}">`:`<span class="ja78-front-label">${esc(card?.name||deckNames[idx])}</span>`}</span></span></button>`:`<div class="ja78-slot"><span>Card ${i+1}</span></div>`;
+          const selectedName=card?.name||deckNames[idx];
+          const imageSrc=card?.image_url||tarotImagePath(selectedName);
+          let visual=filled?`<button type="button" class="ja78-slot-card ${state.revealed[i]?'flipped':''}" data-slot="${i}"><span class="slot-inner"><span class="ja78-slot-face ja78-slot-back"><img class="ja78-back-logo" src="logo.jpg" alt="Jyotish Assam"></span><span class="ja78-slot-face ja78-slot-front"><img src="${esc(imageSrc)}" alt="${esc(selectedName)}" loading="lazy"></span></span></button>`:`<div class="ja78-slot"><span>Card ${i+1}</span></div>`;
           return `<div class="ja78-slot-wrap"><div class="ja78-slot ${filled?'filled':''}">${visual}<span class="slot-label">${esc(label)}</span></div>${makeReport(card,label,i)}</div>`;
         }).join('');
         document.querySelectorAll('.ja78-slot-card').forEach(btn=>btn.addEventListener('click',()=>{const i=Number(btn.dataset.slot);state.revealed[i]=!state.revealed[i];renderSlots();}));
