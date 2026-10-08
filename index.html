@@ -468,34 +468,41 @@
         state.deckOrder=a;
       }
       function getTarotSlug(name){
-        return String(name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+        let s = String(name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+        if (s.startsWith('the-')) s = s.slice(4);
+        return s;
       }
       function getTarotImgPath(index,name){
-        const slug=getTarotSlug(name||deckNames[index]||'');
-        return `assets/tarot/${slug}.jpg`;
+        const slug = getTarotSlug(name || deckNames[index] || '');
+        return `assets/tarot/${slug}.webp`;
       }
-      window.onTarotImgError=function(el){
-        const step=Number(el.dataset.errStep||0);
-        const idx=Number(el.dataset.index||0);
-        const slug=el.dataset.slug||getTarotSlug(deckNames[idx]);
-        const candidates=[
-          `assets/tarot/${slug}.png`,
+      window.onTarotImgError = function(el){
+        const step = Number(el.dataset.errStep || 0);
+        const idx = Number(el.dataset.index || 0);
+        const rawName = deckNames[idx] || '';
+        const cleanSlug = getTarotSlug(rawName);
+        const fullSlug = String(rawName).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        const candidates = [
+          `assets/tarot/${cleanSlug}.webp`,
+          `assets/tarot/${fullSlug}.webp`,
+          `assets/tarot/${cleanSlug}.jpg`,
+          `assets/tarot/${fullSlug}.jpg`,
+          `assets/tarot/${cleanSlug}.png`,
+          `assets/tarot/${fullSlug}.png`,
+          `assets/tarot/${idx}.webp`,
           `assets/tarot/${idx}.jpg`,
-          `assets/tarot/${idx}.png`,
-          `assets/tarot/${idx+1}.jpg`,
-          `assets/tarot/${idx+1}.png`,
-          `assets/tarot/${slug}.webp`
+          `assets/tarot/${idx + 1}.webp`,
+          `assets/tarot/${idx + 1}.jpg`
         ];
-        if(step<candidates.length){
-          el.dataset.errStep=step+1;
-          el.src=candidates[step];
-        }else{
-          el.style.display='none';
-          const fallback=el.parentElement.querySelector('.ja78-front-label');
-          if(fallback)fallback.style.display='block';
+        if (step < candidates.length) {
+          el.dataset.errStep = step + 1;
+          el.src = candidates[step];
+        } else {
+          el.style.display = 'none';
+          const fallback = el.parentElement.querySelector('.ja78-front-label');
+          if (fallback) fallback.style.display = 'block';
         }
       };
-
       function renderDeck(){
         randomizeDeck();
         const deck=$('ja78-deck');
