@@ -337,11 +337,11 @@
                     <p>আপোনাৰ জন্ম তাৰিখ আৰু ৰাশি বাছনি কৰক</p>
                 </div>
                 <div class="input-group">
-                    <label>🎂 জন্ম তাৰিখ (DOB):</label>
+                    <label for="personal-dob">🎂 জন্ম তাৰিখ (DOB):</label>
                     <input type="date" id="personal-dob" class="form-control">
                 </div>
                 <div class="input-group">
-                    <label>🌟 আপোনাৰ ৰাশি:</label>
+                    <label for="personal-rashi">🌟 আপোনাৰ ৰাশি:</label>
                     <select id="personal-rashi" class="form-control">
                         <option value="">ৰাশি বাছনি কৰক...</option>
                         <option value="মেষ">মেষ (Aries)</option><option value="বৃষ">বৃষ (Taurus)</option>
@@ -362,10 +362,10 @@
                     <p>দুয়োৰে জন্ম তাৰিখ আৰু ৰাশি দি আজিৰ প্ৰেমৰ সামঞ্জস্য পৰীক্ষা কৰক</p>
                 </div>
                 <div class="input-group">
-                    <label>👦 ল'ৰাৰ বিৱৰণ:</label>
+                    <label for="boy-dob">👦 ল'ৰাৰ বিৱৰণ:</label>
                     <div class="couple-row">
                         <input type="date" id="boy-dob" class="form-control" style="width: 50%;">
-                        <select id="boy-rashi" class="form-control" style="width: 50%;">
+                        <select id="boy-rashi" aria-label="ল'ৰাৰ ৰাশি" class="form-control" style="width: 50%;">
                             <option value="">ৰাশি...</option>
                             <option value="মেষ">মেষ</option><option value="বৃষ">বৃষ</option><option value="মিথুন">মিথুন</option>
                             <option value="কৰ্কট">কৰ্কট</option><option value="সিংহ">সিংহ</option><option value="কন্যা">কন্যা</option>
@@ -375,10 +375,10 @@
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>👧 ছোৱালীৰ বিৱৰণ:</label>
+                    <label for="girl-dob">👧 ছোৱালীৰ বিৱৰণ:</label>
                     <div class="couple-row">
                         <input type="date" id="girl-dob" class="form-control" style="width: 50%;">
-                        <select id="girl-rashi" class="form-control" style="width: 50%;">
+                        <select id="girl-rashi" aria-label="ছোৱালীৰ ৰাশি" class="form-control" style="width: 50%;">
                             <option value="">ৰাশি...</option>
                             <option value="মেষ">মেষ</option><option value="বৃষ">বৃষ</option><option value="মিথুন">মিথুন</option>
                             <option value="কৰ্কট">কৰ্কট</option><option value="সিংহ">সিংহ</option><option value="কন্যা">কন্যা</option>
@@ -441,7 +441,7 @@
       <div class="ja78-controls">
         <div class="ja78-row" id="ja78-topics"><button class="ja78-pill active" data-topic="General">সাধাৰণ</button><button class="ja78-pill" data-topic="Love">❤️ প্ৰেম</button><button class="ja78-pill" data-topic="Career">💼 কেৰিয়াৰ</button><button class="ja78-pill" data-topic="Finance">💰 ধন</button><button class="ja78-pill" data-topic="Yes/No">❓ Yes / No</button></div>
         <div class="ja78-row" style="margin-top:10px" id="ja78-spreads"><button class="ja78-pill active" data-spread="1_card">১ কাৰ্ড</button><button class="ja78-pill" data-spread="3_card">৩ কাৰ্ড</button><button class="ja78-pill" data-spread="5_card">৫ কাৰ্ড</button><button class="ja78-pill" data-spread="love_3">Love Spread</button><button class="ja78-pill" data-spread="yes_no">Yes / No</button></div>
-        <textarea id="ja78-question" class="ja78-question" placeholder="আপোনাৰ প্ৰশ্নটো লিখক... (উদাহৰণ: মোৰ career-ৰ আগন্তুক ৬ মাহ কেনেকুৱা হ'ব?)"></textarea>
+        <textarea id="ja78-question" aria-label="টেৰটৰ প্ৰশ্ন" class="ja78-question" placeholder="আপোনাৰ প্ৰশ্নটো লিখক... (উদাহৰণ: মোৰ career-ৰ আগন্তুক ৬ মাহ কেনেকুৱা হ'ব?)"></textarea>
         <div class="ja78-actions"><button class="ja78-btn ja78-primary" id="ja78-start">🔮 Shuffle</button><button class="ja78-btn ja78-secondary" id="ja78-new" style="display:none">↻ New Reading</button></div>
       </div>
       <div class="ja78-status" id="ja78-status">প্ৰশ্নটো লিখি “Shuffle” টিপক।</div><div class="ja78-count" id="ja78-count"></div>
@@ -619,7 +619,7 @@
       <p style="color: #555; font-size: 14px; margin-bottom: 20px;">আপোনাৰ জন্ম তাৰিখটো নিৰ্বাচন কৰি আপোনাৰ অধিপতি গ্ৰহ আৰু কোনটো ৰত্ন (Gemstone) আপোনাৰ বাবে সৌভাগ্যশালী চাওক:</p>
 
       <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
-        <input type="date" id="gem-dob" style="padding: 11px 16px; border: 1.5px solid #c99e32; border-radius: 8px; font-size: 15px; outline: none; background: #fff; color: #222;">
+        <input type="date" id="gem-dob" aria-label="ৰত্ন নিৰ্ণয়ৰ বাবে জন্ম তাৰিখ" style="padding: 11px 16px; border: 1.5px solid #c99e32; border-radius: 8px; font-size: 15px; outline: none; background: #fff; color: #222;">
         <button onclick="checkLuckyGem()" style="background: linear-gradient(135deg, #8b0000, #b30000); color: #ffd700; border: 1px solid #ffd700; padding: 11px 24px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(139, 0, 0, 0.25);">
           🔍 মোৰ শুভ ৰত্ন চাওক
         </button>
@@ -906,8 +906,8 @@
         <div id="reviewFormContainer" style="padding: 25px; background: white; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto;">
             <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 18px; text-align: center;">আপোনাৰ মতামত দিয়ক</h3>
             <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                <input type="text" id="reviewerName" class="form-control" placeholder="আপোনাৰ নাম" required style="flex: 1;">
-                <select id="reviewRating" class="form-control" required style="flex: 1;">
+                <input type="text" id="reviewerName" aria-label="আপোনাৰ নাম" class="form-control" placeholder="আপোনাৰ নাম" required style="flex: 1;">
+                <select id="reviewRating" aria-label="ৰেটিং নিৰ্বাচন" class="form-control" required style="flex: 1;">
                     <option value="5">⭐⭐⭐⭐⭐ (অতিকৈ ভাল)</option>
                     <option value="4">⭐⭐⭐⭐ (ভাল)</option>
                     <option value="3">⭐⭐⭐ (ঠিকে আছে)</option>
@@ -915,7 +915,7 @@
                     <option value="1">⭐ (অতিকৈ বেয়া)</option>
                 </select>
             </div>
-            <textarea id="reviewComment" class="form-control" rows="3" placeholder="আপোনাৰ অনুভৱ লিখক..." style="margin-bottom: 15px;" required></textarea>
+            <textarea id="reviewComment" aria-label="মতামত মন্তব্য" class="form-control" rows="3" placeholder="আপোনাৰ অনুভৱ লিখক..." style="margin-bottom: 15px;" required></textarea>
             <button onclick="submitReview()" class="service-btn" style="width: 100%; padding: 12px; border-radius: 8px;">মতামত পঠিয়াওক</button>
         </div>
     </div>
@@ -999,36 +999,36 @@
         <h2 id="orderTitle" style="color: var(--primary-color); margin-bottom: 15px; text-align: center;">সেৱা বুকিং ফৰ্ম</h2>
         <form id="orderForm" onsubmit="processPayment(event)">
             <div style="margin-bottom: 15px;">
-                <label style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
+                <label for="custName" style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
                 <input type="text" id="custName" class="form-control" required>
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="font-size: 14px; font-weight: 600;">ইমেইল (Email):</label>
+                <label for="custEmail" style="font-size: 14px; font-weight: 600;">ইমেইল (Email):</label>
                 <input type="email" id="custEmail" class="form-control" placeholder="example@gmail.com" required>
             </div>
             <div id="tarot-q-box" style="display: none; margin-top: 15px;">
-                <label style="font-weight: bold; margin-bottom: 5px; display: block; color: #475569;">আপোনাৰ প্ৰশ্ন (Tarot Question)</label>
+                <label for="tarot-final-question" style="font-weight: bold; margin-bottom: 5px; display: block; color: #475569;">আপোনাৰ প্ৰশ্ন (Tarot Question)</label>
                 <textarea id="tarot-final-question" rows="2" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: inherit;" placeholder="আপোনাৰ মনৰ প্ৰশ্নটো ইয়াত লিখক..."></textarea>
             </div>
             <div style="margin-bottom: 15px; display: flex; gap: 15px;">
                 <div style="flex: 1;">
-                    <label style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
+                    <label for="custDate" style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
                     <input type="date" id="custDate" class="form-control" required>
                 </div>
                 <div style="flex: 2;">
-                    <label style="font-size: 14px; font-weight: 600;">জন্মৰ সময়:</label>
+                    <label for="custHour" style="font-size: 14px; font-weight: 600;">জন্মৰ সময়:</label>
                     <div style="display: flex; gap: 5px;">
                         <input type="number" id="custHour" class="form-control" placeholder="HR" min="1" max="12" required>
                         <span style="font-size: 20px; font-weight: bold; margin-top: 5px;">:</span>
-                        <input type="number" id="custMin" class="form-control" placeholder="MIN" min="0" max="59" required>
-                        <select id="custAmPm" class="form-control">
+                        <input type="number" id="custMin" aria-label="জন্মৰ মিনিট (Minute)" class="form-control" placeholder="MIN" min="0" max="59" required>
+                        <select id="custAmPm" aria-label="AM বা PM" class="form-control">
                             <option value="AM">AM</option><option value="PM">PM</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="font-size: 14px; font-weight: 600;">জন্মৰ স্থান:</label>
+                <label for="custPlace" style="font-size: 14px; font-weight: 600;">জন্মৰ স্থান:</label>
                 <input type="text" id="custPlace" class="form-control" required>
             </div>
             <button type="submit" id="payBtn" class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857);">পেমেন্ট কৰক (Pay Now)</button>
@@ -2596,9 +2596,9 @@ window.addEventListener('DOMContentLoaded', () => {
         <div class="support-msg">
             নমস্কাৰ! 🙏 পেমেন্ট বা ৰিপোৰ্ট সম্পৰ্কীয় যিকোনো সমস্যা তলত লিখক। আমাৰ টীমে চেক কৰি লগে লগে সমাধান কৰিব।
         </div>
-        <input type="text" id="sup-name" placeholder="আপোনাৰ নাম *" class="sup-input" required>
-        <input type="text" id="sup-contact" placeholder="ইমেইল" class="sup-input">
-        <textarea id="sup-msg" placeholder="আপোনাৰ সমস্যাটো বহলাই লিখক... *" class="sup-input" rows="3" required></textarea>
+        <input type="text" id="sup-name" aria-label="সহায়ৰ বাবে নাম" class="sup-input" required>
+        <input type="text" id="sup-contact" aria-label="যোগাযোগৰ ইমেইল" class="sup-input">
+        <textarea id="sup-msg" aria-label="সমস্যাৰ বিৱৰণ" class="sup-input" rows="3" required></textarea>
     </div>
     
     <div class="support-footer">
