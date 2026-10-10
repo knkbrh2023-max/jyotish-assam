@@ -853,68 +853,238 @@
 
 <!-- Popular Signals 3D Cards -->
 <style>
-.popular-signals-section { padding: 40px 20px; background-color: #f9f9f9; }
-.section-header { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding-bottom: 20px; }
-.popular-signals-section .section-title { color: #ff9800; margin: 0; font-size: 24px; text-align: left; }
-.view-all-btn { background-color: #d84315; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 15px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease; }
-.view-all-btn:hover { background-color: #bf360c; transform: translateY(-2px); }
-@media (max-width: 600px) { .section-header { flex-direction: column; gap: 15px; } }
-.cards-grid-3d { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-.signal-card-3d { background: #ffffff; border-radius: 15px; padding: 25px; text-align: center; text-decoration: none; color: #333; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; border-bottom: 5px solid #ff9800; display: block; position: relative; }
-.signal-card-3d:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(255, 152, 0, 0.3); }
-.popular-badge { position: absolute; top: 15px; right: 15px; background-color: #ffea00; color: #d84315; font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: bold; }
-.card-icon { font-size: 45px; margin-bottom: 15px; }
-.signal-card-3d h3 { font-size: 20px; margin-bottom: 10px; color: #d84315; }
-.signal-card-3d p { font-size: 15px; color: #666; line-height: 1.5; }
-
-/* Reviews CSS */
-.premium-reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px; }
-.p-review-card { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 25px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease; }
-.p-review-card:hover { transform: translateY(-5px); border-color: #3b82f6; }
-.p-review-stars { color: #fbbf24; font-size: 18px; margin-bottom: 15px; letter-spacing: 2px; }
-.p-review-text { color: #cbd5e1; font-size: 14.5px; font-style: italic; line-height: 1.6; margin-bottom: 25px; }
-.p-reviewer-info { display: flex; align-items: center; gap: 12px; border-top: 1px dashed #1e293b; padding-top: 15px; }
-.p-reviewer-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6D28D9, #DB2777); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
-.p-reviewer-details h4 { color: #f8fafc; margin: 0 0 3px 0; font-size: 15px; font-weight: 600; }
-.p-reviewer-details p { color: #64748b; margin: 0; font-size: 12px; }
+.popular-signals-section {
+  padding: 50px 20px;
+  background: radial-gradient(circle at 50% 0%, #1d143c 0%, #0d091e 100%);
+  color: #fff;
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+.section-header-signals {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto 30px auto;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.signals-title-group h2 {
+  color: #fde047;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.signals-title-group p {
+  color: #c4b5fd;
+  font-size: 14px;
+  margin: 0;
+}
+.view-all-btn-signals {
+  background: linear-gradient(135deg, #d4af37, #f59e0b);
+  color: #0f0a1c;
+  padding: 10px 22px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.view-all-btn-signals:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+  color: #000;
+}
+.cards-grid-3d-signals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.signal-card-3d-luxe {
+  background: linear-gradient(145deg, rgba(30, 20, 58, 0.85), rgba(15, 10, 32, 0.95));
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 18px;
+  padding: 24px 20px;
+  text-align: left;
+  text-decoration: none;
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.signal-card-3d-luxe:hover {
+  transform: translateY(-7px);
+  border-color: #fde047;
+  box-shadow: 0 16px 35px rgba(212, 175, 55, 0.25), 0 0 15px rgba(212, 175, 55, 0.2);
+}
+.signal-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.signal-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+.popular-badge-luxe {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.signal-card-3d-luxe h3 {
+  font-size: 18px;
+  margin: 0 0 8px 0;
+  color: #fef08a;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.signal-card-3d-luxe p {
+  font-size: 13.5px;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin: 0 0 14px 0;
+  flex-grow: 1;
+}
+.signal-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.signal-tag {
+  color: #a78bfa;
+  font-weight: 600;
+}
+.signal-read-more {
+  color: #fde047;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
 </style>
 
 <div class="popular-signals-section">
-  <div class="section-header">
-    <h2 class="section-title">জনপ্ৰিয় জীৱনৰ সংকেত</h2>
-    <a href="jibonor-sonket.html" class="view-all-btn">সকলোবোৰ চাওক (১০৫ টা) ➔</a>
+  <div class="section-header-signals">
+    <div class="signals-title-group">
+      <h2>🔮 জনপ্ৰিয় জীৱনৰ সংকেত</h2>
+      <p>দৈনন্দিন জীৱনত ঘটি থকা সৰু-সুৰা ঘটনাৰ পৰম্পৰাগত শুভ-অশুভ ফল আৰু ৰহস্য</p>
+    </div>
+    <a href="jibonor-sonket.html" class="view-all-btn-signals">সকলোবোৰ চাওক (১০৫ টা) ➔</a>
   </div>
   
-  <div class="cards-grid-3d">
-    <a href="dream-36.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
-      <div class="card-icon">🌙</div>
-      <h3>সপোনৰ সংকেত</h3>
-      <p>ৰাতি দেখা সপোনবোৰে আপোনাৰ ভৱিষ্যতৰ বিষয়ে কি কয় জানক।</p>
+  <div class="cards-grid-3d-signals">
+    <!-- ১. সপোনৰ সংকেত -->
+    <a href="dream-36.html" class="signal-card-3d-luxe">
+      <div class="signal-top-row">
+        <div class="signal-icon-circle">🌙</div>
+        <span class="popular-badge-luxe">সপোন ফল 🔮</span>
+      </div>
+      <h3>সপোনৰ শুভ-অশুভ সংকেত</h3>
+      <p>ৰাতি সপোনত সাপ, পানী, মৃত ব্যক্তি, সোণ বা মন্দিৰ দেখাৰ প্ৰকৃত অৰ্থ আৰু আগজাননীসমূহ জানক।</p>
+      <div class="signal-card-footer">
+        <span class="signal-tag">৩৬ টা সপোনৰ ব্যাখ্যা</span>
+        <span class="signal-read-more">পঢ়ক ➔</span>
+      </div>
     </a>
 
-    <a href="morning-21.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
-      <div class="card-icon">🌅</div>
-      <h3>ৰাতিপুৱাৰ সংকেত</h3>
-      <p>ৰাতিপুৱা সাৰ পোৱাৰ লগে লগে দেখা পোৱা শুভ আৰু অশুভ সংকেত।</p>
+    <!-- ২. ৰাতিপুৱাৰ সংকেত -->
+    <a href="morning-21.html" class="signal-card-3d-luxe">
+      <div class="signal-top-row">
+        <div class="signal-icon-circle">🌅</div>
+        <span class="popular-badge-luxe">শুভ পুৱা ☀️</span>
+      </div>
+      <h3>ৰাতিপুৱাৰ শুভ লক্ষ্মণ</h3>
+      <p>পুৱা সাৰ পোৱাৰ লগে লগে পূজাৰ ফুল, শংখধ্বনি, গাখীৰ বা আইনা দেখিলে গোটেই দিনটো কেনে যায়?</p>
+      <div class="signal-card-footer">
+        <span class="signal-tag">২১ টা পুৱাৰ সংকেত</span>
+        <span class="signal-read-more">পঢ়ক ➔</span>
+      </div>
     </a>
 
-    <a href="animals-61.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
-      <div class="card-icon">🐈</div>
-      <h3>জীৱ-জন্তুৰ সংকেত</h3>
-      <p>কুকুৰ, মেকুৰী বা কাউৰীয়ে দিয়া ভৱিষ্যতৰ আগজাননীসমূহৰ বিষয়ে পঢ়ক।</p>
+    <!-- ৩. অংগ স্পন্দন -->
+    <a href="body-1.html" class="signal-card-3d-luxe">
+      <div class="signal-top-row">
+        <div class="signal-icon-circle">👁️</div>
+        <span class="popular-badge-luxe">অঙ্গ স্পন্দন ⚡</span>
+      </div>
+      <h3>চকু কঁপা আৰু অংগ স্পন্দন</h3>
+      <p>পুৰুষৰ সোঁ চকু আৰু মহিলাৰ বাওঁ চকু কঁপিলে কি হয়? হাতৰ তলুৱা খজুৱালে ধনলাভৰ যোগ কেনেদৰে আহে?</p>
+      <div class="signal-card-footer">
+        <span class="signal-tag">২৩ টা শাৰীৰিক লক্ষণ</span>
+        <span class="signal-read-more">পঢ়ক ➔</span>
+      </div>
     </a>
 
-    <a href="body-1.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
-      <div class="card-icon">👁️</div>
-      <h3>শৰীৰৰ অংগৰ সংকেত</h3>
-      <p>চকু কঁপিলে বা হাত খজুৱালে কি হয়, তাৰ ৰহস্য জানক।</p>
+    <!-- ৪. জীৱ-জন্তুৰ সংকেত -->
+    <a href="animals-61.html" class="signal-card-3d-luxe">
+      <div class="signal-top-row">
+        <div class="signal-icon-circle">🦉</div>
+        <span class="popular-badge-luxe">প্ৰকৃতি বাৰ্তা 🐾</span>
+      </div>
+      <h3>জীৱ-জন্তু আৰু চৰাইৰ সংকেত</h3>
+      <p>কাউৰীয়ে ঘৰৰ চালত মাতিলে, ঘৰত পাৰ চৰায়ে বাহ সাজিলে বা মেকুৰীয়ে বাট কাটিলে কি সংকেত দিয়ে?</p>
+      <div class="signal-card-footer">
+        <span class="signal-tag">২৫ টা প্ৰকৃতি সংকেত</span>
+        <span class="signal-read-more">পঢ়ক ➔</span>
+      </div>
+    </a>
+
+    <!-- ৫. শুভ যাত্ৰা সংকেত -->
+    <a href="journey-15.html" class="signal-card-3d-luxe">
+      <div class="signal-top-row">
+        <div class="signal-icon-circle">🚶</div>
+        <span class="popular-badge-luxe">যাত্ৰা সংকেত 🚩</span>
+      </div>
+      <h3>শুভ যাত্ৰা আৰু কৰ্ম সংকেত</h3>
+      <p>ঘৰৰ পৰা ওলাই যাওঁতে পানীভৰা কলহ, মাছ, গাইগৰু বা মন্দিৰৰ ঘণ্টা শুনাৰ ভাগ্যবৰ্ধক লক্ষণসমূহ।</p>
+      <div class="signal-card-footer">
+        <span class="signal-tag">১৫ টা যাত্ৰা সংকেত</span>
+        <span class="signal-read-more">পঢ়ক ➔</span>
+      </div>
+    </a>
+
+    <!-- ৬. ধন প্ৰাপ্তিৰ সংকেত -->
+    <a href="wealth-12.html" class="signal-card-3d-luxe">
+      <div class="signal-top-row">
+        <div class="signal-icon-circle">💰</div>
+        <span class="popular-badge-luxe">লক্ষ্মী যোগ 🪙</span>
+      </div>
+      <h3>ধন আৰু সমৃদ্ধি আগমনৰ সংকেত</h3>
+      <p>ঘৰলৈ হঠাৎ ক'লা পৰুৱাৰ জাক অহা, ঘৰত মৌমাখিৰ বাহ হোৱা আৰু ধন আগমনৰ শুভ আগজাননী।</p>
+      <div class="signal-card-footer">
+        <span class="signal-tag">১২ টা ধনযোগ সংকেত</span>
+        <span class="signal-read-more">পঢ়ক ➔</span>
+      </div>
     </a>
   </div>
 </div>
+
 
 <!-- Reviews Section -->
 <section class="section" id="reviews">
