@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>আচাৰ্যৰ সৈতে লাইভ চেট | জ্যোতিষ অসম</title>
+    <title>AI আচাৰ্য্যৰ সৈতে লাইভ চেট | জ্যোতিষ অসম</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -65,7 +65,7 @@
         <div class="acharya-info">
             <div class="avatar">🛕</div>
             <div class="name-status">
-                <h2>আচাৰ্যৰ সৈতে লাইভ চেট</h2>
+                <h2>AI আচাৰ্য্যৰ সৈতে লাইভ চেট</h2>
                 <div class="status" id="acharyaStatus"><span class="status-dot"></span> অনলাইন (Online)</div>
             </div>
         </div>
@@ -76,7 +76,7 @@
     </header>
 
     <div id="chatArea">
-        <div class="typing-indicator" id="typingIndicator">আচাৰ্যই টাইপ কৰি আছে... ⏳</div>
+        <div class="typing-indicator" id="typingIndicator">AI আচাৰ্য্যই টাইপ কৰি আছে... ⏳</div>
     </div>
 
     <footer>
@@ -87,7 +87,7 @@
     <div id="extensionModal">
         <div class="modal-card">
             <h3 style="color: #8b0000; font-size: 22px; margin-bottom: 10px;">⏳ সময় শেষ হৈছে!</h3>
-            <p style="color: #4b5563; font-size: 14.5px; margin-bottom: 20px;">আচাৰ্যৰ সৈতে কথা-বতৰা অব্যাহত ৰাখিবলৈ সময় বৃদ্ধি কৰক।</p>
+            <p style="color: #4b5563; font-size: 14.5px; margin-bottom: 20px;">AI আচাৰ্য্যৰ সৈতে কথা-বতৰা অব্যাহত ৰাখিবলৈ সময় বৃদ্ধি কৰক।</p>
             <div class="pack-btn" onclick="rechargeTime(49, 5)">
                 <span style="font-size: 18px; font-weight: 700;">+ ৫ মিনিট</span>
                 <span style="font-size: 18px; font-weight: 700; color: #b48509;">₹49</span>
@@ -106,7 +106,11 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // গ্ৰাহকৰ Profile ID টো LocalStorage ৰ পৰা লোৱা হৈছে
-        const profileId = localStorage.getItem('ja_profile_id');
+        const urlParams = new URLSearchParams(window.location.search);
+        const profileId = urlParams.get('profile_id') || localStorage.getItem('ja_profile_id');
+        if (profileId) {
+            try { localStorage.setItem('ja_profile_id', profileId); } catch(e){}
+        }
         let timerInterval;
         let availableSeconds = 0;
 
@@ -135,10 +139,10 @@
                 data.forEach(msg => {
                     renderMessage(msg.sender_type, msg.message);
                 });
-                chatArea.innerHTML += `<div class="typing-indicator" id="typingIndicator">আচাৰ্যই টাইপ কৰি আছে... ⏳</div>`;
+                chatArea.innerHTML += `<div class="typing-indicator" id="typingIndicator">AI আচাৰ্য্যই টাইপ কৰি আছে... ⏳</div>`;
                 chatArea.scrollTop = chatArea.scrollHeight;
             } else {
-                renderMessage("acharya", "নমস্কাৰ! মই জ্যোতিষ অসমৰ আচাৰ্যই কৈছোঁ। মই আপোনাৰ জন্ম কুণ্ডলীৰ সবিশেষ চাই আছোঁ। আপোনাৰ প্ৰধান প্ৰশ্নটো কি, অনুগ্ৰহ কৰি তলত লিখক।");
+                renderMessage("acharya", "নমস্কাৰ! মই জ্যোতিষ অসমৰ AI আচাৰ্য্যই কৈছোঁ। মই আপোনাৰ জন্ম কুণ্ডলীৰ সবিশেষ পৰ্যবেক্ষণ কৰি আছোঁ। আপোনাৰ প্ৰধান প্ৰশ্নটো কি, অনুগ্ৰহ কৰি তলত লিখক।");
             }
         }
 
@@ -265,7 +269,7 @@
             msgDiv.className = `message msg-${sender}`;
             
             if(sender === 'acharya') {
-                msgDiv.innerHTML = `<div class="msg-astro-name">আচাৰ্য</div>${text}`;
+                msgDiv.innerHTML = `<div class="msg-astro-name">AI আচাৰ্য্য</div>${text}`;
             } else {
                 msgDiv.innerHTML = `${text}`;
             }
@@ -281,7 +285,7 @@
                 "amount": amount * 100, 
                 "currency": "INR",
                 "name": "জ্যোতিষ অসম",
-                "description": `আচাৰ্যৰ সৈতে +${minutesToAdd} মিনিট`,
+                "description": `AI আচাৰ্য্যৰ সৈতে +${minutesToAdd} মিনিট`,
                 "handler": async function (response) {
                     document.getElementById('extensionModal').style.display = 'none';
                     
