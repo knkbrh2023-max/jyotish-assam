@@ -1,29 +1,106 @@
-<!doctype html>
-<html lang="as"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>আপোনাৰ Report | Jyotish Assam</title><link rel="stylesheet" href="style.css"></head>
+<!DOCTYPE html>
+<html lang="as">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আপোনাৰ জ্যোতিষ ৰিপোৰ্ট | জ্যোতিষ অসম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans Assamese', sans-serif; }
+        body { background: #fdf5e6; color: #3e2723; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: #8b0000; color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .brand { font-size: 18px; font-weight: 700; color: #fef08a; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .home-btn { background: rgba(255,255,255,0.15); color: #fdf5e6; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); transition: 0.2s; }
+        .home-btn:hover { background: rgba(255,255,255,0.3); color: white; }
+        
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 25px 15px; }
+        .status-card { background: white; border-radius: 16px; padding: 35px 25px; max-width: 500px; width: 100%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 5px solid #8b0000; }
+        .spinner { border: 4px solid rgba(139,0,0,0.15); border-top: 4px solid #8b0000; border-radius: 50%; width: 55px; height: 55px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        h2 { font-size: 20px; color: #8b0000; margin-bottom: 12px; }
+        p { font-size: 14.5px; color: #4b5563; line-height: 1.6; margin-bottom: 20px; }
+        .btn-action { display: inline-block; background: #8b0000; color: white; padding: 10px 24px; border-radius: 25px; text-decoration: none; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(139,0,0,0.25); transition: 0.2s; }
+        .btn-action:hover { background: #700000; transform: translateY(-1px); }
+        .order-badge { background: #fef08a; color: #8b0000; padding: 4px 10px; border-radius: 8px; font-weight: bold; font-size: 13px; display: inline-block; margin-bottom: 12px; }
+    </style>
+</head>
 <body>
-<header class="topbar"><div class="wrap nav"><a class="brand" href="index.html">🔮 জ্যোতিষ অসম</a><a class="small-btn" href="index.html">Home</a></div></header>
-<main class="wrap section">
-<div class="trust-card">
-<span class="eyebrow">PERSONAL REPORT</span><h1>আপোনাৰ জ্যোতিষ Report</h1>
-<p id="status">Loading...</p><div id="reportBox"></div>
-</div></main>
-<script src="config.js"></script>
-<script>
-(async()=>{
- const id=new URLSearchParams(location.search).get("order");
- const s=document.getElementById("status"), b=document.getElementById("reportBox");
- if(!id){s.textContent="Order ID missing.";return}
- if(!JA_CONFIG.apiBaseUrl || JA_CONFIG.apiBaseUrl.includes("YOUR-BACKEND")){
-   s.textContent="Backend not configured yet. Please connect your backend in config.js."; return;
- }
- try{
-  const r=await fetch(JA_CONFIG.apiBaseUrl.replace(/\\/$/,"")+"/api/report/"+encodeURIComponent(id));
-  const d=await r.json(); if(!r.ok) throw new Error(d.message||"Report unavailable");
-  s.textContent=d.status==="ready"?"Report ready":"Report is being generated.";
-  if(d.status==="ready"){
-    b.innerHTML=(d.html||"<p>Report generated.</p>")+ (d.pdfUrl?'<p><a class="btn gold" href="'+d.pdfUrl+'" target="_blank" rel="noopener">Download PDF</a></p>':"");
-  }
- }catch(e){s.textContent=e.message||"Unable to load report."}
-})();
-</script></body></html>
+
+    <header>
+        <a href="index.html" class="brand">🔮 জ্যোতিষ অসম</a>
+        <a href="index.html" class="home-btn">← মূল পৃষ্ঠা</a>
+    </header>
+
+    <main>
+        <div class="status-card" id="statusCard">
+            <div class="spinner" id="spinner"></div>
+            <h2 id="statusTitle">✨ আপোনাৰ ৰিপোৰ্ট লোড হৈ আছে...</h2>
+            <div id="orderBadgeWrap"></div>
+            <p id="statusMsg">অনুগ্ৰহ কৰি কেইছেকেণ্ডমান অপেক্ষা কৰক।</p>
+            <div id="actionArea"></div>
+        </div>
+    </main>
+
+    <script>
+    (async function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order') || localStorage.getItem('ja_latest_order_id');
+
+        if (!orderId) {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('statusTitle').innerText = "⚠️ অৰ্ডাৰ নম্বৰ পোৱা নগ'ল";
+            document.getElementById('statusTitle').style.color = "#ef4444";
+            document.getElementById('statusMsg').innerText = "অনুগ্ৰহ কৰি প্ৰথমে সেৱা বুকিং কৰক অথবা হোম পেজলৈ উভতি যাওক।";
+            document.getElementById('actionArea').innerHTML = '<a href="index.html" class="btn-action">মূল পৃষ্ঠালৈ যাওক</a>';
+            return;
+        }
+
+        // 1. Check storage for pre-rendered report HTML
+        const cached = sessionStorage.getItem('ja_report_' + orderId) || localStorage.getItem('ja_report_' + orderId);
+        if (cached) {
+            // Direct seamless render
+            document.open();
+            document.write(cached);
+            document.close();
+            return;
+        }
+
+        // 2. Display Order ID
+        document.getElementById('orderBadgeWrap').innerHTML = `<span class="order-badge">অৰ্ডাৰ আইডি: ${orderId}</span>`;
+
+        // 3. Fallback: try fetching from calculate-chart if online
+        if (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) {
+            try {
+                const res = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: orderId })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    // Refresh parent index if needed or alert
+                    document.getElementById('statusMsg').innerHTML = `
+                        ৰিপোৰ্ট সফলভাৱে সংৰক্ষিত হৈছে।<br>অনুগ্ৰহ কৰি মূল পেজলৈ গৈ পুনৰ 'ৰিপোৰ্ট চাওক'ত ক্লিক কৰক।
+                    `;
+                    document.getElementById('actionArea').innerHTML = '<a href="index.html" class="btn-action">মূল পৃষ্ঠালৈ যাওক</a>';
+                    return;
+                }
+            } catch(e) {
+                console.warn("Backend fetch fallback:", e);
+            }
+        }
+
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('statusTitle').innerText = "ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে";
+        document.getElementById('statusMsg').innerHTML = `
+            আপোনাৰ অৰ্ডাৰ <strong>${orderId}</strong> প্ৰক্ৰিয়াকৰণ হৈছে।<br>
+            যদি ৰিপোৰ্টখন স্বয়ংক্ৰিয়ভাৱে নোলায়, আপুনি পেমেন্ট কৰা ব্ৰাউজাৰটোতে পেজটো পুনৰ খোলক অথবা আমাৰ এডমিনৰ সৈতে যোগাযোগ কৰক।
+        `;
+        document.getElementById('actionArea').innerHTML = '<a href="index.html" class="btn-action">মূল পৃষ্ঠালৈ উভতি যাওক</a>';
+    })();
+    </script>
+
+</body>
+</html>

@@ -120,7 +120,7 @@
                 <div class="manual-field">
                     <label>সেৱাৰ প্ৰকাৰ *</label>
                     <select id="mService" onchange="updateManualPrice()">
-                        <option value="chat">আচাৰ্যৰ লগত কথা পাতক (₹21)</option>
+                        <option value="chat">AI আচাৰ্য্যৰ সৈতে লাইভ চেট (₹21)</option>
                         <option value="monthly">মাহেকীয়া ৰাশিফল (₹19)</option>
                         <option value="yearly">বাৰ্ষিক ৰাশিফল (₹49)</option>
                         <option value="love">প্ৰেম আৰু সম্পৰ্ক (₹99)</option>
@@ -566,7 +566,7 @@
             if (!order) return alert("অৰ্ডাৰৰ ডাটা পোৱা নগল!");
 
             if (order.service === 'chat') {
-                alert("এইটো এটা 'আচাৰ্যৰ লগত কথা পাতক' (Chat) অৰ্ডাৰ। ইয়াৰ কোনো PDF ৰিপোৰ্ট নাথাকে। গ্ৰাহকে ৱেবছাইটত লাইভ চেট কৰিব।");
+                alert("এইটো এটা 'AI আচাৰ্য্যৰ সৈতে লাইভ চেট' (Chat) অৰ্ডাৰ। ইয়াৰ কোনো PDF ৰিপোৰ্ট নাথাকে। গ্ৰাহকে ৱেবছাইটত লাইভ চেট কৰিব।");
                 
                 // এডমিন হিচাপে mark কৰা
                 if (!order.razorpay_payment_id) {
@@ -875,9 +875,13 @@
                     </html>
                 `;
 
+                try {
+                    localStorage.setItem('ja_report_' + order.id, reportHtml);
+                    sessionStorage.setItem('ja_report_' + order.id, reportHtml);
+                } catch(e){}
                 const win = window.open('', '_blank');
-                if(win) { win.document.write(reportHtml); win.document.close(); } 
-                else { document.body.innerHTML = reportHtml; }
+                if(win && !win.closed) { win.document.open(); win.document.write(reportHtml); win.document.close(); } 
+                else { window.open('report.html?order=' + encodeURIComponent(order.id), '_blank'); }
             } catch (error) {
                 console.error("Error fetching chart:", error);
                 alert("ৰিপোৰ্ট খোলোঁতে সমস্যা হৈছে: " + error.message);
