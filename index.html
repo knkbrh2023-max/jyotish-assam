@@ -514,7 +514,7 @@
           const bx=((pos%7)-3)*1.6,br=((pos%5)-2)*.45,bz=Math.round((pos%7)*2);
           const slug=getTarotSlug(name);
           const imgSrc=getTarotImgPath(cardIndex,name);
-          return `<button type="button" class="ja78-card" data-index="${cardIndex}" aria-label="${esc(name)}" style="--x:${x.toFixed(1)};--y:${y.toFixed(1)};--r:${r.toFixed(2)};--z:${200-Math.round(Math.abs(t)*80)};--bundle-x:${bx};--bundle-r:${br};--bundle-z:${bz}"><span class="ja78-inner"><span class="ja78-face ja78-back"><svg viewBox="0 0 100 140" style="width:70%;height:70%;opacity:0.9;" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="88" height="128" rx="8" stroke="#f4d06a" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="50" cy="70" r="28" stroke="#f4d06a" stroke-width="1.5"/><circle cx="50" cy="70" r="18" stroke="#ffd700" stroke-width="1"/><polygon points="50,45 68,78 32,78" stroke="#f4d06a" stroke-width="1.2"/><polygon points="50,95 68,62 32,62" stroke="#f4d06a" stroke-width="1.2"/><circle cx="50" cy="70" r="4.5" fill="#f4d06a"/></svg><span class="ja78-number">${pos+1}</span></span><span class="ja78-face ja78-front"><img class="ja78-front-img" src="${imgSrc}" alt="${esc(name)}" data-index="${cardIndex}" data-slug="${slug}" onerror="onTarotImgError(this)" loading="lazy"><span class="ja78-front-caption">${esc(name)}</span><span class="ja78-front-label" style="display:none;">${esc(name)}</span></span></span></button>`;
+          return `<button type="button" class="ja78-card" data-index="${cardIndex}" aria-label="${esc(name)}" style="--x:${x.toFixed(1)};--y:${y.toFixed(1)};--r:${r.toFixed(2)};--z:${200-Math.round(Math.abs(t)*80)};--bundle-x:${bx};--bundle-r:${br};--bundle-z:${bz}"><span class="ja78-inner"><span class="ja78-face ja78-back"><img class="ja78-back-logo" src="logo.jpg" alt="Jyotish Assam"><span class="ja78-number">${pos+1}</span></span><span class="ja78-face ja78-front"><img class="ja78-front-img" src="${imgSrc}" alt="${esc(name)}" data-index="${cardIndex}" data-slug="${slug}" onerror="onTarotImgError(this)" loading="lazy"><span class="ja78-front-caption">${esc(name)}</span><span class="ja78-front-label" style="display:none;">${esc(name)}</span></span></span></button>`;
         }).join('');
         deck.className='ja78-deck is-bundle';state.phase='bundle';
       }
@@ -616,11 +616,26 @@
       }
       function reset(){state.selected=[];state.cards=[];state.revealed=[];state.deckOrder=[];state.requestSeq++;state.question='';state.phase='bundle';$('ja78-results').classList.remove('show');$('ja78-results').innerHTML='';$('ja78-new').style.display='none';$('ja78-count').textContent='';$('ja78-start').disabled=false;$('ja78-start').textContent='🔮 Shuffle';renderDeck();renderSlots();}
       function shuffle(){if(state.phase!=='bundle'||state.selected.length>=cardCount())return;if(!$('ja78-question').value.trim()){state.question='';}else state.question=$('ja78-question').value.trim().slice(0,500);$('ja78-start').disabled=true;$('ja78-status').textContent='🔮 Bundle-ৰ পৰা cardবোৰ লাহে লাহে ওলাই U-shape fan হৈ আছে...';fan();}
-      $('ja78-start').addEventListener('click',shuffle);$('ja78-new').addEventListener('click',reset);$('ja78-deck').addEventListener('click',e=>{const card=e.target.closest('.ja78-card');if(!card)return;e.preventDefault();e.stopPropagation();selectCard(card.dataset.index);});
-      $('ja78-deck').addEventListener('pointerover',e=>{const card=e.target.closest('.ja78-card');if(!card\vert{}\vert{}state.phase!=='fan')return;document.querySelectorAll('.ja78-card.is-hovered').forEach(c=>c.classList.remove('is-hovered'));card.classList.add('is-hovered');});$('ja78-deck').addEventListener('pointerout',e=>{const card=e.target.closest('.ja78-card');if(!card)return;const to=e.relatedTarget;if(to&&card.contains(to))return;card.classList.remove('is-hovered');});
+      $('ja78-start').addEventListener('click',shuffle);$('ja78-new').addEventListener('click',reset);
+      $('ja78-deck').addEventListener('click',e=>{const card=e.target.closest('.ja78-card');if(!card)return;e.preventDefault();e.stopPropagation();selectCard(card.dataset.index);});
+      $('ja78-deck').addEventListener('pointerover',e=>{const card=e.target.closest('.ja78-card');if(!card||state.phase!=='fan')return;document.querySelectorAll('.ja78-card.is-hovered').forEach(c=>c.classList.remove('is-hovered'));card.classList.add('is-hovered');});
+      $('ja78-deck').addEventListener('pointerout',e=>{const card=e.target.closest('.ja78-card');if(!card)return;const to=e.relatedTarget;if(to&&card.contains(to))return;card.classList.remove('is-hovered');});
       document.querySelectorAll('#ja78-topics .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.topic=b.dataset.topic;document.querySelectorAll('#ja78-topics .ja78-pill').forEach(x=>x.classList.toggle('active',x===b));if(state.topic==='Yes/No'){state.spread='yes_no';document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(x=>x.classList.toggle('active',x.dataset.spread==='yes_no'));reset();}}));
       document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(b=>b.addEventListener('click',()=>{state.spread=b.dataset.spread;document.querySelectorAll('#ja78-spreads .ja78-pill').forEach(x=>x.classList.toggle('active',x===b));if(state.spread==='love_3')state.topic='Love';if(state.spread==='yes_no')state.topic='Yes/No';reset();}));
-      renderDeck();renderSlots();
+      function initTarot(){
+        try {
+          if (!$('ja78-deck') || !$('ja78-slots')) return;
+          renderDeck();
+          renderSlots();
+        } catch(e) {
+          console.error("Tarot initialization error:", e);
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTarot);
+      } else {
+        initTarot();
+      }
     })();
     </script>
     <!-- END TAROT 78 CARD 3D EXPERIENCE -->
