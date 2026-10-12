@@ -723,17 +723,73 @@
                 let careerAnalysisPage = "";
                 if (service === 'birth' || service === 'career') {
                     const tenthRashi = chart?.houses?.[9]?.rashi || "Aries";
+                    const toAsDigits = (num) => String(num).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+                    let clientAge = 25;
+                    let isMinor = false;
+                    let jobChangeYear = 2027;
+                    let careerPeakStart = 2029;
+                    let careerPeakEnd = 2031;
+                    let cautionYear = 2028;
+                    let careerStartYear = 2048;
+                    let careerPeakStartYear = 2051;
+                    let careerPeakEndYear = 2054;
+
+                    if (dob && dob !== 'N/A') {
+                        const bDate = new Date(dob);
+                        if (!isNaN(bDate.getTime())) {
+                            const today = new Date();
+                            let ageDiff = today.getFullYear() - bDate.getFullYear();
+                            const mDiff = today.getMonth() - bDate.getMonth();
+                            if (mDiff < 0 || (mDiff === 0 && today.getDate() < bDate.getDate())) {
+                                ageDiff--;
+                            }
+                            clientAge = Math.max(0, ageDiff);
+                            if (clientAge < 18) isMinor = true;
+
+                            const bYear = bDate.getFullYear();
+                            const bMonth = bDate.getMonth() + 1;
+                            const ascNo = chart?.ascendant?.rashi_no || 1;
+
+                            if (isMinor) {
+                                careerStartYear = bYear + 22;
+                                careerPeakStartYear = bYear + 25;
+                                careerPeakEndYear = bYear + 28;
+                            } else {
+                                const cSeed = (bYear + bMonth * 2 + ascNo) % 3;
+                                if (cSeed === 0) {
+                                    jobChangeYear = 2027;
+                                    careerPeakStart = 2028;
+                                    careerPeakEnd = 2030;
+                                    cautionYear = 2029;
+                                } else if (cSeed === 1) {
+                                    jobChangeYear = 2027;
+                                    careerPeakStart = 2029;
+                                    careerPeakEnd = 2031;
+                                    cautionYear = 2028;
+                                } else {
+                                    jobChangeYear = 2028;
+                                    careerPeakStart = 2029;
+                                    careerPeakEnd = 2032;
+                                    cautionYear = 2030;
+                                }
+                            }
+                        }
+                    }
+
+                    let sec2Title = isMinor ? "২. ভৱিষ্যত কেৰিয়াৰ আৰম্ভণি আৰু সাফল্যৰ নিৰ্দিষ্ট চন" : "২. কুণ্ডলী আৰু দশা অনুসৰি কেৰিয়াৰৰ নিৰ্দিষ্ট চন (Yearly Career Roadmap)";
+                    let sec2Content = isMinor
+                        ? `যিহেতু জাতক/জাতিকা বৰ্তমান ${clientAge === 0 ? "নৱজাতক" : (clientAge <= 12 ? toAsDigits(clientAge) + " বছৰীয়া শৈশৱ" : toAsDigits(clientAge) + " বছৰীয়া কৈশোৰ")} কালত আছে, সেয়েহে বৰ্তমান সময়ছোৱা বিদ্যা-বুদ্ধি বিকাশৰহে সময়।<br><br>• <strong>উচ্চ শিক্ষা সমাপ্ত কৰি প্ৰথম কেৰিয়াৰ আৰম্ভণি:</strong> প্ৰায় <strong>${toAsDigits(careerStartYear)} চনত</strong> (বয়স প্ৰায় ২২-২৩ বছৰত)।<br>• <strong>কৰ্মক্ষেত্ৰত উচ্চ পদবী আৰু স্থিৰ সাফল্যৰ সোণালী সময়:</strong> <strong>${toAsDigits(careerPeakStartYear)}–${toAsDigits(careerPeakEndYear)} চনৰ ভিতৰত</strong> (বয়স প্ৰায় ২৫-২৮ বছৰত)।`
+                        : `বৰ্তমান চলি থকা <strong>${currentDashaAs} মহাদশা</strong> আৰু দশম ভাৱৰ আধাৰত নিৰ্দিষ্ট চনসমূহ:<br><br>• <strong>কেৰিয়াৰত ডাঙৰ পৰিৱৰ্তন বা নতুন সুযোগ:</strong> <strong>${toAsDigits(jobChangeYear)} চনত</strong> নতুন চাকৰি লাভ বা কাৰ্যালয়ত পদোন্নতিৰ প্ৰৱল যোগ।<br><br>• <strong>সৰ্বাধিক আৰ্থিক সমৃদ্ধি আৰু সাফল্যৰ সোণালী সময়:</strong> <strong>${toAsDigits(careerPeakStart)}–${toAsDigits(careerPeakEnd)} চনৰ ভিতৰত</strong> ব্যৱসায়িক সম্প্ৰসাৰণ, একাধিক উৎসৰ পৰা স্থিৰ আয় আৰু সম্পত্তি বৃদ্ধি।<br><br>• <strong>সাৱধানতা আৰু ধৈৰ্যৰ সময়:</strong> <strong>${toAsDigits(cautionYear)} চনত</strong> অযথা ৰিস্কি বিনিয়োগ আৰু সংঘাত পৰিহাৰ কৰিব।`;
+
                     careerAnalysisPage = `
                     <div class="page page-break">
-                        <h2 class="section-title">❁ কৰ্মজীৱন, ব্যৱসায় আৰু অৰ্থ বিশ্লেষণ ❁</h2>
+                        <h2 class="section-title">❁ কৰ্মজীৱন, ব্যৱসায় আৰু অৰ্থ বিশদ বিশ্লেষণ ❁</h2>
                         <div class="sub-heading">১. দশম ভাৱ আৰু কৰ্মজীৱনৰ মূল দিশ (Career Direction)</div>
-                        <div class="info-card"><div class="card-content">আপোনাৰ জন্ম কুণ্ডলীৰ দশম ভাৱত <strong>${rashiAsMap[tenthRashi] || tenthRashi} (${tenthRashi})</strong> ৰাশি উদিত হৈছে। বৰ্তমান চলি থকা <strong>${currentDashaAs} মহাদশা</strong>ৰ প্ৰভাৱত বয়স বঢ়াৰ লগে লগে আপোনাৰ কৰ্মদক্ষতা আৰু আৰ্থিক সঞ্চয় বৃদ্ধি পাব।</div></div>
-                        <div class="sub-heading">২. ২০২৬ – ২০৩১ বৰ্ষৰ কেৰিয়াৰ সময়ৰেখা</div>
-                        <div class="info-card"><div class="card-content">
-                            <strong>📅 ২০২৬ – ২০২৭ বৰ্ষ:</strong> কৰ্মক্ষেত্ৰত নতুন দায়িত্ব, আৰ্থিক স্থিৰতা।<br><br>
-                            <strong>📅 ২০২৮ – ২০২৯ বৰ্ষ:</strong> পদোন্নতি, ব্যৱসায় সম্প্ৰসাৰণ আৰু নতুন আয়ৰ পথ।<br><br>
-                            <strong>📅 ২০৩০ – ২০৩১ বৰ্ষ:</strong> স্থায়ী সম্পত্তি আৰু দীর্ঘম্যাদী বিনিয়োগৰ পৰা বিশেষ লাভ।
-                        </div></div>
+                        <div class="info-card"><div class="card-content">আপোনাৰ জন্ম কুণ্ডলীৰ দশম ভাৱত <strong>${rashiAsMap[tenthRashi] || tenthRashi} (${tenthRashi})</strong> ৰাশি উদিত হৈছে। কুণ্ডলীৰ শুভ গ্ৰহৰ প্ৰভাৱত বয়স বঢ়াৰ লগে লগে আপোনাৰ কৰ্মদক্ষতা, সামাজিক প্ৰতিপত্তি আৰু আৰ্থিক সঞ্চয় বৃদ্ধি পাব।</div></div>
+                        
+                        <div class="sub-heading">${sec2Title}</div>
+                        <div class="info-card"><div class="card-content">${sec2Content}</div></div>
                     </div>`;
                 }
 
@@ -741,21 +797,117 @@
                 if (service === 'birth' || service === 'love') {
                     const moonRashi = chart?.planets?.Moon?.rashi || "Leo";
                     const seventhHouseRashi = chart?.houses?.[6]?.rashi || "Capricorn";
+                    const fifthHouseRashi = chart?.houses?.[4]?.rashi || "Taurus";
+
+                    const toAsDigits = (num) => String(num).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+                    const rashiLordsMap = {
+                        'Aries': 'মংগল (Mars)', 'Taurus': 'শুক্ৰ (Venus)', 'Gemini': 'বুধ (Mercury)', 'Cancer': 'চন্দ্ৰ (Moon)',
+                        'Leo': 'সূৰ্য (Sun)', 'Virgo': 'বুধ (Mercury)', 'Libra': 'শুক্ৰ (Venus)', 'Scorpio': 'মংগল (Mars)',
+                        'Sagittarius': 'বৃহস্পতি (Jupiter)', 'Capricorn': 'শনি (Saturn)', 'Aquarius': 'শনি (Saturn)', 'Pisces': 'বৃহস্পতি (Jupiter)'
+                    };
+                    const seventhRashiAs = rashiAsMap[seventhHouseRashi] || seventhHouseRashi;
+                    const seventhLordAs = rashiLordsMap[seventhHouseRashi] || "সপ্তম পতি";
+
+                    let clientAge = 25;
+                    let isMinor = false;
+                    let earlyYear = 2027;
+                    let strongYearStart = 2029;
+                    let strongYearEnd = 2030;
+                    let futureChildStart = 2050;
+                    let futureChildEnd = 2053;
+
+                    if (dob && dob !== 'N/A') {
+                        const bDate = new Date(dob);
+                        if (!isNaN(bDate.getTime())) {
+                            const today = new Date();
+                            let ageDiff = today.getFullYear() - bDate.getFullYear();
+                            const mDiff = today.getMonth() - bDate.getMonth();
+                            if (mDiff < 0 || (mDiff === 0 && today.getDate() < bDate.getDate())) {
+                                ageDiff--;
+                            }
+                            clientAge = Math.max(0, ageDiff);
+                            if (clientAge < 18) isMinor = true;
+
+                            const bYear = bDate.getFullYear();
+                            const bMonth = bDate.getMonth() + 1;
+                            const ascNo = chart?.ascendant?.rashi_no || 1;
+
+                            if (isMinor) {
+                                futureChildStart = bYear + 24;
+                                futureChildEnd = bYear + 28;
+                            } else {
+                                const seedVal = (bYear + bMonth * 3 + ascNo) % 3;
+                                if (seedVal === 0) {
+                                    earlyYear = 2027;
+                                    strongYearStart = 2028;
+                                    strongYearEnd = 2029;
+                                } else if (seedVal === 1) {
+                                    earlyYear = 2027;
+                                    strongYearStart = 2029;
+                                    strongYearEnd = 2030;
+                                } else {
+                                    earlyYear = 2028;
+                                    strongYearStart = 2029;
+                                    strongYearEnd = 2030;
+                                }
+                            }
+                        }
+                    }
+
+                    // Zodiac Compatibility
+                    const fireSigns = ['Aries', 'Leo', 'Sagittarius'];
+                    const earthSigns = ['Taurus', 'Virgo', 'Capricorn'];
+                    const airSigns = ['Gemini', 'Libra', 'Aquarius'];
+                    let compatSignsList = [];
+                    let elemDesc = "";
+                    if (fireSigns.includes(moonRashi)) {
+                        compatSignsList = ['Leo', 'Sagittarius', 'Aries', 'Libra', 'Gemini'];
+                        elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি অগ্নি তত্ত্বৰ অন্তৰ্গত। সিংহ, ধনু, মেষ, তুলা আৰু মিথুন ৰাশিৰ সংগীৰ সৈতে আটাইতকৈ মধুৰ আৰু ইতিবাচক বুজাবুজি গঢ়ি উঠিব।";
+                    } else if (earthSigns.includes(moonRashi)) {
+                        compatSignsList = ['Taurus', 'Virgo', 'Capricorn', 'Cancer', 'Pisces'];
+                        elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি পৃথিৱী তত্ত্বৰ অন্তৰ্গত। বৃষ, কন্যা, মকৰ, কৰ্কট আৰু মীন ৰাশিৰ সংগীৰ সৈতে স্থিৰ আৰু দীৰ্ঘম্যাদী বিশ্বাসযোগ্য সম্পৰ্ক গঢ়ি উঠিব।";
+                    } else if (airSigns.includes(moonRashi)) {
+                        compatSignsList = ['Gemini', 'Libra', 'Aquarius', 'Leo', 'Aries'];
+                        elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি বায়ু তত্ত্বৰ অন্তৰ্গত। মিথুন, তুলা, কুম্ভ, সিংহ আৰু মেষ ৰাশিৰ সংগীৰ সৈতে বৌদ্ধিক বন্ধুত্ব আৰু ৰোমান্টিক সংযোগ গঢ়ি উঠিব।";
+                    } else {
+                        compatSignsList = ['Cancer', 'Scorpio', 'Pisces', 'Taurus', 'Virgo'];
+                        elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি জল তত্ত্বৰ অন্তৰ্গত। কৰ্কট, বৃশ্চিক, মীন, বৃষ আৰু কন্যা ৰাশিৰ সংগীৰ সৈতে গভীৰ আৱেগিক বুজাবুজি আৰু আত্মিক সমৰ্পণ গঢ়ি উঠিব।";
+                    }
+                    const compatSignsAs = compatSignsList.map(r => rashiAsMap[r] || r).join(', ');
+
+                    let p1Title = isMinor ? "১. বৌদ্ধিক মেধা আৰু শৈশৱৰ আৱেগিক স্বভাৱ" : "১. আপোনাৰ প্ৰেমৰ স্বভাৱ";
+                    let p1Content = isMinor 
+                        ? `চন্দ্ৰ ৰাশি হৈছে <strong>${rashiAsMap[moonRashi] || moonRashi}</strong>। শিশুটি জন্মগতভাৱে তীক্ষ্ণ ধীশক্তি, সংবেদনশীল মন আৰু গভীৰ ধাৰণ ক্ষমতাৰ অধিকাৰী। শৈশৱ অৱস্থাত পৰিয়ালৰ মৰম আৰু সুস্থ পৰিৱেশে মন অধিক প্ৰফুল্লিত কৰি ৰাখিব।`
+                        : `চন্দ্ৰ ৰাশি হৈছে <strong>${rashiAsMap[moonRashi] || moonRashi}</strong>। আপুনি প্ৰেমৰ সম্পৰ্কত অত্যন্ত যত্নশীল, আৱেগিক আৰু বিশ্বস্ত।`;
+
+                    let p2Title = isMinor ? "২. প্ৰতিভা আৰু শুভ মৈত্ৰী সংগ" : "২. প্ৰেম বিবাহ নে সম্বন্ধভিত্তিক বিবাহ (Love vs Arranged Marriage)";
+                    let p2Content = isMinor
+                        ? `বিদ্যা আৰু বুদ্ধিৰ পঞ্চম স্থানত শুভ ৰাশি উদিত হোৱাৰ বাবে জাতক/জাতিকা মেধাৱী হ'ব। শুভ মৈত্ৰী ৰাশিসমূহ: <strong>${compatSignsAs}</strong>।`
+                        : `কুণ্ডলীত পঞ্চম ভাৱ (প্ৰেম) আৰু সপ্তম ভাৱ (বিবাহ)ৰ মাজত থকা শুভ সংযোগৰ বাবে <strong>প্ৰেমৰ অন্তত সম্বন্ধভিত্তিক বিবাহ (Love-cum-Arranged Marriage)</strong> বা পৰিয়ালৰ সন্মতিৰে প্ৰেম বিবাহৰ সম্ভাৱনা অত্যন্ত প্ৰৱল।<br><br><strong>শুভ মৈত্ৰী ৰাশিসমূহ:</strong> <strong>${compatSignsAs}</strong>।`;
+
+                    let p3Title = isMinor ? "❁ কুণ্ডলী অনুসৰি ভৱিষ্যত বিবাহৰ নিৰ্দিষ্ট চন ❁" : "❁ কুণ্ডলী আৰু দশা অনুসৰি বিবাহৰ নিৰ্দিষ্ট চন ❁";
+                    let p3Content = isMinor
+                        ? `যিহেতু জাতক/জাতিকা বৰ্তমান ${clientAge === 0 ? "নৱজাতক" : (clientAge <= 12 ? toAsDigits(clientAge) + " বছৰীয়া শৈশৱ" : toAsDigits(clientAge) + " বছৰীয়া কৈশোৰ")} কালত আছে, সেয়েহে বৰ্তমান সময়ছোৱা সুস্বাস্থ্য আৰু শিক্ষাৰ বাবেহে মূল সময়।<br><br><strong>কুণ্ডলী অনুসৰি ভৱিষ্যত বিবাহৰ শুভ চন:</strong><br>• প্ৰথম আলোচনা আৰু সম্বন্ধৰ যোগ: প্ৰায় <strong>${toAsDigits(futureChildStart)} চনত</strong> (বয়স প্ৰায় ২৪-২৫ বছৰত)।<br>• সৰ্বাধিক শক্তিশালী শুভ বিবাহ যোগ: <strong>${toAsDigits(futureChildStart + 2)}–${toAsDigits(futureChildEnd)} চনৰ ভিতৰত</strong> (বয়স প্ৰায় ২৬–২৮ বছৰত)। সপ্তম পতি ${seventhLordAs} আৰু গুৰুৰ কৃপাত এক সন্মানজনক দাম্পত্য জীৱন লাভ হ'ব।`
+                        : `আপোনাৰ কুণ্ডলীৰ সপ্তম পতি <strong>${seventhLordAs}</strong>, গুৰু বৃহস্পতিৰ গোচৰ আৰু বৰ্তমান মহাদশাৰ ভিত্তিত নিৰ্দিষ্ট সময়সীমা:<br><br>• <strong>প্ৰথম শুভ যোগ (${toAsDigits(earlyYear)} চন):</strong> ${toAsDigits(earlyYear)} চনত গুৰুৰ দৃষ্টিত বিবাহৰ কথা-বতৰা আৰু সম্বন্ধ আগবঢ়াৰ সুন্দৰ যোগ আছে।<br><br>• <strong>সৰ্বাধিক শক্তিশালী বিবাহ যোগ (${toAsDigits(strongYearStart)}–${toAsDigits(strongYearEnd)} চন):</strong> <strong>${toAsDigits(strongYearStart)}–${toAsDigits(strongYearEnd)} চনৰ ভিতৰত</strong> বিবাহৰ যোগ আটাইতকৈ বেছি শক্তিশালী আৰু ফলপ্ৰসূ হ'ব। এই সময়ছোৱাত বিবাহ কাৰ্য চূড়ান্ত হোৱাৰ প্ৰবল যোগ বিৰাজমান।`;
+
                     loveAnalysisPage = `
                     <div class="page page-break">
-                        <h2 class="section-title">❁ প্ৰেম, বিবাহ আৰু সম্পৰ্ক বিশ্লেষণ ❁</h2>
-                        <div class="sub-heading">১. আপোনাৰ প্ৰেমৰ স্বভাৱ</div>
-                        <div class="info-card"><div class="card-content">চন্দ্ৰ ৰাশি হৈছে <strong>${rashiAsMap[moonRashi] || moonRashi}</strong>। আপুনি প্ৰেমৰ সম্পৰ্কত অত্যন্ত যত্নশীল আৰু বিশ্বস্ত।</div></div>
+                        <h2 class="section-title">${isMinor ? "❁ শৈশৱৰ প্ৰতিভা আৰু ভৱিষ্যত সংসাৰৰ আগতীয়া আভাস ❁" : "❁ প্ৰেম, বিবাহ আৰু সম্পৰ্ক বিশদ বিশ্লেষণ ❁"}</h2>
+                        <div class="sub-heading">${p1Title}</div>
+                        <div class="info-card"><div class="card-content">${p1Content}</div></div>
+
+                        <div class="sub-heading">${p2Title}</div>
+                        <div class="info-card"><div class="card-content">${p2Content}</div></div>
                         
-                        <div class="sub-heading">২. সপ্তম ভাৱ আৰু ভৱিষ্যত সংগী</div>
-                        <div class="info-card"><div class="card-content">সপ্তম ভাৱত <strong>${rashiAsMap[seventhHouseRashi] || seventhHouseRashi}</strong> ৰাশি উদিত হৈছে। সংগী দায়িত্বশীল স্বভাৱৰ হ'ব।</div></div>
+                        <div class="sub-heading">৩. সপ্তম ভাৱ আৰু ভৱিষ্যত সংগীৰ ৰূপৰেখা</div>
+                        <div class="info-card"><div class="card-content">সপ্তম ভাৱত <strong>${seventhRashiAs}</strong> ৰাশি উদিত হৈছে আৰু অধিপতি <strong>${seventhLordAs}</strong>। সংগী দায়িত্বশীল, পৰিয়ালপ্ৰিয় আৰু সন্মানজনক স্বভাৱৰ হ'ব।</div></div>
                         
-                        <div class="sub-heading">❁ ২০২৬ – ২০৩১ প্ৰেম আৰু সম্পৰ্ক পূর্বাভাস ❁</div>
-                        <div class="info-card"><div class="card-content">২০২৭-২০২৯ বৰ্ষত বিবাহ আৰু সম্পৰ্কত গভীৰতা আহিব। ২০৩০ বৰ্ষত স্থায়ী সুখ আৰু সমৃদ্ধি লাভ হ'ব।</div></div>
+                        <div class="sub-heading">${p3Title}</div>
+                        <div class="info-card"><div class="card-content">${p3Content}</div></div>
                     </div>`;
                 }
-
-                let extraAnalysisPage = "";
+let extraAnalysisPage = "";
                 if (service === 'monthly' || service === 'yearly') {
                     const mMoonRashi = chart?.planets?.Moon?.rashi || "Aries";
                     extraAnalysisPage = `

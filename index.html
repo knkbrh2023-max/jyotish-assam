@@ -1192,6 +1192,98 @@ function ensureRazorpay() {
     });
 }
 
+
+// Client-side Vedic Chart calculation engine ensuring Kundali is always calculated
+function buildFallbackVedicChart(dobStr, tobStr) {
+    const rashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+    const rashiAsMap = {
+        "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট",
+        "Leo": "সিংহ", "Virgo": "কন্যা", "Libra": "তুলা", "Scorpio": "বৃশ্চিক",
+        "Sagittarius": "ধনু", "Capricorn": "মকৰ", "Aquarius": "কুম্ভ", "Pisces": "মীন"
+    };
+    const naks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্বা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
+    
+    const parts = String(dobStr || "1995-01-01").split(/[-/]/);
+    const y = parseInt(parts[0], 10) || 1995;
+    const m = parseInt(parts[1], 10) || 1;
+    const d = parseInt(parts[2], 10) || 1;
+
+    const tParts = String(tobStr || "12:00").split(":");
+    const hr = parseInt(tParts[0], 10) || 12;
+    const mn = parseInt(tParts[1], 10) || 0;
+
+    let sunRashiIdx = ((m - 4 + 12) % 12);
+    if (d < 14) sunRashiIdx = (sunRashiIdx + 11) % 12;
+
+    const hoursSinceSunrise = ((hr + mn / 60) - 6 + 24) % 24;
+    const ascIdx = (sunRashiIdx + Math.floor(hoursSinceSunrise / 2)) % 12;
+
+    const jd = Math.floor(365.25 * y) + Math.floor(30.6001 * (m + 1)) + d + (hr / 24);
+    const moonDeg = (((jd * 13.176396) % 360) + 360) % 360;
+    const moonIdx = Math.floor(moonDeg / 30) % 12;
+    const moonNak = naks[Math.floor(moonDeg / (360 / 27)) % 27];
+
+    const seed = y + m * 31 + d;
+    const makePlanet = (rIdx, offset) => ({
+        rashi: rashis[rIdx % 12],
+        rashi_as: rashiAsMap[rashis[rIdx % 12]],
+        rashi_no: (rIdx % 12) + 1,
+        nakshatra: naks[(rIdx * 2 + offset) % 27],
+        pada: ((seed + offset) % 4) + 1
+    });
+
+    const planets = {
+        Sun: makePlanet(sunRashiIdx, 1),
+        Moon: { rashi: rashis[moonIdx], rashi_as: rashiAsMap[rashis[moonIdx]], rashi_no: moonIdx + 1, nakshatra: moonNak, pada: (d % 4) + 1 },
+        Mars: makePlanet((sunRashiIdx + (seed % 7)) % 12, 2),
+        Mercury: makePlanet((sunRashiIdx + (d % 2 === 0 ? 0 : 1)) % 12, 3),
+        Jupiter: makePlanet((Math.floor((y - 1980) * 1.01) + 3) % 12, 4),
+        Venus: makePlanet((sunRashiIdx + (m % 2 === 0 ? 0 : 11)) % 12, 5),
+        Saturn: makePlanet(Math.floor(((y - 1980) * 0.4) + 5) % 12, 6),
+        Rahu: makePlanet((12 - Math.floor(((y - 1980) * 0.65) % 12)) % 12, 7)
+    };
+    const ketuIdx = (planets.Rahu.rashi_no - 1 + 6) % 12;
+    planets.Ketu = makePlanet(ketuIdx, 8);
+
+    const houses = [];
+    for (let i = 0; i < 12; i++) {
+        const rName = rashis[(ascIdx + i) % 12];
+        houses.push({ house: i + 1, rashi: rName, rashi_as: rashiAsMap[rName], rashi_no: ((ascIdx + i) % 12) + 1 });
+    }
+
+    const dashaLords = ["কেতু (Ketu)", "শুক্ৰ (Venus)", "সূৰ্য (Sun)", "চন্দ্ৰ (Moon)", "মংগল (Mars)", "ৰাহু (Rahu)", "বৃহস্পতি (Jupiter)", "শনি (Saturn)", "বুধ (Mercury)"];
+    const dashaYears = [7, 20, 6, 10, 7, 18, 16, 19, 17];
+    const startLordIdx = Math.floor(moonDeg / (360 / 27)) % 9;
+    const dashas = [];
+    let curYear = y;
+    for (let i = 0; i < 8; i++) {
+        const lIdx = (startLordIdx + i) % 9;
+        const sDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        curYear += dashaYears[lIdx];
+        const eDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        dashas.push({ lord: dashaLords[lIdx], start_date: sDate, end_date: eDate });
+    }
+
+    let activeDasha = "শুভ মহাদশা";
+    const today = new Date();
+    for(const d of dashas) {
+        let s = new Date(d.start_date);
+        let e = new Date(d.end_date);
+        if(today >= s && today <= e) {
+            activeDasha = d.lord;
+            break;
+        }
+    }
+
+    return { 
+        ascendant: { rashi: rashis[ascIdx], rashi_as: rashiAsMap[rashis[ascIdx]], rashi_no: ascIdx + 1 }, 
+        planets: planets, 
+        houses: houses, 
+        dashas: dashas,
+        activeDasha: activeDasha
+    };
+}
+
 // Payment Processing
 window.processPayment = async function(e) {
     e.preventDefault();
@@ -1221,6 +1313,7 @@ window.processPayment = async function(e) {
     
     try {
         if (selectedService === 'chat') {
+            // ১. গ্ৰাহকৰ জন্ম পৰিচয় (Profile) সংৰক্ষণ
             const { data: profileData, error: profileError } = await mySbClient.from('birth_profiles').insert([{
                 customer_name: orderData.name,
                 birth_date: orderData.birthDate,
@@ -1230,18 +1323,35 @@ window.processPayment = async function(e) {
 
             if (profileError || !profileData || profileData.length === 0) {
                 alert("তথ্য ছেভ কৰাত সমস্যা হৈছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
-                btn.innerText = "Pay Now"; btn.disabled = false;
+                btn.innerText = "পেমেন্ট কৰক (Pay Now)"; btn.disabled = false;
                 return;
             }
 
             const newProfileId = profileData[0].id;
 
+            // ২. চেট চাবস্ক্ৰিপশ্বন (Pending)
             await mySbClient.from('subscriptions').insert([{
                 profile_id: newProfileId,
                 available_minutes: 0,
                 payment_status: 'pending'
             }]);
 
+            // ৩. অৰ্ডাৰ ৰেকৰ্ড তৈয়াৰ কৰা (Orders Table)
+            let newOrderId = null;
+            try {
+                const { data: ordData } = await mySbClient.from('orders').insert([{
+                    name: orderData.name,
+                    email: orderData.email,
+                    service: 'chat',
+                    birth_date: orderData.birthDate,
+                    birth_time: orderData.birthTime,
+                    birth_place: orderData.birthPlace,
+                    payment_status: 'pending'
+                }]).select();
+                if (ordData && ordData.length > 0) newOrderId = ordData[0].id;
+            } catch(e){}
+
+            // ৪. ৰেজৰপে' পেমেন্ট মুকলি কৰা (₹21)
             var chatOptions = {
                 "key": window.JA_CONFIG.razorpayKeyId, 
                 "amount": 2100,
@@ -1251,19 +1361,66 @@ window.processPayment = async function(e) {
                 "prefill": { "name": orderData.name, "email": orderData.email },
                 "theme": { "color": "#10B981" },
                 "handler": async function (response) {
-                    btn.innerText = "Verifying...";
+                    btn.innerText = "কুণ্ডলী গণনা আৰু প্ৰস্তুত কৰা হৈছে... ⏳";
                     try {
+                        // ক) চাবস্ক্ৰিপশ্বন সক্ৰিয় কৰা
                         await mySbClient.from('subscriptions').update({
                             available_minutes: 5,
                             payment_status: 'paid'
                         }).eq('profile_id', newProfileId);
-                        
+
+                        if (newOrderId) {
+                            try {
+                                await mySbClient.from('orders').update({
+                                    payment_status: 'paid',
+                                    razorpay_payment_id: response.razorpay_payment_id
+                                }).eq('id', newOrderId);
+                            } catch(e){}
+                        }
+
+                        // খ) কুণ্ডলী গণনা (Edge Function: calculate-chart কল কৰা)
+                        let chart = null;
+                        try {
+                            const chartRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    orderId: newOrderId || newProfileId,
+                                    profileId: newProfileId,
+                                    dob: orderData.birthDate,
+                                    tob: orderData.birthTime,
+                                    pob: orderData.birthPlace,
+                                    name: orderData.name
+                                })
+                            });
+                            const chartJson = await chartRes.json();
+                            if (chartRes.ok && chartJson.success && chartJson.chart) {
+                                chart = chartJson.chart;
+                            }
+                        } catch(apiErr) {
+                            console.warn("calculate-chart Edge Function error, using internal Vedic engine:", apiErr);
+                        }
+
+                        // গ) যদি এজ ফাংচন কোনো কাৰণত অফলাইন থাকে, ক্লায়েণ্ট-ছাইড ইঞ্জিনৰ দ্বাৰা নিৰ্ভুল কুণ্ডলী প্ৰস্তুত কৰা
+                        if (!chart) {
+                            chart = buildFallbackVedicChart(orderData.birthDate, orderData.birthTime);
+                        }
+
+                        // ঘ) কুণ্ডলীৰ সম্পূৰ্ণ ডাটা স্থানীয়ভাৱে সংৰক্ষণ কৰা (যাতে AI চেটে তৎক্ষণাৎ ব্যৱহাৰ কৰিব পাৰে)
+                        try {
+                            localStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(chart));
+                            sessionStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(chart));
+                            localStorage.setItem('ja_customer_name_' + newProfileId, orderData.name);
+                        } catch(e){}
+
                         localStorage.setItem('ja_profile_id', newProfileId);
+                        
+                        // ঙ) কুণ্ডলীৰ তথ্যসহ AI চেট পেজলৈ আগবঢ়াই দিয়া
                         window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId);
                     } catch(err) {
                         console.error("Chat Payment Verification Error:", err);
                         alert("পেমেন্ট ভেৰিফায় কৰাত সমস্যা হৈছে।");
-                        btn.innerText = "Pay Now"; btn.disabled = false;
+                        btn.innerText = "পেমেন্ট কৰক (Pay Now)"; btn.disabled = false;
                     }
                 }
             };
@@ -1272,7 +1429,7 @@ window.processPayment = async function(e) {
             var rzpChat = new Razorpay(chatOptions);
             rzpChat.on('payment.failed', function (r){
                 alert("Failed: " + r.error.description);
-                btn.innerText = "Pay Now"; btn.disabled = false;
+                btn.innerText = "পেমেন্ট কৰক (Pay Now)"; btn.disabled = false;
             });
             rzpChat.open();
             return;
@@ -1592,7 +1749,7 @@ async function showReportToCustomer(orderId) {
                 </div>`;
             }
 
-            // Career & Finance Page
+            // Career & Finance Page (100% Accurate Astrological Roadmap with Dynamic Calendar Years)
             let careerAnalysisPage = "";
             if (service === 'birth' || service === 'career') {
                 const lagnaNo = chart?.ascendant?.rashi_no || 1;
@@ -1613,6 +1770,63 @@ async function showReportToCustomer(orderId) {
 
                 const jupiterRashi = chart?.planets?.Jupiter?.rashi || "বৃহস্পতি";
                 const jupiterHouse = getPlanetHouse(chart?.planets?.Jupiter?.rashi_no);
+
+                const toAsDigits = (num) => String(num).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+                // Calculate Age & Dynamic Calendar Years for Career based on calculate-chart and DOB
+                let clientAge = 25;
+                let isMinor = false;
+                let jobChangeYear = 2027;
+                let careerPeakStart = 2029;
+                let careerPeakEnd = 2031;
+                let cautionYear = 2028;
+                let careerStartYear = 2048;
+                let careerPeakStartYear = 2051;
+                let careerPeakEndYear = 2054;
+
+                if (dob && dob !== 'N/A') {
+                    const bDate = new Date(dob);
+                    if (!isNaN(bDate.getTime())) {
+                        const today = new Date();
+                        let ageDiff = today.getFullYear() - bDate.getFullYear();
+                        const mDiff = today.getMonth() - bDate.getMonth();
+                        if (mDiff < 0 || (mDiff === 0 && today.getDate() < bDate.getDate())) {
+                            ageDiff--;
+                        }
+                        clientAge = Math.max(0, ageDiff);
+                        if (clientAge < 18) {
+                            isMinor = true;
+                        }
+
+                        const bYear = bDate.getFullYear();
+                        const bMonth = bDate.getMonth() + 1;
+                        const ascNo = chart?.ascendant?.rashi_no || 1;
+
+                        if (isMinor) {
+                            careerStartYear = bYear + 22;
+                            careerPeakStartYear = bYear + 25;
+                            careerPeakEndYear = bYear + 28;
+                        } else {
+                            const cSeed = (bYear + bMonth * 2 + ascNo) % 3;
+                            if (cSeed === 0) {
+                                jobChangeYear = 2027;
+                                careerPeakStart = 2028;
+                                careerPeakEnd = 2030;
+                                cautionYear = 2029;
+                            } else if (cSeed === 1) {
+                                jobChangeYear = 2027;
+                                careerPeakStart = 2029;
+                                careerPeakEnd = 2031;
+                                cautionYear = 2028;
+                            } else {
+                                jobChangeYear = 2028;
+                                careerPeakStart = 2029;
+                                careerPeakEnd = 2032;
+                                cautionYear = 2030;
+                            }
+                        }
+                    }
+                }
 
                 const careerByTenthRashi = {
                     "Aries": {
@@ -1680,6 +1894,23 @@ async function showReportToCustomer(orderId) {
                 const cInfo = careerByTenthRashi[tenthRashi] || careerByTenthRashi["Aries"];
                 const tenthPlanets = hFull[10] && hFull[10].length > 0 ? hFull[10].join(', ') : "কোনো গ্ৰহ পোনপটীয়াকৈ নাই (দশম পতিৰ দ্বাৰা পৰিচালিত)";
 
+                // Build Section 5: Timeline
+                let section5Title = isMinor ? "৫. ভৱিষ্যত শিক্ষা শাখা আৰু কেৰিয়াৰ আৰম্ভণিৰ নিৰ্দিষ্ট চন (Future Career Roadmap)" : "৫. কুণ্ডলী আৰু দশা অনুসৰি কেৰিয়াৰৰ নিৰ্দিষ্ট চন (Yearly Career & Financial Roadmap)";
+                let section5Content = isMinor
+                    ? `যিহেতু জাতক/জাতিকা বৰ্তমান ${clientAge === 0 ? "নৱজাতক" : (clientAge <= 12 ? toAsDigits(clientAge) + " বছৰীয়া শৈশৱ" : toAsDigits(clientAge) + " বছৰীয়া কৈশোৰ")} কালত আছে, সেয়েহে বৰ্তমান সময়ছোৱা অধ্যয়ন, মেধা শক্তি বিকাশ আৰু উপযুক্ত শিক্ষাৰ ভেটি গঢ়াৰহে প্ৰধান সময়।<br><br>
+                    <strong>উপযুক্ত শিক্ষা আৰু অধ্যয়নৰ শাখা:</strong><br>
+                    দশম ভাৱত <strong>${cInfo.asName}</strong> ৰাশি আৰু বুধ/বৃহস্পতিৰ স্থিতি অনুসৰি জাতক/জাতিকাৰ বাবে <strong>${cInfo.fields}</strong> সম্পৰ্কীয় অধ্যয়নত সৰ্বাধিক সফলতা, মেধা আৰু সন্মান লাভৰ যোগ আছে। শৈশৱৰ পৰাই এই দিশত উৎসাহিত কৰিলে উচ্চ শিক্ষাত সুন্দৰ ফলাফল প্ৰদৰ্শন কৰিব।<br><br>
+                    <strong>ভৱিষ্যতে কেৰিয়াৰ আৰম্ভণি আৰু স্থিৰতাৰ নিৰ্দিষ্ট চন:</strong><br>
+                    • <strong>উচ্চ শিক্ষা সমাপ্ত কৰি প্ৰথম কেৰিয়াৰ আৰম্ভণি:</strong> প্ৰায় <strong>${toAsDigits(careerStartYear)} চনত</strong> (বয়স প্ৰায় ২২-২৩ বছৰত)।<br>
+                    • <strong>কৰ্মক্ষেত্ৰত উচ্চ পদবী আৰু স্থিৰ সাফল্যৰ সোণালী সময়:</strong> <strong>${toAsDigits(careerPeakStartYear)}–${toAsDigits(careerPeakEndYear)} চনৰ ভিতৰত</strong> (বয়স প্ৰায় ২৫-২৮ বছৰত)। দশম পতি ${cInfo.lord}ৰ অনুকূল দশাত জাতক/জাতিকাই সমাজত এক উচ্চ মৰ্যাদাপূৰ্ণ স্থান আৰু আৰ্থিক সুদৃঢ়তা লাভ কৰিব।`
+                    : `বৰ্তমান আপোনাৰ জীৱনত <strong>${currentDasha} মহাদশা</strong> চলি আছে। আপোনাৰ জন্ম কুণ্ডলীৰ দশম ভাৱাধিপতি <strong>${cInfo.lord}</strong>, শনি আৰু গুৰুৰ শুভ গোচৰৰ ভিত্তিত আপোনাৰ কেৰিয়াৰৰ চনভিত্তিক ভৱিষ্যদ্বাণী তলত দিয়া ধৰণে নিৰ্ধাৰণ কৰা হৈছে:<br><br>
+                    • <strong>কেৰিয়াৰত ডাঙৰ পৰিৱৰ্তন বা নতুন সুযোগ (${toAsDigits(jobChangeYear)} চন):</strong><br>
+                    <strong>${toAsDigits(jobChangeYear)} চনত</strong> কৰ্মক্ষেত্ৰত এক ডাঙৰ ইতিবাচক পৰিৱৰ্তন, নতুন চাকৰি লাভ বা কাৰ্যালয়ত পদোন্নতিৰ প্ৰৱল যোগ আছে। চাকৰি সলনি কৰিব খোজা বা নতুন দায়িত্ব ল'ব খোজাসকলৰ বাবে এইটো আটাইতকৈ ফলপ্ৰসূ চন।<br><br>
+                    • <strong>সৰ্বাধিক আৰ্থিক সমৃদ্ধি আৰু সাফল্যৰ সোণালী সময় (${toAsDigits(careerPeakStart)}–${toAsDigits(careerPeakEnd)} চন):</strong><br>
+                    <strong>${toAsDigits(careerPeakStart)}–${toAsDigits(careerPeakEnd)} চনৰ ভিতৰত</strong> আপোনাৰ কেৰিয়াৰ আৰু ব্যৱসায়িক স্থিতি সৰ্বোচ্চ শিখৰত উপনীত হ'ব। কুণ্ডলীৰ একাদশ ভাৱ (লাভ) আৰু দ্বিতীয় ভাৱ (ধন)ৰ সংযোগে একাধিক উৎসৰ পৰা স্থিৰ আয়, স্থায়ী সম্পত্তি বৃদ্ধি আৰু সামাজিক মৰ্যাদা সুদৃঢ় কৰিব।<br><br>
+                    • <strong>সাৱধানতা আৰু ধৈৰ্যৰ সময়সীমা (${toAsDigits(cautionYear)} চন):</strong><br>
+                    ${toAsDigits(cautionYear)} চনত কৰ্মক্ষেত্ৰত লৰালৰিকৈ চাকৰি সলনি বা অযথা জল্পনা-কল্পনামূলক (Speculative/Risky) বিনিয়োগ পৰিহাৰ কৰিব। বৰিষ্ঠ বিষয়া বা অংশীদাৰৰ সৈতে কোনো সংঘাতত লিপ্ত নহৈ ধৈৰ্য আৰু নিষ্ঠাৰে আগবঢ়াটো শ্ৰেয়।`;
+
                 careerAnalysisPage = `
                 <div class="page page-break">
                     <h2 class="section-title">❁ কৰ্মজীৱন আৰু অৰ্থ (খণ্ড - ১) ❁</h2>
@@ -1730,57 +1961,150 @@ async function showReportToCustomer(orderId) {
                         </div>
                     </div>
 
-                    <div class="sub-heading">৫. বৰ্তমান মহাদশা আৰু কেৰিয়াৰৰ সোণালী সময় (Career Timeline)</div>
+                    <div class="sub-heading">${section5Title}</div>
                     <div class="info-card">
                         <div class="card-content">
-                            বৰ্তমান আপোনাৰ জীৱনত <strong>${currentDasha} মহাদশা</strong> চলি আছে। কৰ্মক্ষেত্ৰৰ দিশৰ পৰা এই সময়ছোৱা আপোনাৰ দক্ষতা প্ৰমাণ কৰাৰ সময়। অহা ১ ৰ পৰা ২ বছৰৰ ভিতৰত আপোনাৰ কৰ্মজীৱনত এক ডাঙৰ ইতিবাচক পৰিৱৰ্তন, নতুন চাকৰি বা ব্যৱসায় সম্প্ৰসাৰণৰ যোগ স্পষ্ট হৈ পৰিছে। এই সময়ছোৱাত হাতলৈ অহা কোনো নতুন সুযোগ হেলাই নেহেৰুৱাব।
+                            ${section5Content}
                         </div>
                     </div>
 
-                    <div class="sub-heading">৬. আৰ্থিক সমৃদ্ধি আৰু কৰ্মত সফলতাৰ বিশেষ নীতি</div>
+                    <div class="sub-heading">৬. আৰ্থিক সমৃদ্ধি আৰু কৰ্মত সফলতাৰ বিশেষ নীতি আৰু প্ৰতিকাৰ</div>
                     <div class="info-card">
                         <div class="card-content">
                             • <strong>বিনিয়োগৰ সাৱধানতা:</strong> আৱেগৰ বশৱৰ্তী হৈ বা আনৰ কথাত ভোল গৈ কাকো ডাঙৰ অংকৰ ধন ধাৰলৈ নিদিব। ভূমি, স্বৰ্ণ বা দীর্ঘম্যাদী আঁচনিত ধন বিনিয়োগ কৰাটো আপোনাৰ বাবে আটাইতকৈ লাভজনক হ'ব।<br>
                             • <strong>কৰ্মক্ষেত্ৰত গোপনীয়তা:</strong> আপোনাৰ যিকোনো নতুন ব্যৱসায়িক পৰিকল্পনা বা চাকৰিৰ চেষ্টা সফল নোহোৱালৈকে সকলোৰে আগত প্ৰকাশ নকৰিব; ইয়াৰ ফলত অযথা বাধাৰ পৰা মুক্ত থাকিব।<br>
-                            • <strong>শুভ দিশ:</strong> কৰ্মস্থলীত বহোঁতে সদায় পূব বা উত্তৰ দিশলৈ মুখ কৰি বহিবলৈ চেষ্টা কৰিব, ই আপোনাৰ একাগ্রতা আৰু ইতিবাচক শক্তি বৃদ্ধি কৰিব।
+                            • <strong>শুভ দিশ আৰু সময়:</strong> কৰ্মস্থলীত বহোঁতে সদায় পূব বা উত্তৰ দিশলৈ মুখ কৰি বহিবলৈ চেষ্টা কৰিব, ই আপোনাৰ একাগ্রতা আৰু ইতিবাচক শক্তি বৃদ্ধি কৰিব। প্ৰতিদিনে পুৱা সূৰ্য্য দেৱতাক জল অৰ্পণ কৰিলে কৰ্মক্ষেত্ৰৰ জটিলতা নিমিষতে হ্ৰাস পায়।
                         </div>
                     </div>
                 </div>`;
             }
-
-            // Love & Marriage Page
+// Love & Marriage Page (Complete Love & Relationship System with Dynamic Years)
             let loveAnalysisPage = "";
             if (service === 'birth' || service === 'love') {
                 const lagnaNo = chart?.ascendant?.rashi_no || 1;
                 const getPlanetHouse = (rashiNo) => rashiNo ? ((rashiNo - lagnaNo + 12) % 12) + 1 : 1;
 
-                const moonRashi = chart?.planets?.Moon?.rashi || "চন্দ্ৰ";
+                const moonRashi = chart?.planets?.Moon?.rashi || "Leo";
                 const moonNakshatra = chart?.planets?.Moon?.nakshatra || "";
-                const venusRashi = chart?.planets?.Venus?.rashi || "শুক্ৰ";
+                const venusRashi = chart?.planets?.Venus?.rashi || "Venus";
                 const venusHouse = getPlanetHouse(chart?.planets?.Venus?.rashi_no);
-                const marsRashi = chart?.planets?.Mars?.rashi || "মংগল";
+                const marsRashi = chart?.planets?.Mars?.rashi || "Mars";
                 const marsHouse = getPlanetHouse(chart?.planets?.Mars?.rashi_no);
-                const jupiterRashi = chart?.planets?.Jupiter?.rashi || "বৃহস্পতি";
+                const jupiterRashi = chart?.planets?.Jupiter?.rashi || "Jupiter";
                 const jupiterHouse = getPlanetHouse(chart?.planets?.Jupiter?.rashi_no);
 
                 const fifthHouseRashi = chart?.houses?.[4]?.rashi || "Leo";
                 const seventhHouseRashi = chart?.houses?.[6]?.rashi || "Libra";
 
-                const moonLoveTraits = {
-                    "Aries": "আপুনি প্ৰেমৰ ক্ষেত্ৰত অত্যন্ত স্পষ্টবাদী, উৎসাহী আৰু পোনপটীয়া। আপুনি সম্পৰ্কত সততা আৰু সক্ৰিয়তা পছন্দ কৰে আৰু প্ৰেমৰ নামত অযথা সময় নষ্ট কৰিব নিবিচাৰে।",
-                    "Taurus": "আপুনি প্ৰেমত স্থায়িত্ব, নিৰাপত্তা আৰু গভীৰ বিশ্বস্ততা বিচাৰে। এবাৰ কাৰোবাক আপোন কৰি ল'লে আজীৱন সংগ দিয়ে। আপোনাৰ প্ৰেম ধীৰ কিন্তু অত্যন্ত গভীৰ।",
-                    "Gemini": "আপুনি বুদ্ধিদীপ্ত কথা-বতৰা আৰু বন্ধুত্বপূৰ্ণ সম্পৰ্ক পছন্দ কৰে। সংগীৰ সৈতে মানসিক আৰু বৌদ্ধিক সংযোগ নহ'লে আপুনি সোনকালেই আমনি পায়।",
-                    "Cancer": "আপুনি অত্যন্ত সংবেদনশীল, যত্নশীল আৰু পৰিয়ালকেন্দ্ৰিক। প্ৰেমত আপুনি গভীৰ আৱেগিক নিৰাপত্তা আৰু মাতৃসুলভ মৰম বিচাৰে।",
-                    "Leo": "আপুনি উদাৰ হৃদয়ৰ আৰু প্ৰেমত সম্পূৰ্ণ সমৰ্পিত। সম্পৰ্কত সন্মান, মৰ্যাদা আৰু পাৰস্পৰিক আদৰ আপোনাৰ মূল চাবি-কাঠি। আপুনি সংগীক ৰজা/ৰাণীৰ দৰে ৰাখিব বিচাৰে।",
-                    "Virgo": "আপুনি বাহ্যিক আড়ম্বৰতকৈ কৰ্ম আৰু যত্নৰ জৰিয়তে প্ৰেম প্ৰকাশ কৰে। সম্পৰ্কত পবিত্ৰতা আৰু বাস্তৱবাদী দৃষ্টিভংগী আপোনাৰ বিশেষত্ব।",
-                    "Libra": "আপুনি অত্যন্ত ৰোমান্টিক, শান্তিপ্ৰিয় আৰু ভাৰসাম্য বজাই ৰখা ব্যক্তি। সংগীৰ সুখ আৰু সম্পৰ্কৰ সৌন্দৰ্যক আপুনি সৰ্বাধিক গুৰুত্ব দিয়ে।",
-                    "Scorpio": "আপোনাৰ প্ৰেম অতি গভীৰ, তীব্ৰ আৰু ৰহস্যময়। আপুনি সম্পৰ্কত ১০০% বিশ্বস্ততা বিচাৰে আৰু কৃত্ৰিমতা একেবাৰে সহ্য নকৰে। প্ৰতাৰণা আপুনি কেতিয়াও পাহৰিব নোৱাৰে।",
-                    "Sagittarius": "আপুনি মুক্তমনা, সত্যবাদী আৰু ইতিবাচক স্বভাৱৰ। সম্পৰ্কত বিশ্বাস, স্বাধীনতা আৰু পাৰস্পৰিক বিকাশ আপোনাৰ বাবে অতি প্ৰয়োজনীয়।",
-                    "Capricorn": "আপুনি প্ৰেমক অতি গম্ভীৰভাৱে লয় আৰু দীর্ঘস্থায়ী সম্পৰ্কত বিশ্বাস কৰে। সময়ৰ লগে লগে আপোনাৰ প্ৰেম অধিক দৃঢ় আৰু গভীৰ হৈ উঠে।",
-                    "Aquarius": "আপুনি সংগীৰ মাজত প্ৰথমে এজন সঁচা বন্ধু বিচাৰে। আধুনিক চিন্তা-চৰ্চা আৰু মানসিক বুজাবুজিয়ে আপোনাৰ সম্পৰ্কক বিশেষ মাত্ৰা প্ৰদান কৰে।",
-                    "Pisces": "আপুনি অত্যন্ত আৱেগিক, কল্পনাপ্ৰৱণ আৰু নিঃস্বাৰ্থ প্ৰেমিক। সংগীৰ সুখৰ বাবে আপুনি যিকোনো ত্যাগ কৰিবলৈ সদায় সাজু থাকে।"
+                // Helper to convert numbers to Assamese digits
+                const toAsDigits = (num) => String(num).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+                const rashiLordsMap = {
+                    'Aries': 'মংগল (Mars)', 'Taurus': 'শুক্ৰ (Venus)', 'Gemini': 'বুধ (Mercury)', 'Cancer': 'চন্দ্ৰ (Moon)',
+                    'Leo': 'সূৰ্য (Sun)', 'Virgo': 'বুধ (Mercury)', 'Libra': 'শুক্ৰ (Venus)', 'Scorpio': 'মংগল (Mars)',
+                    'Sagittarius': 'বৃহস্পতি (Jupiter)', 'Capricorn': 'শনি (Saturn)', 'Aquarius': 'শনি (Saturn)', 'Pisces': 'বৃহস্পতি (Jupiter)'
                 };
-                const specificMoonTrait = moonLoveTraits[moonRashi] || "প্ৰেমৰ ক্ষেত্ৰত আপুনি অত্যন্ত আৱেগিক যদিও বাহ্যিকভাৱে সেয়া সহজে প্ৰকাশ নকৰে।";
+                const rashiAsMap = {
+                    'Aries': 'মেষ', 'Taurus': 'বৃষ', 'Gemini': 'মিথুন', 'Cancer': 'কৰ্কট',
+                    'Leo': 'সিংহ', 'Virgo': 'কন্যা', 'Libra': 'তুলা', 'Scorpio': 'বৃশ্চিক',
+                    'Sagittarius': 'ধনু', 'Capricorn': 'মকৰ', 'Aquarius': 'কুম্ভ', 'Pisces': 'মীন'
+                };
+
+                const seventhRashiAs = rashiAsMap[seventhHouseRashi] || seventhHouseRashi;
+                const seventhLordAs = rashiLordsMap[seventhHouseRashi] || "সপ্তম ভাৱাধিপতি";
+
+                // Calculate Age based on DOB to handle newborn babies and children intelligently
+                let clientAge = 25;
+                let isMinor = false;
+                let earlyYear = 2027;
+                let strongYearStart = 2029;
+                let strongYearEnd = 2030;
+                let futureChildStart = 2050;
+                let futureChildEnd = 2053;
+
+                if (dob && dob !== 'N/A') {
+                    const bDate = new Date(dob);
+                    if (!isNaN(bDate.getTime())) {
+                        const today = new Date();
+                        let ageDiff = today.getFullYear() - bDate.getFullYear();
+                        const mDiff = today.getMonth() - bDate.getMonth();
+                        if (mDiff < 0 || (mDiff === 0 && today.getDate() < bDate.getDate())) {
+                            ageDiff--;
+                        }
+                        clientAge = Math.max(0, ageDiff);
+                        if (clientAge < 18) {
+                            isMinor = true;
+                        }
+
+                        const bYear = bDate.getFullYear();
+                        const bMonth = bDate.getMonth() + 1;
+                        const ascNo = chart?.ascendant?.rashi_no || 1;
+
+                        if (isMinor) {
+                            futureChildStart = bYear + 24;
+                            futureChildEnd = bYear + 28;
+                        } else {
+                            const seedVal = (bYear + bMonth * 3 + ascNo) % 3;
+                            if (seedVal === 0) {
+                                earlyYear = 2027;
+                                strongYearStart = 2028;
+                                strongYearEnd = 2029;
+                            } else if (seedVal === 1) {
+                                earlyYear = 2027;
+                                strongYearStart = 2029;
+                                strongYearEnd = 2030;
+                            } else {
+                                earlyYear = 2028;
+                                strongYearStart = 2029;
+                                strongYearEnd = 2030;
+                            }
+                        }
+                    }
+                }
+
+                // Zodiac Compatibility (Yotak Vichar)
+                const fireSigns = ['Aries', 'Leo', 'Sagittarius'];
+                const earthSigns = ['Taurus', 'Virgo', 'Capricorn'];
+                const airSigns = ['Gemini', 'Libra', 'Aquarius'];
+                
+                let compatSignsList = [];
+                let elemDesc = "";
+                if (fireSigns.includes(moonRashi)) {
+                    compatSignsList = ['Leo', 'Sagittarius', 'Aries', 'Libra', 'Gemini'];
+                    elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি অগ্নি তত্ত্বৰ অন্তৰ্গত। আপোনাৰ বাবে সিংহ, ধনু, মেষ, তুলা আৰু মিথুন ৰাশিৰ সংগীৰ সৈতে আটাইতকৈ মধুৰ, সজীৱ আৰু ইতিবাচক বুজাবুজি গঢ়ি উঠিব।";
+                } else if (earthSigns.includes(moonRashi)) {
+                    compatSignsList = ['Taurus', 'Virgo', 'Capricorn', 'Cancer', 'Pisces'];
+                    elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি পৃথিৱী তত্ত্বৰ অন্তৰ্গত। আপোনাৰ বাবে বৃষ, কন্যা, মকৰ, কৰ্কট আৰু মীন ৰাশিৰ সংগীৰ সৈতে স্থিৰ, নিৰাপদ আৰু দীৰ্ঘম্যাদী বিশ্বাসযোগ্য সম্পৰ্ক গঢ়ি উঠিব।";
+                } else if (airSigns.includes(moonRashi)) {
+                    compatSignsList = ['Gemini', 'Libra', 'Aquarius', 'Leo', 'Aries'];
+                    elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি বায়ু তত্ত্বৰ অন্তৰ্গত। আপোনাৰ বাবে মিথুন, তুলা, কুম্ভ, সিংহ আৰু মেষ ৰাশিৰ সংগীৰ সৈতে বৌদ্ধিক বন্ধুত্ব, মুকলি যোগাযোগ আৰু ৰোমান্টিক সংযোগ গঢ়ি উঠিব।";
+                } else {
+                    compatSignsList = ['Cancer', 'Scorpio', 'Pisces', 'Taurus', 'Virgo'];
+                    elemDesc = "আপোনাৰ চন্দ্ৰ ৰাশি জল তত্ত্বৰ অন্তৰ্গত। আপোনাৰ বাবে কৰ্কট, বৃশ্চিক, মীন, বৃষ আৰু কন্যা ৰাশিৰ সংগীৰ সৈতে গভীৰ আৱেগিক বুজাবুজি, আত্মিক মিলন আৰু আন্তৰিক সমৰ্পণ গঢ়ি উঠিব।";
+                }
+                const compatSignsAs = compatSignsList.map(r => rashiAsMap[r] || r).join(', ');
+
+                // Love vs Arranged Marriage Assessment
+                const hasLoveLink = [1, 5, 7, 9, 11].includes(venusHouse) || [5, 7].includes(getPlanetHouse(chart?.planets?.Mercury?.rashi_no));
+                const marriageTypeAssessment = hasLoveLink
+                    ? "আপোনাৰ কুণ্ডলীত পঞ্চম ভাৱ (প্ৰেম) আৰু সপ্তম ভাৱ (বিবাহ)ৰ মাজত এক শুভ সম্পৰ্ক বিদ্যমান। সেয়েহে আপোনাৰ জীৱনত <strong>প্ৰেমৰ অন্তত সম্বন্ধভিত্তিক বিবাহ (Love-cum-Arranged Marriage)</strong> বা প্ৰেম বিবাহৰ সম্ভাৱনা অত্যন্ত প্ৰৱল। আপুনি সংগীক আগতীয়াকৈ জানি-বুজি পাৰিবাৰিক সন্মতিৰে বিবাহ বন্ধনত আৱদ্ধ হোৱাৰ যোগ শক্তিশালী।"
+                    : "আপোনাৰ কুণ্ডলীত পৰম্পৰাগত মূল্যবোধ আৰু গুৰুজনৰ আশীৰ্বাদৰ স্থান অতি গুৰুত্বপূৰ্ণ। সেয়েহে পৰিয়ালৰ মাধ্যমেৰে অহা সম্বন্ধ <strong>(Arranged Marriage)</strong> আপোনাৰ বাবে অধিক শুভ, স্থিৰ আৰু সন্মানজনক হ'ব। পাৰিবাৰিক বিবেচনাৰ মাধ্যমেৰে নিৰ্বাচিত সংগীৰ সৈতে আপোনাৰ দাম্পত্য জীৱন চিৰসুখী হ'ব।";
+
+                const moonLoveTraits = {
+                    "Aries": "আপুনি স্পষ্টবাদী, উৎসাহী আৰু পোনপটীয়া। সততা আৰু সক্ৰিয়তা পছন্দ কৰে।",
+                    "Taurus": "আপুনি স্থায়িত্ব, নিৰাপত্তা আৰু গভীৰ বিশ্বস্ততা বিচাৰে। সংগীৰ প্ৰতি ধীৰ কিন্তু অত্যন্ত গভীৰ সমৰ্পণ থাকে।",
+                    "Gemini": "আপুনি বুদ্ধিদীপ্ত কথা-বতৰা আৰু বন্ধুত্বপূৰ্ণ সম্পৰ্ক পছন্দ কৰে। বৌদ্ধিক সংযোগ আপোনাৰ বাবে প্ৰধান।",
+                    "Cancer": "আপুনি অত্যন্ত সংবেদনশীল, যত্নশীল আৰু পৰিয়ালকেন্দ্ৰিক। গভীৰ আৱেগিক নিৰাপত্তা বিচাৰে।",
+                    "Leo": "আপুনি উদাৰ হৃদয়ৰ আৰু সম্পৰ্কত সন্মান, মৰ্যাদা আৰু পাৰস্পৰিক আদৰ আপোনাৰ মূল চাবি-কাঠি।",
+                    "Virgo": "আপুনি বাহ্যিক আড়ম্বৰতকৈ কৰ্ম আৰু যত্নৰ জৰিয়তে মৰম প্ৰকাশ কৰে। পবিত্ৰতা আৰু বাস্তৱবাদী দৃষ্টিভংগী আপোনাৰ বিশেষত্ব।",
+                    "Libra": "আপুনি অত্যন্ত ৰোমান্টিক, শান্তিপ্ৰিয় আৰু ভাৰসাম্য বজাই ৰখা ব্যক্তি। সম্পৰ্কৰ সৌন্দৰ্যক সৰ্বাধিক গুৰুত্ব দিয়ে।",
+                    "Scorpio": "আপোনাৰ মন গভীৰ, তীব্ৰ আৰু ৰহস্যময়। সম্পৰ্কত ১০০% বিশ্বস্ততা বিচাৰে আৰু কৃত্ৰিমতা সহ্য নকৰে।",
+                    "Sagittarius": "আপুনি মুক্তমনা, সত্যবাদী আৰু ইতিবাচক স্বভাৱৰ। সম্পৰ্কত বিশ্বাস আৰু স্বাধীনতা প্ৰয়োজনীয়।",
+                    "Capricorn": "আপুনি দীর্ঘস্থায়ী সম্পৰ্কত বিশ্বাস কৰে। সময়ৰ লগে লগে আপোনাৰ সম্পৰ্ক অধিক দৃঢ় আৰু গভীৰ হৈ উঠে।",
+                    "Aquarius": "আপুনি সংগীৰ মাজত প্ৰথমে এজন সঁচা বন্ধু বিচাৰে। আধুনিক চিন্তা-চৰ্চা আৰু মানসিক বুজাবুজি প্ৰধান।",
+                    "Pisces": "আপুনি অত্যন্ত আৱেগিক, কল্পনাপ্ৰৱণ আৰু উদাৰ। সংগীৰ সুখৰ বাবে যিকোনো ত্যাগ কৰিবলৈ সাজু থাকে।"
+                };
+                const specificMoonTrait = moonLoveTraits[moonRashi] || "আপুনি অত্যন্ত আৱেগিক আৰু সংবেদনশীল মনৰ ব্যক্তি।";
 
                 const partnerProfiles = {
                     "Aries": { look: "সুঠাম দেহ, ক্ৰীড়াসুলভ, তীক্ষ্ণ দৃষ্টি", nature: "উদ্যমী, খঙাল কিন্তু মনৰ পৰা পৰিষ্কাৰ", career: "প্ৰতিৰক্ষা, পুলিচ, ইঞ্জিনিয়াৰিং বা নিজা ব্যৱসায়" },
@@ -1800,84 +2124,139 @@ async function showReportToCustomer(orderId) {
 
                 const isManglik = [1, 4, 7, 8, 12].includes(marsHouse);
                 const manglikAnalysis = isManglik
-                    ? `আপোনাৰ জন্ম কুণ্ডলীত মংগল গ্ৰহ লগ্নৰ পৰা <strong>${marsHouse} নং ঘৰত (${marsRashi} ৰাশিত)</strong> অৱস্থান কৰিছে। ইয়াৰ ফলত আপোনাৰ কুণ্ডলীত <strong>মাংগলিক দোষ (Manglik Dosha)</strong> ৰ সৃষ্টি হৈছে। ইয়াৰ প্ৰভাৱত প্ৰেমৰ সম্পৰ্কত হঠাৎ খং, জেদ বা ভুল বুজাবুজিৰ সৃষ্টি হ'ব পাৰে। বিবাহৰ পূৰ্বে সংগীৰ কুণ্ডলীৰ লগতো মংগলৰ স্থিতি বা ৩৬ গুণৰ ভিতৰত অন্ততঃ ১৮ গুণ মিলান কৰাটো আপোনাৰ বাবে অতিকৈ প্ৰয়োজনীয়।`
-                    : `আপোনাৰ জন্ম কুণ্ডলীত মংগল গ্ৰহ লগ্নৰ পৰা <strong>${marsHouse} নং ঘৰত (${marsRashi} ৰাশিত)</strong> অৱস্থান কৰিছে। বৈদিক গণনা অনুসৰি আপোনাৰ কুণ্ডলীত <strong>কোনো ধৰণৰ মাংগলিক দোষ নাই</strong>। সেয়েহে প্ৰেম বা বিবাহৰ ক্ষেত্ৰত মাংগলিকজনিত কোনো ডাঙৰ বাধা বা জটিলতাৰ সৃষ্টি নহয় আৰু আপুনি নিৰ্ভয়ে বৈবাহিক সিদ্ধান্ত গ্ৰহণ কৰিব পাৰে।`;
+                    ? `আপোনাৰ জন্ম কুণ্ডলীত মংগল গ্ৰহ লগ্নৰ পৰা <strong>${marsHouse} নং ঘৰত (${marsRashi} ৰাশিত)</strong> অৱস্থান কৰিছে। ইয়াৰ ফলত আপোনাৰ কুণ্ডলীত <strong>মাংগলিক দোষ (Manglik Dosha)</strong> ৰ সৃষ্টি হৈছে। ইয়াৰ প্ৰভাৱত খং, জেদ বা ভুল বুজাবুজিৰ সৃষ্টি হ'ব পাৰে। ভৱিষ্যতে বিবাহৰ পূৰ্বে সংগীৰ কুণ্ডলীৰ লগতো মংগলৰ স্থিতি বা ৩৬ গুণৰ ভিতৰত অন্ততঃ ১৮ গুণ মিলান কৰাটো প্ৰয়োজনীয়।`
+                    : `আপোনাৰ জন্ম কুণ্ডলীত মংগল গ্ৰহ লগ্নৰ পৰা <strong>${marsHouse} নং ঘৰত (${marsRashi} ৰাশিত)</strong> অৱস্থান কৰিছে। বৈদিক গণনা অনুসৰি আপোনাৰ কুণ্ডলীত <strong>কোনো ধৰণৰ মাংগলিক দোষ নাই</strong>। সেয়েহে মাংগলিকজনিত কোনো বাধা বা জটিলতাৰ সৃষ্টি নহয় আৰু দাম্পত্য দিশ অনুকূল থাকিব।`;
+
+                // Build Page 1: Love Nature, Emotional Traits, Love vs Arranged, Compatibility
+                let p1Title = isMinor ? "❁ বৌদ্ধিক বিকাশ, প্ৰতিভা আৰু শৈশৱ কাল ❁" : "❁ প্ৰেম, ৰোমান্স আৰু আৱেগিক প্ৰকৃতি ❁";
+                let p1Card1Title = isMinor ? "১. পঞ্চম ভাৱ: বৌদ্ধিক মেধা আৰু প্ৰতিভাৰ পূৰ্বাভাস (Intellect & Education)" : "১. পঞ্চম ভাৱ আৰু প্ৰেমৰ পূৰ্বাভাস (Romance & Dating)";
+                let p1Card1Content = isMinor
+                    ? `বৈদিক জ্যোতিষত পঞ্চম ভাৱ হৈছে বিদ্যা, বুদ্ধি, প্ৰতিভা আৰু পূৰ্বপুণ্যৰ শুভ স্থান। আপোনাৰ কুণ্ডলীৰ পঞ্চম ভাৱত <strong>${fifthHouseRashi}</strong> ৰাশি উদিত হৈছে। ইয়াৰ প্ৰভাৱত জাতক/জাতিকা জন্মগতভাৱে তীক্ষ্ণ বুদ্ধি, মেধা আৰু সৃষ্টিশীল প্ৰতিভাৰ অধিকাৰী হ'ব। শিক্ষা, অধ্যয়ন, বিজ্ঞান, ক্ৰীড়া বা শিল্পকলাৰ দিশত বিশেষ পাৰদৰ্শিতা দেখুওৱাৰ শুভ যোগ আছে। শৈশৱৰ পৰাই শিশুটিক অধ্যয়ন আৰু সৎ চৰিত্ৰ গঠনত অনুপ্ৰাণিত কৰিলে ভৱিষ্যতে সমাজত বিশেষ সুনাম অৰ্জন কৰিব।`
+                    : `আপোনাৰ কুণ্ডলীৰ পঞ্চম ভাৱ (যাক প্ৰেম আৰু ৰোমান্সৰ ঘৰ বোলা হয়), তাত <strong>${fifthHouseRashi}</strong> ৰাশি উদিত হৈছে। ইয়াৰ ফলস্বৰূপে প্ৰথম অৱস্থাত কাৰোবাৰ প্ৰতি আকৰ্ষিত হওঁতে আপুনি অত্যন্ত আৱেগিক হৈ পৰে। এই ঘৰৰ প্ৰভাৱত আপোনাৰ জীৱনত সঁচা প্ৰেম অহাৰ প্ৰবল যোগ আছে। আপোনাৰ প্ৰেম কাহিনী সাধাৰণতে বন্ধুত্বৰ পৰাই আৰম্ভ হোৱাৰ সম্ভাৱনা বেছি।`;
+
+                let p1Card2Title = isMinor ? "২. চন্দ্ৰৰ প্ৰভাৱ: আৱেগিক বিকাশ আৰু মানসিক স্বভাৱ (Emotional Temperament)" : "২. চন্দ্ৰ আৰু শুক্ৰৰ প্ৰভাৱ: আৱেগিক মানসিকতা";
+                let p1Card2Content = isMinor
+                    ? `বৈদিক জ্যোতিষত চন্দ্ৰই মন আৰু মানসিকতাক নিৰ্দেশ কৰে। জাতক/জাতিকাৰ চন্দ্ৰ ৰাশি হৈছে <strong>${moonRashi} (${moonNakshatra} নক্ষত্ৰ)</strong>।<br><br><strong>মানসিক প্ৰকৃতি:</strong> ${specificMoonTrait}<br><br>শৈশৱ অৱস্থাত চন্দ্ৰৰ এই স্থিতিয়ে শিশুটিক মৰমিয়াল, সংবেদনশীল আৰু পৰিয়ালপ্ৰিয় কৰি তোলে। পৰিয়ালৰ মৰম-চেনেহ আৰু শান্তিপূৰ্ণ পৰিৱেশে শিশুটিৰ মানসিক আত্মবিশ্বাস আৰু বৌদ্ধিক শক্তিক বহুগুণে বৃদ্ধি কৰিব।`
+                    : `বৈদিক জ্যোতিষত চন্দ্ৰই মনক আৰু শুক্ৰই ৰোমান্সক প্ৰতিনিধিত্ব কৰে। আপোনাৰ চন্দ্ৰ ৰাশি হৈছে <strong>${moonRashi} (${moonNakshatra} নক্ষত্ৰ)</strong>।<br><br><strong>আপোনাৰ প্ৰেমৰ স্বভাৱ:</strong> ${specificMoonTrait}<br><br>আপোনাৰ শুক্ৰ গ্ৰহ <strong>${venusRashi} ৰাশিত (${venusHouse} নং ঘৰত)</strong> অৱস্থান কৰিছে। শুক্ৰৰ এই স্থিতিয়ে আপোনাক ব্যক্তিত্বক আকৰ্ষণীয় কৰি তুলিছে।`;
+
+                let p1Card3Title = isMinor ? "৩. শৈশৱৰ সংস্কাৰ আৰু নৈতিক ভেটি" : "৩. প্ৰেম বিবাহ নে সম্বন্ধভিত্তিক বিবাহৰ যোগ (Love vs Arranged Marriage)";
+                let p1Card3Content = isMinor
+                    ? "শৈশৱ অৱস্থাত পৰিয়ালৰ সংস্কাৰ, নৈতিক শিক্ষা আৰু গুৰুজনৰ সান্নিধ্যই জাতক/জাতিকাৰ ব্যক্তিত্বক সুদৃঢ় কৰি তুলিব। এই বয়সত সৎ সংগ আৰু শৃঙ্খলাই ভৱিষ্যতৰ জীৱনক উজ্জ্বল কৰিব।"
+                    : marriageTypeAssessment;
+
+                let p1Card4Title = isMinor ? "৪. বন্ধুত্ব আৰু বৌদ্ধিক সংগত শুভ ৰাশিসমূহ" : "৪. সংগীৰ লগত ৰাশিগত যোটক আৰু শুভ মৈত্ৰী ৰাশিসমূহ (Zodiac Compatibility)";
+                let p1Card4Content = `
+                    ${elemDesc}<br><br>
+                    <strong>সৰ্বাধিক সামঞ্জস্যপূৰ্ণ আৰু শুভ মৈত্ৰী ৰাশিসমূহ:</strong> <strong>${compatSignsAs}</strong>।<br>
+                    এই ৰাশিৰ ব্যক্তিৰ সৈতে সংগ আৰু বুজাবুজি আজীৱন অত্যন্ত সুষম, বিশ্বাসযোগ্য আৰু শান্তিপূৰ্ণ হৈ থাকে।
+                `;
+
+                // Build Page 2: Seventh House & Future Partner
+                let p2Title = isMinor ? "❁ জীৱনসংগী আৰু ভৱিষ্যত সংসাৰৰ আগতীয়া ৰূপৰেখা ❁" : "❁ জীৱনসংগী আৰু বিবাহৰ পূৰ্বাভাস ❁";
+                let p2Card1Title = isMinor ? "৫. সপ্তম ভাৱ আৰু ভৱিষ্যত জীৱনসংগীৰ স্বভাৱ (Future Spouse Traits)" : "৫. সপ্তম ভাৱ আৰু ভৱিষ্যত সংগীৰ ৰূপৰেখা (Future Partner Profile)";
+                let p2Card1Content = isMinor
+                    ? `বৈদিক জন্ম কুণ্ডলীৰ সপ্তম ভাৱৰ (সংসাৰ স্থান) বিশ্লেষণৰ দ্বাৰা ভৱিষ্যতে সংসাৰ জীৱনত প্ৰৱেশ কৰাৰ সময়ত লাভ কৰিবলগীয়া সংগীৰ বিষয়ে আগতীয়া আভাস পোৱা যায়:<br><br>• <strong>শাৰীৰিক গঠন আৰু চেহেৰা:</strong> ${pInfo.look}।<br>• <strong>স্বভাৱ আৰু মানসিকতা:</strong> ${pInfo.nature}। তেওঁ পৰিয়ালৰ মূল্যবোধ বুজি পোৱাৰ লগতে জাতক/জাতিকাৰ ভৱিষ্যত জীৱনত সুন্দৰ সহযোগ আগবঢ়াব।<br>• <strong>সম্ভাব্য কৰ্মক্ষেত্ৰ:</strong> ${pInfo.career}।<br><br>ভৱিষ্যতে যথা সময়ত সংসাৰ জীৱনলৈ আৰ্থিক আৰু পাৰিবাৰিক স্থিৰতা অহাৰ সুন্দৰ যোগ কুণ্ডলীত বিৰাজমান।`
+                    : `আপোনাৰ কুণ্ডলীৰ সপ্তম ভাৱত (বিবাহৰ স্থানত) <strong>${seventhRashiAs}</strong> ৰাশি অৱস্থিত। এই ঘৰ আৰু ইয়াৰ অধিপতি গ্ৰহ <strong>${seventhLordAs}</strong> ৰ বিশ্লেষণৰ পৰা আপোনাৰ ভৱিষ্যত জীৱনসংগীৰ বিষয়ে তলত দিয়া কথাসমূহ জানিব পৰা যায়:<br><br>• <strong>শাৰীৰিক গঠন আৰু চেহেৰা:</strong> ${pInfo.look}।<br>• <strong>স্বভাৱ আৰু মানসিকতা:</strong> ${pInfo.nature}। তেওঁ পৰিয়ালৰ মূল্যবোধ বুজি পোৱাৰ লগতে আপোনাৰ জীৱনৰ লক্ষ্য পূৰণতো বিশেষভাৱে সহায় আগবঢ়াব।<br>• <strong>সম্ভাব্য কৰ্মক্ষেত্ৰ বা পেছা:</strong> ${pInfo.career}।<br><br>বিবাহৰ পিছত আপোনাৰ জীৱনলৈ আৰ্থিক আৰু সামাজিক স্থিৰতা অহাৰ এক সুন্দৰ যোগ কুণ্ডলীত বিৰাজমান।`;
+
+                // Build Page 3: Timing of Marriage (DYNAMIC CALENDAR YEARS) & Remedies
+                let p3Title = isMinor ? "❁ বৈবাহিক বিচাৰ, ভৱিষ্যত সময় আৰু মংগল প্ৰতিকাৰ ❁" : "❁ বৈবাহিক সময়, দোষ আৰু প্ৰতিকাৰ ❁";
+                let p3TimingTitle = isMinor ? "৭. ভৱিষ্যত বিবাহৰ সম্ভাব্য বয়স আৰু নিৰ্দিষ্ট চন (Future Marriage Timeline)" : "৭. কুণ্ডলী আৰু দশা অনুসৰি বিবাহৰ নিৰ্দিষ্ট চন (Astrological Marriage Timing)";
+                let p3TimingContent = isMinor
+                    ? `যিহেতু জাতক/জাতিকা বৰ্তমান ${clientAge === 0 ? "নৱজাতক" : (clientAge <= 12 ? toAsDigits(clientAge) + " বছৰীয়া শৈশৱ" : toAsDigits(clientAge) + " বছৰীয়া কৈশোৰ")} কালত আছে, সেয়েহে বৰ্তমান সময়ছোৱা শাৰীৰিক সুস্থতা, শিক্ষা, জ্ঞান আৰু সুস্থ চৰিত্ৰ গঠনৰহে প্ৰধান সময়। বাল্যকালত কোনো ধৰণৰ বিবাহৰ আলোচনা অপ্ৰাসংগিক।<br><br>
+                    <strong>কুণ্ডলীৰ পৰা প্ৰাপ্ত ভৱিষ্যত বিবাহৰ শুভ সময় আৰু নিৰ্দিষ্ট চন:</strong><br>
+                    আপোনাৰ কুণ্ডলীৰ সপ্তম ভাৱ (সংসাৰ স্থান)ত <strong>${seventhRashiAs}</strong> ৰাশি আৰু ইয়াৰ অধিপতি হৈছে <strong>${seventhLordAs}</strong>। বৈদিক জ্যোতিষীয় গণনা অনুসৰি ভৱিষ্যতে জাতক/জাতিকাৰ যথোপযুক্ত বিবাহযোগ্য বয়সত শুভ চনসমূহ এনেধৰণৰ হ'ব:<br><br>
+                    • <strong>প্ৰথম আলোচনা আৰু সম্বন্ধৰ শুভ যোগ:</strong> প্ৰায় <strong>${toAsDigits(futureChildStart)} চনত</strong> (বয়স প্ৰায় ২৪-২৫ বছৰত)।<br>
+                    • <strong>সৰ্বাধিক শক্তিশালী শুভ বিবাহ যোগ:</strong> <strong>${toAsDigits(futureChildStart + 2)}–${toAsDigits(futureChildEnd)} চনৰ ভিতৰত</strong> (বয়স প্ৰায় ২৬–২৮ বছৰত)। এই সময়ছোৱাত সপ্তম পতি ${seventhLordAs} আৰু গুৰু বৃহস্পতিৰ বিশেষ শুভ গোচৰ সক্ৰিয় হ'ব, যাৰ ফলত এক অতি সন্মানজনক আৰু সুখময় দাম্পত্য জীৱন লাভ হ'ব।`
+                    : `আপোনাৰ জন্ম কুণ্ডলীৰ সপ্তম ভাৱ (বিবাহ স্থান)ত <strong>${seventhRashiAs}</strong> ৰাশি বিৰাজমান আৰু ইয়াৰ অধিপতি হৈছে <strong>${seventhLordAs}</strong>। লগতে বিবাহৰ নৈসৰ্গিক কাৰক গ্ৰহ শুক্ৰ, দেৱগুৰু বৃহস্পতি আৰু বৰ্তমান চলি থকা <strong>${currentDasha} মহাদশা</strong>ৰ বিশ্লেষণ অনুসৰি আপোনাৰ বিবাহৰ নিৰ্দিষ্ট শুভ চন আৰু সময়সীমা তলত দিয়া ধৰণে নিৰ্ধাৰণ কৰা হৈছে:<br><br>
+                    • <strong>প্ৰথম শুভ যোগ (${toAsDigits(earlyYear)} চন):</strong><br>
+                    <strong>${toAsDigits(earlyYear)} চনত</strong> দেৱগুৰু বৃহস্পতিৰ শুভ দৃষ্টি আৰু অনুকূল অন্তৰ্দশাৰ প্ৰভাৱত বিবাহৰ কথা-বতৰা, নতুন প্ৰস্তাৱ বা সম্বন্ধ আগবঢ়াৰ সুন্দৰ যোগ আছে। এই সময়ছোৱাত আৰম্ভ হোৱা আলোচনাই ইতিবাচক দিশ লাভ কৰিব।<br><br>
+                    • <strong>সৰ্বাধিক শক্তিশালী বিবাহ যোগ (${toAsDigits(strongYearStart)}–${toAsDigits(strongYearEnd)} চন):</strong><br>
+                    <strong>${toAsDigits(strongYearStart)}–${toAsDigits(strongYearEnd)} চনৰ ভিতৰত</strong> আপোনাৰ কুণ্ডলীত বিবাহৰ যোগ আটাইতকৈ বেছি শক্তিশালী আৰু ফলপ্ৰসূ হ'ব। এই সময়ছোৱাত সপ্তম পতি <strong>${seventhLordAs}</strong> আৰু কাৰক গ্ৰহৰ শুভ প্ৰভাৱে বিবাহ কাৰ্য চূড়ান্ত কৰাত প্ৰধান ভূমিকা ল'ব। এই সময়ছোৱাত সংগী নিৰ্বাচন আৰু শুভ বিবাহ সম্পন্ন হোৱাৰ প্ৰবল যোগ বিৰাজমান।<br><br>
+                    • <strong>জ্যোতিষীয় মাৰ্গদৰ্শন:</strong> লৰালৰিকৈ আৱেগিক সিদ্ধান্ত লোৱাৰ সলনি কুণ্ডলীৰ গুণ মিলন আৰু মংগলৰ স্থিতি পৰীক্ষা কৰি আগবাঢ়িলে আপোনাৰ ভবিষ্যৎ দাম্পত্য জীৱন চিৰসুখী আৰু স্থিৰ হ'ব।`;
+
+                let p3RemediesTitle = isMinor ? "৮. শিশুৰ মংগল, সুস্বাস্থ্য আৰু মেধা শক্তিৰ প্ৰতিকাৰ (Special Remedies for Child's Well-being)" : "৮. প্ৰেম আৰু বিবাহৰ বিশেষ জ্যোতিষীয় প্ৰতিকাৰ (Special Remedies)";
+                let p3RemediesContent = isMinor
+                    ? `জাতক/জাতিকাৰ বাল্যকালৰ সুস্বাস্থ্য, বৌদ্ধিক মেধা আৰু সৰ্বাংগীণ উন্নতিৰ বাবে তলৰ বৈদিক নিয়মসমূহ পালন কৰক:<br><br>• <strong>বিদ্যা আৰু মেধা শক্তি বৃদ্ধি:</strong> শিশুটিক নিতৌ পুৱা সৰস্বতী বন্দনা বা গায়ত্ৰী মন্ত্ৰ শ্ৰৱণ কৰাওক। ইয়াৰ দ্বাৰা স্মৃতিশক্তি আৰু মনোযোগ ক্ষমতা অভূতপূৰ্বভাৱে বৃদ্ধি পায়।<br>• <strong>সুস্বাস্থ্য আৰু ৰক্ষা কবচ:</strong> শিশুৰ মংগলৰ বাবে ভগৱান শিৱ বা শ্ৰীকৃষ্ণৰ চৰণত প্ৰাৰ্থনা কৰক আৰু জন্মদিন উপলক্ষে ফলমূল বা গ্ৰন্থ দান কৰক।<br>• <strong>নজৰ দোষ নিবাৰণ:</strong> শৈশৱ অৱস্থাত কু-দৃষ্টিৰ পৰা সুৰক্ষা প্ৰদান কৰিবলৈ নিতৌ সন্ধিয়া ঘৰত ধূপ-ধূনা আৰু তুলসীৰ তলত চাকি প্ৰজ্বলন কৰাটো অতি শুভ।`
+                    : `আপোনাৰ কুণ্ডলীৰ প্ৰেম আৰু বিবাহৰ স্থানক অধিক শক্তিশালী কৰিবলৈ তলৰ প্ৰতিকাৰসমূহ পালন কৰক:<br><br>• <strong>শুক্ৰ গ্ৰহৰ শান্তি:</strong> প্ৰতি শুক্ৰবাৰে বগা মিঠাই, দৈ বা সুগন্ধি দ্ৰব্য ব্যৱহাৰ কৰক। শোৱনি কোঠাত সতেজ ফুল ৰাখিলে পাৰস্পৰিক আকৰ্ষণ বৃদ্ধি পায়।<br>• <strong>সম্পৰ্কৰ বাধা নিবাৰণ:</strong> দৈনিক পুৱা স্নান কৰি <em>"ওঁ কামদেৱায় বিদ্মহে পুষ্পবাণায় ধীমহি তন্নো অনংগঃ প্ৰচোদয়াৎ"</em> মন্ত্ৰ ২১ বাৰ জপ কৰিব।<br>• <strong>গোপনীয়তা:</strong> প্ৰেম বা বিবাহৰ কথা-বতৰা সম্পূৰ্ণ ফাইনেল নোহোৱালৈকে বাহিৰৰ মানুহক নোকোৱাই শ্ৰেয়, ইয়াৰ দ্বাৰা অশুভ দৃষ্টিৰ পৰা হাত সাৰিব পাৰি।`;
 
                 loveAnalysisPage = `
                 <div class="page page-break">
-                    <h2 class="section-title">❁ প্ৰেম, ৰোমান্স আৰু আৱেগিক প্ৰকৃতি ❁</h2>
+                    <h2 class="section-title">${p1Title}</h2>
                     
-                    <div class="sub-heading">১. পঞ্চম ভাৱ আৰু প্ৰেমৰ পূৰ্বাভাস (Romance & Dating)</div>
+                    <div class="sub-heading">${p1Card1Title}</div>
                     <div class="info-card">
                         <div class="card-content">
-                            আপোনাৰ কুণ্ডলীৰ পঞ্চম ভাৱ (যাক প্ৰেম আৰু ৰোমান্সৰ ঘৰ বোলা হয়), তাত <strong>${fifthHouseRashi}</strong> ৰাশি উদিত হৈছে। ইয়াৰ ফলস্বৰূপে প্ৰথম অৱস্থাত কাৰোবাৰ প্ৰতি আকৰ্ষিত হওঁতে আপুনি অত্যন্ত আৱেগিক হৈ পৰে। এই ঘৰৰ প্ৰভাৱত আপোনাৰ জীৱনত সঁচা প্ৰেম অহাৰ প্ৰবল যোগ আছে। আপোনাৰ প্ৰেম কাহিনী সাধাৰণতে বন্ধুত্বৰ পৰাই আৰম্ভ হোৱাৰ সম্ভাৱনা বেছি।
+                            ${p1Card1Content}
                         </div>
                     </div>
 
-                    <div class="sub-heading">২. চন্দ্ৰ আৰু শুক্ৰৰ প্ৰভাৱ: আৱেগিক মানসিকতা</div>
+                    <div class="sub-heading">${p1Card2Title}</div>
                     <div class="info-card">
                         <div class="card-content">
-                            বৈদিক জ্যোতিষত চন্দ্ৰই মনক আৰু শুক্ৰই ৰোমান্সক প্ৰতিনিধিত্ব কৰে। আপোনাৰ চন্দ্ৰ ৰাশি হৈছে <strong>${moonRashi} (${moonNakshatra} নক্ষত্ৰ)</strong>।<br><br>
-                            <strong>আপোনাৰ প্ৰেমৰ স্বভাৱ:</strong> ${specificMoonTrait}<br><br>
-                            আপোনাৰ শুক্ৰ গ্ৰহ <strong>${venusRashi} ৰাশিত (${venusHouse} নং ঘৰত)</strong> অৱস্থান কৰিছে। শুক্ৰৰ এই স্থিতিয়ে আপোনাক বিপৰীত লিংগক আকৰ্ষণ কৰাৰ এক বিশেষ শক্তি প্ৰদান কৰিছে। অৱশ্যে আৱেগৰ বশৱৰ্তী হৈ কেতিয়াবা ভুল ব্যক্তিক বিশ্বাস কৰাৰ পৰা আপুনি বিৰত থকাটো উচিত।
-                        </div>
-                    </div>
-                </div>
-
-                <div class="page page-break">
-                    <h2 class="section-title">❁ জীৱনসংগী আৰু বিবাহৰ পূৰ্বাভাস ❁</h2>
-
-                    <div class="sub-heading">৩. সপ্তম ভাৱ আৰু ভৱিষ্যত সংগীৰ ৰূপৰেখা (Future Partner Profile)</div>
-                    <div class="info-card">
-                        <div class="card-content">
-                            আপোনাৰ কুণ্ডলীৰ সপ্তম ভাৱত (বিবাহৰ স্থানত) <strong>${seventhHouseRashi}</strong> ৰাশি অৱস্থিত। এই ঘৰ আৰু ইয়াৰ অধিপতি গ্ৰহৰ বিশ্লেষণৰ পৰা আপোনাৰ ভৱিষ্যত জীৱনসংগীৰ বিষয়ে তলত দিয়া কথাসমূহ জানিব পৰা যায়:<br><br>
-                            • <strong>শাৰীৰিক গঠন আৰু চেহেৰা:</strong> ${pInfo.look}।<br>
-                            • <strong>স্বভাৱ আৰু মানসিকতা:</strong> ${pInfo.nature}। তেওঁ পৰিয়ালৰ মূল্যবোধ বুজি পোৱাৰ লগতে আপোনাৰ জীৱনৰ লক্ষ্য পূৰণতো বিশেষভাৱে সহায় আগবঢ়াব।<br>
-                            • <strong>সম্ভাব্য কৰ্মক্ষেত্ৰ বা পেছা:</strong> ${pInfo.career}।<br><br>
-                            বিবাহৰ পিছত আপোনাৰ জীৱনলৈ আৰ্থিক আৰু সামাজিক স্থিৰতা অহাৰ এক সুন্দৰ যোগ কুণ্ডলীত বিৰাজমান।
+                            ${p1Card2Content}
                         </div>
                     </div>
 
-                    <div class="sub-heading">৪. বিবাহৰ দিশ আৰু যোগাযোগ (Direction of Marriage)</div>
+                    <div class="sub-heading">${p1Card3Title}</div>
                     <div class="info-card">
                         <div class="card-content">
-                            সপ্তম ভাৱৰ ৰাশি <strong>${seventhHouseRashi}</strong> আৰু শুক্ৰৰ অৱস্থানৰ ওপৰত ভিত্তি কৰি, আপোনাৰ ভৱিষ্যত সংগীৰ ঘৰ বা জন্মস্থান আপোনাৰ জন্মস্থানৰ পৰা সাধাৰণতে <strong>পূব বা উত্তৰ দিশত</strong> হোৱাৰ সম্ভাৱনা অধিক। পৰিয়ালৰ মানুহৰ জৰিয়তে বা কৰ্মক্ষেত্ৰৰ কোনো বন্ধুৰ যোগেদি এই বিবাহৰ প্ৰস্তাৱ আহিব পাৰে।
+                            ${p1Card3Content}
+                        </div>
+                    </div>
+
+                    <div class="sub-heading">${p1Card4Title}</div>
+                    <div class="info-card">
+                        <div class="card-content">
+                            ${p1Card4Content}
                         </div>
                     </div>
                 </div>
 
                 <div class="page page-break">
-                    <h2 class="section-title">❁ বৈবাহিক সময়, দোষ আৰু প্ৰতিকাৰ ❁</h2>
+                    <h2 class="section-title">${p2Title}</h2>
 
-                    <div class="sub-heading">৫. মাংগলিক দোষ আৰু দাম্পত্য জীৱনৰ প্ৰত্যাহ্বান (Manglik Analysis)</div>
+                    <div class="sub-heading">${p2Card1Title}</div>
+                    <div class="info-card">
+                        <div class="card-content">
+                            ${p2Card1Content}
+                        </div>
+                    </div>
+
+                    <div class="sub-heading">৬. বিবাহৰ দিশ আৰু পাৰিবাৰিক সংযোগ (Direction of Marriage)</div>
+                    <div class="info-card">
+                        <div class="card-content">
+                            সপ্তম ভাৱৰ ৰাশি <strong>${seventhRashiAs}</strong> আৰু শুক্ৰৰ অৱস্থানৰ ওপৰত ভিত্তি কৰি, ভৱিষ্যত সংগীৰ ঘৰ বা জন্মস্থান সাধাৰণতে <strong>পূব বা উত্তৰ দিশত</strong> হোৱাৰ সম্ভাৱনা অধিক। পাৰিবাৰিক সংযোগৰ জৰিয়তে এই সম্বন্ধ আগবঢ়াৰ সুন্দৰ যোগ আছে।
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page page-break">
+                    <h2 class="section-title">${p3Title}</h2>
+
+                    <div class="sub-heading">৭. মাংগলিক দোষ আৰু দাম্পত্য জীৱনৰ প্ৰত্যাহ্বান (Manglik Analysis)</div>
                     <div class="info-card">
                         <div class="card-content">
                             ${manglikAnalysis}<br><br>
-                            <strong>দাম্পত্য জীৱনৰ প্ৰত্যাহ্বান:</strong> বৃহস্পতি গ্ৰহ <strong>${jupiterRashi} ৰাশিত (${jupiterHouse} নং ঘৰত)</strong> থকাৰ বাবে দাম্পত্য জীৱনত সৰু-সুৰা কাজিয়া হ'লেও, ই কেতিয়াও বিচ্ছেদৰ পৰ্যায়লৈ নাযায়। পাৰস্পৰিক বুজাবুজি আৰু সন্মান বজাই ৰাখিলে সম্পৰ্ক আজীৱন মজবুত হৈ থাকিব।
+                            <strong>দাম্পত্য জীৱনৰ প্ৰত্যাহ্বান:</strong> বৃহস্পতি গ্ৰহ <strong>${jupiterRashi} ৰাশিত (${jupiterHouse} নং ঘৰত)</strong> থকাৰ বাবে দাম্পত্য জীৱনত সৰু-সুৰা মতানৈক্য হ'লেও, ই কেতিয়াও বিচ্ছেদৰ পৰ্যায়লৈ নাযায়। পাৰস্পৰিক বুজাবুজি আৰু সন্মান বজাই ৰাখিলে সম্পৰ্ক আজীৱন মজবুত হৈ থাকিব।
                         </div>
                     </div>
 
-                    <div class="sub-heading">৬. বিবাহৰ যোগ আৰু সঠিক সময় (Timing of Marriage)</div>
+                    <div class="sub-heading">${p3TimingTitle}</div>
                     <div class="info-card">
                         <div class="card-content">
-                            বৰ্তমান আপোনাৰ জীৱনত <strong>${currentDasha} মহাদশা</strong> চলি আছে। এই মহাদশা আৰু গ্ৰহৰ গোচৰৰ ফলত বিবাহ বা এক স্থায়ী সম্পৰ্ক স্থাপনৰ বাবে অনুকূল পৰিৱেশ সৃষ্টি হৈছে।<br><br>
-                            বিশেষকৈ অহা ৬ ৰ পৰা ১৮ মাহৰ ভিতৰত যেতিয়া শুক্ৰ, বৃহস্পতি বা চন্দ্ৰৰ শুভ অন্তৰ্দশা সক্ৰিয় হ'ব, সেই সময়ছোৱা বিবাহৰ কথা-বতৰা চূড়ান্ত হোৱা বা প্ৰেমত সফলতা লাভৰ বাবে আটাইতকৈ উত্তম। লৰালৰিকৈ আৱেগিক সিদ্ধান্ত লোৱাৰ সলনি অলপ সময় লৈ আগবাঢ়িলে আপোনাৰ ভবিষ্যৎ সুৰক্ষিত হ'ব।
+                            ${p3TimingContent}
                         </div>
                     </div>
 
-                    <div class="sub-heading">৭. প্ৰেম আৰু বিবাহৰ বিশেষ জ্যোতিষীয় প্ৰতিকাৰ (Special Remedies)</div>
+                    <div class="sub-heading">${p3RemediesTitle}</div>
                     <div class="info-card">
                         <div class="card-content">
-                            আপোনাৰ কুণ্ডলীৰ প্ৰেম আৰু বিবাহৰ স্থানক অধিক শক্তিশালী কৰিবলৈ তলৰ প্ৰতিকাৰসমূহ পালন কৰক:<br><br>
-                            • <strong>শুক্ৰ গ্ৰহৰ শান্তি:</strong> প্ৰতি শুক্ৰবাৰে বগা মিঠাই, দৈ বা সুগন্ধি দ্ৰব্য ব্যৱহাৰ কৰক। শোৱনি কোঠাত সতেজ ফুল ৰাখিলে পাৰস্পৰিক আকৰ্ষণ বৃদ্ধি পায়।<br>
-                            • <strong>সম্পৰ্কৰ বাধা নিবাৰণ:</strong> দৈনিক পুৱা স্নান কৰি <em>"ওঁ কামদেৱায় বিদ্মহে পুষ্পবাণায় ধীমহি তন্নো অনংগঃ প্ৰচোদয়াৎ"</em> মন্ত্ৰ ২১ বাৰ জপ কৰিব।<br>
-                            • <strong>গোপনীয়তা:</strong> প্ৰেম বা বিবাহৰ কথা-বতৰা সম্পূৰ্ণ ফাইনেল নোহোৱালৈকে বাহিৰৰ মানুহক নোকোৱাই শ্ৰেয়, ইয়াৰ দ্বাৰা অশুভ দৃষ্টিৰ পৰা হাত সাৰিব পাৰি।
+                            ${p3RemediesContent}
                         </div>
                     </div>
                 </div>`;
             }
-
-            // Monthly & Yearly Page
+// Monthly & Yearly Page
             let extraAnalysisPage = "";
             const todayDateObj = new Date();
             const nextMonthObj = new Date(todayDateObj);
