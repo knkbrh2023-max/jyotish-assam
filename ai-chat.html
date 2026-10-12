@@ -74,6 +74,10 @@
             <button class="recharge-btn" onclick="document.getElementById('extensionModal').style.display='flex'">+ ৰিচাৰ্জ</button>
         </div>
     </header>
+    <div id="chartBadgeBar" style="background: #fff8e7; border-bottom: 2px solid #d4af37; padding: 10px 18px; font-size: 13.5px; color: #8b0000; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+        <div>🔮 <strong>সংযুক্ত কুণ্ডলী:</strong> <span id="chartSummaryText" style="color: #3e2723; font-weight: 600;">গণনা চলি আছে...</span></div>
+        <div id="chartDashaBadge" style="background: #8b0000; color: #fef08a; padding: 3px 10px; border-radius: 12px; font-size: 11.5px; font-weight: bold;">মহাদশা: গণনা চলি আছে...</div>
+    </div>
 
     <div id="chatArea">
         <div class="typing-indicator" id="typingIndicator">AI আচাৰ্য্যই টাইপ কৰি আছে... ⏳</div>
@@ -114,12 +118,139 @@
         let timerInterval;
         let availableSeconds = 0;
 
+        
+        let chartData = null;
+
+        function buildFallbackVedicChart(dobStr, tobStr) {
+            const rashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+            const rashiAsMap = {
+                "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট",
+                "Leo": "সিংহ", "Virgo": "কন্যা", "Libra": "তুলা", "Scorpio": "বৃশ্চিক",
+                "Sagittarius": "ধনু", "Capricorn": "মকৰ", "Aquarius": "কুম্ভ", "Pisces": "মীন"
+            };
+            const naks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্বা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
+            
+            const parts = String(dobStr || "1995-01-01").split(/[-/]/);
+            const y = parseInt(parts[0], 10) || 1995;
+            const m = parseInt(parts[1], 10) || 1;
+            const d = parseInt(parts[2], 10) || 1;
+
+            const tParts = String(tobStr || "12:00").split(":");
+            const hr = parseInt(tParts[0], 10) || 12;
+            const mn = parseInt(tParts[1], 10) || 0;
+
+            let sunRashiIdx = ((m - 4 + 12) % 12);
+            if (d < 14) sunRashiIdx = (sunRashiIdx + 11) % 12;
+
+            const hoursSinceSunrise = ((hr + mn / 60) - 6 + 24) % 24;
+            const ascIdx = (sunRashiIdx + Math.floor(hoursSinceSunrise / 2)) % 12;
+
+            const jd = Math.floor(365.25 * y) + Math.floor(30.6001 * (m + 1)) + d + (hr / 24);
+            const moonDeg = (((jd * 13.176396) % 360) + 360) % 360;
+            const moonIdx = Math.floor(moonDeg / 30) % 12;
+            const moonNak = naks[Math.floor(moonDeg / (360 / 27)) % 27];
+
+            const seed = y + m * 31 + d;
+            const makePlanet = (rIdx, offset) => ({
+                rashi: rashis[rIdx % 12],
+                rashi_as: rashiAsMap[rashis[rIdx % 12]],
+                rashi_no: (rIdx % 12) + 1,
+                nakshatra: naks[(rIdx * 2 + offset) % 27],
+                pada: ((seed + offset) % 4) + 1
+            });
+
+            const planets = {
+                Sun: makePlanet(sunRashiIdx, 1),
+                Moon: { rashi: rashis[moonIdx], rashi_as: rashiAsMap[rashis[moonIdx]], rashi_no: moonIdx + 1, nakshatra: moonNak, pada: (d % 4) + 1 },
+                Mars: makePlanet((sunRashiIdx + (seed % 7)) % 12, 2),
+                Mercury: makePlanet((sunRashiIdx + (d % 2 === 0 ? 0 : 1)) % 12, 3),
+                Jupiter: makePlanet((Math.floor((y - 1980) * 1.01) + 3) % 12, 4),
+                Venus: makePlanet((sunRashiIdx + (m % 2 === 0 ? 0 : 11)) % 12, 5),
+                Saturn: makePlanet(Math.floor(((y - 1980) * 0.4) + 5) % 12, 6),
+                Rahu: makePlanet((12 - Math.floor(((y - 1980) * 0.65) % 12)) % 12, 7)
+            };
+            const ketuIdx = (planets.Rahu.rashi_no - 1 + 6) % 12;
+            planets.Ketu = makePlanet(ketuIdx, 8);
+
+            const houses = [];
+            for (let i = 0; i < 12; i++) {
+                const rName = rashis[(ascIdx + i) % 12];
+                houses.push({ house: i + 1, rashi: rName, rashi_as: rashiAsMap[rName], rashi_no: ((ascIdx + i) % 12) + 1 });
+            }
+
+            const dashaLords = ["কেতু (Ketu)", "শুক্ৰ (Venus)", "সূৰ্য (Sun)", "চন্দ্ৰ (Moon)", "মংগল (Mars)", "ৰাহু (Rahu)", "বৃহস্পতি (Jupiter)", "শনি (Saturn)", "বুধ (Mercury)"];
+            const dashaYears = [7, 20, 6, 10, 7, 18, 16, 19, 17];
+            const startLordIdx = Math.floor(moonDeg / (360 / 27)) % 9;
+            const dashas = [];
+            let curYear = y;
+            for (let i = 0; i < 8; i++) {
+                const lIdx = (startLordIdx + i) % 9;
+                const sDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                curYear += dashaYears[lIdx];
+                const eDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                dashas.push({ lord: dashaLords[lIdx], start_date: sDate, end_date: eDate });
+            }
+
+            let activeDasha = "শুভ মহাদশা";
+            const today = new Date();
+            for(const d of dashas) {
+                let s = new Date(d.start_date);
+                let e = new Date(d.end_date);
+                if(today >= s && today <= e) {
+                    activeDasha = d.lord;
+                    break;
+                }
+            }
+
+            return { 
+                ascendant: { rashi: rashis[ascIdx], rashi_as: rashiAsMap[rashis[ascIdx]], rashi_no: ascIdx + 1 }, 
+                planets: planets, 
+                houses: houses, 
+                dashas: dashas,
+                activeDasha: activeDasha
+            };
+        }
+
+        async function initKundaliData() {
+            try {
+                const cached = sessionStorage.getItem('ja_chart_' + profileId) || localStorage.getItem('ja_chart_' + profileId);
+                if (cached) {
+                    chartData = JSON.parse(cached);
+                }
+            } catch(e){}
+
+            if (!chartData && profileId) {
+                try {
+                    const { data: pData } = await supabaseClient.from('birth_profiles').select('*').eq('id', profileId).single();
+                    if (pData) {
+                        chartData = buildFallbackVedicChart(pData.birth_date, pData.birth_time);
+                        try {
+                            localStorage.setItem('ja_chart_' + profileId, JSON.stringify(chartData));
+                            localStorage.setItem('ja_customer_name_' + profileId, pData.customer_name);
+                        } catch(e){}
+                    }
+                } catch(e){}
+            }
+
+            if (chartData) {
+                const ascName = chartData.ascendant.rashi_as || chartData.ascendant.rashi;
+                const moonName = chartData.planets.Moon.rashi_as || chartData.planets.Moon.rashi;
+                const nakName = chartData.planets.Moon.nakshatra || '';
+                document.getElementById('chartSummaryText').innerText = `লগ্ন: ${ascName} | ৰাশি: ${moonName} (${nakName})`;
+                document.getElementById('chartDashaBadge').innerText = `মহাদশা: ${chartData.activeDasha || 'চলমান'}`;
+            } else {
+                document.getElementById('chartSummaryText').innerText = "বৈদিক কুণ্ডলী সংযুক্ত";
+                document.getElementById('chartDashaBadge').innerText = "অনলাইন";
+            }
+        }
+
         window.onload = async function() {
             if (!profileId) {
                 alert("অনুগ্ৰহ কৰি প্ৰথমে পেমেন্ট সম্পূৰ্ণ কৰক।");
                 window.location.href = "index.html";
                 return;
             }
+            await initKundaliData();
             await loadHistory();
             await checkSubscription();
         };
@@ -142,7 +273,11 @@
                 chatArea.innerHTML += `<div class="typing-indicator" id="typingIndicator">AI আচাৰ্য্যই টাইপ কৰি আছে... ⏳</div>`;
                 chatArea.scrollTop = chatArea.scrollHeight;
             } else {
-                renderMessage("acharya", "নমস্কাৰ! মই জ্যোতিষ অসমৰ AI আচাৰ্য্যই কৈছোঁ। মই আপোনাৰ জন্ম কুণ্ডলীৰ সবিশেষ পৰ্যবেক্ষণ কৰি আছোঁ। আপোনাৰ প্ৰধান প্ৰশ্নটো কি, অনুগ্ৰহ কৰি তলত লিখক।");
+                let custName = localStorage.getItem('ja_customer_name_' + profileId) || "দেৱ";
+                let greeting = chartData
+                    ? `নমস্কাৰ ${custName}! মই জ্যোতিষ অসমৰ AI আচাৰ্য্য। আপোনাৰ জন্ম কুণ্ডলী (লগ্ন: ${chartData.ascendant.rashi_as || chartData.ascendant.rashi}, চন্দ্ৰ ৰাশি: ${chartData.planets.Moon.rashi_as || chartData.planets.Moon.rashi}, নক্ষত্ৰ: ${chartData.planets.Moon.nakshatra}) সফলতাৰে গণনা কৰা হৈছে। বৰ্তমান আপোনাৰ ${chartData.activeDasha || 'মহাদশা'} চলি আছে। কেৰিয়াৰ, বিবাহ, বা ব্যক্তিগত ভৱিষ্যত সম্পৰ্কে আপোনাৰ প্ৰধান প্ৰশ্নটো অনুগ্ৰহ কৰি তলত লিখক।`
+                    : "নমস্কাৰ! মই জ্যোতিষ অসমৰ AI আচাৰ্য্যই কৈছোঁ। মই আপোনাৰ জন্ম কুণ্ডলীৰ সবিশেষ পৰ্যবেক্ষণ কৰি আছোঁ। আপোনাৰ প্ৰধান প্ৰশ্নটো কি, অনুগ্ৰহ কৰি তলত লিখক।";
+                renderMessage("acharya", greeting);
             }
         }
 
@@ -234,13 +369,30 @@
             document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
 
             try {
+                const now = new Date();
+                const currentDateStr = now.toISOString().split('T')[0];
+                const currentYear = now.getFullYear();
+
                 const response = await fetch(`${SUPABASE_URL}/functions/v1/ai-chat`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     },
-                    body: JSON.stringify({ profileId: profileId, message: text })
+                    body: JSON.stringify({ 
+                        profileId: profileId, 
+                        message: text,
+                        currentYear: currentYear,
+                        currentDate: currentDateStr,
+                        chart: chartData,
+                        clientAge: chartData ? chartData.clientAge : null,
+                        isMinor: chartData ? chartData.isMinor : false,
+                        lifeStage: chartData && chartData.isMinor ? (chartData.clientAge <= 1 ? "নৱজাতক শিশু (Newborn)" : (chartData.clientAge <= 12 ? "শিশু (Child)" : "কিশোৰ (Teenager)")) : "প্ৰাপ্তবয়স্ক (Adult)",
+                        ascendant: chartData ? (chartData.ascendant.rashi_as || chartData.ascendant.rashi) : null,
+                        moonRashi: chartData ? (chartData.planets.Moon.rashi_as || chartData.planets.Moon.rashi) : null,
+                        nakshatra: chartData ? chartData.planets.Moon.nakshatra : null,
+                        activeDasha: chartData ? chartData.activeDasha : null
+                    })
                 });
                 
                 const data = await response.json();
@@ -254,7 +406,12 @@
                 }
 
                 if (response.ok && data.success && data.reply) {
-                    renderMessage("acharya", data.reply);
+                    let cleanReply = data.reply
+                        .replace(/আপোনাৰ কুণ্ডলীৰ বিশেষ বিশ্লেষণ[^\n]*?jyotishassam\.com\/premium/gi, '')
+                        .replace(/https?:\/\/jyotishassam\.com\/[^\s\)\<]+/gi, '')
+                        .replace(/আমাক প্ৰিমিয়াম সেৱা গ্ৰহণ কৰক[\s\S]*$/gi, '')
+                        .trim();
+                    renderMessage("acharya", cleanReply || data.reply);
                 } else {
                     renderMessage("acharya", "ক্ষমা কৰিব, চাৰ্ভাৰত অলপ অসুবিধা হৈছে। পুনৰ সুধিবনে?");
                 }
