@@ -313,7 +313,14 @@ function generatePalmistryReportHtml(order) {
 }
 
 function generateGrandVedicReport(order, chart) {
-    if (order && order.service === 'palmistry') {
+    // 🛡️ BULLETPROOF PALMISTRY DETECTION:
+    if (order && (
+        order.service === 'palmistry' || 
+        String(order.service).toLowerCase().includes('palm') ||
+        order.palmHand || 
+        order.palmGender || 
+        order.palmPhoto
+    )) {
         if (typeof generatePalmistryReportHtml === 'function') {
             return generatePalmistryReportHtml(order);
         }
