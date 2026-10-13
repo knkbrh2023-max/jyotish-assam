@@ -231,11 +231,15 @@
         .section { margin: 50px 0; }
         .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
         .section-subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 15px; }
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .service-card { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .services-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 28px; }
+        .service-card { flex: 1 1 310px; max-width: 370px; min-width: 280px; background: white; border: 1px solid var(--border-color); border-radius: 18px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(0,0,0,0.08); }
+        .service-card { background: white; border: 1px solid var(--border-color); border-radius: 18px; padding: 32px 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; height: 100%; box-sizing: border-box; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(0,0,0,0.08); }
         .service-icon { font-size: 45px; margin-bottom: 20px; }
         .service-price { font-size: 32px; font-weight: 700; color: var(--primary-color); margin: 20px 0; }
-        .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); }
+        .service-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); margin-top: auto; transition: transform 0.2s ease, filter 0.2s ease; }
+        .service-btn:hover { transform: translateY(-2px); filter: brightness(1.06); }
 
         .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
         
@@ -254,6 +258,313 @@
     <script src="config.js"></script>
     <script src="grand_report_engine.js"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
+
+    
+
+
+    <!-- 3D PALMISTRY HORIZONTAL (পঠালী) FULL-WIDTH FEATURED CARD STYLES -->
+    <style>
+    .services-grid { 
+        display: grid !important; 
+        grid-template-columns: repeat(3, 1fr) !important; 
+        gap: 28px !important; 
+        align-items: stretch !important; 
+    }
+    @media (max-width: 980px) {
+        .services-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+    @media (max-width: 640px) {
+        .services-grid { grid-template-columns: 1fr !important; }
+    }
+
+    .service-card { 
+        background: white; 
+        border: 1px solid var(--border-color); 
+        border-radius: 18px; 
+        padding: 32px 24px; 
+        text-align: center; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: space-between; 
+        height: 100%; 
+        box-sizing: border-box; 
+        transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    }
+    .service-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 18px 40px rgba(0,0,0,0.08); 
+    }
+    .service-btn { 
+        display: block; 
+        width: 100%; 
+        padding: 14px; 
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
+        color: white; 
+        border: none; 
+        border-radius: 10px; 
+        cursor: pointer; 
+        font-weight: 600; 
+        font-size: 16px; 
+        box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3); 
+        margin-top: auto; 
+        transition: transform 0.2s ease, filter 0.2s ease; 
+    }
+    .service-btn:hover { 
+        transform: translateY(-2px); 
+        filter: brightness(1.06); 
+    }
+
+    /* পঠালী (Horizontal) 3D Featured Palmistry Card */
+    .palmistry-horizontal-3d-card {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        position: relative !important;
+        background: linear-gradient(135deg, #0b1329 0%, #161b3d 45%, #064e3b 100%) !important;
+        border: 2px solid #10b981 !important;
+        border-radius: 22px !important;
+        padding: 32px 36px 28px !important;
+        color: #f8fafc !important;
+        box-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.35), 0 0 25px rgba(245, 158, 11, 0.18) !important;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 32px !important;
+        box-sizing: border-box !important;
+        margin: 6px 0 !important;
+    }
+    .palmistry-horizontal-3d-card:hover {
+        transform: translateY(-6px) scale(1.008) !important;
+        box-shadow: 0 25px 55px -8px rgba(16, 185, 129, 0.55), 0 0 35px rgba(245, 158, 11, 0.35) !important;
+        border-color: #34d399 !important;
+    }
+    .palm-badge-left {
+        position: absolute;
+        top: -13px;
+        left: 24px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 11px;
+        padding: 5px 14px;
+        border-radius: 30px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
+        z-index: 2;
+    }
+    .palm-badge-top {
+        position: absolute;
+        top: -13px;
+        right: 24px;
+        background: linear-gradient(135deg, #ef4444, #f59e0b);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 11px;
+        padding: 5px 14px;
+        border-radius: 30px;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+        letter-spacing: 0.5px;
+        animation: pulseBadgeH 2.2s infinite;
+        z-index: 2;
+    }
+    @keyframes pulseBadgeH {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    .palm-h-scanner-col {
+        flex: 0 0 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .palm-scanner-box {
+        position: relative;
+        width: 115px;
+        height: 115px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(15, 23, 42, 0.85) 75%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed rgba(52, 211, 153, 0.7);
+        box-shadow: inset 0 0 25px rgba(16, 185, 129, 0.35), 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+    .palm-scanner-box svg {
+        width: 72px;
+        height: 72px;
+        filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.9));
+        animation: palmFloatH 3s ease-in-out infinite alternate;
+    }
+    @keyframes palmFloatH {
+        0% { transform: translateY(0px) scale(1); }
+        100% { transform: translateY(-4px) scale(1.04); }
+    }
+    .scanner-laser {
+        position: absolute;
+        left: 12%;
+        right: 12%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #34d399, #fde047, #34d399, transparent);
+        box-shadow: 0 0 10px #34d399, 0 0 16px #fde047;
+        border-radius: 3px;
+        animation: scanLaserH 2.2s ease-in-out infinite alternate;
+        pointer-events: none;
+    }
+    @keyframes scanLaserH {
+        0% { top: 16%; opacity: 0.3; }
+        50% { opacity: 1; }
+        100% { top: 82%; opacity: 0.3; }
+    }
+    .photo-camera-tag {
+        position: absolute;
+        bottom: -7px;
+        background: #f59e0b;
+        color: #111827;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 3px 11px;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(245, 158, 11, 0.6);
+        white-space: nowrap;
+    }
+    .palm-h-info-col {
+        flex: 1;
+        text-align: left;
+        min-width: 0;
+    }
+    .palm-h-header-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+    }
+    .palm-h-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: #fde047;
+        margin: 0;
+        text-shadow: 0 2px 10px rgba(253, 224, 71, 0.3);
+    }
+    .palm-h-photo-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(16, 185, 129, 0.22);
+        border: 1px solid rgba(52, 211, 153, 0.6);
+        color: #a7f3d0;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12.5px;
+        font-weight: 700;
+    }
+    .palm-h-desc {
+        color: #cbd5e1;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 0 12px 0;
+    }
+    .palm-h-steps-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .palm-h-step-box {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        padding: 6px 12px;
+        font-size: 12px;
+        color: #e2e8f0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .palm-h-step-box .step-num {
+        background: #10b981;
+        color: white;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .palm-h-cta-col {
+        flex: 0 0 260px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .palm-h-price-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .palm-h-price-orig {
+        text-decoration: line-through;
+        color: #94a3b8;
+        font-size: 18px;
+        font-weight: 500;
+    }
+    .palm-h-price-curr {
+        color: #34d399;
+        font-size: 34px;
+        font-weight: 800;
+        text-shadow: 0 0 18px rgba(52, 211, 153, 0.45);
+    }
+    .palm-h-discount {
+        background: #dc2626;
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+    }
+    .palm-h-action-btn {
+        width: 100%;
+        padding: 14px 18px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 50%, #f59e0b 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    .palm-h-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.65), 0 0 20px rgba(245, 158, 11, 0.5);
+        filter: brightness(1.08);
+    }
+    @media (max-width: 900px) {
+        .palmistry-horizontal-3d-card {
+            flex-direction: column !important;
+            text-align: center !important;
+            padding: 36px 20px 26px !important;
+            gap: 20px !important;
+        }
+        .palm-h-info-col { text-align: center !important; }
+        .palm-h-header-row { justify-content: center !important; }
+        .palm-h-steps-row { justify-content: center !important; }
+        .palm-h-cta-col { width: 100% !important; max-width: 320px !important; }
+    }
+    </style>
+
 </head>
 <body>
 
@@ -805,8 +1116,9 @@
     <section class="section" id="premium-services">
         <h2 class="section-title">আমাৰ প্ৰিমিয়াম জ্যোতিষ সেৱাসমূহ</h2>
         <p class="section-subtitle">আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক</p>
-        <div class="services-grid">
+                <div class="services-grid">
 
+            <!-- CARD 1: Live Chat -->
             <div class="service-card" style="position: relative;">
                 <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; position: absolute; top: -12px; right: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">🔥 বিশেষ অফাৰ</span>
                 <div class="service-icon">💬</div>
@@ -818,6 +1130,7 @@
                 <button class="service-btn" onclick="openOrderForm('chat', 21, 'AI আচাৰ্য্যৰ সৈতে লাইভ চেট (৫ মিনিট)')">এতিয়াই চেট কৰক (₹২১)</button>
             </div>
 
+            <!-- CARD 2: Complete Birth Chart -->
             <div class="service-card">
                 <div class="service-icon">🔮</div>
                 <h3>সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
@@ -826,6 +1139,7 @@
                 <button class="service-btn" onclick="openOrderForm('birth', 299, 'সম্পূৰ্ণ জন্ম কুণ্ডলী')">সেৱা গ্ৰহণ কৰক</button>
             </div>
             
+            <!-- CARD 3: Love & Relationship -->
             <div class="service-card">
                 <div class="service-icon">❤️</div>
                 <h3>প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
@@ -833,7 +1147,86 @@
                 <div class="service-price">₹99</div>
                 <button class="service-btn" onclick="openOrderForm('love', 99, 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ')">সেৱা গ্ৰহণ কৰক</button>
             </div>
-            
+
+            <!-- CARD 4 (পঠালী / HORIZONTAL 3D FEATURED BANNER): Palmistry Reading -->
+            <div class="palmistry-horizontal-3d-card" onclick="openOrderForm('palmistry', 99, 'হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)')">
+                <!-- Floating Badges -->
+                <span class="palm-badge-left">⚡ সময় নালাগে (No Birth Time)</span>
+                <span class="palm-badge-top">🔥 আটাইতকৈ জনপ্ৰিয় • 📸 ফটো বিচাৰ</span>
+
+                <!-- Left: 3D Animated Palm Scanner -->
+                <div class="palm-h-scanner-col">
+                    <div class="palm-scanner-box">
+                        <div class="scanner-laser"></div>
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M28 48 C28 35 32 30 35 30 C38 30 40 35 40 45 L40 24 C40 20 44 20 46 20 C48 20 51 20 51 24 L51 20 C51 16 55 16 57 16 C59 16 62 16 62 20 L62 26 C62 22 66 22 68 22 C70 22 73 23 73 28 L73 52 C76 50 82 54 82 60 C82 72 70 88 56 90 C42 92 26 84 24 72 C22 66 22 58 28 48 Z" fill="url(#palmGradH)" stroke="#34d399" stroke-width="2" filter="url(#glowH)"/>
+                            <path d="M26 62 C18 58 14 52 18 46 C21 42 26 44 28 50" fill="none" stroke="#34d399" stroke-width="1.8"/>
+                            <path d="M70 42 C56 38 44 42 38 36" stroke="#fde047" stroke-width="2.2" stroke-linecap="round"/>
+                            <path d="M26 54 C40 50 56 56 68 62" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M26 50 C34 52 38 66 38 78" stroke="#4ade80" stroke-width="2.2" stroke-linecap="round"/>
+                            <path d="M50 82 L50 40" stroke="#fbbf24" stroke-width="1.8" stroke-dasharray="2 2" stroke-linecap="round"/>
+                            <circle cx="38" cy="34" r="2.5" fill="#fde047"/>
+                            <circle cx="48" cy="28" r="2.5" fill="#fde047"/>
+                            <circle cx="60" cy="28" r="2.5" fill="#fde047"/>
+                            <circle cx="28" cy="68" r="3" fill="#f43f5e"/>
+                            <defs>
+                                <linearGradient id="palmGradH" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+                                    <stop offset="100%" stop-color="#0f172a" stop-opacity="0.95"/>
+                                </linearGradient>
+                                <filter id="glowH" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="2" result="blur"/>
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                                </filter>
+                            </defs>
+                        </svg>
+                        <span class="photo-camera-tag">📸 ফটো স্কেনিং</span>
+                    </div>
+                </div>
+
+                <!-- Center: Info, Photo Highlight & Steps -->
+                <div class="palm-h-info-col">
+                    <div class="palm-h-header-row">
+                        <h3 class="palm-h-title">হস্তৰেখা বিশদ বিচাৰ</h3>
+                        <div class="palm-h-photo-pill">
+                            📸 কেৱল হাতৰ তলুৱাৰ ফটো দিয়ক
+                        </div>
+                    </div>
+                    <p class="palm-h-desc">
+                        জন্মৰ সময় মনত নাই? কোনো চিন্তা নাই! কেৱল মোবাইলৰ পৰা হাতৰ তলুৱাৰ এখন স্পষ্ট ফটো দিয়ক — জীৱন ৰেখা, হৃদয় ৰেখা, মস্তিষ্ক আৰু ভাগ্য ৰেখা বিশ্লেষণ কৰি আয়ুস, কেৰিয়াৰ, ধনযোগ আৰু বিবাহৰ সম্পূৰ্ণ সত্য জানক।
+                    </p>
+                    <div class="palm-h-steps-row">
+                        <div class="palm-h-step-box">
+                            <span class="step-num">১</span>
+                            <span>📸 তলুৱাৰ ফটো তোলক</span>
+                        </div>
+                        <div class="palm-h-step-box">
+                            <span class="step-num">২</span>
+                            <span>🤖 AI & বৈদিক স্কেন</span>
+                        </div>
+                        <div class="palm-h-step-box">
+                            <span class="step-num">৩</span>
+                            <span>📜 বিশদ ৰিপোৰ্ট লাভ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Price & CTA Button -->
+                <div class="palm-h-cta-col">
+                    <div class="palm-h-price-wrapper">
+                        <span class="palm-h-price-orig">₹199</span>
+                        <span class="palm-h-price-curr">₹99</span>
+                        <span class="palm-h-discount">৫০% ৰেহাই</span>
+                    </div>
+                    <button type="button" class="palm-h-action-btn" onclick="event.stopPropagation(); openOrderForm('palmistry', 99, 'হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)')">
+                        <span>📸 হাতৰ ফটো আপলোড কৰি চাওক</span>
+                        <span style="font-size: 18px;">➔</span>
+                    </button>
+                    <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">⚡ নিমিষতে অনলাইন ৰিপোৰ্ট প্ৰস্তুত</div>
+                </div>
+            </div>
+
+            <!-- CARD 5: Career & Business -->
             <div class="service-card">
                 <div class="service-icon">💼</div>
                 <h3>কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
@@ -841,18 +1234,8 @@
                 <div class="service-price">₹199</div>
                 <button class="service-btn" onclick="openOrderForm('career', 199, 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস')">সেৱা গ্ৰহণ কৰক</button>
             </div>
-            <div class="service-card" style="position: relative;">
-                <span style="background: #10B981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; position: absolute; top: -12px; right: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">✋ জন্মৰ সময় নালাগে</span>
-                <div class="service-icon">✋</div>
-                <h3>হস্তৰেখা বিশদ বিচাৰ</h3>
-                <p>হাতৰ ৰেখা বিশ্লেষণ কৰি আয়ুস, কেৰিয়াৰ, ভাগ্যোদয়ৰ বয়স আৰু বিবাহৰ নিখুঁত ভৱিষ্যদ্বাণী।</p>
-                <div class="service-price">
-                    <span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹199</span>₹99
-                </div>
-                <button class="service-btn" onclick="openOrderForm('palmistry', 99, 'হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)')">সেৱা গ্ৰহণ কৰক</button>
-            </div>
 
-            
+            <!-- CARD 6: Monthly Horoscope -->
             <div class="service-card">
                 <div class="service-icon">📅</div>
                 <h3>মাহেকীয়া ৰাশিফল</h3>
@@ -861,6 +1244,7 @@
                 <button class="service-btn" onclick="openOrderForm('monthly', 19, 'মাহেকীয়া ৰাশিফল')">সেৱা গ্ৰহণ কৰক</button>
             </div>
             
+            <!-- CARD 7: Yearly Horoscope -->
             <div class="service-card">
                 <div class="service-icon">📜</div>
                 <h3>বাৰ্ষিক ৰাশিফল</h3>
@@ -868,6 +1252,7 @@
                 <div class="service-price">₹49</div>
                 <button class="service-btn" onclick="openOrderForm('yearly', 49, 'বাৰ্ষিক ৰাশিফল')">সেৱা গ্ৰহণ কৰক</button>
             </div>
+
         </div>
     </section>
         
