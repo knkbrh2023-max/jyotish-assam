@@ -244,9 +244,9 @@
         .secure-banner { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin: 40px 0; }
         
         /* Modals */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 20px; }
-        .modal.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 550px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: flex-start; padding: 20px 10px; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; }
+        .modal.active { display: flex !important; }
+        .modal-content { background: white; padding: 30px 24px; border-radius: 18px; width: 100%; max-width: 550px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.25); margin: 25px auto; box-sizing: border-box; }
         .close-modal { position: absolute; right: 20px; top: 15px; font-size: 26px; cursor: pointer; color: #666; }
 
         .horoscope-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(5px); }
@@ -1218,7 +1218,7 @@
                         <span class="palm-h-price-curr">₹99</span>
                         <span class="palm-h-discount">৫০% ৰেহাই</span>
                     </div>
-                    <button type="button" class="palm-h-action-btn" onclick="event.stopPropagation(); openOrderForm('palmistry', 99, 'হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)')">
+                    <button type="button" class="palm-h-action-btn" onclick="event.stopPropagation(); openPalmistryModal()">
                         <span>📸 হাতৰ ফটো আপলোড কৰি চাওক</span>
                         <span style="font-size: 18px;">➔</span>
                     </button>
@@ -1602,6 +1602,10 @@ function toggleMenu() {
 let selectedService = '', selectedPrice = 0, currentLang = 'as';
 
 function openOrderForm(service, price, title) {
+    if (service === 'palmistry') {
+        openPalmistryModal();
+        return;
+    }
     const dateInput = document.getElementById('custDate');
     const hourInput = document.getElementById('custHour');
     const minInput = document.getElementById('custMin');
@@ -1824,7 +1828,13 @@ function buildFallbackVedicChart(dobStr, tobStr) {
 
 // --- DEDICATED PALMISTRY MODAL & PAYMENT HANDLERS ---
 function openPalmistryModal() {
-    document.getElementById('palmistryModal').classList.add('active');
+    const modal = document.getElementById('palmistryModal');
+    if (modal) {
+        modal.classList.add('active');
+        modal.scrollTop = 0;
+        const mContent = modal.querySelector('.modal-content');
+        if (mContent) mContent.scrollTop = 0;
+    }
     window.currentPalmPhotoBase64 = null;
     const preview = document.getElementById('palmModalPhotoPreview');
     if (preview) { preview.src = ''; preview.style.display = 'none'; }
