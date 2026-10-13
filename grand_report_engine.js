@@ -1,3 +1,316 @@
+function generatePalmistryReportHtml(order) {
+    const name = order.name || 'গ্ৰাহক';
+    const dob = order.birth_date || order.birthDate || 'N/A';
+    const tob = order.birth_time || order.birthTime || '10:30';
+    const place = order.birth_place || order.birthPlace || 'অসম';
+    const hand = order.palmHand || 'right';
+    const gender = order.palmGender || 'male';
+    const photo = order.palmPhoto || (typeof localStorage !== 'undefined' ? localStorage.getItem('ja_palm_photo_' + (order.public_order_id || order.id)) : null) || null;
+
+    const handAsMap = { 'right': 'সোঁহাত (Right Hand)', 'left': 'বাওঁহাত (Left Hand)' };
+    const handName = handAsMap[hand] || 'সোঁহাত (Right Hand)';
+    
+    const genderAsMap = { 'male': 'পুৰুষ (Male)', 'female': 'মহিলা (Female)', 'other': 'অন্যান্য' };
+    const genderName = genderAsMap[gender] || 'পুৰুষ (Male)';
+
+    const toAsDigits = (num) => String(num).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+    let clientAge = 28;
+    let bYear = 1996;
+    if (dob && dob !== 'N/A') {
+        const bDate = new Date(dob);
+        if (!isNaN(bDate.getTime())) {
+            const today = new Date();
+            let ageDiff = today.getFullYear() - bDate.getFullYear();
+            const mDiff = today.getMonth() - bDate.getMonth();
+            if (mDiff < 0 || (mDiff === 0 && today.getDate() < bDate.getDate())) ageDiff--;
+            clientAge = Math.max(0, ageDiff);
+            bYear = bDate.getFullYear();
+        }
+    }
+
+    const elements = [
+        {
+            type: "বায়ু হস্ত (Air Hand - বৰ্গাকাৰ তলুৱা, দীঘলীয়া আঙুলি)",
+            nature: "আপোনাৰ হাতৰ গঠন বায়ু তত্ত্বৰ অন্তৰ্গত। ই তীব্ৰ বৌদ্ধিক ক্ষমতা, সূক্ষ্ম বিশ্লেষণ আৰু যোগাযোগৰ পাৰদৰ্শিতা সূচায়।",
+            traits: "আপুনি স্পষ্টবাদী, যুক্তিপূৰ্ণ কথা কোৱা আৰু মানসিকভাৱে অত্যন্ত সক্ৰিয় ব্যক্তি। শাৰীৰিক শ্ৰমতকৈ বুদ্ধি আৰু চিন্তাশীল কামত আপুনি সৰ্বাধিক উন্নতি কৰিব পাৰিব।",
+            bestFields: "তথ্য-প্ৰযুক্তি (IT), প্ৰশাসন, লেখা-মেলা, শিক্ষকতা, ব্যৱসায়িক পৰামৰ্শদাতা বা বাণিজ্য।"
+        },
+        {
+            type: "পৃথিৱী হস্ত (Earth Hand - বৰ্গাকাৰ তলুৱা, স্থিৰ গঠন)",
+            nature: "আপোনাৰ হাতৰ গঠন পৃথিৱী তত্ত্বৰ অন্তৰ্গত। ই ব্যৱহাৰিক চিন্তা, কঠোৰ পৰিশ্ৰম আৰু স্থিৰতাক প্ৰতিনিধিত্ব কৰে।",
+            traits: "আপুনি বাস্তৱবাদী, শান্তিপ্ৰিয় আৰু যিকোনো কাম হাতত ল'লে শেষ নকৰাকৈ এৰি নিদিয়া ব্যক্তি। পৰিয়ালৰ প্ৰতি দায়বদ্ধতা আৰু ধন সঞ্চয়ৰ ক্ষমতা আপোনাৰ স্বভাৱজাত গুণ।",
+            bestFields: "বেংকিং, ফাইনেন্স, নিৰ্মাণ কাৰ্য (Construction), কৃষিভিত্তিক উদ্যোগ, প্ৰশাসন বা নিজা ব্যৱসায়।"
+        },
+        {
+            type: "অগ্নি হস্ত (Fire Hand - দীঘলীয়া তলুৱা, চুটি শক্তিশালী আঙুলি)",
+            nature: "আপোনাৰ হাতৰ গঠন অগ্নি তত্ত্বৰ অন্তৰ্গত। ই অদম্য সাহস, নেতৃত্বপ্ৰদানকাৰী শক্তি আৰু উদ্যমক নিৰ্দেশ কৰে।",
+            traits: "আপুনি স্বাধীনচেতা, নতুন প্ৰত্যাহ্বান ল'বলৈ ভাল পোৱা আৰু ক্ষিপ্ৰ সিদ্ধান্ত ল'ব পৰা ব্যক্তি। আনৰ তলত কাম কৰাতকৈ নিজৰ পৰিকল্পনাৰে আগবাঢ়িলে আপোনাৰ প্ৰতিভা সৰ্বাধিক জিলিকি উঠিব।",
+            bestFields: "প্ৰতিৰক্ষা, পুলিচ, ৰাজনীতি, পৰিচালনা (Management), ঠিকাদাৰী বা নিজা উদ্যোগ।"
+        },
+        {
+            type: "জল হস্ত (Water Hand - দীঘলীয়া তলুৱা, দীঘল মাৰ্জিত আঙুলি)",
+            nature: "আপোনাৰ হাতৰ গঠন জল তত্ত্বৰ অন্তৰ্গত। ই সংবেদনশীলতা, সৃজনশীল কল্পনা আৰু গভীৰ অন্তৰ্দৃষ্টিৰ প্ৰতীক।",
+            traits: "আপুনি অত্যন্ত মৰমিয়াল, যত্নশীল আৰু আনৰ মনৰ ভাব সহজে বুজিব পৰা ব্যক্তি। কলা, সংগীত, সাহিত্য বা পৰামৰ্শমূলক কামত আপোনাৰ অন্তৰ্দৃষ্টিয়ে অনন্য সফলতা কঢ়িয়াই আনিব।",
+            bestFields: "চিকিৎসা, নাৰ্ছিং, মানৱ সম্পদ (HR), কলা-ডিজাইনিং, সমাজসেৱা বা খাদ্য-পানীয়ৰ ব্যৱসায়।"
+        }
+    ];
+
+    const elemIdx = (bYear + (dob.length || 0)) % 4;
+    const elem = elements[elemIdx];
+
+    let firstRiseAge = 24;
+    let bigPeakAge = 32;
+    let wealthPeakAge = 40;
+    let firstRiseYear = bYear + firstRiseAge;
+    let bigPeakYear = bYear + bigPeakAge;
+    let wealthPeakYear = bYear + wealthPeakAge;
+
+    const photoHtml = photo 
+        ? `<div style="text-align: center; margin: 20px 0;">
+                <img src="${photo}" alt="Customer Palm Photo" style="max-width: 260px; max-height: 320px; border-radius: 10px; border: 4px solid #8b0000; box-shadow: 0 8px 20px rgba(0,0,0,0.25);">
+                <div style="font-size: 13px; color: #5c3a21; margin-top: 8px; font-weight: bold;">[ আপোনাৰ আপলোড কৰা হস্ততলৰ চিত্ৰ • সমুদ্ৰিক স্কেন সম্পূৰ্ণ ]</div>
+           </div>`
+        : `<div style="text-align: center; margin: 20px 0;">
+                <svg viewBox="0 0 260 300" width="230" height="270" style="background: #fdf5e6; border: 3px solid #8b0000; border-radius: 12px; margin: 0 auto; display: block;">
+                    <path d="M 60 170 C 60 110, 70 80, 85 45 C 90 35, 100 35, 103 50 L 110 110 L 115 30 C 120 20, 130 20, 133 35 L 140 110 L 148 40 C 153 30, 163 30, 165 45 L 170 120 L 178 70 C 183 60, 193 60, 195 75 C 200 110, 205 160, 205 190 C 205 240, 185 275, 140 285 C 95 285, 60 250, 60 170 Z" fill="#faeed9" stroke="#8b0000" stroke-width="2.5"/>
+                    <path d="M 60 170 C 50 140, 30 135, 25 150 C 20 170, 45 210, 75 240" fill="#faeed9" stroke="#8b0000" stroke-width="2.5"/>
+                    <path d="M 50 155 Q 85 180 95 245" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+                    <text x="45" y="215" font-size="10" font-weight="bold" fill="#dc2626">জীৱন ৰেখা</text>
+                    <path d="M 50 155 Q 120 170 175 195" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+                    <text x="130" y="175" font-size="10" font-weight="bold" fill="#2563eb">মস্তিষ্ক ৰেখা</text>
+                    <path d="M 195 130 Q 140 125 105 105" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+                    <text x="135" y="115" font-size="10" font-weight="bold" fill="#ec4899">হৃদয় ৰেখা</text>
+                    <path d="M 135 270 L 135 110" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+                    <text x="140" y="210" font-size="10" font-weight="bold" fill="#7c3aed">ভাগ্য ৰেখা</text>
+                </svg>
+                <div style="font-size: 13px; color: #5c3a21; margin-top: 8px; font-weight: bold;">[ বৈদিক সমুদ্ৰিক হস্তৰেখা মানচিত্ৰ • মুখ্য ৰেখা আৰু পৰ্বতৰ অৱস্থান ]</div>
+           </div>`;
+
+    return `
+    <!DOCTYPE html>
+    <html lang="as">
+    <head>
+        <meta charset="UTF-8">
+        <title>${name} - হস্তৰেখা বিশদ বিচাৰ</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+            body { font-family: 'Noto Sans Assamese', Georgia, serif; line-height: 1.8; color: #3e2723; background: #e8dcc4; margin: 0; padding: 20px; }
+            .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 50px 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px double #8b0000; position: relative; box-sizing: border-box; }
+            .page::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #8b0000; pointer-events: none; }
+            .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
+            .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; }
+            .cover-brand { font-size: 45px; font-weight: 700; color: #5c3a21; margin-bottom: 10px; border-bottom: 2px solid #8b0000; display: inline-block; padding-bottom: 10px;}
+            .cover-subtitle { font-size: 24px; color: #8b0000; margin-bottom: 40px; font-weight: 600; }
+            .cover-details { margin-top: 40px; text-align: left; background: rgba(219, 190, 146, 0.2); padding: 30px; border: 1px solid #c9a961; border-radius: 4px; }
+            .detail-row { font-size: 18px; margin-bottom: 12px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px; }
+            .detail-label { font-weight: 600; color: #8b0000; display: inline-block; width: 170px; }
+            .section-title { font-size: 25px; font-weight: 700; color: #8b0000; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #8b0000; padding-bottom: 10px; }
+            .sub-heading { font-size: 19px; color: #5c3a21; margin-top: 25px; margin-bottom: 12px; border-left: 4px solid #8b0000; padding-left: 10px; font-weight: bold;}
+            .shloka { text-align: center; font-size: 17px; color: #8b0000; font-style: italic; margin: 15px 0 25px; padding: 12px; background: rgba(139,0,0,0.05); border-radius: 5px; }
+            .text-section { font-size: 15.5px; margin-bottom: 18px; text-align: justify; }
+            .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 18px; margin: 14px 0; border-radius: 3px; }
+            .remedy-card { border-left-color: #5c3a21; background: rgba(92, 58, 33, 0.05); }
+            .card-title { font-weight: 700; color: #8b0000; margin-bottom: 8px; font-size: 17px; }
+            .card-content { font-size: 15.5px; color: #3e2723; text-align: justify; line-height: 1.7; }
+            .disclaimer { background: rgba(139, 0, 0, 0.05); padding: 15px; margin-top: 35px; font-size: 13.5px; border: 1px solid #8b0000; text-align: justify; }
+            .footer-seal { text-align: center; margin-top: 35px; color: #8b0000; font-size: 17px; font-weight: bold; border-top: 2px dashed #8b0000; padding-top: 15px; }
+            .print-btn-wrapper { text-align: center; margin-top: 15px; padding-bottom: 30px; }
+            .print-btn { background: #8b0000; color: #fdf5e6; border: 2px solid #5c3a21; padding: 12px 30px; font-size: 17px; cursor: pointer; font-weight: bold; border-radius: 6px; }
+            ul { margin: 8px 0 8px 18px; }
+            li { margin-bottom: 6px; }
+            @media print {
+                @page { margin: 8mm; }
+                body { background: #fdf5e6; padding: 0; }
+                .page { box-shadow: none; margin: 0; border: 4px double #8b0000; width: 100%; max-width: 100%; }
+                .page-break { page-break-after: always; }
+                .print-btn-wrapper, .no-print { display: none !important; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="print-btn-wrapper no-print">
+            <button class="print-btn" onclick="window.print()">📥 হস্তৰেখা ৰিপোৰ্ট প্ৰিন্ট বা PDF ছেভ কৰক</button>
+        </div>
+
+        <!-- PAGE 1: COVER -->
+        <div class="page page-break cover">
+            <div class="om-symbol">ॐ</div>
+            <div><h1 class="cover-brand">জ্যোতিষ অসম</h1></div>
+            <div class="cover-subtitle">হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)</div>
+            <div style="color: #5c3a21; letter-spacing: 2px; font-size: 16px; margin-bottom: 20px;">
+                সমুদ্ৰিক শাস্ত্ৰ • আয়ুস • বুদ্ধি • প্ৰেম • ভাগ্য • কৰ্মফল
+            </div>
+            <div class="cover-details">
+                <div class="detail-row"><span class="detail-label">গ্ৰাহকৰ নাম:</span> ${name}</div>
+                <div class="detail-row"><span class="detail-label">জন্ম তাৰিখ / বয়স:</span> ${dob} (বয়স প্ৰায় ${toAsDigits(clientAge)} বছৰ)</div>
+                <div class="detail-row"><span class="detail-label">প্ৰধান হাত:</span> ${handName} (${hand === 'right' ? 'কৰ্ম আৰু বৰ্তমান ফল' : 'জন্মগত প্ৰতিভা আৰু আভ্যন্তৰীণ স্বভাৱ'})</div>
+                <div class="detail-row"><span class="detail-label">লিংগ:</span> ${genderName}</div>
+                <div class="detail-row"><span class="detail-label">জন্ম স্থান:</span> ${place}</div>
+                <div class="detail-row"><span class="detail-label">সেৱাৰ প্ৰকাৰ:</span> হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)</div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: HAND SHAPE & ELEMENT -->
+        <div class="page page-break">
+            <h2 class="section-title">❁ হস্তাকাৰ, পঞ্চ মহাভূত আৰু প্ৰাথমিক বিচাৰ ❁</h2>
+            <div class="shloka">"কৰাগ্ৰে বসতে লক্ষ্মীঃ কৰমধ্যে সৰস্বতী।<br>কৰমূলে তু গোবিন্দঃ প্ৰভাতে কৰদৰ্শনম্॥"</div>
+            <div class="text-section">
+                বৈদিক সমুদ্ৰিক শাস্ত্ৰ অনুসৰি আমাৰ হাতৰ তলুৱা আৰু আঙুলিসমূহ হৈছে মস্তিষ্কৰ স্নায়ুতন্ত্ৰ আৰু কৰ্মফলৰ প্ৰত্যক্ষ প্ৰতিফলন। জন্ম কুণ্ডলীৰ সময় নথকা অৱস্থাতো হাতৰ ৰেখা আৰু গ্ৰহৰ পৰ্বতসমূহে ব্যক্তিৰ জীৱনৰ হুবহু সত্য প্ৰকাশ কৰে।
+            </div>
+
+            <div class="sub-heading">১. হস্তাকাৰ আৰু পঞ্চ মহাভূত তত্ত্ব (Hand Elemental Shape)</div>
+            <div class="info-card">
+                <div class="card-title">${elem.type}</div>
+                <div class="card-content">
+                    • <strong>মূল প্ৰকৃতি:</strong> ${elem.nature}<br><br>
+                    • <strong>ব্যক্তিত্ব আৰু চিন্তাধাৰা:</strong> ${elem.traits}<br><br>
+                    • <strong>সৰ্বাধিক অনুকূল কৰ্মক্ষেত্ৰ:</strong> ${elem.bestFields}
+                </div>
+            </div>
+
+            <div class="sub-heading">২. বুঢ়া আঙুলিৰ বিশ্লেষণ (Significance of the Thumb)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    সমুদ্ৰিক শাস্ত্ৰত বুঢ়া আঙুলিক <strong>"মনৰ ইচ্ছাশক্তিৰ দাপোন"</strong> বোলা হয়। আপোনাৰ বুঢ়া আঙুলিৰ প্ৰথম পৰ্বই (First Phalanx) সুদৃঢ় ইচ্ছাশক্তি আৰু দ্বিতীয় পৰ্বই গভীৰ যুক্তি-তৰ্কৰ ক্ষমতা সূচায়। আপুনি যিকোনো কামত সহজে প্ৰলোভিত নহৈ নিজৰ যুক্তিত অটল থাকে, যিয়ে আপোনাক জীৱনৰ বহু বিপদৰ পৰা ৰক্ষা কৰিব।
+                </div>
+            </div>
+
+            ${photoHtml}
+        </div>
+
+        <!-- PAGE 3: THREE MAJOR LINES -->
+        <div class="page page-break">
+            <h2 class="section-title">❁ প্ৰধান ত্ৰি-ৰেখাৰ বিস্তৃত বিশ্লেষণ ❁</h2>
+            
+            <div class="sub-heading">১. জীৱন ৰেখা (Life Line / আয়ুস আৰু প্ৰাণশক্তি)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    জীৱন ৰেখাই শুক্ৰ পৰ্বতক সুন্দৰভাৱে আৱৰি ধৰিছে, যিয়ে এক <strong>সুদৃঢ় প্ৰাণশক্তি (Strong Vitality)</strong> আৰু সুস্বাস্থ্যক নিৰ্দেশ কৰে।<br><br>
+                    • <strong>স্বাস্থ্য আৰু ৰোগ প্ৰতিৰোধ:</strong> আপোনাৰ শৰীৰত ৰোগ প্ৰতিৰোধ ক্ষমতা আৰু পুনৰুজ্জীৱিত হোৱাৰ শক্তি প্ৰৱল। ঋতু পৰিৱৰ্তনৰ সময়ত সাধাৰণ দুৰ্বলতা আহিব পাৰে যদিও দীৰ্ঘম্যাদীভাৱে আপোনাৰ আয়ুস সুৰক্ষিত।<br>
+                    • <strong>বাসস্থান আৰু পৰিৱৰ্তন:</strong> জীৱন ৰেখাৰ পৰা ওলোৱা সৰু সৰু উৰ্ধ্বগামী শাখাসমূহে সূচায় যে নিজৰ জন্মস্থানৰ পৰা কিছু দূৰলৈ গৈ বা অন্য ঠাইত কৰ্মসূত্ৰে থাকিলে আপোনাৰ উন্নতিৰ গতি অধিক ক্ষিপ্ৰ হ'ব।
+                </div>
+            </div>
+
+            <div class="sub-heading">২. মস্তিষ্ক ৰেখা (Head Line / মেধা আৰু সিদ্ধান্ত ক্ষমতা)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    আপোনাৰ মস্তিষ্ক ৰেখা স্পষ্ট, গভীৰ আৰু চন্দ্ৰ পৰ্বতৰ দিশে সামান্য ঢাল খোৱা।<br><br>
+                    • <strong>বৌদ্ধিক চাতুৰ্য:</strong> ই বাস্তৱবাদী চিন্তা আৰু সৃজনশীল কল্পনাশক্তিৰ সুন্দৰ সংমিশ্ৰণক সূচায়। আপুনি জটিল সমস্যাৰ সমাধান অতি সহজে আৰু শান্ত মগজুৰে উলিয়াব পাৰে।<br>
+                    • <strong>মানসিক স্থিৰতা:</strong> জীৱনৰ সংকটকালতো ধৈৰ্য নেহেৰুৱাই সঠিক সিদ্ধান্ত লোৱাৰ ক্ষমতা আপোনাৰ আছে। হিচাপ-নিকাচ, পৰিকল্পনা আৰু কৌশল নিৰ্ধাৰণত আপোনাৰ মেধা বিশেষভাৱে প্রশংসনীয়।
+                </div>
+            </div>
+
+            <div class="sub-heading">৩. হৃদয় ৰেখা (Heart Line / প্ৰেম, সংগী আৰু আৱেগ)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    আপোনাৰ হৃদয় ৰেখা বৃহস্পতি পৰ্বতৰ (গুৰু পৰ্বতৰ) দিশে আগবাঢ়িছে, যিটো সমুদ্ৰিক শাস্ত্ৰত এক অতিশয় শুভ আৰু আদৰ্শবাদী লক্ষণ বুলি গণ্য কৰা হয়।<br><br>
+                    • <strong>প্ৰেম আৰু সমৰ্পণ:</strong> আপুনি সম্পৰ্কত ১০০% বিশ্বাস আৰু সততাত বিশ্বাসী। সংগীৰ সুখ আৰু সন্মান আপোনাৰ বাবে প্ৰথম অগ্ৰাধিকাৰ।<br>
+                    • <strong>দাম্পত্য বুজাবুজি:</strong> বিবাহৰ পিছত সংগীৰ আগমনৰ ফলত আপোনাৰ জীৱনত আৰ্থিক আৰু পাৰিবাৰিক স্থিৰতা বৃদ্ধি পাব। সাময়িক আৱেগিক ভুল বুজাবুজি হ'লেও, পাৰস্পৰিক বিশ্বাসে সম্পৰ্ক আজীৱন সুদৃঢ় কৰি ৰাখিব।
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 4: FATE LINE & WEALTH -->
+        <div class="page page-break">
+            <h2 class="section-title">❁ ভাগ্য ৰেখা, কৰ্মজীৱন আৰু আৰ্থিক সমৃদ্ধি ❁</h2>
+
+            <div class="sub-heading">৪. ভাগ্য ৰেখা (Fate Line / শনি ৰেখা - Career & Success)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    সমুদ্ৰিক শাস্ত্ৰ অনুসৰি ভাগ্য ৰেখাই ব্যক্তিৰ জীৱনৰ কৰ্মক্ষেত্ৰ, আৰ্থিক উত্থান আৰু সমাজত প্ৰতিপত্তিক প্ৰতিনিধিত্ব কৰে। আপোনাৰ হাতত ভাগ্য ৰেখা স্পষ্ট আৰু শনি পৰ্বতৰ দিশে গতি কৰিছে।<br><br>
+                    • <strong>চাকৰি নে নিজা ব্যৱসায়:</strong> আপোনাৰ হাতৰ ভাগ্য ৰেখা আৰু বুধ পৰ্বতৰ স্থিতিয়ে সূচায় যে চাকৰিৰ সমান্তৰালকৈ বা স্বতন্ত্ৰভাৱে নিজা ব্যৱসায়/উদ্যোগ গঢ়ি তোলাৰ যোগ অত্যন্ত প্ৰৱল। আনৰ অধীনত সাধাৰণ কাম কৰাতকৈ দায়িত্বশীল পদবীত থাকিলে আপুনি দ্ৰুত উন্নতি কৰিব।<br>
+                    • <strong>একাধিক উৎসৰ পৰা ধনলাভ:</strong> ভাগ্য ৰেখাৰ সমান্তৰালভাৱে থকা সহযোগী ৰেখাই একাধিক পথৰ পৰা (Secondary Income) স্থিৰ আয় হোৱাৰ শুভ ইংগিত দিয়ে।
+                </div>
+            </div>
+
+            <div class="sub-heading">৫. চন আৰু বয়সভিত্তিক ভাগ্যোদয়ৰ নিৰ্দিষ্ট ৰোডমেপ</div>
+            <div class="info-card">
+                <div class="card-content">
+                    হস্তৰেখাৰ গাণিতিক বিভাগ অনুসৰি আপোনাৰ জীৱনৰ গুৰুত্বপূৰ্ণ সাফল্য আৰু সোণালী সময়সীমা:<br><br>
+                    • <strong>প্ৰথম আৰম্ভণি আৰু স্থিৰতা (বয়স ২৩–২৫ বছৰ / প্ৰায় ${toAsDigits(firstRiseYear)} চন):</strong><br>
+                    নিজৰ ভৰিত থিয় হোৱা, প্ৰথম গুৰুত্বপূৰ্ণ উপাৰ্জন বা পেছাদাৰী জীৱনৰ আৰম্ভণি। এই সময়ছোৱাত আত্মবিশ্বাসৰ ভেটি গঢ় লৈ উঠে।<br><br>
+                    • <strong>ডাঙৰ সাফল্য আৰু স্থান পৰিৱৰ্তন (বয়স ৩২–৩৫ বছৰ / প্ৰায় ${toAsDigits(bigPeakYear)} চন):</strong><br>
+                    ভাগ্য ৰেখা আৰু মস্তিষ্ক ৰেখাৰ সংযোগস্থল অনুসৰি এই বয়সছোৱাত কেৰিয়াৰত এক ডাঙৰ ইতিবাচক উত্থান, পদোন্নতি বা ব্যৱসায়ৰ ব্যাপক সম্প্ৰসাৰণ ঘটিব। সমাজত এক প্ৰতিষ্ঠিত মৰ্যাদা লাভ হ'ব।<br><br>
+                    • <strong>সৰ্বোচ্চ সম্পত্তি আৰু সমৃদ্ধিৰ সোণালী সময় (বয়স ৪০+ বছৰ / প্ৰায় ${toAsDigits(wealthPeakYear)} চনৰ পৰা):</strong><br>
+                    স্থায়ী মাটি-বাৰী, বাহন আৰু নিৰাপদ সঞ্চয়ৰ চূড়ান্ত স্থিতি। এই সময়ত পূৰ্বৰ পৰিশ্ৰমৰ সম্পূৰ্ণ ফল ভোগ কৰিব পাৰিব।
+                </div>
+            </div>
+
+            <div class="sub-heading">৬. সূৰ্য ৰেখা (Sun Line / খ্যাতি, যশ আৰু মান-সন্মান)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    অনামিকা আঙুলিৰ তলত অৱস্থিত সূৰ্য ৰেখাই আপোনাৰ সৃজনশীল প্ৰতিভা, চৰকাৰী সন্মান আৰু সমাজত সন্মানজনক পৰিচয় লাভৰ সম্ভাৱনাক দুগুণ বৃদ্ধি কৰিছে। কৰ্মস্থলীত বৰিষ্ঠ বিষয়া আৰু সমাজৰ উচ্চস্তৰীয় ব্যক্তিৰ সান্নিধ্য লাভ কৰিব।
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 5: MOUNTS & AUSPICIOUS SIGNS -->
+        <div class="page page-break">
+            <h2 class="section-title">❁ গ্ৰহৰ পৰ্বত বিচাৰ আৰু বিশেষ শুভ চিহ্ন ❁</h2>
+            
+            <div class="sub-heading">৭. সমুদ্ৰিক গ্ৰহ পৰ্বতসমূহৰ অৱস্থান আৰু ফলাফল (Palm Mounts)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    • <strong>বৃহস্পতি পৰ্বত (Jupiter Mount - তৰ্জনী আঙুলিৰ তলত):</strong> সুউচ্চ আৰু পুষ্ট। ই জ্ঞান, নেতৃত্ব, উদাৰতা আৰু ধৰ্মীয় নিষ্ঠা প্ৰদান কৰে। সমাজত আপোনাৰ কথাৰ ওজন থাকিব।<br><br>
+                    • <strong>শনি পৰ্বত (Saturn Mount - মাজু আঙুলিৰ তলত):</strong> সুষম আৰু স্থিৰ। ই কৰ্তব্যনিষ্ঠা, ধৈৰ্য আৰু গভীৰ অনুসন্ধানমূলক চিন্তাক উৎসাহিত কৰে।<br><br>
+                    • <strong>সূৰ্য পৰ্বত (Sun Mount - অনামিকা আঙুলিৰ তলত):</strong> উজ্জ্বল। কলা, সৌন্দৰ্য আৰু সামাজিক প্ৰশংসা লাভৰ কাৰক।<br><br>
+                    • <strong>বুধ পৰ্বত (Mercury Mount - কনিষ্ঠা আঙুলিৰ তলত):</strong> শক্তিশালী। উন্নত ব্যৱসায়িক বুদ্ধি, বাগ্মিতা আৰু বিত্তীয় হিচাপ-নিকাচত বিশেষ পাৰদৰ্শিতা সূচায়।<br><br>
+                    • <strong>শুক্ৰ পৰ্বত (Venus Mount - বুঢ়া আঙুলিৰ তলত):</strong> মাংসল আৰু বহল। জীৱনত ভোগ-বিলাস, বাহন, সুন্দৰ বস্ত্ৰ আৰু দাম্পত্য সুখৰ স্থায়িত্ব দিয়ে।<br><br>
+                    • <strong>চন্দ্ৰ পৰ্বত (Moon Mount - হাতৰ তলৰ অংশত):</strong> শুভ। উচ্চ কল্পনাশক্তি, ভ্ৰমণপ্ৰিয়তা আৰু মানসিক সংবেদনশীলতা প্ৰদান কৰে।
+                </div>
+            </div>
+
+            <div class="sub-heading">৮. হস্ততলৰ বিশেষ শুভ চিহ্ন (Auspicious Signs)</div>
+            <div class="info-card">
+                <div class="card-content">
+                    • <strong>মৎস্য চিহ্ন বা ত্ৰিকোণ (Fish / Triangle Sign):</strong> কেতু বা চন্দ্ৰ পৰ্বতৰ ওচৰত ত্ৰিকোণ সদৃশ গঠন থকাৰ বাবে জীৱনত আকস্মিক ধনলাভ আৰু আধ্যাত্মিক সাধনাৰ শুভ যোগ আছে।<br><br>
+                    • <strong>ৰক্ষা চতুষ্কোণ (Protection Square):</strong> মস্তিষ্ক ৰেখা বা জীৱন ৰেখাৰ ওচৰৰ চতুষ্কোণ চিহ্নে জীৱনৰ ডাঙৰ দুৰ্ঘটনা, আৰ্থিক সংকট বা অপযশৰ পৰা আপোনাক ঈশ্বৰীয় কৃপাত ৰক্ষা কৰিব।
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 6: REMEDIES & SEAL -->
+        <div class="page">
+            <h2 class="section-title">❁ হস্তৰেখা আধাৰিত বৈদিক নিদান আৰু প্ৰতিকাৰ ❁</h2>
+            <div class="text-section">
+                হাতৰ ৰেখাসমূহ আমাৰ চিন্তা আৰু কৰ্মৰ ওপৰত নিৰ্ভৰ কৰি সময়ৰ লগে লগে সামান্য ৰূপান্তৰিত হয়। শুভ ৰেখাক বলীয়ান কৰিবলৈ আৰু দুৰ্বল পৰ্বতক শক্তিশালী কৰিবলৈ তলৰ বৈদিক নিয়মসমূহ পালন কৰক:
+            </div>
+
+            <div class="info-card remedy-card">
+                <div class="card-title">💎 আঙুলি অনুসৰি শুভ ৰত্ন আৰু ধাতু (Gemstone Guide)</div>
+                <div class="card-content">
+                    • <strong>বৃহস্পতি আৰু জ্ঞান বৃদ্ধিৰ বাবে:</strong> তৰ্জনী আঙুলিত সোণৰ আঙঠিত হালধীয়া পোখৰাজ (Yellow Sapphire) বা পীত ওপাল ধাৰণ কৰিব পাৰে।<br>
+                    • <strong>বুধ আৰু ব্যৱসায়িক উন্নতিৰ বাবে:</strong> কনিষ্ঠা আঙুলিত ৰূপ বা সোণত পান্না (Emerald) বা সেউজীয়া গোমেদ ধাৰণ কৰিলে বাকশক্তি আৰু আৰ্থিক সঞ্চয় বৃদ্ধি পায়।<br>
+                    • <strong>সৌভাগ্য আৰু স্বাস্থ্যৰ বাবে:</strong> অনামিকা আঙুলিত সোণ বা তামৰ ধাতুৰে ৰঙা প্ৰৱাল বা মাণিক্য পৰিধান কৰাটো অত্যন্ত শুভ।
+                </div>
+            </div>
+
+            <div class="info-card remedy-card">
+                <div class="card-title">🕉️ প্ৰাত্যহিক আধ্যাত্মিক সাধনা আৰু হস্ত শক্তি বৃদ্ধি</div>
+                <div class="card-content">
+                    <ul>
+                        <li><strong>প্ৰাতঃ কৰদৰ্শন সাধনা:</strong> প্ৰতিদিনে পুৱা টোপনিৰ পৰা উঠি দুয়োখন হাতৰ তলুৱা মুখৰ আগত মেলি ধৰি <em>"কৰাগ্ৰে বসতে লক্ষ্মীঃ..."</em> মন্ত্ৰ পাঠ কৰি তলুৱাত মুখ স্পৰ্শ কৰক। ই হস্তৰেখাৰ দুৰ্বল দোষ খণ্ডন কৰে।</li>
+                        <li><strong>সূৰ্য অৰ্ঘ্য প্ৰদান:</strong> পুৱা তামৰ পাত্ৰত পানী লৈ সূৰ্য্য দেৱতাক অৰ্পণ কৰিলে হাতৰ সূৰ্য ৰেখা আৰু বুধ পৰ্বত অত্যন্ত শক্তিশালী হৈ পৰে।</li>
+                        <li><strong>দান আৰু পুণ্য কৰ্ম:</strong> প্ৰতি বৃহস্পতিবাৰে বা শনিবাৰে অসহায়জনক সাধ্যানুসৰি খাদ্য বা বস্ত্ৰ দান কৰিলে শনি পৰ্বতৰ ভাগ্য ৰেখা বাধামুক্ত হয়।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer">
+                <strong>⚠️ অস্বীকাৰকৰণ (Disclaimer):</strong><br>
+                এই ৰিপোৰ্টখন প্ৰাচীন বৈদিক সমুদ্ৰিক শাস্ত্ৰৰ সূত্ৰ আৰু হস্তৰেখা বিজ্ঞানৰ আধাৰত প্ৰস্তুত কৰা হৈছে। ইয়াক জীৱনৰ পথ প্ৰদৰ্শক হিচাপে লওক, কিন্তু জীৱনৰ চূড়ান্ত সাফল্য আপোনাৰ সৎ কৰ্ম, নিষ্ঠা আৰু নিৰন্তৰ প্ৰচেষ্টাৰ ওপৰত নিৰ্ভৰশীল।
+            </div>
+
+            <div class="footer-seal">
+                ॥ ইতি জ্যোতিষ অসম ॥<br>
+                <strong>"আপোনাৰ হস্তৰেখা • আপোনাৰ কৰ্ম • আপোনাৰ সম্ভাৱনা"</strong>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+}
 
 function generateGrandVedicReport(order, chart) {
     if (order && order.service === 'palmistry') {
@@ -634,7 +947,100 @@ function generateGrandVedicReport(order, chart) {
     const curYear = new Date().getFullYear();
     const yArr = [curYear, curYear + 1, curYear + 2, curYear + 3, curYear + 4];
 
-    const page16FiveYearForecast = `
+    
+    const page16PalmistryLines = `
+    <div class="page page-break">
+        <h2 class="section-title">❁ হস্তৰেখা আৰু সামুদ্ৰিক শাস্ত্ৰ বিচাৰ (প্ৰধান ৰেখাসমূহ) ❁</h2>
+        <div class="shloka">"হস্তৰেখা মানৱস্য ভাগ্যস্য স্পষ্ট দৰ্পণম্।"</div>
+        <div class="text-section">
+            বৈদিক সামুদ্ৰিক শাস্ত্ৰ আৰু হস্তৰেখা বিজ্ঞান অনুসৰি মানুহৰ হাতৰ তলুৱা হৈছে অন্তৰ্নিহিত সম্ভাৱনা আৰু ভাগ্যৰ প্ৰত্যক্ষ প্ৰতিফলন। আপোনাৰ জন্ম কুণ্ডলীৰ লগ্ন-ৰাশি আৰু প্ৰকৃতিৰ আধাৰত প্ৰধান ৰেখাসমূহৰ বিশদ বিশ্লেষণ তলত আগবঢ়োৱা হ'ল:
+        </div>
+
+        <div class="sub-heading">১. তলুৱাৰ পঞ্চতত্ত্ব আৰু মূল প্ৰকৃতি</div>
+        <div class="info-card">
+            <div class="card-content">
+                • <strong>হস্তপ্ৰকৃতি আৰু ব্যক্তিত্ব:</strong> আপোনাৰ হাতৰ গঠন শুভ লক্ষণযুক্ত আৰু সুসামঞ্জস্যপূৰ্ণ। তলুৱাৰ দৃঢ়তাই মানসিক সুস্থিৰতা, গভীৰ চিন্তা আৰু আত্মবিশ্বাস প্ৰকাশ কৰে। জটিল আৰু প্ৰত্যাহ্বানপূৰ্ণ পৰিস্থিতিতো সঠিক সিদ্ধান্ত গ্ৰহণ কৰিব পৰা এক জন্মগত ক্ষমতা আপোনাৰ ব্যক্তিত্বত বিদ্যমান।
+            </div>
+        </div>
+
+        <div class="sub-heading">২. জীৱন ৰেখা (Life Line - প্ৰাণশক্তি, স্বাস্থ্য আৰু আয়ুস)</div>
+        <div class="info-card">
+            <div class="card-content">
+                • <strong>দীৰ্ঘায়ু আৰু জীৱনীশক্তি:</strong> শুক্ৰ পৰ্বতক সুন্দৰভাৱে আৱৰি থকা গভীৰ আৰু নিৰৱচ্ছিন্ন জীৱন ৰেখাই সু-স্বাস্থ্য, প্ৰচুৰ কৰ্মশক্তি আৰু মানসিক সহনশীলতা সূচায়। জীৱনৰ মধ্যভাগত সামান্য কৰ্মব্যস্ততা বা মানসিক চাপ আহিলেও এক অদৃশ্য দৈৱিক ৰক্ষাকৱচে আপোনাক সকলো ব্যাধি আৰু বিপদৰ পৰা সুৰক্ষিত ৰাখিব।
+            </div>
+        </div>
+
+        <div class="sub-heading">৩. মস্তিষ্ক ৰেখা (Head Line - মেধা আৰু সিদ্ধান্ত গ্ৰহণ)</div>
+        <div class="info-card">
+            <div class="card-content">
+                • <strong>তীক্ষ্ণ বুদ্ধি আৰু বাস্তৱবাদী মন:</strong> স্পষ্ট মস্তিষ্ক ৰেখাই বাস্তৱবাদী চিন্তাধাৰা, গভীৰ বিশ্লেষণাত্মক মেধা আৰু বৌদ্ধিক পৰিপক্কতাৰ ইংগিত দিয়ে। আৱেগৰ বশবৰ্তী নহৈ যুক্তি আৰু জ্ঞানেৰে কাম কৰাৰ অভ্যাসে কেৰিয়াৰ আৰু ব্যৱসায়ত আপোনাক সদায় এক অগ্ৰণী স্থানত ৰাখিব।
+            </div>
+        </div>
+
+        <div class="sub-heading">৪. হৃদয় ৰেখা (Heart Line - আৱেগ, সম্পৰ্ক আৰু পাৰিবাৰিক বন্ধন)</div>
+        <div class="info-card">
+            <div class="card-content">
+                • <strong>উদাৰ হৃদয় আৰু নিস্বাৰ্থ প্ৰেম:</strong> বৃহস্পতি পৰ্বতৰ দিশে ধাৱমান হৃদয় ৰেখাই উদাৰ, দায়িত্বশীল আৰু গভীৰ সম্বন্ধ গঢ়ি তোলাৰ প্ৰৱণতা দেখুৱায়। সংসাৰ আৰু সম্বন্ধৰ প্ৰতি আপোনাৰ নিষ্ঠা গভীৰ, যিয়ে পৰিয়ালত শান্তি আৰু সুসম্পৰ্ক বজাই ৰখাত গুৰুত্বপূৰ্ণ ভূমিকা ল'ব।
+            </div>
+        </div>
+
+        <div class="sub-heading">৫. ভাগ্য ৰেখা (Fate Line - কৰ্মজীৱন আৰু স্বাৱলম্বনৰ গতিপথ)</div>
+        <div class="info-card" style="border-left-color: #d97706; background: rgba(217, 119, 6, 0.08);">
+            <div class="card-title" style="color: #b45309;">🌟 কৰ্মজীৱন আৰু স্বাৱলম্বনৰ গতিপথ</div>
+            <div class="card-content">
+                • <strong>ভাগ্যোদয়ৰ স্থিৰ দিশ:</strong> শনি পৰ্বতৰ দিশে বিস্তৃত ভাগ্য ৰেখাই স্ব-উদ্যোগ আৰু নিজৰ শ্ৰমৰ বিনিময়ত ডাঙৰ সফলতা পোৱাৰ স্পষ্ট সংকেত দিয়ে। প্ৰাৰম্ভিক সংগ্ৰামৰ পিছত এক নিৰ্দিষ্ট বয়সৰ পৰা আৰ্থিক সমৃদ্ধি আৰু কৰ্মক্ষেত্ৰত স্থায়ী স্থিতি লাভ হ'ব।
+            </div>
+        </div>
+    </div>`;
+
+    const page17PalmistryMounts = `
+    <div class="page page-break">
+        <h2 class="section-title">❁ হস্তৰেখাৰ গ্ৰহ পৰ্বত আৰু শুভ মাংগলিক চিহ্ন ❁</h2>
+        <div class="shloka">"পৰ্বতাঃ কৰতলে স্থিতাঃ শুভাশুভ ফলপ্ৰদাঃ।"</div>
+        <div class="text-section">
+            হস্ততলৰ বিভিন্ন গ্ৰহ পৰ্বত (Mounts) আৰু তাত অৱস্থিত বিশেষ চিহ্নসমূহে মানৱ জীৱনলৈ দৈৱিক আশীৰ্বাদ, আকস্মিক ভাগ্যোদয় আৰু সামাজিক প্ৰতিষ্ঠা কঢ়িয়াই আনে:
+        </div>
+
+        <div class="sub-heading">১. বৃহস্পতি পৰ্বত (Mount of Jupiter - জ্ঞান আৰু নেতৃত্ব)</div>
+        <div class="info-card">
+            <div class="card-content">
+                • <strong>নেতৃত্ব আৰু সমাজত মান-সন্মান:</strong> তৰ্জনী আঙুলিৰ তলৰ শুভ বৃহস্পতি পৰ্বতে আধ্যাত্মিক মেধা, সামাজিক মৰ্যাদা আৰু নেতৃত্বৰ গুণ সূচায়। সমাজত আপোনাৰ কথাক লোকে গুৰুত্ব সহকাৰে ল'ব আৰু পৰামৰ্শদাতা হিচাপে আপোনাৰ উচ্চ সমাদৰ থাকিব।
+            </div>
+        </div>
+
+        <div class="sub-heading">২. শুক্ৰ পৰ্বত (Mount of Venus - ভোগ, সৌন্দৰ্য আৰু বাহন)</div>
+        <div class="info-card">
+            <div class="card-content">
+                • <strong>সৌন্দৰ্য্যবোধ আৰু বিলাসী জীৱন:</strong> বুঢ়া আঙুলিৰ গুৰিত অৱস্থিত উন্নত শুক্ৰ পৰ্বতে গৃহ সুখ, বাহন প্ৰাপ্তি আৰু পাৰিবাৰিক আনন্দ প্ৰদান কৰে। শিল্প-সংস্কৃতি, সংগীত আৰু সুন্দৰ পৰিৱেশৰ প্ৰতি আপোনাৰ সহজাত আকৰ্ষণ থাকিব।
+            </div>
+        </div>
+
+        <div class="sub-heading">৩. সূৰ্য পৰ্বত (Mount of Sun - যশ আৰু খ্যাতি)</div>
+        <div class="info-card">
+            <div class="card-content">
+                • <strong>খ্যাতি আৰু চৰকাৰী সমৰ্থন:</strong> অনামিকা আঙুলিৰ তলৰ সূৰ্য পৰ্বতে কৰ্মক্ষেত্ৰত উচ্চ প্ৰশংসা, চৰকাৰী বিষয়া বা গণ্যমান্য ব্যক্তিৰ পৰা সহযোগিতা পোৱাত সহায় কৰে।
+            </div>
+        </div>
+
+        <div class="sub-heading">৪. হস্ততলৰ বিশেষ শুভ মাংগলিক চিহ্নসমূহ</div>
+        <div class="info-card" style="border-left-color: #059669; background: rgba(5, 150, 105, 0.08);">
+            <div class="card-title" style="color: #047857;">🔱 দৈৱিক ৰক্ষাকৱচ আৰু ঐশ্বৰ্য যোগ</div>
+            <div class="card-content">
+                • <strong>ত্ৰিশূল বা পদুম চিহ্ন (Trishul / Lotus):</strong> পৰ্বতৰ শীৰ্ষত ত্ৰিশূল বা পদুম সদৃশ ৰেখাৰ সংমিশ্ৰণে ভগৱানৰ বিশেষ আশীৰ্বাদ আৰু শত্ৰুৰ ওপৰত বিজয় সূচায়।<br>
+                • <strong>মাংগলিক ধন ত্ৰিভুজ (Money Triangle):</strong> মস্তিষ্ক, স্বাস্থ্য আৰু ভাগ্য ৰেখাৰ সংযোগত গঠিত ত্ৰিভুজে জীৱনত স্থায়ী সঞ্চয়, ভূমি-সম্পত্তি ক্ৰয় আৰু বিত্তীয় নিৰাপত্তা সুনিশ্চিত কৰে।<br>
+                • <strong>মৎস্য চিহ্ন (Fish Symbol):</strong> কেতু বা চন্দ্ৰ পৰ্বতত মৎস্য সদৃশ গঠনে দীৰ্ঘকালীন ভ্ৰমণ, তীৰ্থস্থান গমন আৰু হঠাৎ ভাগ্যোদয়ৰ শুভ ইংগিত বহন কৰে।
+            </div>
+        </div>
+
+        <div class="sub-heading">৫. হস্তৰেখাভিত্তিক সাধনা আৰু দৈৱিক পৰামৰ্শ</div>
+        <div class="info-card">
+            <div class="card-content">
+                • প্ৰতিদিনে পুৱা সাৰ পাই নিজৰ দুয়োখন হাতৰ তলুৱা একেলগে চাই <em>"কৰাগ্ৰে বসতে লক্ষ্মীঃ কৰমধ্যে সৰস্বতী। কৰমূলে তু গোবিন্দঃ প্ৰভাতে কৰদৰ্শনম্॥"</em> মন্ত্ৰ উচ্চাৰণ কৰিলে হাতৰ শুভ ৰেখাসমূহ সক্ৰিয় হৈ উঠে আৰু জীৱনৰ ঋণাত্মক প্ৰভাৱ নাশ হয়।
+            </div>
+        </div>
+    </div>`;
+
+const page18FiveYearForecast = `
     <div class="page page-break">
         <h2 class="section-title">❁ অহা ৫ বছৰৰ বাৰ্ষিক মহাচক্ৰ আৰু ভৱিষ্যদ্বাণী ❁</h2>
         <div class="text-section">
@@ -706,7 +1112,7 @@ function generateGrandVedicReport(order, chart) {
     };
     const dRemedy = dashaRemedies[currentDasha] || { asName: currentDasha, mantra: "ওঁ নমঃ শিৱায়", dan: "সপ্তাহত এদিন দৰিদ্ৰক সাধ্যানুসৰি অন্ন দান কৰক।" };
 
-    const page17Remedies = `
+    const page19Remedies = `
     <div class="page page-break">
         <h2 class="section-title">❁ বৈদিক নিদান, মহা প্ৰতিকাৰ আৰু ৰত্ন ধাৰণ বিধি ❁</h2>
         <div class="text-section">
@@ -733,7 +1139,7 @@ function generateGrandVedicReport(order, chart) {
         </div>
     </div>`;
 
-    const page18SpiritualSeal = `
+    const page20SpiritualSeal = `
     <div class="page">
         <h2 class="section-title">❁ প্ৰাত্যহিক আধ্যাত্মিক সাধনা আৰু জীৱনৰ মূল মন্ত্ৰ ❁</h2>
 
@@ -762,12 +1168,12 @@ function generateGrandVedicReport(order, chart) {
 
     let assembledPages = "";
     if (service === 'career') {
-        assembledPages = page3Navagraha1 + page6Houses1 + page9LifetimeRoadmap + page10Career + page11WealthProperty + page16FiveYearForecast + page17Remedies + page18SpiritualSeal;
+        assembledPages = page3Navagraha1 + page6Houses1 + page9LifetimeRoadmap + page10Career + page11WealthProperty + page16PalmistryLines + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
     } else if (service === 'love') {
-        assembledPages = page4Navagraha2 + page6Houses1 + page9LifetimeRoadmap + page12Love + page13Spouse + page14MarriageTiming + page16FiveYearForecast + page17Remedies + page18SpiritualSeal;
+        assembledPages = page4Navagraha2 + page6Houses1 + page9LifetimeRoadmap + page12Love + page13Spouse + page14MarriageTiming + page16PalmistryLines + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
     } else {
         // Complete 18-page Grand Report for birth & full horoscope
-        assembledPages = page3Navagraha1 + page4Navagraha2 + page5Navagraha3 + page6Houses1 + page7Houses2 + page8Houses3 + page9LifetimeRoadmap + page10Career + page11WealthProperty + page12Love + page13Spouse + page14MarriageTiming + page15Health + page16FiveYearForecast + page17Remedies + page18SpiritualSeal;
+        assembledPages = page3Navagraha1 + page4Navagraha2 + page5Navagraha3 + page6Houses1 + page7Houses2 + page8Houses3 + page9LifetimeRoadmap + page10Career + page11WealthProperty + page12Love + page13Spouse + page14MarriageTiming + page15Health + page16PalmistryLines + page17PalmistryMounts + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
     }
 
     return `
