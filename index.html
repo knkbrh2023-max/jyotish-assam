@@ -1828,6 +1828,7 @@ function buildFallbackVedicChart(dobStr, tobStr) {
 
 // --- DEDICATED PALMISTRY MODAL & PAYMENT HANDLERS ---
 function openPalmistryModal() {
+    window.selectedService = 'palmistry';
     const modal = document.getElementById('palmistryModal');
     if (modal) {
         modal.classList.add('active');
@@ -1888,12 +1889,10 @@ window.processPalmistryPayment = async function(e) {
     // Because 'palmistry' is a newly added frontend service (₹99), passing service: 'love' ensures /create-order
     // maps directly to the exact ₹99 tier without throwing 'amount: is required'.
     const orderPayload = {
-        service: 'career', // Backend recognizes 'career' as ₹199
-        service_type: 'palmistry',
-        custom_service: 'palmistry',
+        service: 'palmistry',
         name: name,
         email: email,
-        amount: 19900, // 199 INR in paise
+        amount: 199,
         birthDate: '1995-01-01',
         birthTime: '10:30:00',
         birthPlace: 'অসম',
@@ -1976,9 +1975,37 @@ window.processPalmistryPayment = async function(e) {
                 } catch(e){}
                 
                 try {
-                    showReportToCustomer(responseData.orderId);
+                    window.selectedService = 'palmistry';
+                    const palmOrder = {
+                        id: responseData.orderId,
+                        public_order_id: responseData.orderId,
+                        name: name,
+                        email: email,
+                        birth_date: 'N/A',
+                        birth_place: 'অসম',
+                        service: 'palmistry',
+                        palmHand: hand,
+                        palmGender: gender,
+                        palmPhoto: photo
+                    };
+                    const reportHtml = generatePalmistryReportHtml(palmOrder);
+                    try {
+                        sessionStorage.setItem('ja_report_' + responseData.orderId, reportHtml);
+                        localStorage.setItem('ja_report_' + responseData.orderId, reportHtml);
+                        localStorage.setItem('ja_latest_order_id', responseData.orderId);
+                        localStorage.setItem('ja_service_' + responseData.orderId, 'palmistry');
+                    } catch(e){}
                     if (typeof closePalmistryModal === 'function') closePalmistryModal();
+                    const win = window.open('', '_blank');
+                    if (win && !win.closed) {
+                        win.document.open();
+                        win.document.write(reportHtml);
+                        win.document.close();
+                    } else {
+                        window.location.href = "report.html?order=" + encodeURIComponent(responseData.orderId);
+                    }
                 } catch(repErr) {
+                    console.warn("Palmistry direct report error:", repErr);
                     window.location.href = "report.html?order=" + encodeURIComponent(responseData.orderId);
                 }
                 btn.innerText = "🔒 পেমেন্ট কৰক — মাত্ৰ ₹১৯৯"; btn.disabled = false;
@@ -2574,22 +2601,34 @@ function generatePalmistryReportHtml(order) {
 }
 
 async function showReportToCustomer(orderId) {
-    const name = document.getElementById('custName') ? document.getElementById('custName').value : 'গ্ৰাহক';
-    const email = document.getElementById('custEmail') ? document.getElementById('custEmail').value : 'N/A';
+    const savedSvc = localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId);
+    const service = (typeof selectedService !== 'undefined' && selectedService) ? selectedService : (savedSvc || 'birth');
+    const name = (document.getElementById('palmCustName') && document.getElementById('palmCustName').value.trim()) || 
+                 (document.getElementById('custName') && document.getElementById('custName').value.trim()) || 'গ্ৰাহক';
+    const email = (document.getElementById('palmCustEmail') && document.getElementById('palmCustEmail').value.trim()) || 
+                  (document.getElementById('custEmail') && document.getElementById('custEmail').value.trim()) || 'N/A';
     const dob = document.getElementById('custDate') ? document.getElementById('custDate').value : 'N/A';
     const place = document.getElementById('custPlace') ? document.getElementById('custPlace').value : 'N/A';
-    const service = typeof selectedService !== 'undefined' ? selectedService : 'birth';
 
-    if (service === 'palmistry') {
+    const isPalm = service === 'palmistry' || 
+                   (document.getElementById('palmCustName') && document.getElementById('palmCustName').value.trim() !== '') ||
+                   window.currentPalmPhotoBase64;
+
+    if (isPalm) {
+        const hand = (document.getElementById('palmCustHand') && document.getElementById('palmCustHand').value) || 
+                     (document.getElementById('custPalmHand') && document.getElementById('custPalmHand').value) || 'right';
+        const gender = (document.getElementById('palmCustGender') && document.getElementById('palmCustGender').value) || 
+                       (document.getElementById('custPalmGender') && document.getElementById('custPalmGender').value) || 'male';
         const palmOrder = {
             id: orderId,
             public_order_id: orderId,
             name: name,
-            birth_date: dob,
-            birth_place: place,
+            email: email,
+            birth_date: 'N/A',
+            birth_place: 'অসম',
             service: 'palmistry',
-            palmHand: document.getElementById('custPalmHand') ? document.getElementById('custPalmHand').value : 'right',
-            palmGender: document.getElementById('custPalmGender') ? document.getElementById('custPalmGender').value : 'male',
+            palmHand: hand,
+            palmGender: gender,
             palmPhoto: window.currentPalmPhotoBase64 || null
         };
         const reportHtml = generatePalmistryReportHtml(palmOrder);

@@ -496,7 +496,13 @@ function generatePalmistryReportHtml(order) {
 
     // --- Complete Rich Vedic Report Generation Function ---
     function renderFullReport(order, chart) {
-        if (order.service === 'palmistry') {
+        if (order && (
+            order.service === 'palmistry' || 
+            String(order.service).toLowerCase().includes('palm') ||
+            order.palmHand || 
+            order.palmGender || 
+            order.palmPhoto
+        )) {
             return generatePalmistryReportHtml(order);
         }
         return generateGrandVedicReport(order, chart);
@@ -511,7 +517,10 @@ function generatePalmistryReportHtml(order) {
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত পূৰ্বৰে পৰা তৈয়াৰী ৰিপোৰ্ট মজুত আছে
         if (orderId) {
             const cached = sessionStorage.getItem('ja_report_' + orderId) || localStorage.getItem('ja_report_' + orderId);
-            if (cached) {
+            const isPalmOrder = (localStorage.getItem('ja_service_' + orderId) === 'palmistry') ||
+                                (sessionStorage.getItem('ja_service_' + orderId) === 'palmistry');
+            // If cached report is a birth chart but this is actually a palmistry order, ignore the bad cache!
+            if (cached && !(isPalmOrder && cached.includes('Complete Grand Birth Chart'))) {
                 document.open();
                 document.write(cached);
                 document.close();
@@ -547,6 +556,14 @@ function generatePalmistryReportHtml(order) {
 
         // ৪. যদি অৰ্ডাৰ পোৱা গ'ল, ৰিপোৰ্ট প্ৰস্তুত কৰা
         if (order) {
+            const sKey = order.public_order_id || order.id || orderId;
+            const savedSvc = localStorage.getItem('ja_service_' + sKey) || sessionStorage.getItem('ja_service_' + sKey);
+            if (savedSvc) order.service = savedSvc;
+            if (order.service === 'palmistry') {
+                const pPhoto = localStorage.getItem('ja_palm_photo_' + sKey);
+                if (pPhoto) order.palmPhoto = pPhoto;
+            }
+
             document.getElementById('statusTitle').innerText = "✨ কুণ্ডলী বিশ্লেষণ সম্পূৰ্ণ হৈছে...";
             document.getElementById('statusMsg').innerText = "ৰিপোৰ্ট প্ৰদৰ্শন কৰা হৈছে। অনুগ্ৰহ কৰি ৰ'ব...";
 
