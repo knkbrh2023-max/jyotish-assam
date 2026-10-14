@@ -57,8 +57,21 @@ function generatePalmistryReportHtml(order) {
         }
     ];
 
+    const aiAnalysis = order.aiPalmAnalysis || null;
     const elemIdx = (bYear + (dob.length || 0)) % 4;
-    const elem = elements[elemIdx];
+    const baseElem = elements[elemIdx];
+    const elem = {
+        type: (aiAnalysis && aiAnalysis.handType) ? aiAnalysis.handType : baseElem.type,
+        nature: (aiAnalysis && aiAnalysis.handNature) ? aiAnalysis.handNature : baseElem.nature,
+        traits: (aiAnalysis && aiAnalysis.personalityTraits) ? aiAnalysis.personalityTraits : baseElem.traits,
+        bestFields: (aiAnalysis && aiAnalysis.bestCareerFields) ? aiAnalysis.bestCareerFields : baseElem.bestFields
+    };
+    const aiVisionBanner = (aiAnalysis && aiAnalysis.aiSummary)
+        ? `<div class="info-card" style="border-left-color: #059669; background: rgba(5, 150, 105, 0.08);">
+               <div class="card-title" style="color: #047857;">🔍 AI সমুদ্ৰিক চিত্ৰ বিশ্লেষণৰ বিশেষ সাৰাংশ (AI Palm Vision Insight)</div>
+               <div class="card-content">${aiAnalysis.aiSummary}</div>
+           </div>`
+        : '';
 
     let firstRiseAge = 24;
     let bigPeakAge = 32;
@@ -341,6 +354,7 @@ function generatePalmistryReportHtml(order) {
                 </div>
             </div>
 
+            ${aiVisionBanner}
             ${photoHtml}
         </div>
 
@@ -585,9 +599,11 @@ function generateGrandVedicReport(order, chart) {
 
     let planetsHtml = `<table class="vedic-table"><thead><tr><th>গ্ৰহ</th><th>ৰাশি</th><th>ঘৰ (House)</th><th>নক্ষত্ৰ</th><th>পদ</th></tr></thead><tbody>`;
     for(const key in chart.planets) {
-        let hNum = (chart.planets[key].rashi_no - ascRashi + 12) % 12 + 1;
-        let rEn = chart.planets[key].rashi;
-        planetsHtml += `<tr><td><strong>${planetNames[key] || key} (${key})</strong></td><td>${rashiAsMap[rEn] || rEn} (${rEn})</td><td>${toAsDigits(hNum)}</td><td>${chart.planets[key].nakshatra}</td><td>${toAsDigits(chart.planets[key].pada)}</td></tr>`;
+        let pRashiNo = chart.planets[key].rashi_no || 1;
+        let hNum = (pRashiNo - ascRashi + 12) % 12 + 1;
+        let rEn = chart.planets[key].rashi || "Aries";
+        let padaVal = chart.planets[key].pada || (((pRashiNo + key.length) % 4) + 1);
+        planetsHtml += `<tr><td><strong>${planetNames[key] || key} (${key})</strong></td><td>${rashiAsMap[rEn] || rEn} (${rEn})</td><td>${toAsDigits(hNum)}</td><td>${chart.planets[key].nakshatra || "অশ্বিনী"}</td><td>${toAsDigits(padaVal)}</td></tr>`;
     }
     planetsHtml += `</tbody></table>`;
 
@@ -773,10 +789,18 @@ function generateGrandVedicReport(order, chart) {
         "ধৰ্মীয় বা সৎ কাৰ্যত ধন ব্যয়, দূৰ স্থান বা বিদেশৰ সৈতে সংযোগ আৰু জীৱনৰ অন্তিম পৰ্যায়ত মানসিক তৃপ্তি তথা আধ্যাত্মিক মুক্তিৰ যোগ সূচায়।"
     ];
 
+    const orderedRashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+    const getHouseRashiEn = (houseNumber) => {
+        const fromHousesArr = chart?.houses?.[houseNumber - 1]?.rashi;
+        if (fromHousesArr && orderedRashis.includes(fromHousesArr)) return fromHousesArr;
+        const baseIdx = Math.max(0, (parseInt(ascRashi, 10) || 1) - 1);
+        return orderedRashis[(baseIdx + houseNumber - 1) % 12] || "Aries";
+    };
+
     const buildHouseCards = (startHouse, endHouse) => {
         let cardsHtml = "";
         for (let i = startHouse; i <= endHouse; i++) {
-            const rashiEn = chart?.houses?.[i - 1]?.rashi || "Aries";
+            const rashiEn = getHouseRashiEn(i);
             const rInfo = rashiDetails[rashiEn] || { asName: rashiEn, lord: "গ্ৰহ", trait: "বিশেষ জ্যোতিষীয় প্ৰভাৱ" };
             const hasPlanets = hFull[i] && hFull[i].length > 0;
             const pInH = hasPlanets ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই (ভাৱাধিপতিৰ দ্বাৰা নিয়ন্ত্ৰিত)";
@@ -898,10 +922,10 @@ function generateGrandVedicReport(order, chart) {
         </div>
     </div>`;
 
-    const tenthRashi = chart?.houses?.[9]?.rashi || "Aries";
-    const secondRashi = chart?.houses?.[1]?.rashi || "Taurus";
-    const eleventhRashi = chart?.houses?.[10]?.rashi || "Aquarius";
-    const fourthRashi = chart?.houses?.[3]?.rashi || "Cancer";
+    const tenthRashi = getHouseRashiEn(10);
+    const secondRashi = getHouseRashiEn(2);
+    const eleventhRashi = getHouseRashiEn(11);
+    const fourthRashi = getHouseRashiEn(4);
 
     const sunHouse = getPlanetHouse(chart?.planets?.Sun?.rashi_no);
     const saturnHouse = getPlanetHouse(chart?.planets?.Saturn?.rashi_no);
@@ -992,8 +1016,8 @@ function generateGrandVedicReport(order, chart) {
         </div>
     </div>`;
 
-    const seventhHouseRashi = chart?.houses?.[6]?.rashi || "Libra";
-    const fifthHouseRashi = chart?.houses?.[4]?.rashi || "Leo";
+    const seventhHouseRashi = getHouseRashiEn(7);
+    const fifthHouseRashi = getHouseRashiEn(5);
     const venusHouse = getPlanetHouse(chart?.planets?.Venus?.rashi_no);
     const marsHouse = getPlanetHouse(chart?.planets?.Mars?.rashi_no);
     const seventhRashiAs = rashiAsMap[seventhHouseRashi] || seventhHouseRashi;

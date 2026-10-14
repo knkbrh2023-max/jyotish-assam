@@ -466,33 +466,103 @@ function ensureRazorpay() {
 }
 
 async function rechargeTime(amount, minutesToAdd) {
-            await ensureRazorpay();
-            var options = {
-                "key": window.JA_CONFIG.razorpayKeyId,
-                "amount": amount * 100, 
-                "currency": "INR",
-                "name": "জ্যোতিষ অসম",
-                "description": `AI আচাৰ্য্যৰ সৈতে +${minutesToAdd} মিনিট`,
-                "handler": async function (response) {
-                    document.getElementById('extensionModal').style.display = 'none';
-                    
-                    // ডাটাবেছত নতুন মিনিট যোগ কৰা
-                    const currentMins = Math.floor(availableSeconds / 60);
-                    const newMins = (currentMins > 0 ? currentMins : 0) + minutesToAdd;
-                    
-                    await supabaseClient.from('subscriptions')
-                        .update({ available_minutes: newMins, payment_status: 'paid' })
-                        .eq('profile_id', profileId);
-                    
-                    availableSeconds = newMins * 60;
-                    unlockChat();
-                    startTimer();
-                    renderMessage("acharya", `ধন্যবাদ! আপোনাৰ পেমেন্ট সফল হৈছে আৰু সময় বৃদ্ধি কৰা হৈছে।`);
-                },
-                "theme": { "color": "#10B981" }
-            };
-            var rzp = new Razorpay(options);
-            rzp.open();
+            try {
+                await ensureRazorpay();
+                const serviceCode = minutesToAdd >= 10 ? 'chat_10m' : 'chat_5m';
+                const custName = localStorage.getItem('ja_customer_name_' + profileId) || 'গ্ৰাহক';
+                const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1');
+
+                // ১. প্ৰথমে বেকএণ্ডত সুৰক্ষিতভাৱে Razorpay Order সৃষ্টি কৰক
+                let rzpOrderId = null;
+                let publicOrderId = null;
+                let rzpKey = (window.JA_CONFIG && window.JA_CONFIG.razorpayKeyId) || "rzp_test_TjQLxMWOfOVhZq";
+                try {
+                    const createRes = await fetch(apiBase + '/create-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            service: serviceCode,
+                            amount: amount,
+                            name: custName,
+                            email: 'chat@jyotishassam.com',
+                            birthDate: '1995-01-01',
+                            birthTime: '10:30:00',
+                            birthPlace: 'অসম',
+                            profileId: profileId,
+                            minutesToAdd: minutesToAdd
+                        })
+                    });
+                    if (createRes.ok) {
+                        const cData = await createRes.json();
+                        if (cData && cData.success) {
+                            rzpOrderId = cData.razorpayOrderId;
+                            publicOrderId = cData.orderId;
+                            if (cData.keyId) rzpKey = cData.keyId;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Order creation fallback for chat recharge:", e);
+                }
+
+                var options = {
+                    "key": rzpKey,
+                    "amount": amount * 100,
+                    "currency": "INR",
+                    "name": "জ্যোতিষ অসম",
+                    "description": `AI আচাৰ্য্যৰ সৈতে +${minutesToAdd} মিনিট`,
+                    ...(rzpOrderId ? { "order_id": rzpOrderId } : {}),
+                    "handler": async function (response) {
+                        document.getElementById('extensionModal').style.display = 'none';
+                        const currentMins = Math.floor(availableSeconds / 60);
+                        const newMins = (currentMins > 0 ? currentMins : 0) + minutesToAdd;
+
+                        // ২. বেকএণ্ডত পেমেণ্ট ছাইন ভেৰিফাই কৰি মিনিট যোগ কৰক
+                        let backendUpdated = false;
+                        try {
+                            const verifyRes = await fetch(apiBase + '/verify-payment', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'apikey': SUPABASE_ANON_KEY,
+                                    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+                                },
+                                body: JSON.stringify({
+                                    orderId: publicOrderId,
+                                    razorpay_order_id: response.razorpay_order_id || rzpOrderId,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    profileId: profileId,
+                                    minutesToAdd: minutesToAdd
+                                })
+                            });
+                            if (verifyRes.ok) {
+                                const vData = await verifyRes.json();
+                                if (vData && vData.success) backendUpdated = true;
+                            }
+                        } catch (vErr) {
+                            console.warn("Verify payment warning:", vErr);
+                        }
+
+                        if (!backendUpdated) {
+                            try {
+                                await supabaseClient.from('subscriptions')
+                                    .update({ available_minutes: newMins, payment_status: 'paid' })
+                                    .eq('profile_id', profileId);
+                            } catch (e) {}
+                        }
+
+                        availableSeconds = newMins * 60;
+                        unlockChat();
+                        startTimer();
+                        renderMessage("acharya", `ধন্যবাদ! আপোনাৰ পেমেন্ট সফলতাৰে ভেৰিফাই হৈছে আৰু +${minutesToAdd} মিনিট সময় বৃদ্ধি কৰা হৈছে।`);
+                    },
+                    "theme": { "color": "#10B981" }
+                };
+                var rzp = new Razorpay(options);
+                rzp.open();
+            } catch (err) {
+                alert("পেমেন্ট গেটৱে মুকলি কৰাত সমস্যা হৈছে: " + err.message);
+            }
         }
     </script>
 </body>
