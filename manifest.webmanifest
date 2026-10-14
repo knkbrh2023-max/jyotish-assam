@@ -1,1 +1,26 @@
-{"name":"Jyotish Assam","short_name":"Jyotish Assam","start_url":"/","display":"standalone","background_color":"#fffaf4","theme_color":"#21140e","icons":[]}
+{
+  "name": "জ্যোতিষ অসম | Jyotish Assam - Vedic Astrology, Palmistry & AI Acharya",
+  "short_name": "জ্যোতিষ অসম",
+  "description": "অসমীয়া ভাষাত দৈনিক ৰাশিফল, বৈদিক জন্ম-কুণ্ডলী, সমুদ্ৰিক হস্তৰেখা বিচাৰ, ৭৮-কাৰ্ড টেৰট আৰু লাইভ AI আচাৰ্য্য সেৱা।",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf4",
+  "theme_color": "#8b0000",
+  "lang": "as",
+  "icons": [
+    {
+      "src": "fav.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -67,11 +67,12 @@
 
     <div id="loginOverlay">
         <div class="login-card">
-            <h2>🔒 এডমিন লগইন</h2>
-            <p style="font-size: 14px; color: #64748b; margin-bottom: 20px;">ডেশ্ববৰ্ড চাবলৈ পাছৱৰ্ড প্ৰদান কৰক</p>
-            <input type="password" id="adminPassword" class="login-input" placeholder="পাছৱৰ্ড লিখক..." onkeypress="if(event.key==='Enter') checkPassword()">
-            <button class="login-btn" onclick="checkPassword()">লগইন কৰক</button>
-            <p id="errorMsg" class="error-msg">ভুল পাছৱৰ্ড! পুনৰ চেষ্টা কৰক।</p>
+            <h2>🔒 সুৰক্ষিত এডমিন লগইন</h2>
+            <p style="font-size: 13.5px; color: #64748b; margin-bottom: 18px;">Supabase Auth ইমেইল আৰু পাছৱৰ্ড বা এডমিন ছিক্ৰেট কী প্ৰদান কৰক</p>
+            <input type="email" id="adminEmail" class="login-input" placeholder="এডমিন ইমেইল (ঐচ্ছিক যদি ছিক্ৰেট কী ব্যৱহাৰ কৰে)">
+            <input type="password" id="adminPassword" class="login-input" placeholder="পাছৱৰ্ড বা এডমিন কী লিখক..." onkeypress="if(event.key==='Enter') checkPassword()">
+            <button class="login-btn" id="adminLoginBtn" onclick="checkPassword()">সুৰক্ষিতভাৱে লগইন কৰক</button>
+            <p id="errorMsg" class="error-msg">লগইন বিফল হৈছে! অনুগ্ৰহ কৰি সঠিক ইমেইল/পাছৱৰ্ড দিয়ক।</p>
         </div>
     </div>
 
@@ -126,7 +127,7 @@
                         <option value="love">প্ৰেম আৰু সম্পৰ্ক (₹99)</option>
                         <option value="career">কেৰিয়াৰ আৰু ব্যৱসায় (₹199)</option>
                         <option value="birth">সম্পূৰ্ণ জন্ম কুণ্ডলী (₹299)</option>
-                        <option value="palmistry">হস্তৰেখা বিশদ বিচাৰ (₹99)</option>
+                        <option value="palmistry">হস্তৰেখা বিশদ বিচাৰ (₹199)</option>
                     </select>
                 </div>
                 <div class="manual-field">
@@ -198,7 +199,6 @@
     </div>
 
     <script>
-        const CORRECT_PASSWORD = "Kanak@123";
         const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
         const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
         const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -249,30 +249,91 @@
             return 'pending';
         }
 
-        function checkPassword() {
-            const enteredPass = document.getElementById('adminPassword').value;
-            if (enteredPass === CORRECT_PASSWORD) {
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('mainDashboard').style.display = 'block';
-                sessionStorage.setItem('isAdminLoggedIn', 'true');
-                fetchOrders();
-                fetchSupportMessages(); // নতুন Support ডাটা লোড কৰা
-            } else {
-                document.getElementById('errorMsg').style.display = 'block';
+        async function checkPassword() {
+            const emailVal = (document.getElementById('adminEmail').value || '').trim();
+            const enteredPass = (document.getElementById('adminPassword').value || '').trim();
+            const errEl = document.getElementById('errorMsg');
+            const btnEl = document.getElementById('adminLoginBtn');
+            errEl.style.display = 'none';
+
+            if (!enteredPass) {
+                errEl.innerText = "অনুগ্ৰহ কৰি পাছৱৰ্ড প্ৰদান কৰক।";
+                errEl.style.display = 'block';
+                return;
+            }
+
+            btnEl.innerText = "পৰীক্ষা কৰা হৈছে... ⏳";
+            btnEl.disabled = true;
+
+            try {
+                let isAuthenticated = false;
+
+                // ১. যদি ইমেইল দিয়া হৈছে, প্ৰথমে Supabase Auth (Email + Password) চেষ্টা কৰক
+                if (emailVal) {
+                    const { data, error } = await sbClient.auth.signInWithPassword({
+                        email: emailVal,
+                        password: enteredPass
+                    });
+                    if (!error && data && data.session) {
+                        isAuthenticated = true;
+                        sessionStorage.setItem('ja_admin_token', data.session.access_token);
+                    }
+                }
+
+                // ২. যদি Supabase Auth নহয়, তেন্তে Backend Edge Function (/admin-verify)-ৰ জৰিয়তে পৰীক্ষা কৰক
+                if (!isAuthenticated) {
+                    const verifyRes = await fetch(SUPABASE_URL + '/functions/v1/admin-verify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': 'Bearer ' + SUPABASE_KEY
+                        },
+                        body: JSON.stringify({ email: emailVal, password: enteredPass })
+                    });
+                    if (verifyRes.ok) {
+                        const vJson = await verifyRes.json();
+                        if (vJson && vJson.success) {
+                            isAuthenticated = true;
+                            sessionStorage.setItem('ja_admin_key', enteredPass);
+                        }
+                    }
+                }
+
+                if (isAuthenticated) {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainDashboard').style.display = 'block';
+                    sessionStorage.setItem('isAdminLoggedIn', 'true');
+                    fetchOrders();
+                    fetchSupportMessages();
+                } else {
+                    errEl.innerText = "ভুল ইমেইল বা পাছৱৰ্ড! পুনৰ চেষ্টা কৰক।";
+                    errEl.style.display = 'block';
+                }
+            } catch (err) {
+                errEl.innerText = "চাৰ্ভাৰ সংযোগৰ সমস্যা: " + (err.message || "পুনৰ চেষ্টা কৰক");
+                errEl.style.display = 'block';
+            } finally {
+                btnEl.innerText = "সুৰক্ষিতভাৱে লগইন কৰক";
+                btnEl.disabled = false;
             }
         }
 
-        function logout() {
+        async function logout() {
+            try { await sbClient.auth.signOut(); } catch(e) {}
             sessionStorage.removeItem('isAdminLoggedIn');
+            sessionStorage.removeItem('ja_admin_token');
+            sessionStorage.removeItem('ja_admin_key');
             location.reload();
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: sessionData } = await sbClient.auth.getSession();
+            if ((sessionData && sessionData.session) || sessionStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('mainDashboard').style.display = 'block';
                 fetchOrders();
-                fetchSupportMessages(); // নতুন Support ডাটা লোড কৰা
+                fetchSupportMessages();
             }
         });
 

@@ -202,6 +202,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         let orderId = urlParams.get('order') || urlParams.get('orderId') || urlParams.get('razorpay_order_id') || localStorage.getItem('ja_latest_order_id');
         const paymentId = urlParams.get('razorpay_payment_id');
+        const rzpOrderId = urlParams.get('razorpay_order_id');
+        const rzpSignature = urlParams.get('razorpay_signature');
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত পূৰ্বৰে পৰা তৈয়াৰী ৰিপোৰ্ট মজুত আছে
         if (orderId) {
@@ -256,15 +258,50 @@
             document.getElementById('statusTitle').innerText = "✨ কুণ্ডলী বিশ্লেষণ সম্পূৰ্ণ হৈছে...";
             document.getElementById('statusMsg').innerText = "ৰিপোৰ্ট প্ৰদৰ্শন কৰা হৈছে। অনুগ্ৰহ কৰি ৰ'ব...";
 
-            // যদি Razorpay-ৰ পৰা redirect হৈ আহিছে আৰু payment_id আছে, তেন্তে DB আপডেট কৰক
-            if (paymentId && order.id && order.payment_status !== 'paid') {
+            // 🔒 সুৰক্ষিত পেমেন্ট ভেৰিফিকেচন: কেৱল বৈধ Razorpay Signature থাকিলেহে verify-payment এজ ফাংচনৰ জৰিয়তে আপডেট হ'ব
+            if (paymentId && rzpOrderId && rzpSignature && order.payment_status !== 'paid') {
                 try {
-                    await sb.from('orders').update({
-                        payment_status: 'paid',
-                        status: 'paid',
-                        razorpay_payment_id: paymentId
-                    }).eq('id', order.id);
-                } catch(e){}
+                    const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1');
+                    await fetch(apiBase + '/verify-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': 'Bearer ' + SUPABASE_KEY
+                        },
+                        body: JSON.stringify({
+                            orderId: order.public_order_id || order.id,
+                            razorpay_order_id: rzpOrderId,
+                            razorpay_payment_id: paymentId,
+                            razorpay_signature: rzpSignature
+                        })
+                    });
+                } catch(e) {
+                    console.warn("Payment verification call warning:", e);
+                }
+            }
+
+            // যদি হস্তৰেখা অৰ্ডাৰ হয় আৰু হাতৰ ফটো আছে, তেন্তে AI Vision বিশ্লেষণ চেষ্টা কৰক
+            if (order.service === 'palmistry' && order.palmPhoto && !order.aiPalmAnalysis) {
+                try {
+                    const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1');
+                    const aiRes = await fetch(apiBase + '/analyze-palm', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            palmPhoto: order.palmPhoto,
+                            palmHand: order.palmHand || order.palm_hand || 'right',
+                            palmGender: order.palmGender || order.palm_gender || 'male',
+                            name: order.name
+                        })
+                    });
+                    if (aiRes.ok) {
+                        const aiJson = await aiRes.json();
+                        if (aiJson && aiJson.success && aiJson.analysis) {
+                            order.aiPalmAnalysis = aiJson.analysis;
+                        }
+                    }
+                } catch(e) {}
             }
 
             const dobStr = order.birth_date || order.birthDate || '1996-01-01';

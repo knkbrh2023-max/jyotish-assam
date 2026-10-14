@@ -844,7 +844,7 @@
           const bx=((pos%7)-3)*1.6,br=((pos%5)-2)*.45,bz=Math.round((pos%7)*2);
           const slug=getTarotSlug(name);
           const imgSrc=getTarotImgPath(cardIndex,name);
-          return `<button type="button" class="ja78-card" data-index="${cardIndex}" aria-label="${esc(name)}" style="--x:${x.toFixed(1)};--y:${y.toFixed(1)};--r:${r.toFixed(2)};--z:${200-Math.round(Math.abs(t)*80)};--bundle-x:${bx};--bundle-r:${br};--bundle-z:${bz}"><span class="ja78-inner"><span class="ja78-face ja78-back"><img class="ja78-back-logo" src="icon.png" alt="Jyotish Assam"><span class="ja78-number">${pos+1}</span></span><span class="ja78-face ja78-front"><img class="ja78-front-img" src="${imgSrc}" alt="${esc(name)}" data-index="${cardIndex}" data-slug="${slug}" onerror="onTarotImgError(this)" loading="lazy"><span class="ja78-front-caption">${esc(name)}</span><span class="ja78-front-label" style="display:none;">${esc(name)}</span></span></span></button>`;
+          return `<button type="button" class="ja78-card" data-index="${cardIndex}" aria-label="${esc(name)}" style="--x:${x.toFixed(1)};--y:${y.toFixed(1)};--r:${r.toFixed(2)};--z:${200-Math.round(Math.abs(t)*80)};--bundle-x:${bx};--bundle-r:${br};--bundle-z:${bz}"><span class="ja78-inner"><span class="ja78-face ja78-back"><img class="ja78-back-logo" src="logo.jpg" alt="Jyotish Assam"><span class="ja78-number">${pos+1}</span></span><span class="ja78-face ja78-front"><img class="ja78-front-img" src="${imgSrc}" alt="${esc(name)}" data-index="${cardIndex}" data-slug="${slug}" onerror="onTarotImgError(this)" loading="lazy"><span class="ja78-front-caption">${esc(name)}</span><span class="ja78-front-label" style="display:none;">${esc(name)}</span></span></span></button>`;
         }).join('');
         deck.className='ja78-deck is-bundle';state.phase='bundle';
       }
@@ -1976,6 +1976,24 @@ window.processPalmistryPayment = async function(e) {
                 
                 try {
                     window.selectedService = 'palmistry';
+                    let aiPalmAnalysis = null;
+                    if (photo) {
+                        try {
+                            const aiRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/analyze-palm', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ palmPhoto: photo, palmHand: hand, palmGender: gender, name: name })
+                            });
+                            if (aiRes.ok) {
+                                const aiData = await aiRes.json();
+                                if (aiData && aiData.success && aiData.analysis) {
+                                    aiPalmAnalysis = aiData.analysis;
+                                }
+                            }
+                        } catch (aiErr) {
+                            console.warn("AI Palm Vision fallback to Samudrik engine:", aiErr);
+                        }
+                    }
                     const palmOrder = {
                         id: responseData.orderId,
                         public_order_id: responseData.orderId,
@@ -1986,7 +2004,8 @@ window.processPalmistryPayment = async function(e) {
                         service: 'palmistry',
                         palmHand: hand,
                         palmGender: gender,
-                        palmPhoto: photo
+                        palmPhoto: photo,
+                        aiPalmAnalysis: aiPalmAnalysis
                     };
                     const reportHtml = generatePalmistryReportHtml(palmOrder);
                     try {
@@ -2359,7 +2378,16 @@ async function showReportToCustomer(orderId) {
                     <h2>✨ AI য়ে আপোনাৰ ৰিপোৰ্ট লিখি আছে...</h2>
                     <p>আপোনাৰ কাৰ্ডসমূহ বিশ্লেষণ কৰি এক বিতং ভৱিষ্যৎবাণী প্ৰস্তুত কৰা হৈছে।<br>অনুগ্ৰহ কৰি ১৫-২০ ছেকেণ্ড অপেক্ষা কৰক, পেজটো বন্ধ নকৰিব।</p>
                 </div>
-            </body>
+            <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').catch(function(err) {
+      console.warn('SW registration note:', err);
+    });
+  });
+}
+</script>
+</body>
             </html>
         `;
         
