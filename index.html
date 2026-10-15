@@ -221,12 +221,12 @@
 
         /* 12 Rashi Grid */
         .rashi-section { margin: 50px 0; text-align: center; }
-        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 25px; }
+        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; margin-top: 25px; }
         .rashi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .rashi-card:hover { border-color: var(--primary-color); transform: translateY(-5px); }
         .rashi-icon { font-size: 32px; background: #f3e8ff; width: 60px; height: 60px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary-color); }
         .rashi-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-        .rashi-card p { font-size: 13px; color: var(--text-light); }
+        .rashi-card p { font-size: 13.8px; color: #334155; line-height: 1.65; text-align: center; }
 
         .section { margin: 50px 0; }
         .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
@@ -1425,54 +1425,53 @@
 <div class="modal" id="rashiModal">
     <div class="modal-content">
         <span class="close-modal" onclick="document.getElementById('rashiModal').classList.remove('active')">&times;</span>
-        <h2 id="modalRashiTitle" style="color: var(--primary-color); margin-bottom: 10px;">ৰাশিফল</h2>
+        <h2 id="modalRashiTitle" style="color: var(--primary-color); margin: 0 0 14px 0; padding: 0 40px 10px 0; border-bottom: 1px solid #e2e8f0; font-size: 21px;">ৰাশিফল</h2>
         <div id="modalRashiBody" style="font-size: 15px; color: #334155; line-height: 1.7;"></div>
     </div>
 </div>
 
 <!-- Order & Payment Form Modal -->
 <div class="modal" id="orderModal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 520px; border-top: 6px solid var(--primary-color); border-radius: 20px; padding: 26px 22px; max-height: 88vh; overflow-y: auto; box-sizing: border-box;">
         <span class="close-modal" onclick="closeOrderModal()">&times;</span>
-        <h2 id="orderTitle" style="color: var(--primary-color); margin-bottom: 15px; text-align: center;">সেৱা বুকিং ফৰ্ম</h2>
-        <form id="orderForm" onsubmit="processPayment(event)">
-            <div style="margin-bottom: 15px;">
-                <label for="custName" style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
-                <input type="text" id="custName" class="form-control" required>
+        <h2 id="orderTitle" style="color: var(--primary-color); margin: 0 0 18px 0; padding: 0 40px 12px 10px; border-bottom: 1px solid #e2e8f0; text-align: center; font-size: 20px; line-height: 1.4;">সেৱা বুকিং ফৰ্ম</h2>
+        <form id="orderForm" onsubmit="processPayment(event)" style="display: flex; flex-direction: column; gap: 14px; text-align: left;">
+            <div>
+                <label for="custName" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">আপোনাৰ নাম: *</label>
+                <input type="text" id="custName" class="form-control" placeholder="যেনে: ৰাহুল বৰা" required>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label for="custEmail" style="font-size: 14px; font-weight: 600;">ইমেইল (Email):</label>
+            <div>
+                <label for="custEmail" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">ইমেইল (Email): *</label>
                 <input type="email" id="custEmail" class="form-control" placeholder="example@gmail.com" required>
             </div>
-            <div id="tarot-q-box" style="display: none; margin-top: 15px;">
-                <label for="tarot-final-question" style="font-weight: bold; margin-bottom: 5px; display: block; color: #475569;">আপোনাৰ প্ৰশ্ন (Tarot Question)</label>
-                <textarea id="tarot-final-question" rows="2" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: inherit;" placeholder="আপোনাৰ মনৰ প্ৰশ্নটো ইয়াত লিখক..."></textarea>
+            <div id="tarot-q-box" style="display: none;">
+                <label for="tarot-final-question" style="font-weight: 600; font-size: 14px; margin-bottom: 6px; display: block; color: #1e293b;">আপোনাৰ প্ৰশ্ন (Tarot Question):</label>
+                <textarea id="tarot-final-question" rows="2" class="form-control" style="font-family: inherit;" placeholder="আপোনাৰ মনৰ প্ৰশ্নটো ইয়াত লিখক..."></textarea>
             </div>
-            
-            </div>
-
-            <div style="margin-bottom: 15px; display: flex; gap: 15px;">
-                <div style="flex: 1;">
-                    <label for="custDate" style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
+            <div id="orderDateTimeRow" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div id="orderDateBox" style="flex: 1 1 170px;">
+                    <label for="custDate" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">জন্ম তাৰিখ: *</label>
                     <input type="date" id="custDate" class="form-control" required>
                 </div>
-                <div style="flex: 2;">
-                    <label for="custHour" style="font-size: 14px; font-weight: 600;">জন্মৰ সময়:</label>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="number" id="custHour" class="form-control" placeholder="HR" min="1" max="12" required>
-                        <span style="font-size: 20px; font-weight: bold; margin-top: 5px;">:</span>
-                        <input type="number" id="custMin" aria-label="জন্মৰ মিনিট (Minute)" class="form-control" placeholder="MIN" min="0" max="59" required>
-                        <select id="custAmPm" aria-label="AM বা PM" class="form-control">
-                            <option value="AM">AM</option><option value="PM">PM</option>
+                <div id="orderTimeBox" style="flex: 1 1 220px;">
+                    <label for="custHour" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">জন্মৰ সময়: *</label>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <input type="number" id="custHour" class="form-control" placeholder="ঘণ্টা" min="1" max="12" required style="flex: 1; min-width: 60px; text-align: center; padding: 10px 6px;">
+                        <span style="font-size: 18px; font-weight: bold; color: #475569;">:</span>
+                        <input type="number" id="custMin" aria-label="জন্মৰ মিনিট (Minute)" class="form-control" placeholder="মিনিট" min="0" max="59" required style="flex: 1; min-width: 60px; text-align: center; padding: 10px 6px;">
+                        <select id="custAmPm" aria-label="AM বা PM" class="form-control" style="flex: 1; min-width: 72px; padding: 10px 6px; background: #fff;">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
                         </select>
                     </div>
                 </div>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label for="custPlace" style="font-size: 14px; font-weight: 600;">জন্মৰ স্থান:</label>
-                <input type="text" id="custPlace" class="form-control" required>
+            <div id="orderPlaceRow">
+                <label for="custPlace" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">জন্মৰ স্থান: *</label>
+                <input type="text" id="custPlace" class="form-control" placeholder="যেনে: গুৱাহাটী, অসম" required>
             </div>
-            <button type="submit" id="payBtn" class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857);">পেমেন্ট কৰক (Pay Now)</button>
+            <button type="submit" id="payBtn" class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); margin-top: 6px; width: 100%; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 10px;">🔒 পেমেন্ট কৰক (Pay Now)</button>
+            <div style="text-align: center; font-size: 11.5px; color: #64748b; margin-top: -4px;">🛡️ Razorpay দ্বাৰা ১০০% সুৰক্ষিত পেমেন্ট • পেমেন্টৰ পিছতে নিমিষতে অনলাইন ৰিপোৰ্ট লাভ কৰিব</div>
         </form>
     </div>
 </div>
@@ -1613,9 +1612,9 @@ function openOrderForm(service, price, title) {
     const tarotBox = document.getElementById('tarot-q-box');
     const palmBox = document.getElementById('palmistry-box');
 
-    const dateTimeRow = dateInput ? dateInput.parentElement.parentElement : null;
-    const timeBox = hourInput ? hourInput.parentElement.parentElement : null;
-    const placeRow = placeInput ? placeInput.parentElement : null;
+    const dateTimeRow = document.getElementById('orderDateTimeRow') || (dateInput ? dateInput.parentElement.parentElement : null);
+    const timeBox = document.getElementById('orderTimeBox') || (hourInput ? hourInput.parentElement.parentElement : null);
+    const placeRow = document.getElementById('orderPlaceRow') || (placeInput ? placeInput.parentElement : null);
 
     if (service === 'premium_tarot') {
         if(dateTimeRow) dateTimeRow.style.display = 'none';
@@ -2518,18 +2517,150 @@ function updateDate() {
 }
 
 const FALLBACK_RASHI_DATA = [
-    { id: "aries", symbol: "♈", name: "মেষ ৰাশি", short: "কৰ্মক্ষেত্ৰত নতুন সুযোগ আৰু আত্মবিশ্বাস বৃদ্ধি পাব।", overall: "আজি আপোনাৰ দিনটো অত্যন্ত শুভ আৰু ফলপ্ৰসূ হ'ব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব আৰু আৰ্থিক লাভৰ যোগ আছে।", love: "পাৰিবাৰিক আৰু প্ৰেমৰ সম্পৰ্কত মধুৰতা বৃদ্ধি পাব।", health: "শৰীৰ আৰু মন সতেজ থাকিব।", lucky: "ৰঙা | শুভ সংখ্যা: ৯" },
-    { id: "taurus", symbol: "♉", name: "বৃষ ৰাশি", short: "আৰ্থিক সঞ্চয় বৃদ্ধি আৰু পাৰিবাৰিক সুখ-শান্তি বিৰাজ কৰিব।", overall: "ধৈৰ্য আৰু মিঠা ব্যৱহাৰৰ দ্বাৰা আজি সকলো কামত সফল হ'ব।", career: "ব্যৱসায় আৰু চাকৰিত স্থায়িত্ব তথা ধন আগমনৰ যোগ।", love: "প্ৰিয়জনৰ পৰা বিশেষ সহযোগিতা লাভ কৰিব।", health: "খাদ্যাভ্যাসত সাৱধানতা অৱলম্বন কৰক।", lucky: "বগা | শুভ সংখ্যা: ৬" },
-    { id: "gemini", symbol: "♊", name: "মিথুন ৰাশি", short: "ব্যৱসায়িক যোগাযোগ আৰু বৌদ্ধিক কামত সুন্দৰ সফলতা লাভ।", overall: "নতুন চিন্তা আৰু যোগাযোগে আজি আপোনাক উন্নতিৰ পথ দেখুৱাব।", career: "বাণিজ্য আৰু তথ্য-প্ৰযুক্তিৰ ক্ষেত্ৰত বিশেষ লাভ।", love: "বন্ধুত্ব আৰু প্ৰেমৰ সম্পৰ্কত আনন্দময় পৰিৱেশ।", health: "মানসিক প্ৰশান্তি বজাই থাকিব।", lucky: "সেউজীয়া | শুভ সংখ্যা: ৫" },
-    { id: "cancer", symbol: "♋", name: "কৰ্কট ৰাশি", short: "মাতৃৰ আশীৰ্বাদ আৰু ঘৰুৱা মাংগলিক কাৰ্যত আনন্দ লাভ।", overall: "ঘৰুৱা সুখ-শান্তি আৰু মানসিক তৃপ্তিৰে দিনটো পাৰ হ'ব।", career: "পৈতৃক সম্পত্তি বা স্থায়ী কামত শুভ ফল পাব।", love: "জীৱনসংগীৰ সৈতে আন্তৰিকতা বৃদ্ধি পাব।", health: "পৰ্যাপ্ত বিশ্ৰাম গ্ৰহণ কৰক।", lucky: "ৰূপালী বগা | শুভ সংখ্যা: ২" },
-    { id: "leo", symbol: "♌", name: "সিংহ ৰাশি", short: "সমাজত মান-সন্মান বৃদ্ধি আৰু নেতৃত্বমূলক কামত প্ৰশংসা লাভ।", overall: "আত্মবিশ্বাস আৰু সাহসেৰে আজি জটিল কামো সহজ কৰি তুলিব।", career: "উচ্চ পদস্থ বিষয়াৰ সহযোগিতা আৰু পদোন্নতিৰ যোগ।", love: "সম্পৰ্কত পাৰস্পৰিক সন্মান বৃদ্ধি পাব।", health: "স্বাস্থ্য উন্নত আৰু শক্তিশালী থাকিব।", lucky: "সোণালী | শুভ সংখ্যা: ১" },
-    { id: "virgo", symbol: "♍", name: "কন্যা ৰাশি", short: "পুৰণি সমস্যাৰ সমাধান আৰু কৰ্মস্থলীত বৰিষ্ঠজনৰ সহযোগিতা।", overall: "শৃংখলাবদ্ধ পৰিকল্পনাৰ জৰিয়তে আজি আৰ্থিক সুফল লাভ কৰিব।", career: "হিচাপ-নিকাচ আৰু ব্যৱসায়ত লাভৰ মাত্ৰা বৃদ্ধি।", love: "পৰিয়ালত সুখ আৰু বুজাবুজি অটুট থাকিব।", health: "স্বাস্থ্যৰ উন্নতি ঘটিব।", lucky: "সেউজীয়া | শুভ সংখ্যা: ৫" },
-    { id: "libra", symbol: "♎", name: "তুলা ৰাশি", short: "দাম্পত্য আৰু প্ৰেমৰ সম্পৰ্কত মধুৰতা আৰু আৰ্থিক লাভ।", overall: "কলা, সৌন্দৰ্য আৰু সামাজিক কাৰ্যত আজি বিশেষ সন্মান পাব।", career: "অংশীদাৰী ব্যৱসায় আৰু নতুন চুক্তিত সুফল।", love: "প্ৰেমত শুভ সংযোগ আৰু বিবাহৰ আলোচনা আগবাঢ়িব।", health: "মন প্রফুল্লিত হৈ থাকিব।", lucky: "গুলপীয়া | শুভ সংখ্যা: ৬" },
-    { id: "scorpio", symbol: "♏", name: "বৃশ্চিক ৰাশি", short: "সাহসিক সিদ্ধান্তৰ দ্বাৰা জটিল কামত বিজয় সাব্যস্ত কৰিব।", overall: "আপোনাৰ একাগ্ৰতা আৰু সংকল্পই আজি ডাঙৰ সফলতা আনিব।", career: "কৰ্মক্ষেত্ৰত শত্ৰু পৰাজিত হ'ব আৰু আৰ্থিক বাধা দূৰ হ'ব।", love: "গভীৰ আৱেগিক বিশ্বাসে সম্পৰ্ক মজবুত কৰিব।", health: "শৰীৰত নতুন উদ্যম অনুভৱ কৰিব।", lucky: "গাঢ় ৰঙা | শুভ সংখ্যা: ৯" },
-    { id: "sagittarius", symbol: "♐", name: "ধনু ৰাশি", short: "ধৰ্মীয় চেতনা, উচ্চ শিক্ষা আৰু ভ্ৰমণৰ শুভ যোগ।", overall: "দেৱগুৰু বৃহস্পতিৰ কৃপাত আজি ভাগ্যই আপোনাক সম্পূৰ্ণ সংগ দিব।", career: "শিক্ষা, পৰামৰ্শ আৰু চৰকাৰী কামত বিশেষ অগ্ৰগতি।", love: "পাৰিবাৰিক জীৱনত শুভ বাৰ্তা লাভ।", health: "সুস্বাস্থ্য আৰু মানসিক উজ্জীৱিত ভাব।", lucky: "হালধীয়া | শুভ সংখ্যা: ৩" },
-    { id: "capricorn", symbol: "♑", name: "মকৰ ৰাশি", short: "কঠোৰ পৰিশ্ৰমৰ সুফল লাভ আৰু স্থাৱৰ সম্পত্তিৰ যোগ।", overall: "ধৈৰ্য সহকাৰে কৰা কামৰ আজি সুন্দৰ প্ৰতিফল লাভ কৰিব।", career: "নিৰ্মাণ, কাৰিকৰী আৰু স্থায়ী ব্যৱসায়ত উন্নতি।", love: "সংসাৰত দায়িত্ববোধ আৰু স্নেহ বৃদ্ধি পাব।", health: "হাড় বা গাঁঠিৰ যত্ন লওক।", lucky: "নীলা | শুভ সংখ্যা: ৮" },
-    { id: "aquarius", symbol: "♒", name: "কুম্ভ ৰাশি", short: "নতুন পৰিকল্পনা সফল হ'ব আৰু মিত্ৰৰ পৰা বিশেষ সহায় পাব।", overall: "উদ্ভাৱনী চিন্তা আৰু সামাজিক সংযোগৰ বাবে দিনটো উত্তম।", career: "আয়ৰ নতুন উৎস মুকলি হোৱাৰ সম্ভাৱনা।", love: "মনৰ কথা প্ৰকাশ কৰাৰ বাবে অনুকূল সময়।", health: "মানসিক চাপমুক্ত হৈ থাকিব।", lucky: "আকাশী নীলা | শুভ সংখ্যা: ৮" },
-    { id: "pisces", symbol: "♓", name: "মীন ৰাশি", short: "মানসিক প্ৰশান্তি, সৃজনশীল কামত উন্নতি আৰু ধন আগমন।", overall: "আধ্যাত্মিক চিন্তা আৰু সৃজনশীল প্ৰতিভাই আজি সফলতা আনিব।", career: "অৰ্থনৈতিক অৱস্থা সবল হ'ব আৰু সন্মান বাঢ়িব।", love: "দাম্পত্য জীৱনত সুখ আৰু শান্তি বিৰাজ কৰিব।", health: "স্বাস্থ্য অনুকূল থাকিব।", lucky: "হালধীয়া | শুভ সংখ্যা: ৩" }
+    {
+        "id": "aries",
+        "symbol": "♈",
+        "name": "মেষ ৰাশি (Aries)",
+        "short": "কৰ্মক্ষেত্ৰত নতুন সুযোগ, উচ্চ পদস্থ বিষয়াৰ সহযোগিতা আৰু আত্মবিশ্বাস বৃদ্ধি পাব। আৰ্থিক লেনদেনত শুভ ফল আৰু পুৰণি প্ৰচেষ্টাৰ সুফল লাভ কৰিব।",
+        "overall": "মংগল দেৱতাৰ শুভ দৃষ্টি আৰু গ্ৰহ-নক্ষত্ৰৰ অনুকূল অৱস্থানৰ বাবে আজি আপোনাৰ দিনটো অত্যন্ত ফলপ্ৰসূ আৰু ইতিবাচক শক্তিৰে ভৰপূৰ হ'ব। বহুদিন ধৰি স্থগিত হৈ থকা কোনো গুৰুত্বপূৰ্ণ কাম আজি পুনৰ আৰম্ভ হ'ব আৰু আপোনাৰ সাহসিক সিদ্ধান্তই সমাজত তথা কৰ্মক্ষেত্ৰত বিশেষ সন্মান কঢ়িয়াই আনিব। দিনটোৰ দ্বিতীয়াৰ্ধত কোনো শুভ বাতৰি লাভৰ যোগ আছে।",
+        "career": "চাকৰিয়ালসকলৰ বাবে আজি পদোন্নতি বা নতুন দায়িত্ব লাভৰ উত্তম সময়; বৰিষ্ঠ বিষয়া আৰু সহকৰ্মীসকলে আপোনাৰ কৰ্মদক্ষতাৰ শলাগ ল'ব। ব্যৱসায়ীসকলে নতুন চুক্তি বা বিনিয়োগৰ পৰা আশা কৰাতকৈ অধিক লাভ অৰ্জন কৰিব পাৰিব আৰু আবদ্ধ ধন ঘূৰি অহাৰ পথ মুকলি হ'ব।",
+        "love": "পাৰিবাৰিক জীৱনত সুখ-শান্তি আৰু পাৰস্পৰিক বুজাবুজি বৃদ্ধি পাব। প্ৰেমৰ সম্পৰ্কত থকা ভুল বুজাবুজিবোৰ আঁতৰি মধুৰতা ঘূৰি আহিব আৰু অবিবাহিতসকলৰ বাবে বিবাহৰ শুভ আলোচনা আগবাঢ়িব পাৰে।",
+        "health": "শাৰীৰিকভাৱে আজি আপুনি যথেষ্ট উদ্যমী আৰু সতেজ অনুভৱ কৰিব। অৱশ্যে কামৰ অত্যাধিক চাপৰ বাবে মূৰৰ বিষ বা চকুৰ ক্লান্তি হ'ব পাৰে, সেয়ে পর্যাপ্ত পানী খাওক আৰু সময়মতে বিশ্ৰাম লওক।",
+        "advice": "পুৱা স্নান কৰি সূৰ্য দেৱতাক তামৰ পাত্ৰত জল অৰ্পণ কৰক আৰু হনুমান চালিছা পাঠ কৰক। খৰখেদাকৈ খঙত কোনো সিদ্ধান্ত নল'ব।",
+        "lucky": "ৰঙা আৰু গেৰুৱা | শুভ সংখ্যা: ৯ | শুভ দিশ: পূব"
+    },
+    {
+        "id": "taurus",
+        "symbol": "♉",
+        "name": "বৃষ ৰাশি (Taurus)",
+        "short": "আৰ্থিক সঞ্চয় বৃদ্ধি, ব্যৱসায়িক লাভ আৰু পাৰিবাৰিক সুখ-শান্তি বিৰাজ কৰিব। প্রিয়জনৰ লগত মধুৰ সময় অতিবাহিত হ'ব আৰু মাংগলিক কাৰ্যৰ যোগ আছে।",
+        "overall": "শুক্ৰ গ্ৰহৰ অনুকূল প্ৰভাৱত আজি আপোনাৰ ধৈৰ্য, সংযম আৰু মিঠা ব্যৱহাৰে সকলো কঠিন কাম সহজ কৰি তুলিব। ঘৰুৱা সুখ-স্বাচ্ছন্দ্য বৃদ্ধিৰ বাবে নতুন সামগ্ৰী ক্ৰয় কৰাৰ যোগ আছে। সামাজিক ক্ষেত্ৰত আপোনাৰ জনপ্ৰিয়তা বাঢ়িব আৰু কোনো অভিজ্ঞ ব্যক্তিৰ পৰামৰ্শই আপোনাক ভৱিষ্যতৰ ডাঙৰ আঁচনিত সহায় কৰিব।",
+        "career": "অৰ্থনৈতিক দিশত আজি স্থায়িত্ব আহিব আৰু উপাৰ্জনৰ নতুন উৎস মুকলি হ'ব পাৰে। বেংকিং, কৃষি, কাপোৰ বা খুচুৰা ব্যৱসায়ৰ লগত জড়িত লোকসকলে বিশেষ লাভ দেখিবলৈ পাব। চাকৰি বিচাৰি থকা যুৱক-যুৱতীসকলে সাক্ষাৎকাৰত সুফল লাভ কৰিব।",
+        "love": "দাম্পত্য জীৱনত পতি-পত্নীৰ মাজত বিশ্বাস আৰু আন্তৰিকতা অধিক গভীৰ হ'ব। প্ৰিয়জনৰ পৰা কোনো উপহাৰ বা বিশেষ সহযোগিতা লাভ কৰি মন আনন্দিত হৈ উঠিব। পৰিয়ালত সৰু-সুৰা মাংগলিক অনুষ্ঠানৰ আয়োজন হ'ব পাৰে।",
+        "health": "স্বাস্থ্য সামগ্ৰিকভাৱে ভালে থাকিব, কিন্তু ডিঙিৰ সমস্যাত ভোগা লোকসকলে ঠাণ্ডা পানীয় বা ফাষ্ট ফুডৰ পৰা বিৰত থাকক। পুৱা খোজ কঢ়া আৰু যোগাভ্যাস কৰিলে মন সতেজ থাকিব।",
+        "advice": "মা লক্ষ্মীৰ চৰণত বগা ফুল অৰ্পণ কৰক আৰু গাই গৰুক সেউজীয়া ঘাঁহ বা ৰুটি খুৱাওক। অপ্ৰয়োজনীয় তৰ্কৰ পৰা আঁতৰি থাকক।",
+        "lucky": "বগা আৰু আকাশী নীলা | শুভ সংখ্যা: ৬ | শুভ দিশ: দক্ষিণ-পূব"
+    },
+    {
+        "id": "gemini",
+        "symbol": "♊",
+        "name": "মিথুন ৰাশি (Gemini)",
+        "short": "ব্যৱসায়িক যোগাযোগ, শিক্ষা আৰু বৌদ্ধিক কামত সুন্দৰ সফলতা লাভ কৰিব। নতুন মিত্ৰতা আৰু দূৰণিবটীয়া সুখবৰে মন উৎসাহিত কৰিব।",
+        "overall": "বুধ গ্ৰহৰ শুভ স্থিতিয়ে আজি আপোনাৰ চিন্তাশক্তি, বাকপটুতা আৰু সিদ্ধান্ত গ্ৰহণৰ ক্ষমতাক অধিক তীক্ষ্ণ কৰি তুলিব। বহুদিন ধৰি অমীমাংসিত হৈ থকা কোনো আইনী বা পাৰিবাৰিক বিষয় আজি আপোনাৰ পক্ষত সমাধান হ'ব পাৰে। ছাত্ৰ-ছাত্ৰী আৰু গৱেষণাৰ লগত জড়িত লোকসকলৰ বাবে দিনটো বিশেষভাৱে শুভ।",
+        "career": "বাণিজ্য, তথ্য-প্ৰযুক্তি, শিক্ষকতা, সংবাদ মাধ্যম আৰু বিপণন ক্ষেত্ৰত কৰ্মৰত লোকসকলে আজি বিশেষ সাফল্য লাভ কৰিব। নতুন ব্যৱসায়িক অংশীদাৰীত্বৰ বাবে কথা-বতৰা আগবাঢ়িব আৰু চুটি ব্যৱসায়িক ভ্ৰমণ লাভজনক প্ৰমাণিত হ'ব।",
+        "love": "বন্ধুত্ব আৰু প্ৰেমৰ সম্পৰ্কত আজি এক আনন্দময় পৰিৱেশে বিৰাজ কৰিব। মনৰ কথা স্পষ্টকৈ প্ৰকাশ কৰাৰ বাবে আজিৰ দিনটো অতি উত্তম। জীৱনসংগীৰ সৈতে ভৱিষ্যতৰ আৰ্থিক পৰিকল্পনা সন্দৰ্ভত ইতিবাচক আলোচনা হ'ব।",
+        "health": "মানসিক প্ৰশান্তি বজাই থাকিব যদিও অত্যধিক কম্পিউটাৰ বা মোবাইল ব্যৱহাৰৰ ফলত স্নায়ুবিক ভাগৰ আৰু টোপনিৰ ব্যাঘাত জন্মিব পাৰে। নিশা সোনকালে শোৱাৰ অভ্যাস কৰক।",
+        "advice": "ভগৱান গণেশক দূবৰি বন অৰ্পণ কৰক আৰু চৰাইক এমুঠি মাহ-চাউল খাবলৈ দিয়ক। একেলগে বহুত কাম হাতত নলৈ একাগ্ৰতাৰে কাম কৰক।",
+        "lucky": "সেউজীয়া আৰু পাতল হালধীয়া | শুভ সংখ্যা: ৫ | শুভ দিশ: উত্তৰ"
+    },
+    {
+        "id": "cancer",
+        "symbol": "♋",
+        "name": "কৰ্কট ৰাশি (Cancer)",
+        "short": "মাতৃৰ আশীৰ্বাদ, স্থাৱৰ সম্পত্তিৰ লাভ আৰু ঘৰুৱা মাংগলিক কাৰ্যত আনন্দ লাভ কৰিব। মানসিক শান্তি বৃদ্ধি পাব আৰু আৰ্থিক বাধা দূৰ হ'ব।",
+        "overall": "চন্দ্ৰ দেৱতাৰ শুভ প্ৰভাৱত আজি আপোনাৰ মনত শান্তি, দয়া আৰু সৃজনশীল ভাবনাৰ উদয় হ'ব। পৰিয়ালৰ জ্যেষ্ঠসকলৰ বিশেষকৈ মাতৃৰ আশীৰ্বাদত আপোনাৰ জটিল কামবোৰ সুকলমে সম্পন্ন হ'ব। মাটি-বাৰী, বাহন বা ঘৰ মেৰামতি সম্পৰ্কীয় কামত আজি হাত দিলে শুভ ফল লাভ কৰিব।",
+        "career": "কৰ্মস্থলীত আপোনাৰ নিষ্ঠা আৰু সততাৰ বাবে উর্ধ্বতন কৰ্তৃপক্ষৰ আস্থাভাজন হ'ব পাৰিব। চৰকাৰী কাম-কাজ বা নিবিদাত সফলতা পোৱাৰ যোগ আছে। আৰ্থিকভাৱে দিনটো সবল থাকিব, তথাপি আৱেগৰ বশৱৰ্তী হৈ কাকো ডাঙৰ অংকৰ ধন ধাৰলৈ নিদিব।",
+        "love": "পাৰিবাৰিক জীৱনত মৰম-চেনেহ আৰু একতা বৃদ্ধি পাব। জীৱনসংগীয়ে আপোনাৰ মানসিক অনুভূতিক সন্মান জনাব আৰু সন্তানৰ কোনো কৃতিত্বই ঘখনলৈ গৌৰৱ কঢ়িয়াই আনিব। পুৰণি বন্ধুৰ সৈতে হঠাৎ দেখা হ'ব পাৰে।",
+        "health": "স্বাস্থ্য অনুকূল থাকিব, কিন্তু বতৰ সলনিৰ বাবে চর্দি-কাঁহ বা পেটৰ সমান্য অসুবিধা হ'ব পাৰে। বিশুদ্ধ কুহুমীয়া পানী আৰু ঘৰুৱা সতেজ আহাৰ গ্ৰহণ কৰক।",
+        "advice": "শিৱলিংগত কঁচা গাখীৰ আৰু জল অৰ্পণ কৰি 'ওঁ নমঃ শিৱায়' মন্ত্ৰ জপ কৰক। মনত অযথা শংকা বা দুশ্চিন্তা স্থান নিদিব।",
+        "lucky": "ৰূপালী বগা আৰু ক্ৰীম | শুভ সংখ্যা: ২ | শুভ দিশ: উত্তৰ-পশ্চিম"
+    },
+    {
+        "id": "leo",
+        "symbol": "♌",
+        "name": "সিংহ ৰাশি (Leo)",
+        "short": "সমাজত মান-সন্মান বৃদ্ধি, নেতৃত্বমূলক কামত প্ৰশংসা আৰু চৰকাৰী ক্ষেত্ৰত বিশেষ সফলতা লাভ। আৰ্থিক উন্নতি আৰু নতুন সুযোগৰ যোগ আছে।",
+        "overall": "গ্ৰহৰাজ সূৰ্যৰ তেজস্বী প্ৰভাৱত আজি আপোনাৰ আত্মবিশ্বাস, ব্যক্তিত্ব আৰু কৰ্মশক্তি শীৰ্ষত থাকিব। যিকোনো কঠিন প্ৰত্যাহ্বানক আপুনি নিজৰ বুদ্ধিমত্তা আৰু সাহসেৰে জয় কৰিবলৈ সক্ষম হ'ব। সামাজিক বা ৰাজহুৱা অনুষ্ঠানত আপোনাৰ মতামতক সকলোৱে গুৰুত্ব দিব আৰু নেতৃত্বৰ সুযোগ লাভ কৰিব।",
+        "career": "প্ৰশাসনিক সেৱা, চৰকাৰী চাকৰি, ৰাজনীতি আৰু ঠিকাদাৰী বা ব্যৱসায়ৰ লগত জড়িত লোকসকলৰ বাবে আজিৰ দিনটো অত্যন্ত লাভজনক। উচ্চ পদস্থ বিষয়াৰ সহযোগত পদোন্নতি বা বদলিৰ চেষ্টা সফল হ'ব। নতুন বিনিয়োগৰ বাবেও দিনটো অনুকূল।",
+        "love": "প্ৰেম আৰু দাম্পত্য সম্পৰ্কত পাৰস্পৰিক সন্মান অটুট থাকিব। অৱশ্যে নিজৰ মতামত জাপি দিয়াৰ মনোভাৱ পৰিহাৰ কৰি সংগীৰ কথাও ধৈৰ্যৰে শুনিলে সম্পৰ্ক অধিক মধুৰ হ'ব। পৰিয়ালৰ সৈতে ভ্ৰমণৰ পৰিকল্পনা হ'ব পাৰে।",
+        "health": "দেহ-মনত নতুন শক্তি আৰু স্ফূৰ্তি অনুভৱ কৰিব। উচ্চ ৰক্তচাপ বা অ্যাসিডিটিৰ সমস্যা থকা লোকসকলে অতিমাত্ৰা মছলাযুক্ত খাদ্য এৰাই চলক আৰু পুৱা খোজ কাঢ়ক।",
+        "advice": "পুৱা উদিত সূৰ্যক প্ৰণাম কৰি গায়ত্ৰী মন্ত্ৰ জপ কৰক আৰু পিতৃ বা গুৰুজনৰ আশীৰ্বাদ লৈ ঘৰৰ পৰা ওলাওক। অহংকাৰৰ পৰা আঁতৰি থাকক।",
+        "lucky": "সোণালী, কমলা আৰু ৰঙা | শুভ সংখ্যা: ১ | শুভ দিশ: পূব"
+    },
+    {
+        "id": "virgo",
+        "symbol": "♍",
+        "name": "কন্যা ৰাশি (Virgo)",
+        "short": "পুৰণি সমস্যাৰ সমাধান, হিচাপ-নিকাচত লাভ আৰু কৰ্মস্থলীত বৰিষ্ঠজনৰ সহযোগিতা লাভ। অধ্যয়ন আৰু প্রতিযোগিতামূলক পৰীক্ষাত সুফল পাব।",
+        "overall": "বুধ গ্ৰহৰ অনুকূল আশীৰ্বাদত আজি আপুনি শৃংখলাবদ্ধ পৰিকল্পনা আৰু বাস্তৱসন্মত চিন্তাৰ জৰিয়তে বিশেষ সাফল্য অৰ্জন কৰিব। বহুদিন ধৰি মনত চলি থকা কোনো শংকা বা খেলিমেলি আজি দূৰ হ'ব। ঘৰুৱা দায়িত্বসমূহ সুন্দৰকৈ পালন কৰিব পাৰিব আৰু আত্মীয়-স্বজনৰ মাজত আপোনাৰ আদৰ বাঢ়িব।",
+        "career": "ব্যৱসায়-বাণিজ্য, একাউণ্টিং, চিকিৎসা, ওকালতি আৰু লেখা-মেলাৰ ক্ষেত্ৰত থকা লোকসকলৰ বাবে আজি সোণালী সুযোগ আহিব। পূৰ্বতে কৰা সঞ্চয় বা বিনিয়োগৰ পৰা আজি ভাল লভ্যাংশ পাব পাৰে। কৰ্মক্ষেত্ৰত সহকৰ্মীৰ সম্পূৰ্ণ সহযোগিতা থাকিব।",
+        "love": "পৰিয়ালত সুখ-শান্তি আৰু মিলাপ্ৰীতি বিৰাজ কৰিব। প্ৰিয়জনৰ সৰু-সুৰা ভুলবোৰ ধৰি নাথাকি ক্ষমাশীল মনোভাৱ ৰাখিলে প্ৰেমৰ সম্পৰ্ক অধিক গভীৰ হ'ব। অবিবাহিতসকলে কোনো সুন্দৰ প্ৰস্তাৱ লাভ কৰিব পাৰে।",
+        "health": "স্বাস্থ্যৰ উন্নতি ঘটিব আৰু পুৰণি পেট বা ছালৰ সমস্যাৰ পৰা উপশম পাব। সময়মতে সুষম আহাৰ গ্ৰহণ কৰক আৰু দিনটোত পৰ্যাপ্ত পৰিমাণে পানী খাওক।",
+        "advice": "তুলসী গছৰ গুৰিত পানী ঢালক আৰু সন্ধিয়া ঘিউৰ চাকি জ্বলাওক। সৰু কথাতে অতিমাত্ৰা চিন্তা কৰাটো এৰাই চলক।",
+        "lucky": "সেউজীয়া আৰু বগা | শুভ সংখ্যা: ৫ | শুভ দিশ: উত্তৰ-পূব"
+    },
+    {
+        "id": "libra",
+        "symbol": "♎",
+        "name": "তুলা ৰাশি (Libra)",
+        "short": "দাম্পত্য আৰু প্ৰেমৰ সম্পৰ্কত মধুৰতা, অংশীদাৰী ব্যৱসায়ত লাভ আৰু সামাজিক সন্মান বৃদ্ধি। কলা-সংস্কৃতি আৰু সৃষ্টিশীল কামত বিশেষ সাফল্য।",
+        "overall": "শুক্ৰ গ্ৰহৰ কৃপাত আজি আপোনাৰ জীৱনত সমতা, আনন্দ আৰু সৌভাগ্যৰ সুন্দৰ সমন্বয় ঘটিব। আপোনাৰ অমায়িক ব্যৱহাৰ আৰু ন্যায়পৰায়ণ মনোভাৱে শত্রুকো মিত্ৰ কৰি তুলিব। ঘৰ সজোৱা, নতুন কাপোৰ বা বাহন ক্ৰয় কৰাৰ বাবে আজিৰ দিনটো অত্যন্ত শুভ।",
+        "career": "অংশীদাৰী ব্যৱসায়, ফেশ্বন, ডিজাইন, হোটেল বা জনসংযোগৰ লগত জড়িত লোকসকলে আজি আকস্মিক আৰ্থিক লাভৰ মুখ দেখিব। চাকৰিক্ষেত্ৰত আপোনাৰ সৃজনশীল পৰিকল্পনা গৃহীত হ'ব আৰু আৰ্থিক অৱস্থা পূর্বতকৈ অধিক টনকিয়াল হ'ব।",
+        "love": "প্ৰেম আৰু ৰোমান্সৰ বাবে আজিৰ দিনটো অতিকৈ মনোৰম। পতি-পত্নীৰ মাজত মৰম আৰু বুজাবুজি বাঢ়িব আৰু একেলগে ফুৰিবলৈ যোৱাৰ সুযোগ মিলিব পাৰে। বিবাহযোগ্যসকলৰ বাবে সম্বন্ধ স্থিৰ হোৱাৰ যোগ আছে।",
+        "health": "শৰীৰ আৰু মন প্রফুল্লিত হৈ থাকিব। কঁকালৰ বিষ বা মধুমেহৰ সমস্যাত ভোগা লোকসকলে মিঠা কমাই খাব আৰু নিয়মিত লঘু ব্যায়াম কৰিব।",
+        "advice": "আঁহত বা তুলসী তলত চাকি জ্বলাওক আৰু দৰিদ্ৰ বা সৰু ল'ৰা-ছোৱালীক মিঠাই দান কৰক। সিদ্ধান্ত লোৱাত দোমোজাত নপৰিব।",
+        "lucky": "গুলপীয়া, বগা আৰু পাতল নীলা | শুভ সংখ্যা: ৬ | শুভ দিশ: পশ্চিম"
+    },
+    {
+        "id": "scorpio",
+        "symbol": "♏",
+        "name": "বৃশ্চিক ৰাশি (Scorpio)",
+        "short": "সাহসিক সিদ্ধান্তৰ দ্বাৰা জটিল কামত বিজয়, শত্ৰু নাশ আৰু আকস্মিক ধন লাভৰ যোগ। পুৰণি ৰোগ আৰু ঋণৰ পৰা মুক্তি পোৱাৰ পথ প্ৰশস্ত হ'ব।",
+        "overall": "মংগল গ্ৰহৰ শক্তিশালী প্ৰভাৱত আজি আপোনাৰ একাগ্ৰতা, মনোবল আৰু সংকল্পশক্তি অজেয় হৈ থাকিব। যিবোৰ কাম আনৰ বাবে অসম্ভৱ যেন লাগিছিল, সেইবোৰ কাম আজি আপুনি নিজৰ দক্ষতাৰে সম্পন্ন কৰি দেখুৱাব। গোপন শত্ৰু বা বিৰোধীসকল আপোনাৰ সন্মুখত নতশিৰ হ'ব।",
+        "career": "ইঞ্জিনিয়াৰিং, আৰক্ষী, সেনা, চিকিৎসা, খনিজ বা ৰিয়েল এষ্টেটৰ লগত জড়িত লোকসকলে আজি বিশেষ উন্নতি লাভ কৰিব। বহুদিন ধৰি ফচি থকা টকা ঘূৰি আহিব পাৰে আৰু নতুন আৰ্থিক উৎসৰ সন্ধান পাব।",
+        "love": "প্ৰেমৰ সম্পৰ্কত গভীৰ আৱেগিক নিষ্ঠা থাকিব। সংগীৰ ওপৰত অযথা সন্দেহ বা খং নকৰি মুকলিকৈ কথা পাতিলে সম্পৰ্কত মধুৰতা বাঢ়িব। ভাতৃ-ভগ্নীৰ পৰা বিশেষ সহায় আৰু সমৰ্থন লাভ কৰিব।",
+        "health": "দেহত নতুন উদ্যম অনুভৱ কৰিব। অৱশ্যে জুই, বিজুলী বা বাহন চলোৱাৰ সময়ত সাৱধানতা অৱলম্বন কৰক আৰু ৰক্তচাপ নিয়ন্ত্ৰণত ৰাখক।",
+        "advice": "হনুমানজীক সেন্দূৰ বা ৰঙা ফুল অৰ্পণ কৰক আৰু 'ওঁ অং অঙ্গাৰকায় নমঃ' মন্ত্ৰ স্মৰণ কৰক। নিজৰ গোপন পৰিকল্পনা আনৰ আগত প্ৰকাশ নকৰিব।",
+        "lucky": "গাঢ় ৰঙা আৰু মেৰুণ | শুভ সংখ্যা: ৯ | শুভ দিশ: দক্ষিণ"
+    },
+    {
+        "id": "sagittarius",
+        "symbol": "♐",
+        "name": "ধনু ৰাশি (Sagittarius)",
+        "short": "দেৱগুৰু বৃহস্পতিৰ কৃপাত ভাগ্যোদয়, উচ্চ শিক্ষা, ধৰ্মীয় কাৰ্য আৰু ভ্ৰমণৰ শুভ যোগ। পিতৃ আৰু গুৰুজনৰ আশীৰ্বাদত কৰ্মক্ষেত্ৰত বিশেষ অগ্ৰগতি।",
+        "overall": "ৰাশিপতি বৃহস্পতিৰ শুভ দৃষ্টয়ে আজি আপোনাক ভাগ্যৰ সম্পূৰ্ণ সহযোগিতা প্ৰদান কৰিব। আপোনাৰ উদাৰ চিন্তা, ধৰ্মপৰায়ণতা আৰু আশাবাদী মনোভাৱে ঘৰত তথা সমাজত এক পৱিত্ৰ পৰিৱেশৰ সৃষ্টি কৰিব। উচ্চ শিক্ষা বা বিদেশ ভ্ৰমণৰ বাবে চেষ্টা চলাই থকাসকলে আজি শুভ সংকেত পাব।",
+        "career": "শিক্ষা, আইন, বিত্তীয় পৰামৰ্শ, চৰকাৰী বিভাগ আৰু ব্যৱসায়ত জড়িত লোকসকলৰ বাবে আজি উন্নতিৰ নতুন দুৱাৰ মুকলি হ'ব। কর্মস্থলীত পদোন্নতিৰ যোগ আছে আৰু আৰ্থিক সঞ্চয় বৃদ্ধি পাব। নতুন কাম আৰম্ভ কৰাৰ বাবে আজিৰ দিনটো অত্যন্ত শুভ।",
+        "love": "পাৰিবাৰিক জীৱনত সুখ, শান্তি আৰু ঐক্য বজাই থাকিব। জীৱনসংগীৰ সৈতে ধৰ্মীয় স্থান দর্শন বা তীৰ্থযাত্ৰাৰ পৰিকল্পনা হ'ব পাৰে। প্ৰেমৰ সম্পৰ্কত পৱিত্ৰতা আৰু বিশ্বাস দৃঢ় হ'ব।",
+        "health": "স্বাস্থ্য উন্নত আৰু মন উজ্জীৱিত থাকিব। যকৃত বা মেদবহুলতাৰ সমস্যা থকা লোকসকলে তেল-ঘিউযুক্ত খাদ্য কমাই খাব আৰু দৈনিক খোজ কাঢ়িব।",
+        "advice": "কপালত হালধি বা চন্দনৰ ফোঁট লগাওক আৰু ভগৱান বিষ্ণুক হালধীয়া ফুল অৰ্পণ কৰক। কাকো মিছা প্ৰতিশ্ৰুতি নিদিব।",
+        "lucky": "হালধীয়া আৰু সোণালী | শুভ সংখ্যা: ৩ | শুভ দিশ: উত্তৰ-পূব"
+    },
+    {
+        "id": "capricorn",
+        "symbol": "♑",
+        "name": "মকৰ ৰাশি (Capricorn)",
+        "short": "কঠোৰ পৰিশ্ৰমৰ সুফল লাভ, কৰ্মক্ষেত্ৰত স্থায়িত্ব আৰু স্থাৱৰ সম্পত্তি বৃদ্ধির যোগ। শৃংখলাবদ্ধ প্রচেষ্টাই দীর্ঘম্যাদী আৰ্থিক লাভ কঢ়িয়াই আনিব।",
+        "overall": "শনি দেৱতাৰ অনুকূল প্ৰভাৱত আজি আপোনাৰ ধৈৰ্য, একাগ্ৰতা আৰু কৰ্তব্যনিষ্ঠাই বিশেষ ফল প্ৰদান কৰিব। যিকোনো কামত লৰালৰি নকৰি ধীৰে-সুস্থিৰে আগবাঢ়িলে স্থায়ী সফলতা লাভ কৰিব। সমাজত আপোনাৰ গধুৰ ব্যক্তিত্ব আৰু অভিজ্ঞতাৰ বাবে লোকে আপোনাৰ পৰামৰ্শ বিচাৰিব।",
+        "career": "নিৰ্মাণ কাৰ্য, কাৰিকৰী ক্ষেত্ৰ, কৃষি, লোহা বা যন্ত্ৰপাতিৰ ব্যৱসায় আৰু চাকৰিত আজি বিশেষ উন্নতিৰ যোগ আছে। কর্মস্থলীত আপোনাৰ ওপৰত থকা দায়িত্ব বৃদ্ধি পাব পাৰে, যিয়ে ভৱিষ্যতে পদোন্নতি আৰু অৰ্থলাভৰ পথ মুকলি কৰিব।",
+        "love": "দাম্পত্য জীৱনত দায়িত্ববোধ আৰু স্নেহ বৃদ্ধি পাব। কামৰ ব্যস্ততাৰ মাজতো পৰিয়ালৰ বাবে কিছু সময় উলিয়ালে ঘৰুৱা পৰিৱেশ অধিক আনন্দময় হ'ব। প্রিয়জনৰ স্বাস্থ্য আৰু সুখৰ প্ৰতি যত্নশীল হওক।",
+        "health": "স্বাস্থ্যত বিশেষ অসুবিধা নাই যদিও আঁঠু, গাঁঠি বা কঁকালৰ বিষত ভোগা লোকসকলে ঠাণ্ডাৰ পৰা সাৱধান থাকিব আৰু কেলচিয়ামযুক্ত খাদ্য গ্ৰহণ কৰিব।",
+        "advice": "শনি দেৱতা বা ভগৱান শিৱক স্মৰণ কৰক আৰু শ্রমজীবী বা অসহায় লোকক সাধ্যানুসৰি সহায় কৰক। আলস্য পৰিহাৰ কৰক।",
+        "lucky": "নীলা, ক'লা আৰু ছাই ৰং | শুভ সংখ্যা: ৮ | শুভ দিশ: পশ্চিম"
+    },
+    {
+        "id": "aquarius",
+        "symbol": "♒",
+        "name": "কুম্ভ ৰাশি (Aquarius)",
+        "short": "নতুন উদ্ভাৱনী পৰিকল্পনা সফল হ'ব, মিত্ৰৰ পৰা বিশেষ সহায় পাব আৰু আয়ৰ নতুন উৎস মুকলি হ'ব। সামাজিক কামত সন্মান আৰু মানসিক সন্তুষ্টি লাভ।",
+        "overall": "কুম্ভ ৰাশিৰ জাতক-জাতিকাসকলৰ বাবে আজিৰ দিনটো নতুন চিন্তা, আধুনিক প্রযুক্তি আৰু সামাজিক সংযোগৰ বাবে অতি উত্তম। বহুদিনৰ পৰা মনত পুহি ৰখা কোনো সপোন বা প্রজেক্ট আজি বাস্তৱায়িত হোৱাৰ দিশে আগবাঢ়িব। প্ৰভাৱশালী বন্ধু বা জ্যেষ্ঠ ভাতৃৰ সহযোগত আৰ্থিক সমস্যাৰ সমাধান হ'ব।",
+        "career": "অনলাইন ব্যৱসায়, বিজ্ঞান, গৱেষণা, এন.জি.অ' বা চৰকাৰী-বেচৰকাৰী চাকৰিত আজি আপোনাৰ অভিনৱ চিন্তাধাৰাই উচ্চ প্ৰশংসা লাভ কৰিব। পূৰ্বৰ বিনিয়োগৰ পৰা ধন লাভৰ যোগ আছে আৰু নতুন ব্যৱসায়িক যোগাযোগ স্থাপন হ'ব।",
+        "love": "প্ৰেমৰ সম্পৰ্কত বন্ধুত্বসুলভ বুজাবুজি থাকিব আৰু মনৰ কথা খোলাখুলিকৈ পাতিলে সকলো দ্বিধা আঁতৰি যাব। দাম্পত্য জীৱনত সংগীৰ সহযোগত ঘৰুৱা গুৰুত্বপূৰ্ণ কাম সম্পন্ন হ'ব।",
+        "health": "মানসিকভাৱে আপুনি চাপমুক্ত অনুভৱ কৰিব। ভৰিৰ সিৰা বা গেষ্ট্ৰিকৰ সমস্যা নহ'বলৈ একে ঠাইতে বহু সময় বহি নাথাকিব আৰু লঘু ব্যায়াম কৰিব।",
+        "advice": "সন্ধিয়া গোঁসাই ঘৰত ধূপ-চাকি জ্বলাই 'ওঁ শং শনৈশ্চৰায় নমঃ' জপ কৰক আৰু পক্ষীক পানী তথা শস্য আগবঢ়াওক।",
+        "lucky": "আকাশী নীলা আৰু বেঙুনীয়া | শুভ সংখ্যা: ৮ | শুভ দিশ: পশ্চিম"
+    },
+    {
+        "id": "pisces",
+        "symbol": "♓",
+        "name": "মীন ৰাশি (Pisces)",
+        "short": "মানসিক প্ৰশান্তি, আধ্যাত্মিক উন্নতি, সৃজনশীল কামত সাফল্য আৰু ধন আগমনৰ শুভ যোগ। পাৰিবাৰিক মাংগলিক কাৰ্য আৰু সন্তানৰ উন্নতিয়ে আনন্দ দিব।",
+        "overall": "দেৱগুৰু বৃহস্পতিৰ আশীৰ্বাদত আজি আপোনাৰ অন্তৰাত্মা শান্ত, পৱিত্ৰ আৰু ইতিবাচক শক্তিত পূৰ্ণ হৈ থাকিব। আপোনাৰ সহজাত অন্তৰ্দৃষ্টিয়ে আজি আপোনাক সঠিক পথ দেখুৱাব। সাহিত্য, সংগীত, শিক্ষা বা ধৰ্মীয় কামত জড়িত লোকসকলে আজি বিশেষ সন্মান আৰু মানসিক তৃপ্তি লাভ কৰিব।",
+        "career": "অৰ্থনৈতিক অৱস্থা সবল হ'ব আৰু সৎ পথেৰে ধন উপাৰ্জন বৃদ্ধি পাব। শিক্ষকতা, চিকিৎসা, পৰামৰ্শদাতা বা ব্যৱসায়ত জড়িত লোকসকলে নতুন সুযোগ লাভ কৰিব। কর্মস্থলীত কোনো বাধা থাকিলে আজি সহজেই আঁতৰি যাব।",
+        "love": "দাম্পত্য জীৱনত গভীৰ প্ৰেম, শান্তি আৰু সমৰ্পণৰ ভাব বিৰাজ কৰিব। প্রিয়জনৰ লগত আৱেগিক বন্ধন অধিক দৃঢ় হ'ব আৰু সন্তানৰ ফালৰ পৰা কোনো সুখবৰ লাভ কৰি মন উলাহিত হ'ব।",
+        "health": "স্বাস্থ্য সামগ্ৰিকভাৱে ভালে থাকিব। অৱশ্যে বতৰ সলনিৰ ফলত হ'ব পৰা এলাৰ্জি বা কফজনিত সমস্যাৰ পৰা সাৱধান থাকক আৰু পুৱা প্ৰাণায়াম কৰক।",
+        "advice": "ভগৱান বিষ্ণু বা ইষ্ট দেৱতাক হালধীয়া ফুল আৰু চন্দন অৰ্পণ কৰক তথা বয়োজ্যেষ্ঠসকলক প্ৰণাম জনাই দিনটো আৰম্ভ কৰক।",
+        "lucky": "হালধীয়া, কেশৰীয়া আৰু বগা | শুভ সংখ্যা: ৩ | শুভ দিশ: উত্তৰ"
+    }
 ];
 
 async function fetchDailyRashi() {
@@ -2548,14 +2679,23 @@ async function fetchDailyRashi() {
         const result = await response.json();
         
         if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
-            dynamicRashiData = result.data.map((r, i) => ({
-                ...FALLBACK_RASHI_DATA[i % 12],
-                ...r
-            }));
+            dynamicRashiData = FALLBACK_RASHI_DATA.map((base, i) => {
+                const apiItem = result.data.find(x => x.id === base.id) || result.data[i] || {};
+                return {
+                    ...base,
+                    short: (apiItem.short && apiItem.short.length >= 65) ? apiItem.short : base.short,
+                    overall: (apiItem.overall && apiItem.overall.length >= 100) ? apiItem.overall : base.overall,
+                    career: (apiItem.career && apiItem.career.length >= 80) ? apiItem.career : base.career,
+                    love: (apiItem.love && apiItem.love.length >= 80) ? apiItem.love : base.love,
+                    health: (apiItem.health && apiItem.health.length >= 60) ? apiItem.health : base.health,
+                    advice: (apiItem.advice && apiItem.advice.length >= 50) ? apiItem.advice : base.advice,
+                    lucky: (apiItem.lucky && apiItem.lucky.length >= 12) ? apiItem.lucky : base.lucky
+                };
+            });
             renderRashiGrid();
         }
     } catch (error) {
-        console.warn("Using built-in daily rashi fallback:", error);
+        console.warn("Using built-in detailed daily rashi:", error);
     }
 }
 
@@ -2565,38 +2705,42 @@ function renderRashiGrid() {
         <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
             <div class="rashi-icon">${r.symbol}</div>
             <h3>${r.name}</h3>
-            <p style="margin-bottom: 10px;">${r.short}</p>
-            <span class="know-more-btn">অধিক জানক ➔</span>
+            <p style="margin-bottom: 12px;">${r.short}</p>
+            <div style="font-size: 12px; color: #7c3aed; background: #f5f3ff; padding: 5px 10px; border-radius: 8px; margin-bottom: 10px; font-weight: 600;">🍀 শুভ ৰং: ${r.lucky}</div>
+            <span class="know-more-btn">সম্পূৰ্ণ ৰাশিফল পঢ়ক ➔</span>
         </div>`).join('');
 }
 
-function openRashiDetail(id) {
+window.openRashiDetail = function openRashiDetail(id) {
     const r = dynamicRashiData.find(x => x.id === id);
     if(!r) return;
-    document.getElementById('modalRashiTitle').innerText = r.name + " ৰাশিফল";
+    document.getElementById('modalRashiTitle').innerText = r.symbol + " " + r.name + " — আজিৰ বিশদ ৰাশিফল";
     
     document.getElementById('modalRashiBody').innerHTML = `
-        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #6D28D9;">
-            <p style="margin:0; font-size: 15px; color: #1e293b;"><strong>🌟 সামগ্ৰিক ফল:</strong> ${r.overall}</p>
+        <div style="background: linear-gradient(135deg, #f5f3ff, #ede9fe); padding: 16px; border-radius: 12px; margin-bottom: 16px; border-left: 5px solid #6D28D9;">
+            <h4 style="color: #5b21b6; margin: 0 0 6px 0; font-size: 16px;">🌟 আজিৰ সামগ্ৰিক ফলাফল</h4>
+            <p style="margin:0; font-size: 14.8px; color: #1e293b; line-height: 1.75; text-align: justify;">${r.overall}</p>
         </div>
-        <div style="display: grid; gap: 15px;">
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                <h4 style="color: #475569; margin-bottom: 8px; font-size: 16px;">💼 কৰ্মক্ষেত্ৰ আৰু অৰ্থ</h4>
-                <p style="margin:0; font-size: 14.5px; color: #334155;">${r.career}</p>
+        <div style="display: grid; gap: 14px;">
+            <div style="background: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="color: #1d4ed8; margin: 0 0 6px 0; font-size: 15.5px;">💼 কৰ্মক্ষেত্ৰ, চাকৰি আৰু আৰ্থিক স্থিতি</h4>
+                <p style="margin:0; font-size: 14.5px; color: #334155; line-height: 1.7; text-align: justify;">${r.career}</p>
             </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                <h4 style="color: #e11d48; margin-bottom: 8px; font-size: 16px;">❤️ প্ৰেম আৰু সম্পৰ্ক</h4>
-                <p style="margin:0; font-size: 14.5px; color: #334155;">${r.love}</p>
+            <div style="background: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #e11d48; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="color: #be123c; margin: 0 0 6px 0; font-size: 15.5px;">❤️ প্ৰেম, বিবাহ আৰু পাৰিবাৰিক সম্পৰ্ক</h4>
+                <p style="margin:0; font-size: 14.5px; color: #334155; line-height: 1.7; text-align: justify;">${r.love}</p>
             </div>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 140px; background: #ecfdf5; padding: 12px; border-radius: 8px; border: 1px solid #a7f3d0;">
-                    <h4 style="color: #047857; margin-bottom: 5px; font-size: 14px;">🧘 স্বাস্থ্য</h4>
-                    <p style="margin:0; font-size: 13.5px; color: #064e3b;">${r.health}</p>
-                </div>
-                <div style="flex: 1; min-width: 140px; background: #fffbeb; padding: 12px; border-radius: 8px; border: 1px solid #fde68a;">
-                    <h4 style="color: #b45309; margin-bottom: 5px; font-size: 14px;">🍀 শুভ ৰং আৰু সংখ্যা</h4>
-                    <p style="margin:0; font-size: 14px; font-weight: 600; color: #78350f;">${r.lucky}</p>
-                </div>
+            <div style="background: #ecfdf5; padding: 14px; border-radius: 10px; border: 1px solid #a7f3d0; border-left: 4px solid #059669;">
+                <h4 style="color: #047857; margin: 0 0 6px 0; font-size: 15px;">🧘 স্বাস্থ্য আৰু মানসিক স্থিতি</h4>
+                <p style="margin:0; font-size: 14px; color: #064e3b; line-height: 1.65;">${r.health}</p>
+            </div>
+            <div style="background: #fffbeb; padding: 14px; border-radius: 10px; border: 1px solid #fde68a; border-left: 4px solid #d97706;">
+                <h4 style="color: #b45309; margin: 0 0 6px 0; font-size: 15px;">🕉️ আজিৰ বৈদিক পৰামৰ্শ আৰু প্ৰতিকাৰ</h4>
+                <p style="margin:0; font-size: 14px; color: #78350f; line-height: 1.65;">${r.advice || 'ইষ্ট দেৱতাক স্মৰণ কৰি দিনটো আৰম্ভ কৰক।'}</p>
+            </div>
+            <div style="background: #f8fafc; padding: 12px 15px; border-radius: 10px; border: 1px dashed #cbd5e1; text-align: center;">
+                <span style="font-size: 14px; font-weight: 700; color: #475569;">🍀 শুভ ৰং, সংখ্যা আৰু দিশ: </span>
+                <span style="font-size: 14px; font-weight: 700; color: #6D28D9;">${r.lucky}</span>
             </div>
         </div>
     `;
