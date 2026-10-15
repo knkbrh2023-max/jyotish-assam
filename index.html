@@ -2378,16 +2378,7 @@ async function showReportToCustomer(orderId) {
                     <h2>✨ AI য়ে আপোনাৰ ৰিপোৰ্ট লিখি আছে...</h2>
                     <p>আপোনাৰ কাৰ্ডসমূহ বিশ্লেষণ কৰি এক বিতং ভৱিষ্যৎবাণী প্ৰস্তুত কৰা হৈছে।<br>অনুগ্ৰহ কৰি ১৫-২০ ছেকেণ্ড অপেক্ষা কৰক, পেজটো বন্ধ নকৰিব।</p>
                 </div>
-            <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js').catch(function(err) {
-      console.warn('SW registration note:', err);
-    });
-  });
-}
-</script>
-</body>
+            </body>
             </html>
         `;
         
@@ -2526,9 +2517,24 @@ function updateDate() {
     document.getElementById('p-date').innerText = "তাৰিখ: " + new Date().toLocaleDateString('as-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
 }
 
+const FALLBACK_RASHI_DATA = [
+    { id: "aries", symbol: "♈", name: "মেষ ৰাশি", short: "কৰ্মক্ষেত্ৰত নতুন সুযোগ আৰু আত্মবিশ্বাস বৃদ্ধি পাব।", overall: "আজি আপোনাৰ দিনটো অত্যন্ত শুভ আৰু ফলপ্ৰসূ হ'ব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব আৰু আৰ্থিক লাভৰ যোগ আছে।", love: "পাৰিবাৰিক আৰু প্ৰেমৰ সম্পৰ্কত মধুৰতা বৃদ্ধি পাব।", health: "শৰীৰ আৰু মন সতেজ থাকিব।", lucky: "ৰঙা | শুভ সংখ্যা: ৯" },
+    { id: "taurus", symbol: "♉", name: "বৃষ ৰাশি", short: "আৰ্থিক সঞ্চয় বৃদ্ধি আৰু পাৰিবাৰিক সুখ-শান্তি বিৰাজ কৰিব।", overall: "ধৈৰ্য আৰু মিঠা ব্যৱহাৰৰ দ্বাৰা আজি সকলো কামত সফল হ'ব।", career: "ব্যৱসায় আৰু চাকৰিত স্থায়িত্ব তথা ধন আগমনৰ যোগ।", love: "প্ৰিয়জনৰ পৰা বিশেষ সহযোগিতা লাভ কৰিব।", health: "খাদ্যাভ্যাসত সাৱধানতা অৱলম্বন কৰক।", lucky: "বগা | শুভ সংখ্যা: ৬" },
+    { id: "gemini", symbol: "♊", name: "মিথুন ৰাশি", short: "ব্যৱসায়িক যোগাযোগ আৰু বৌদ্ধিক কামত সুন্দৰ সফলতা লাভ।", overall: "নতুন চিন্তা আৰু যোগাযোগে আজি আপোনাক উন্নতিৰ পথ দেখুৱাব।", career: "বাণিজ্য আৰু তথ্য-প্ৰযুক্তিৰ ক্ষেত্ৰত বিশেষ লাভ।", love: "বন্ধুত্ব আৰু প্ৰেমৰ সম্পৰ্কত আনন্দময় পৰিৱেশ।", health: "মানসিক প্ৰশান্তি বজাই থাকিব।", lucky: "সেউজীয়া | শুভ সংখ্যা: ৫" },
+    { id: "cancer", symbol: "♋", name: "কৰ্কট ৰাশি", short: "মাতৃৰ আশীৰ্বাদ আৰু ঘৰুৱা মাংগলিক কাৰ্যত আনন্দ লাভ।", overall: "ঘৰুৱা সুখ-শান্তি আৰু মানসিক তৃপ্তিৰে দিনটো পাৰ হ'ব।", career: "পৈতৃক সম্পত্তি বা স্থায়ী কামত শুভ ফল পাব।", love: "জীৱনসংগীৰ সৈতে আন্তৰিকতা বৃদ্ধি পাব।", health: "পৰ্যাপ্ত বিশ্ৰাম গ্ৰহণ কৰক।", lucky: "ৰূপালী বগা | শুভ সংখ্যা: ২" },
+    { id: "leo", symbol: "♌", name: "সিংহ ৰাশি", short: "সমাজত মান-সন্মান বৃদ্ধি আৰু নেতৃত্বমূলক কামত প্ৰশংসা লাভ।", overall: "আত্মবিশ্বাস আৰু সাহসেৰে আজি জটিল কামো সহজ কৰি তুলিব।", career: "উচ্চ পদস্থ বিষয়াৰ সহযোগিতা আৰু পদোন্নতিৰ যোগ।", love: "সম্পৰ্কত পাৰস্পৰিক সন্মান বৃদ্ধি পাব।", health: "স্বাস্থ্য উন্নত আৰু শক্তিশালী থাকিব।", lucky: "সোণালী | শুভ সংখ্যা: ১" },
+    { id: "virgo", symbol: "♍", name: "কন্যা ৰাশি", short: "পুৰণি সমস্যাৰ সমাধান আৰু কৰ্মস্থলীত বৰিষ্ঠজনৰ সহযোগিতা।", overall: "শৃংখলাবদ্ধ পৰিকল্পনাৰ জৰিয়তে আজি আৰ্থিক সুফল লাভ কৰিব।", career: "হিচাপ-নিকাচ আৰু ব্যৱসায়ত লাভৰ মাত্ৰা বৃদ্ধি।", love: "পৰিয়ালত সুখ আৰু বুজাবুজি অটুট থাকিব।", health: "স্বাস্থ্যৰ উন্নতি ঘটিব।", lucky: "সেউজীয়া | শুভ সংখ্যা: ৫" },
+    { id: "libra", symbol: "♎", name: "তুলা ৰাশি", short: "দাম্পত্য আৰু প্ৰেমৰ সম্পৰ্কত মধুৰতা আৰু আৰ্থিক লাভ।", overall: "কলা, সৌন্দৰ্য আৰু সামাজিক কাৰ্যত আজি বিশেষ সন্মান পাব।", career: "অংশীদাৰী ব্যৱসায় আৰু নতুন চুক্তিত সুফল।", love: "প্ৰেমত শুভ সংযোগ আৰু বিবাহৰ আলোচনা আগবাঢ়িব।", health: "মন প্রফুল্লিত হৈ থাকিব।", lucky: "গুলপীয়া | শুভ সংখ্যা: ৬" },
+    { id: "scorpio", symbol: "♏", name: "বৃশ্চিক ৰাশি", short: "সাহসিক সিদ্ধান্তৰ দ্বাৰা জটিল কামত বিজয় সাব্যস্ত কৰিব।", overall: "আপোনাৰ একাগ্ৰতা আৰু সংকল্পই আজি ডাঙৰ সফলতা আনিব।", career: "কৰ্মক্ষেত্ৰত শত্ৰু পৰাজিত হ'ব আৰু আৰ্থিক বাধা দূৰ হ'ব।", love: "গভীৰ আৱেগিক বিশ্বাসে সম্পৰ্ক মজবুত কৰিব।", health: "শৰীৰত নতুন উদ্যম অনুভৱ কৰিব।", lucky: "গাঢ় ৰঙা | শুভ সংখ্যা: ৯" },
+    { id: "sagittarius", symbol: "♐", name: "ধনু ৰাশি", short: "ধৰ্মীয় চেতনা, উচ্চ শিক্ষা আৰু ভ্ৰমণৰ শুভ যোগ।", overall: "দেৱগুৰু বৃহস্পতিৰ কৃপাত আজি ভাগ্যই আপোনাক সম্পূৰ্ণ সংগ দিব।", career: "শিক্ষা, পৰামৰ্শ আৰু চৰকাৰী কামত বিশেষ অগ্ৰগতি।", love: "পাৰিবাৰিক জীৱনত শুভ বাৰ্তা লাভ।", health: "সুস্বাস্থ্য আৰু মানসিক উজ্জীৱিত ভাব।", lucky: "হালধীয়া | শুভ সংখ্যা: ৩" },
+    { id: "capricorn", symbol: "♑", name: "মকৰ ৰাশি", short: "কঠোৰ পৰিশ্ৰমৰ সুফল লাভ আৰু স্থাৱৰ সম্পত্তিৰ যোগ।", overall: "ধৈৰ্য সহকাৰে কৰা কামৰ আজি সুন্দৰ প্ৰতিফল লাভ কৰিব।", career: "নিৰ্মাণ, কাৰিকৰী আৰু স্থায়ী ব্যৱসায়ত উন্নতি।", love: "সংসাৰত দায়িত্ববোধ আৰু স্নেহ বৃদ্ধি পাব।", health: "হাড় বা গাঁঠিৰ যত্ন লওক।", lucky: "নীলা | শুভ সংখ্যা: ৮" },
+    { id: "aquarius", symbol: "♒", name: "কুম্ভ ৰাশি", short: "নতুন পৰিকল্পনা সফল হ'ব আৰু মিত্ৰৰ পৰা বিশেষ সহায় পাব।", overall: "উদ্ভাৱনী চিন্তা আৰু সামাজিক সংযোগৰ বাবে দিনটো উত্তম।", career: "আয়ৰ নতুন উৎস মুকলি হোৱাৰ সম্ভাৱনা।", love: "মনৰ কথা প্ৰকাশ কৰাৰ বাবে অনুকূল সময়।", health: "মানসিক চাপমুক্ত হৈ থাকিব।", lucky: "আকাশী নীলা | শুভ সংখ্যা: ৮" },
+    { id: "pisces", symbol: "♓", name: "মীন ৰাশি", short: "মানসিক প্ৰশান্তি, সৃজনশীল কামত উন্নতি আৰু ধন আগমন।", overall: "আধ্যাত্মিক চিন্তা আৰু সৃজনশীল প্ৰতিভাই আজি সফলতা আনিব।", career: "অৰ্থনৈতিক অৱস্থা সবল হ'ব আৰু সন্মান বাঢ়িব।", love: "দাম্পত্য জীৱনত সুখ আৰু শান্তি বিৰাজ কৰিব।", health: "স্বাস্থ্য অনুকূল থাকিব।", lucky: "হালধীয়া | শুভ সংখ্যা: ৩" }
+];
+
 async function fetchDailyRashi() {
-    const container = document.getElementById('rashiGridContainer');
-    if(container) container.innerHTML = "<p style='text-align:center; color:#6D28D9; font-weight:bold;'>আজিৰ ৰাশিফল লোড হৈ আছে... ⏳</p>";
+    dynamicRashiData = FALLBACK_RASHI_DATA;
+    renderRashiGrid();
     
     try {
         const todayStr = new Date().toISOString().split('T')[0]; 
@@ -2541,14 +2547,15 @@ async function fetchDailyRashi() {
         });
         const result = await response.json();
         
-        if (result.success) {
-            dynamicRashiData = result.data;
+        if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
+            dynamicRashiData = result.data.map((r, i) => ({
+                ...FALLBACK_RASHI_DATA[i % 12],
+                ...r
+            }));
             renderRashiGrid();
-        } else {
-            if(container) container.innerHTML = "<p style='color:red;'>ৰাশিফল লোড কৰাত সমস্যা হৈছে।</p>";
         }
     } catch (error) {
-        if(container) container.innerHTML = "<p style='color:red;'>চাৰ্ভাৰৰ সৈতে সংযোগ হোৱা নাই।</p>";
+        console.warn("Using built-in daily rashi fallback:", error);
     }
 }
 
@@ -2983,6 +2990,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').catch(function(err) {
+      console.warn('SW registration note:', err);
+    });
+  });
+}
 </script>
 </body>
 </html>
