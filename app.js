@@ -414,7 +414,6 @@ async function generateReport(orderId, language, serviceCode) {
                 marriageDate: `<strong>विवाह का संभावित समय:</strong> ${parseInt(dashaEndDate)-3} से ${dashaEndDate} के बीच विवाह के योग हैं।`,
                 marriageType: "<strong>विवाह का प्रकार:</strong> कुंडली में 65% योग लव मैरिज के हैं, शेष पारिवारिक सहमति से अरेंज मैरिज के संकेत हैं।",
 
-,
                 careerTitle: "💼 करियर, नौकरी और व्यवसाय पूर्वानुमान",
                 jobTimingTitle: "📈 नौकरी मिलने के योग और अनुकूल वर्ष:",
                 jobTimingDesc: `कर्म भाव के विश्लेषण के अनुसार, <strong>${currentYear} से ${parseInt(currentYear)+1} के बीच</strong> आपको स्थायी नौकरी या पदोन्नति मिलने का अत्यंत शुभ समय है।`,
