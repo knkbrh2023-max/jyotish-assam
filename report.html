@@ -60,6 +60,13 @@
             border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 15px;
         }
         #sup-send-btn:hover { background: #047857; }
+
+        @media print {
+            header, main, #statusCard, #support-widget-btn, #support-chat-window, .no-print {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
     </style>
     <script src="grand_report_engine.js"></script>
 </head>
@@ -212,9 +219,19 @@
                                 (sessionStorage.getItem('ja_service_' + orderId) === 'palmistry');
             // If cached report is a birth chart but this is actually a palmistry order, ignore the bad cache!
             if (cached && !(isPalmOrder && cached.includes('Complete Grand Birth Chart'))) {
-                document.open();
-                document.write(cached);
-                document.close();
+                try {
+                const sw = document.getElementById('support-widget-btn');
+                if (sw) sw.remove();
+                const sc = document.getElementById('support-chat-window');
+                if (sc) sc.remove();
+                const hd = document.querySelector('header');
+                if (hd) hd.remove();
+                const mn = document.querySelector('main');
+                if (mn) mn.remove();
+            } catch(e){}
+            document.open();
+            document.write(cached);
+            document.close();
                 return;
             }
         }
@@ -316,6 +333,16 @@
                 localStorage.setItem('ja_latest_order_id', saveId);
             } catch(e){}
 
+            try {
+                const sw = document.getElementById('support-widget-btn');
+                if (sw) sw.remove();
+                const sc = document.getElementById('support-chat-window');
+                if (sc) sc.remove();
+                const hd = document.querySelector('header');
+                if (hd) hd.remove();
+                const mn = document.querySelector('main');
+                if (mn) mn.remove();
+            } catch(e){}
             document.open();
             document.write(reportHtml);
             document.close();
@@ -372,9 +399,19 @@
                 localStorage.setItem('ja_latest_order_id', order.id);
 
                 setTimeout(() => {
-                    document.open();
-                    document.write(reportHtml);
-                    document.close();
+                    try {
+                const sw = document.getElementById('support-widget-btn');
+                if (sw) sw.remove();
+                const sc = document.getElementById('support-chat-window');
+                if (sc) sc.remove();
+                const hd = document.querySelector('header');
+                if (hd) hd.remove();
+                const mn = document.querySelector('main');
+                if (mn) mn.remove();
+            } catch(e){}
+            document.open();
+            document.write(reportHtml);
+            document.close();
                 }, 800);
             } else {
                 msgDiv.innerHTML = "<span style='color:red;'>এই ইমেইল বা অৰ্ডাৰ নম্বৰৰ কোনো অৰ্ডাৰ পোৱা নগ'ল। সহায়ৰ বাবে তলৰ '🎧 সহায় (Support)' বুটামত সমস্যা লিখক।</span>";

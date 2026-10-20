@@ -261,15 +261,43 @@ function generatePalmistryReportHtml(order) {
                 text-overflow: ellipsis !important;
             }
             @media print {
+                @page { size: A4 portrait; margin: 8mm; }
+                html, body {
+                    background: #fdf5e6 !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                header, main, #statusCard, #support-widget-btn, #support-chat-window, .no-print, .print-btn-wrapper, .report-nav-bar {
+                    display: none !important;
+                    visibility: hidden !important;
+                }
+                .page {
+                    box-shadow: none !important;
+                    margin: 0 auto !important;
+                    border: 3px double #8b0000 !important;
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    padding: 24px 28px !important;
+                    box-sizing: border-box !important;
+                    page-break-after: always !important;
+                    break-after: page !important;
+                }
                 .page.royal-cover-page {
                     width: 100% !important;
                     max-width: 100% !important;
+                    height: 275mm !important;
+                    max-height: 275mm !important;
                     aspect-ratio: 2 / 3 !important;
                     margin: 0 auto !important;
                     padding: 0 !important;
                     border: none !important;
                     box-shadow: none !important;
                     page-break-after: always !important;
+                    break-after: page !important;
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
                 }
                 .royal-plaque-title {
                     color: #fde047 !important;
@@ -277,14 +305,16 @@ function generatePalmistryReportHtml(order) {
                     background: none !important;
                     text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
                 }
-            }
-
-            @media print {
-                @page { margin: 8mm; }
-                body { background: #fdf5e6; padding: 0; }
-                .page { box-shadow: none; margin: 0; border: 4px double #8b0000; width: 100%; max-width: 100%; }
-                .page-break { page-break-after: always; }
-                .print-btn-wrapper, .no-print { display: none !important; }
+                .page-break {
+                    page-break-after: always !important;
+                    break-after: page !important;
+                }
+                .info-card, .vedic-table, .remedy-card, .disclaimer, .footer-seal {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                    margin: 7px 0 !important;
+                    padding: 10px 14px !important;
+                }
             }
         </style>
     </head>
@@ -810,17 +840,17 @@ function generateGrandVedicReport(order, chart) {
                 : `এই ঘৰত কোনো গ্ৰহ পোনপটীয়াকৈ নাথাকিলেও ইয়াৰ অধিপতি গ্ৰহ <strong>${rInfo.lord}</strong> ৰ শুভ দৃষ্টি আৰু অৱস্থানৰ দ্বাৰা এই ঘৰৰ ফলাফলসমূহ সুন্দৰভাৱে সুৰক্ষিত আৰু পৰিচালিত হ'ব।`;
 
             cardsHtml += `
-            <div class="info-card">
-                <div class="card-title">${houseNames[i - 1]}</div>
-                <div class="card-content">
-                    <div style="margin-bottom: 8px; font-size: 14px; color: #5c3a21; background: rgba(139,0,0,0.05); padding: 5px 10px; border-radius: 4px; border: 1px dashed #d4b483;">
+            <div class="info-card house-card" style="margin: 8px 0; padding: 10px 14px;">
+                <div class="card-title" style="font-size: 16px; margin-bottom: 4px;">${houseNames[i - 1]}</div>
+                <div class="card-content" style="font-size: 13.5px; line-height: 1.5;">
+                    <div class="badge-box" style="margin-bottom: 6px; font-size: 13px; color: #5c3a21; background: rgba(139,0,0,0.05); padding: 4px 8px; border-radius: 4px; border: 1px dashed #d4b483;">
                         <strong>উদিত ৰাশি:</strong> ${rInfo.asName} (${rashiEn}) &nbsp;|&nbsp; 
                         <strong>ভাৱাধিপতি:</strong> ${rInfo.lord} &nbsp;|&nbsp; 
                         <strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}
                     </div>
-                    <div style="margin-top: 6px; line-height: 1.7;">
-                        <p style="margin-bottom: 5px;"><strong>• ভাৱৰ মূল কাৰকত্ব আৰু তাৎপৰ্য্য:</strong> ${houseCoreMeanings[i - 1]}</p>
-                        <p style="margin-bottom: 5px;"><strong>• ৰাশি আৰু অধিপতিৰ বিশেষ ফল:</strong> এই ভাৱত <strong>${rInfo.asName}</strong> ৰাশি আৰু অধিপতি <strong>${rInfo.lord}</strong> ৰ প্ৰভাৱ থকাৰ বাবে ইয়াত ${rInfo.trait} স্পষ্টৰূপে প্ৰতিফলিত হ'ব।</p>
+                    <div style="margin-top: 4px; line-height: 1.5;">
+                        <p style="margin-bottom: 4px;"><strong>• ভাৱৰ মূল কাৰকত্ব আৰু তাৎপৰ্য্য:</strong> ${houseCoreMeanings[i - 1]}</p>
+                        <p style="margin-bottom: 4px;"><strong>• ৰাশি আৰু অধিপতিৰ বিশেষ ফল:</strong> এই ভাৱত <strong>${rInfo.asName}</strong> ৰাশি আৰু অধিপতি <strong>${rInfo.lord}</strong> ৰ প্ৰভাৱ থকাৰ বাবে ইয়াত ${rInfo.trait} স্পষ্টৰূপে প্ৰতিফলিত হ'ব।</p>
                         <p style="margin-bottom: 0;"><strong>• গ্ৰহৰ স্থিতি আৰু জ্যোতিষীয় বিচাৰ:</strong> ${planetImpact}</p>
                     </div>
                 </div>
@@ -861,62 +891,67 @@ function generateGrandVedicReport(order, chart) {
     let y_prosper_start = bYear + 40;
     let y_spirit_start = bYear + 50;
 
-    const page9LifetimeRoadmap = `
+    const page9LifetimeRoadmapPart1 = `
     <div class="page page-break">
-        <h2 class="section-title">❁ সম্পূৰ্ণ জীৱনৰ বয়সভিত্তিক ভাগ্যোদয়ৰ ৰোডমেপ ❁</h2>
+        <h2 class="section-title">❁ সম্পূৰ্ণ জীৱনৰ বয়সভিত্তিক ভাগ্যোদয়ৰ ৰোডমেপ (১ম খণ্ড: ১৮–৩৫ বছৰ) ❁</h2>
         <div class="shloka">"ভাগ্যং ফলতি সৰ্বত্ৰ ন বিদ্যা ন চ পৌৰুষম্।"</div>
         <div class="text-section">
             বৈদিক কালচক্ৰ, গোচৰ আৰু আপোনাৰ জন্ম কুণ্ডলীৰ গ্ৰহ-দশাৰ আধাৰত সমগ্ৰ জীৱনৰ প্ৰধান সময়সীমাসমূহ তলত নিৰ্দিষ্ট চন আৰু বয়সৰ মাইলষ্ট'ন অনুসৰি বিশ্লেষণ কৰা হ'ল:
         </div>
 
-        <div class="sub-heading">১. শিক্ষা সমাপ্তি আৰু প্ৰাথমিক সন্ধান (বয়স ১৮–২২ বছৰ / প্ৰায় ${toAsDigits(y1)}–${toAsDigits(y2)} চন)</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="sub-heading" style="margin-top: 10px;">১. শিক্ষা সমাপ্তি আৰু প্ৰাথমিক সন্ধান (বয়স ১৮–২২ বছৰ / প্ৰায় ${toAsDigits(y1)}–${toAsDigits(y2)} চন)</div>
+        <div class="info-card" style="margin: 6px 0; padding: 10px 14px;">
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.5;">
                 • <strong>বিদ্যাৰ্থী জীৱন আৰু লক্ষ্য নিৰ্ধাৰণ:</strong> বিদ্যাবুদ্ধি বিকাশ, উচ্চ শিক্ষা সমাপ্তি আৰু নিজৰ পছন্দৰ কেৰিয়াৰ বাছনিৰ প্ৰাথমিক সময়। পঞ্চম আৰু নৱম ভাৱৰ শুভ দৃষ্টয়ে জ্ঞান আহৰণত সহায় কৰে।
             </div>
         </div>
 
-        <div class="sub-heading">২. বয়স ২৩–২৫ বছৰ (প্ৰথম স্থিৰতাৰ সময়সীমা / প্ৰায় ${toAsDigits(y_stab_start)}–${toAsDigits(y_stab_end)} চন)</div>
-        <div class="info-card" style="border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06);">
-            <div class="card-title" style="color: #1d4ed8;">🌱 প্ৰথম স্থিৰতা আৰু কেৰিয়াৰৰ দৃঢ় ভেটি</div>
-            <div class="card-content">
+        <div class="sub-heading" style="margin-top: 10px;">২. বয়স ২৩–২৫ বছৰ (প্ৰথম স্থিৰতাৰ সময়সীমা / প্ৰায় ${toAsDigits(y_stab_start)}–${toAsDigits(y_stab_end)} চন)</div>
+        <div class="info-card" style="border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06); margin: 6px 0; padding: 10px 14px;">
+            <div class="card-title" style="color: #1d4ed8; font-size: 15px; margin-bottom: 4px;">🌱 প্ৰথম স্থিৰতা আৰু কেৰিয়াৰৰ দৃঢ় ভেটি</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.5;">
                 • <strong>কৰ্মসংস্থাপন আৰু আৰ্থিক স্বাৱলম্বন:</strong> চাকৰি বা ব্যৱসায়ত এক নিৰ্দিষ্ট স্থান অধিকাৰ কৰা আৰু প্ৰথম উপাৰ্জনৰ পথ মুকলি হোৱা। এই বয়সত জীৱনৰ অনিশ্চয়তা দূৰ হৈ প্ৰথম স্থিৰতা আহে আৰু সংসাৰ নিৰ্মাণৰ পথ প্ৰশস্ত হয়।
             </div>
         </div>
 
-        <div class="sub-heading">৩. কৰ্ম সম্প্ৰসাৰণ আৰু সংসাৰ নিৰ্মাণ (বয়স ২৬–৩১ বছৰ / প্ৰায় ${toAsDigits(y_mid1)}–${toAsDigits(y_mid2)} চন)</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="sub-heading" style="margin-top: 10px;">৩. কৰ্ম সম্প্ৰসাৰণ আৰু সংসাৰ নিৰ্মাণ (বয়স ২৬–৩১ বছৰ / প্ৰায় ${toAsDigits(y_mid1)}–${toAsDigits(y_mid2)} চন)</div>
+        <div class="info-card" style="margin: 6px 0; padding: 10px 14px;">
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.5;">
                 • <strong>অভিজ্ঞতা আৰু সামাজিক প্ৰতিষ্ঠা:</strong> কৰ্মক্ষেত্ৰত স্থিতি মজবুত কৰা, বৈবাহিক সম্বন্ধ গঢ়ি তোলা আৰু সামাজিক দায়বদ্ধতা বৃদ্ধি। নিজৰ কৰ্মপ্ৰতিভা সমাজত সুপ্ৰতিষ্ঠিত কৰাৰ বাবে এই সময়ছোৱা ফলপ্ৰসূ।
             </div>
         </div>
 
-        <div class="sub-heading">৪. বয়স ৩২–৩৫ বছৰ (ডাঙৰ উত্থান আৰু সোণালী সময়সীমা / প্ৰায় ${toAsDigits(y_peak_start)}–${toAsDigits(y_peak_end)} চন)</div>
-        <div class="info-card" style="border-left-color: #d97706; background: rgba(217, 119, 6, 0.08);">
-            <div class="card-title" style="color: #b45309;">🌟 ভাগ্যোদয়ৰ ডাঙৰ উত্থান (Golden Peak Era)</div>
-            <div class="card-content">
+        <div class="sub-heading" style="margin-top: 10px;">৪. বয়স ৩২–৩৫ বছৰ (ডাঙৰ উত্থান আৰু সোণালী সময়সীমা / প্ৰায় ${toAsDigits(y_peak_start)}–${toAsDigits(y_peak_end)} চন)</div>
+        <div class="info-card" style="border-left-color: #d97706; background: rgba(217, 119, 6, 0.08); margin: 6px 0; padding: 10px 14px;">
+            <div class="card-title" style="color: #b45309; font-size: 15px; margin-bottom: 4px;">🌟 ভাগ্যোদয়ৰ ডাঙৰ উত্থান (Golden Peak Era)</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.5;">
                 • <strong>কেৰিয়াৰ আৰু ব্যৱসায়ৰ সৰ্বোচ্চ শিখৰ:</strong> দশম পতি আৰু একাদশ ভাৱৰ সংযোগে এই সময়ছোৱাত জীৱনৰ আটাইতকৈ ডাঙৰ উত্থান ঘটাব। সমাজত উচ্চ মৰ্যাদা, প্ৰভাৱশালী পদবী বা ব্যৱসায়ৰ ব্যাপক সম্প্ৰসাৰণ ঘটিব। একাধিক উৎসৰ পৰা স্থিৰ ধন প্ৰবাহ আৰু সন্মান লাভৰ এইটোৱেই সোণালী কাল।
             </div>
         </div>
+    </div>`;
 
-        <div class="sub-heading">৫. স্থায়ী সম্পদ, গৃহ-নিৰ্মাণ আৰু বাহন ক্ৰয় (বয়স ৩৬–৩৯ বছৰ / প্ৰায় ${toAsDigits(y_prop_start)}–${toAsDigits(y_prop_end)} চন)</div>
-        <div class="info-card">
-            <div class="card-content">
+    const page9LifetimeRoadmapPart2 = `
+    <div class="page page-break">
+        <h2 class="section-title">❁ সম্পূৰ্ণ জীৱনৰ বয়সভিত্তিক ভাগ্যোদয়ৰ ৰোডমেপ (২য় খণ্ড: ৩৬–৫০+ বছৰ) ❁</h2>
+
+        <div class="sub-heading" style="margin-top: 14px;">৫. স্থায়ী সম্পদ, গৃহ-নিৰ্মাণ আৰু বাহন ক্ৰয় (বয়স ৩৬–৩৯ বছৰ / প্ৰায় ${toAsDigits(y_prop_start)}–${toAsDigits(y_prop_end)} চন)</div>
+        <div class="info-card" style="margin: 8px 0; padding: 12px 14px;">
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.55;">
                 • <strong>গৃহ আৰু বাহন সুখ:</strong> চতুৰ্থ ভাৱৰ শুভ প্ৰভাৱে নিজা মাটি-বাৰী, গৃহ নিৰ্মাণ আৰু বাহন ক্ৰয়ৰ শুভ যোগ সৃষ্টি কৰে। পৰিয়ালৰ ভৱিষ্যত সুৰক্ষিত কৰাৰ স্থায়ী সিদ্ধান্ত গ্ৰহণ।
             </div>
         </div>
 
-        <div class="sub-heading">৬. বয়স ৪০+ বছৰৰ সমৃদ্ধিৰ সময়সীমা (প্ৰায় ${toAsDigits(y_prosper_start)} চনৰ পৰা)</div>
-        <div class="info-card" style="border-left-color: #059669; background: rgba(5, 150, 105, 0.08);">
-            <div class="card-title" style="color: #047857;">💎 স্থায়ী আৰ্থিক সমৃদ্ধি আৰু সামাজিক প্ৰভাৱ</div>
-            <div class="card-content">
+        <div class="sub-heading" style="margin-top: 14px;">৬. বয়স ৪০+ বছৰৰ সমৃদ্ধিৰ সময়সীমা (প্ৰায় ${toAsDigits(y_prosper_start)} চনৰ পৰা)</div>
+        <div class="info-card" style="border-left-color: #059669; background: rgba(5, 150, 105, 0.08); margin: 8px 0; padding: 12px 14px;">
+            <div class="card-title" style="color: #047857; font-size: 15px; margin-bottom: 4px;">💎 স্থায়ী আৰ্থিক সমৃদ্ধি আৰু সামাজিক প্ৰভাৱ</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.55;">
                 • <strong>স্থায়ী সমৃদ্ধি আৰু মৰ্যাদা:</strong> জীৱনত অৰ্থনৈতিক নিৰাপত্তা, স্থাৱৰ সম্পত্তি আৰু সামাজিক প্ৰভাৱ চূড়ান্ত পৰ্যায়ত উপনীত হ'ব। সন্তানৰ উন্নতি, ব্যৱসায় বা কৰ্মৰ স্থিৰ নেটৱৰ্ক আৰু পূৰ্ণ সমৃদ্ধি ভোগৰ দীৰ্ঘম্যাদী সময়।
             </div>
         </div>
 
-        <div class="sub-heading">৭. আধ্যাত্মিক পৰিপক্কতা আৰু পুণ্যফল ভোগ (বয়স ৫০+ বছৰ / প্ৰায় ${toAsDigits(y_spirit_start)} চনৰ পৰা)</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="sub-heading" style="margin-top: 14px;">৭. আধ্যাত্মিক পৰিপক্কতা আৰু পুণ্যফল ভোগ (বয়স ৫০+ বছৰ / প্ৰায় ${toAsDigits(y_spirit_start)} চনৰ পৰা)</div>
+        <div class="info-card" style="margin: 8px 0; padding: 12px 14px;">
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.55;">
                 • <strong>আধ্যাত্মিক তৃপ্তি আৰু শান্তি:</strong> জীৱনৰ দায়িত্বসমূহ সুকলমে সম্পন্ন কৰি সমাজত আদৰ্শ ব্যক্তি হিচাপে সন্মান লাভ। ধৰ্মীয় তীৰ্থস্থান ভ্ৰমণ, লোককল্যাণ আৰু মানসিক প্ৰশান্তিৰে ভৰপূৰ পৰিনাতি কাল।
             </div>
         </div>
@@ -1268,37 +1303,37 @@ const page18FiveYearForecast = `
             পৰৱৰ্তী ৫টা বছৰৰ বাবে গুৰু আৰু শনিৰ মহাজাগতিক গোচৰ ফল অনুসৰি বছৰেকীয়া বিস্তৃত পূৰ্বাভাস:
         </div>
 
-        <div class="sub-heading">🗓️ ${toAsDigits(yArr[0])} চন: কৰ্মক্ষেত্ৰত সক্ৰিয়তা আৰু ভেটি সুদৃঢ় কৰণ</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="info-card" style="margin: 6px 0; padding: 9px 12px;">
+            <div class="card-title" style="font-size: 15px; margin-bottom: 3px; color: #8b0000;">🗓️ ${toAsDigits(yArr[0])} চন: কৰ্মক্ষেত্ৰত সক্ৰিয়তা আৰু ভেটি সুদৃঢ় কৰণ</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.45;">
                 এই বছৰটোত আপোনাৰ কৰ্মক্ষেত্ৰত নতুন দায়িত্ব আৰু সুযোগ আহিব। পূৰ্বৰ আধৰুৱা কামসমূহ সমাপ্ত হ'ব। আৰ্থিক পৰিকল্পনাত শৃংখলা বজাই ৰাখিলে বছৰৰ দ্বিতীয়াৰ্ধত বিশেষ লাভ অৰ্জন কৰিব পাৰিব।
             </div>
         </div>
 
-        <div class="sub-heading">🗓️ ${toAsDigits(yArr[1])} চন: স্থান পৰিৱৰ্তন, নতুন সুযোগ আৰু বিবাহ আলোচনা</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="info-card" style="margin: 6px 0; padding: 9px 12px;">
+            <div class="card-title" style="font-size: 15px; margin-bottom: 3px; color: #8b0000;">🗓️ ${toAsDigits(yArr[1])} চন: স্থান পৰিৱৰ্তন, নতুন সুযোগ আৰু বিবাহ আলোচনা</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.45;">
                 কেৰিয়াৰত এক ডাঙৰ ইতিবাচক পৰিৱৰ্তন বা সন্মানজনক স্থান লাভৰ প্ৰৱল যোগ। অবিবাহিতসকলৰ বাবে বিবাহৰ সম্বন্ধ অগ্ৰগতি লাভ কৰিব। নতুন যোগাযোগৰ দ্বাৰা ভৱিষ্যতৰ সুদৃঢ় পথ মুকলি হ'ব।
             </div>
         </div>
 
-        <div class="sub-heading">🗓️ ${toAsDigits(yArr[2])} চন: আৰ্থিক সমৃদ্ধি আৰু সাফল্যৰ শিখৰ</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="info-card" style="margin: 6px 0; padding: 9px 12px;">
+            <div class="card-title" style="font-size: 15px; margin-bottom: 3px; color: #8b0000;">🗓️ ${toAsDigits(yArr[2])} চন: আৰ্থিক সমৃদ্ধি আৰু সাফল্যৰ শিখৰ</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.45;">
                 বৃহস্পতি আৰু শনিৰ শুভ সংযোগে এই বছৰত আপোনাৰ আয়ৰ মাত্ৰা বৃদ্ধি কৰিব। ব্যৱসায়িক সম্প্ৰসাৰণ আৰু সামাজিক মান-সন্মান বৃদ্ধি পাব। পাৰিবাৰিক শান্তি বজাই থাকিব।
             </div>
         </div>
 
-        <div class="sub-heading">🗓️ ${toAsDigits(yArr[3])} চন: স্থায়ী সম্পত্তি, গৃহ আৰু বাহন যোগ</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="info-card" style="margin: 6px 0; padding: 9px 12px;">
+            <div class="card-title" style="font-size: 15px; margin-bottom: 3px; color: #8b0000;">🗓️ ${toAsDigits(yArr[3])} চন: স্থায়ী সম্পত্তি, গৃহ আৰু বাহন যোগ</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.45;">
                 মাটি-বাৰী, গৃহ নিৰ্মাণ বা স্থায়ী সম্পত্তি ক্ৰয়ৰ বাবে এই বছৰটো আটাইতকৈ ফলপ্ৰসূ হ'ব। দীৰ্ঘম্যাদী বিনিয়োগত শুভ ফল দেখা যায়। স্বাস্থ্যৰ প্ৰতি সতৰ্ক দৃষ্টি ৰাখিব।
             </div>
         </div>
 
-        <div class="sub-heading">🗓️ ${toAsDigits(yArr[4])} চন: মানসিক স্থিৰতা, পুণ্য অৰ্জন আৰু ভৱিষ্যত পৰিকল্পনা</div>
-        <div class="info-card">
-            <div class="card-content">
+        <div class="info-card" style="margin: 6px 0; padding: 9px 12px;">
+            <div class="card-title" style="font-size: 15px; margin-bottom: 3px; color: #8b0000;">🗓️ ${toAsDigits(yArr[4])} চন: মানসিক স্থিৰতা, পুণ্য অৰ্জন আৰু ভৱিষ্যত পৰিকল্পনা</div>
+            <div class="card-content" style="font-size: 13.5px; line-height: 1.45;">
                 পূৰ্বৰ পৰিশ্ৰমৰ সুন্দৰ ফল ভোগ কৰাৰ সময়। ধৰ্মীয় কাৰ্যত মন বহিব। পৰিয়াল আৰু সমাজত আপোনাৰ স্থিতি এক আদৰ্শ আৰু প্ৰভাৱশালী স্থান হিচাপে প্ৰতিষ্ঠিত হ'ব।
             </div>
         </div>
@@ -1389,12 +1424,14 @@ const page18FiveYearForecast = `
 
     let assembledPages = "";
     if (service === 'career') {
-        assembledPages = page3Navagraha1 + page6Houses1 + page9LifetimeRoadmap + page10Career + page11WealthProperty + page16PalmistryLines + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
+        assembledPages = page3Navagraha1 + page4Navagraha2 + page5Navagraha3 + page6Houses1 + page7Houses2 + page8Houses3 + page9LifetimeRoadmapPart1 + page9LifetimeRoadmapPart2 + page10Career + page11WealthProperty + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
     } else if (service === 'love') {
-        assembledPages = page4Navagraha2 + page6Houses1 + page9LifetimeRoadmap + page12Love + page13Spouse + page14MarriageTiming + page16PalmistryLines + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
+        assembledPages = page3Navagraha1 + page4Navagraha2 + page5Navagraha3 + page6Houses1 + page7Houses2 + page8Houses3 + page9LifetimeRoadmapPart1 + page9LifetimeRoadmapPart2 + page12Love + page13Spouse + page14MarriageTiming + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
+    } else if (service === 'palmistry' || order.palmHand || order.palmPhoto) {
+        assembledPages = page3Navagraha1 + page4Navagraha2 + page5Navagraha3 + page6Houses1 + page7Houses2 + page8Houses3 + page9LifetimeRoadmapPart1 + page9LifetimeRoadmapPart2 + page10Career + page11WealthProperty + page12Love + page13Spouse + page14MarriageTiming + page15Health + page16PalmistryLines + page17PalmistryMounts + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
     } else {
-        // Complete 18-page Grand Report for birth & full horoscope
-        assembledPages = page3Navagraha1 + page4Navagraha2 + page5Navagraha3 + page6Houses1 + page7Houses2 + page8Houses3 + page9LifetimeRoadmap + page10Career + page11WealthProperty + page12Love + page13Spouse + page14MarriageTiming + page15Health + page16PalmistryLines + page17PalmistryMounts + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
+        // Complete Grand Vedic Birth Chart Report (clean 18-page presentation without irrelevant palmistry pages)
+        assembledPages = page3Navagraha1 + page4Navagraha2 + page5Navagraha3 + page6Houses1 + page7Houses2 + page8Houses3 + page9LifetimeRoadmapPart1 + page9LifetimeRoadmapPart2 + page10Career + page11WealthProperty + page12Love + page13Spouse + page14MarriageTiming + page15Health + page18FiveYearForecast + page19Remedies + page20SpiritualSeal;
     }
 
     
@@ -1582,15 +1619,43 @@ const page18FiveYearForecast = `
                 text-overflow: ellipsis !important;
             }
             @media print {
+                @page { size: A4 portrait; margin: 8mm; }
+                html, body {
+                    background: #fdf5e6 !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                header, main, #statusCard, #support-widget-btn, #support-chat-window, .no-print, .print-btn-wrapper, .report-nav-bar {
+                    display: none !important;
+                    visibility: hidden !important;
+                }
+                .page {
+                    box-shadow: none !important;
+                    margin: 0 auto !important;
+                    border: 3px double #8b0000 !important;
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    padding: 24px 28px !important;
+                    box-sizing: border-box !important;
+                    page-break-after: always !important;
+                    break-after: page !important;
+                }
                 .page.royal-cover-page {
                     width: 100% !important;
                     max-width: 100% !important;
+                    height: 275mm !important;
+                    max-height: 275mm !important;
                     aspect-ratio: 2 / 3 !important;
                     margin: 0 auto !important;
                     padding: 0 !important;
                     border: none !important;
                     box-shadow: none !important;
                     page-break-after: always !important;
+                    break-after: page !important;
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
                 }
                 .royal-plaque-title {
                     color: #fde047 !important;
@@ -1598,14 +1663,50 @@ const page18FiveYearForecast = `
                     background: none !important;
                     text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
                 }
-            }
-
-            @media print {
-                @page { margin: 8mm; }
-                body { background: #fdf5e6; padding: 0; }
-                .page { box-shadow: none; margin: 0; border: 4px double #8b0000; width: 100%; max-width: 100%; }
-                .page-break { page-break-after: always; }
-                .print-btn-wrapper, .report-nav-bar, .no-print { display: none !important; }
+                .page-break {
+                    page-break-after: always !important;
+                    break-after: page !important;
+                }
+                .info-card, .vedic-table, .remedy-card, .kundali-wrapper, .disclaimer, .footer-seal, .house-card {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                    margin: 7px 0 !important;
+                    padding: 10px 14px !important;
+                }
+                .card-title {
+                    font-size: 16px !important;
+                    margin-bottom: 5px !important;
+                }
+                .card-content {
+                    font-size: 13.5px !important;
+                    line-height: 1.55 !important;
+                }
+                .sub-heading {
+                    page-break-after: avoid !important;
+                    break-after: avoid !important;
+                    margin-top: 13px !important;
+                    margin-bottom: 5px !important;
+                    font-size: 16px !important;
+                }
+                .section-title {
+                    font-size: 19px !important;
+                    margin-bottom: 12px !important;
+                    padding-bottom: 5px !important;
+                }
+                .shloka {
+                    margin: 8px 0 14px !important;
+                    padding: 8px 12px !important;
+                    font-size: 15px !important;
+                }
+                .text-section {
+                    font-size: 13.5px !important;
+                    margin-bottom: 10px !important;
+                    line-height: 1.5 !important;
+                }
+                .vedic-table th, .vedic-table td {
+                    padding: 6px 10px !important;
+                    font-size: 13px !important;
+                }
             }
         </style>
     </head>
@@ -1650,20 +1751,25 @@ const page18FiveYearForecast = `
                 </div>
             </div>
         </div>
-        <!-- PAGE 2: CORE IDENTITY & KUNDALI -->
+        <!-- PAGE 2: CORE IDENTITY & KUNDALI CHART -->
         <div class="page page-break">
             <h2 class="section-title">❁ মূল জ্যোতিষিক পৰিচয় ❁</h2>
             <div class="shloka">"যথা শিখা ময়ূৰাণাং নাগানাং মணயথা।<br>তদ্বদ্ বেদাঙ্গশাস্ত্ৰাণাং জ্যোতিষং মূৰ্ধনি স্থিতম্॥"</div>
             <div class="info-card">
-                <div class="card-title">লগ্ন (Ascendant): <strong>${ascRashiName} (${chart.ascendant.rashi})</strong></div>
-                <div class="card-title">চন্দ্ৰ ৰাশি (Moon Sign): <strong>${moonRashiName} (${moonRashi} - ${moonNakshatra} নক্ষত্ৰ)</strong></div>
-                <div class="card-title">বৰ্তমান মহাদশা: <strong>${currentDashaAs} মহাদশা</strong></div>
+                <div class="card-title" style="margin-bottom: 8px;">লগ্ন (Ascendant): <strong>${ascRashiName} (${chart.ascendant.rashi})</strong></div>
+                <div class="card-title" style="margin-bottom: 8px;">চন্দ্ৰ ৰাশি (Moon Sign): <strong>${moonRashiName} (${moonRashi} - ${moonNakshatra} নক্ষত্ৰ)</strong></div>
+                <div class="card-title" style="margin-bottom: 0;">বৰ্তমান মহাদশা: <strong>${currentDashaAs} মহাদশা</strong></div>
             </div>
-            <h2 class="section-title" style="margin-top:35px;">❁ জন্ম কুণ্ডলী আৰু গ্ৰহ স্থিতি ❁</h2>
+            <h2 class="section-title" style="margin-top:25px;">❁ জন্ম কুণ্ডলী (Vedic Birth Chart) ❁</h2>
             ${svgHtml}
-            <h3 class="sub-heading">গ্ৰহৰ স্পষ্ট অৱস্থান</h3>
+        </div>
+
+        <!-- PAGE 3: PLANETARY POSITIONS & VIMSHOTTARI DASHA -->
+        <div class="page page-break">
+            <h2 class="section-title">❁ গ্ৰহৰ স্পষ্ট অৱস্থান আৰু বিংশোত্তৰী মহা দশা ❁</h2>
+            <h3 class="sub-heading" style="margin-top: 10px;">গ্ৰহৰ স্পষ্ট অৱস্থান (Planetary Positions)</h3>
             ${planetsHtml}
-            <h3 class="sub-heading">বিংশোত্তৰী মহা দশা</h3>
+            <h3 class="sub-heading" style="margin-top: 20px;">বিংশোত্তৰী মহা দশা চক্ৰ (Vimshottari Dasha Timeline)</h3>
             ${dashaHtml}
         </div>
 
