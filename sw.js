@@ -1,19 +1,11 @@
-const CACHE_NAME = 'jyotish-assam-v2';
+const CACHE_NAME = 'jyotish-assam-v6-fresh';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/config.js',
-  '/style.css',
-  '/jyotishassam-2.0.css',
   '/fav.png',
   '/icon.png',
   '/manifest.webmanifest'
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)).catch(() => {})
-  );
   self.skipWaiting();
 });
 
@@ -31,7 +23,14 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Network-first for HTML & JS so updates are always fresh
+  // Always network-first with cache: 'no-store' for HTML and JS files so updates apply immediately
+  if (url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname === '/') {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' }).catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((res) => {

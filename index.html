@@ -2289,10 +2289,10 @@ window.processPayment = async function(e) {
                         } catch (e) {}
 
                         if (typeof closeOrderModal === 'function') closeOrderModal();
-                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&paid=1";
+                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&dob=" + encodeURIComponent(orderData.birthDate) + "&tob=" + encodeURIComponent(orderData.birthTime) + "&pob=" + encodeURIComponent(orderData.birthPlace) + "&name=" + encodeURIComponent(orderData.name) + "&paid=1";
                     } catch (err) {
                         console.error("Chat Payment Redirect fallback:", err);
-                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&paid=1";
+                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&dob=" + encodeURIComponent(orderData.birthDate) + "&tob=" + encodeURIComponent(orderData.birthTime) + "&pob=" + encodeURIComponent(orderData.birthPlace) + "&name=" + encodeURIComponent(orderData.name) + "&paid=1";
                     }
                 }
             };
