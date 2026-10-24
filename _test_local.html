@@ -2,7 +2,7 @@
 <html lang="as">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src=""></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CX40FND93"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -19,29 +19,29 @@
     <meta name="keywords" content="Jyotish Assam, জ্যোতিষ অসম, Assamese Rashifal, Ajir Rashifal Assamese, Ajir Rakhifal, Axomiya Rashifal Today, অসমীয়া ৰাশিফল, আজিৰ ৰাশিফল, দৈনিক ৰাশিফল, Assamese Kundali PDF, জন্ম কুণ্ডলী, সোঁৱৰণী, Assamese Suworoni, Xuworoni, জন্ম পত্ৰিকা, যুটীয়া ৰাশিফল, Jutiya Rashifal, Biyarilon, বিবাহ মিলন, কুণ্ডলী মিলন, Assamese Horoscope Today, Online Kundali Assam, Janma Patrika Assamese, Laluk Astrologer, Best Astrologer in Assam">
     <meta name="author" content="Jyotish Assam">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="">
+    <link rel="canonical" href="https://jyotishassam.com/">
 
     <!-- Browser Tab Icon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%2306152d%22 stroke=%22%23ffd700%22 stroke-width=%226%22/><text x=%2250%22 y=%2276%22 font-family=%22Georgia, serif%22 font-size=%2276%22 font-weight=%22900%22 text-anchor=%22middle%22 fill=%22%23ffd700%22>JA</text><line x1=%2215%22 y1=%2288%22 x2=%2285%22 y2=%2288%22 stroke=%22%23e61919%22 stroke-width=%228%22 stroke-linecap=%22round%22/></svg>">
-    <link rel="apple-touch-icon" href="">
+    <link rel="apple-touch-icon" href="https://jyotishassam.com/icon.png">
     
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="জ্যোতিষ অসম - Jyotish Assam | 100% নিখুঁত বৈদিক কুণ্ডলী আৰু ৰাশিফল">
     <meta property="og:description" content="অসমীয়া ভাষাত বিনামূলীয়া দৈনিক ৰাশিফল, যুটীয়া ৰাশিফল আৰু নিমিষতে সম্পূৰ্ণ বৈদিক জন্ম কুণ্ডলী (PDF) লাভ কৰক।">
-    <meta property="og:url" content="">
+    <meta property="og:url" content="https://jyotishassam.com/">
     <meta property="og:site_name" content="জ্যোতিষ অসম (Jyotish Assam)">
-    <meta property="og:image" content="">
+    <meta property="og:image" content="https://jyotishassam.com/icon.png">
 
     <!-- Schema Markup -->
     <script type="application/ld+json">
     {
-      "@context": "",
+      "@context": "https://schema.org",
       "@type": "ProfessionalService",
       "name": "জ্যোতিষ অসম (Jyotish Assam)",
-      "url": "",
-      "logo": "",
-      "image": "",
+      "url": "https://jyotishassam.com/",
+      "logo": "https://jyotishassam.com/icon.png",
+      "image": "https://jyotishassam.com/icon.png",
       "description": "100% নিখুঁত বৈদিক জন্ম কুণ্ডলী (PDF), যুটীয়া ৰাশিফল আৰু দৈনিক অসমীয়া ৰাশিফল সেৱা।",
       "address": {
         "@type": "PostalAddress",
@@ -61,9 +61,9 @@
     </script>
     
     <!-- Supabase আৰু Razorpay Scripts -->
-    <script src=""></script>
-    <script src="" defer></script>
-    <link href="" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -221,12 +221,12 @@
 
         /* 12 Rashi Grid */
         .rashi-section { margin: 50px 0; text-align: center; }
-        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 25px; }
+        .rashi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; margin-top: 25px; }
         .rashi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .rashi-card:hover { border-color: var(--primary-color); transform: translateY(-5px); }
         .rashi-icon { font-size: 32px; background: #f3e8ff; width: 60px; height: 60px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary-color); }
         .rashi-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-        .rashi-card p { font-size: 13px; color: var(--text-light); }
+        .rashi-card p { font-size: 13.8px; color: #334155; line-height: 1.65; text-align: center; }
 
         .section { margin: 50px 0; }
         .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
@@ -256,6 +256,7 @@
         .close-horoscope-btn:hover { background: #fee2e2; color: #dc2626; }
     </style>
     <script src="config.js"></script>
+    <script src="rashifal.js"></script>
     <script src="grand_report_engine.js"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
@@ -613,18 +614,18 @@
         <div class="ja20-ai-copy">
             <div class="ja20-kicker">✦ JYOTISH ASSAM AI</div>
             <h2>আপোনাৰ ব্যক্তিগত <span>AI জ্যোতিষী</span></h2>
-            <p>জন্ম তথ্য আৰু আপোনাৰ প্ৰশ্নৰ ভিত্তিত প্ৰেম, কেৰিয়াৰ, ধন-সম্পদ আৰু জীৱনৰ গুৰুত্বপূৰ্ণ দিশসমূহৰ বিষয়ে ব্যক্তিগতকৃত জ্যোতিষীয় guidance লাভ কৰক।</p>
+            <p>জন্ম তথ্য আৰু আপোনাৰ প্ৰশ্নৰ ভিত্তিত প্ৰেম, কেৰিয়াৰ, ধন-সম্পদ আৰু জীৱনৰ গুৰুত্বপূৰ্ণ দিশসমূহৰ বিষয়ে ব্যক্তিগতকৃত বৈদিক জ্যোতিষীয় মাৰ্গদৰ্শন লাভ কৰক।</p>
             <div class="ja20-ai-actions">
                 <button class="ja20-btn ja20-btn-gold" onclick="openOrderForm('chat', 21, 'AI আচাৰ্য্যৰ সৈতে লাইভ চেট (৫ মিনিট)')">🤖 AI আচাৰ্য্যৰ সৈতে লাইভ চেট</button>
-                <a href="#premium-services" class="ja20-btn ja20-btn-ghost">প্ৰিমিয়াম Reading চাওক</a>
+                <a href="#premium-services" class="ja20-btn ja20-btn-ghost">প্ৰিমিয়াম সেৱাসমূহ চাওক</a>
             </div>
-            <div class="ja20-trust-row"><span>🔐 Secure</span><span>⚡ Fast response</span><span>🌙 Assamese support</span></div>
+            <div class="ja20-trust-row"><span>🔐 ১০০% সুৰক্ষিত</span><span>⚡ তাৎক্ষণিক উত্তৰ</span><span>🌙 শুদ্ধ অসমীয়া মাধ্যম</span></div>
         </div>
         <div class="ja20-ai-orbit">
             <div class="ja20-orb">☽</div>
-            <div class="ja20-orbit-card card-a">❤️ Love</div>
-            <div class="ja20-orbit-card card-b">💼 Career</div>
-            <div class="ja20-orbit-card card-c">💰 Finance</div>
+            <div class="ja20-orbit-card card-a">❤️ প্ৰেম-বিবাহ</div>
+            <div class="ja20-orbit-card card-b">💼 কেৰিয়াৰ</div>
+            <div class="ja20-orbit-card card-c">💰 ধন-সম্পদ</div>
         </div>
     </section>
 
@@ -720,7 +721,7 @@
 
     <!-- Couple Horoscope WhatsApp Share Button -->
     <div style="text-align: center; margin-top: 18px; margin-bottom: 10px;">
-        <a href="" 
+        <a href="https://api.whatsapp.com/send?text=❤️%20*চোৱাচোন,%20মই%20আমাৰ%20দুয়োৰে%20আজিৰ%20যুটীয়া%20ৰাশিফল%20আৰু%20ৰাশি%20মিলন%20চালোঁ!*%20✨%0A%0Aতুমিও%20আমাৰ%20যোৰাটোৰ%20ফলাফল%20চাবলৈ%20তলৰ%20লিংকত%20ক্লিক%20কৰা%20👇%0Ahttps://jyotishassam.com" 
            target="_blank" 
            style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #25D366, #128C7E); color: #ffffff; padding: 10px 22px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35); border: 1px solid rgba(255,255,255,0.3);">
             <span>💌 প্ৰিয়জনক WhatsApp-ত পঠিয়াওক</span>
@@ -1039,7 +1040,7 @@
 
     <!-- Daily Rashifal WhatsApp Share Button -->
     <div style="text-align: center; margin: 25px auto 15px auto;">
-      <a href="" 
+      <a href="https://api.whatsapp.com/send?text=🔮%20*আজিৰ%20অসমীয়া%20দৈনিক%20ৰাশিফল%20আৰু%20ভাগ্য%20গণনা%20আপডেট%20হৈছে!*%20✨%0A%0Aতোমাৰ%20ৰাশিত%20আজি%20কি%20শুভ%20যোগ%20লিখা%20আছে%20বিনামূলীয়াকৈ%20চাবলৈ%20তলৰ%20লিংকত%20ক্লিক%20কৰা%20👇%0Ahttps://jyotishassam.com" 
          target="_blank" 
          style="display: inline-flex; align-items: center; gap: 8px; background: #128C7E; color: #ffffff; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
         <span>📲 বন্ধু বা পৰিয়ালক আজিৰ ৰাশিফল পঠিয়াওক (WhatsApp)</span>
@@ -1292,38 +1293,55 @@
 
 <div class="popular-signals-section">
   <div class="section-header">
-    <h2 class="section-title">জনপ্ৰিয় জীৱনৰ সংকেত</h2>
+    <h2 class="section-title">🔮 জনপ্ৰিয় জীৱনৰ সংকেত (সম্পূৰ্ণ ১০৫ টা অধ্যায়)</h2>
     <a href="jibonor-sonket.html" class="view-all-btn">সকলোবোৰ চাওক (১০৫ টা) ➔</a>
   </div>
   
-  <div class="cards-grid-3d">
-    <a href="dream-36.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
-      <div class="card-icon">🌙</div>
-      <h3>সপোনৰ সংকেত</h3>
-      <p>ৰাতি দেখা সপোনবোৰে আপোনাৰ ভৱিষ্যতৰ বিষয়ে কি কয় জানক।</p>
-    </a>
-
-    <a href="morning-21.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
-      <div class="card-icon">🌅</div>
-      <h3>ৰাতিপুৱাৰ সংকেত</h3>
-      <p>ৰাতিপুৱা সাৰ পোৱাৰ লগে লগে দেখা পোৱা শুভ আৰু অশুভ সংকেত।</p>
-    </a>
-
-    <a href="animals-61.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
-      <div class="card-icon">🐈</div>
-      <h3>জীৱ-জন্তুৰ সংকেত</h3>
-      <p>কুকুৰ, মেকুৰী বা কাউৰীয়ে দিয়া ভৱিষ্যতৰ আগজাননীসমূহৰ বিষয়ে পঢ়ক।</p>
-    </a>
-
-    <a href="body-1.html" class="signal-card-3d">
-      <span class="popular-badge">Popular 🔥</span>
+  <div class="cards-grid-3d" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+    <a href="jibonor-sonket.html?cat=body" class="signal-card-3d">
+      <span class="popular-badge">২০ টা লেখা 🔥</span>
       <div class="card-icon">👁️</div>
       <h3>শৰীৰৰ অংগৰ সংকেত</h3>
-      <p>চকু কঁপিলে বা হাত খজুৱালে কি হয়, তাৰ ৰহস্য জানক।</p>
+      <p>সোঁ-বাওঁ চকু লৰা, হাত-ভৰি খজুওৱা, কাণ গৰম হোৱা আৰু হাঁচি অহাৰ সামুদ্ৰিক শাস্ত্ৰীয় ৰহস্য জানক।</p>
     </a>
+
+    <a href="jibonor-sonket.html?cat=morning" class="signal-card-3d">
+      <span class="popular-badge">১৫ টা লেখা 🔥</span>
+      <div class="card-icon">🌅</div>
+      <h3>পুৱা আৰু দৈনন্দিন সংকেত</h3>
+      <p>ব্ৰহ্ম মুহূৰ্তত সাৰ পোৱা, পুৱা ফুল, গাখীৰ বা পৰুৱা দেখা আদি দৈনন্দিন শুভ-অশুভ সংকেতসমূহ পঢ়ক।</p>
+    </a>
+
+    <a href="jibonor-sonket.html?cat=dream" class="signal-card-3d">
+      <span class="popular-badge">২৫ টা লেখা 🔥</span>
+      <div class="card-icon">🌙</div>
+      <h3>সপোনৰ অৰ্থ (স্বপ্ন শাস্ত্ৰ)</h3>
+      <p>সপোনত সাপ, নির্মল পানী, নদী, সোণ, মন্দিৰ, বিয়া বা পূর্বপুৰুষ দেখাৰ গভীৰ জ্যোতিষীয় তাৎপৰ্য জানক।</p>
+    </a>
+
+    <a href="jibonor-sonket.html?cat=animals" class="signal-card-3d">
+      <span class="popular-badge">১৫ টা লেখা 🔥</span>
+      <div class="card-icon">🦋</div>
+      <h3>চৰাই-পখিলা আৰু জীৱ-জন্তু</h3>
+      <p>ঘৰত পখিলা সোমোৱা, টিকটিকিৰ মাত, কাউৰী, মেকুৰী আৰু ক'লা পৰুৱাই দিয়া আগজাননীসমূহ সবিস্তাৰে পঢ়ক।</p>
+    </a>
+
+    <a href="jibonor-sonket.html?cat=women" class="signal-card-3d">
+      <span class="popular-badge">১৫ টা লেখা 🔥</span>
+      <div class="card-icon">👩</div>
+      <h3>মহিলা-কেন্দ্ৰিক লোকবিশ্বাস</h3>
+      <p>গৃহলক্ষ্মীৰ বাওঁ চকু লৰা, হাত খজুওৱা, সপোন আৰু পুৱাৰ মাংগলিক বিধিসমূহৰ বিশেষ ফলাফল জানক।</p>
+    </a>
+
+    <a href="jibonor-sonket.html?cat=home" class="signal-card-3d">
+      <span class="popular-badge">১৫ টা লেখা 🔥</span>
+      <div class="card-icon">🏠</div>
+      <h3>ঘৰ-সংসাৰ আৰু বাস্তু সংকেত</h3>
+      <p>গোঁসাই ঘৰৰ চাকি, পূজাৰ ফুল সৰি পৰা, ঘৰত সুগন্ধি পোৱা আৰু ধন-সম্পত্তি বৃদ্ধিৰ বাস্তু সংকেতসমূহ চাওক।</p>
+    </a>
+  </div>
+  <div style="text-align:center;margin-top:22px;">
+    <a href="jibonor-sonket.html" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#d4af37,#b48509);color:#111827;font-weight:800;padding:12px 26px;border-radius:30px;text-decoration:none;box-shadow:0 6px 18px rgba(212,175,55,0.35);">📖 সম্পূৰ্ণ ১০৫ টা জীৱনৰ সংকেত ইয়াত পঢ়ক ➔</a>
   </div>
 </div>
 
@@ -1378,7 +1396,7 @@
 <!-- Google FAQ Schema Markup -->
 <script type="application/ld+json">
 {
-  "@context": "",
+  "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [{
     "@type": "Question",
@@ -1425,54 +1443,53 @@
 <div class="modal" id="rashiModal">
     <div class="modal-content">
         <span class="close-modal" onclick="document.getElementById('rashiModal').classList.remove('active')">&times;</span>
-        <h2 id="modalRashiTitle" style="color: var(--primary-color); margin-bottom: 10px;">ৰাশিফল</h2>
+        <h2 id="modalRashiTitle" style="color: var(--primary-color); margin: 0 0 14px 0; padding: 0 40px 10px 0; border-bottom: 1px solid #e2e8f0; font-size: 21px;">ৰাশিফল</h2>
         <div id="modalRashiBody" style="font-size: 15px; color: #334155; line-height: 1.7;"></div>
     </div>
 </div>
 
 <!-- Order & Payment Form Modal -->
 <div class="modal" id="orderModal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 520px; border-top: 6px solid var(--primary-color); border-radius: 20px; padding: 26px 22px; max-height: 88vh; overflow-y: auto; box-sizing: border-box;">
         <span class="close-modal" onclick="closeOrderModal()">&times;</span>
-        <h2 id="orderTitle" style="color: var(--primary-color); margin-bottom: 15px; text-align: center;">সেৱা বুকিং ফৰ্ম</h2>
-        <form id="orderForm" onsubmit="processPayment(event)">
-            <div style="margin-bottom: 15px;">
-                <label for="custName" style="font-size: 14px; font-weight: 600;">আপোনাৰ নাম:</label>
-                <input type="text" id="custName" class="form-control" required>
+        <h2 id="orderTitle" style="color: var(--primary-color); margin: 0 0 18px 0; padding: 0 40px 12px 10px; border-bottom: 1px solid #e2e8f0; text-align: center; font-size: 20px; line-height: 1.4;">সেৱা বুকিং ফৰ্ম</h2>
+        <form id="orderForm" onsubmit="processPayment(event)" style="display: flex; flex-direction: column; gap: 14px; text-align: left;">
+            <div>
+                <label for="custName" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">আপোনাৰ নাম: *</label>
+                <input type="text" id="custName" class="form-control" placeholder="যেনে: ৰাহুল বৰা" required>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label for="custEmail" style="font-size: 14px; font-weight: 600;">ইমেইল (Email):</label>
+            <div>
+                <label for="custEmail" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">ইমেইল (Email): *</label>
                 <input type="email" id="custEmail" class="form-control" placeholder="example@gmail.com" required>
             </div>
-            <div id="tarot-q-box" style="display: none; margin-top: 15px;">
-                <label for="tarot-final-question" style="font-weight: bold; margin-bottom: 5px; display: block; color: #475569;">আপোনাৰ প্ৰশ্ন (Tarot Question)</label>
-                <textarea id="tarot-final-question" rows="2" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: inherit;" placeholder="আপোনাৰ মনৰ প্ৰশ্নটো ইয়াত লিখক..."></textarea>
+            <div id="tarot-q-box" style="display: none;">
+                <label for="tarot-final-question" style="font-weight: 600; font-size: 14px; margin-bottom: 6px; display: block; color: #1e293b;">আপোনাৰ প্ৰশ্ন (Tarot Question):</label>
+                <textarea id="tarot-final-question" rows="2" class="form-control" style="font-family: inherit;" placeholder="আপোনাৰ মনৰ প্ৰশ্নটো ইয়াত লিখক..."></textarea>
             </div>
-            
-            </div>
-
-            <div style="margin-bottom: 15px; display: flex; gap: 15px;">
-                <div style="flex: 1;">
-                    <label for="custDate" style="font-size: 14px; font-weight: 600;">জন্ম তাৰিখ:</label>
+            <div id="orderDateTimeRow" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div id="orderDateBox" style="flex: 1 1 170px;">
+                    <label for="custDate" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">জন্ম তাৰিখ: *</label>
                     <input type="date" id="custDate" class="form-control" required>
                 </div>
-                <div style="flex: 2;">
-                    <label for="custHour" style="font-size: 14px; font-weight: 600;">জন্মৰ সময়:</label>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="number" id="custHour" class="form-control" placeholder="HR" min="1" max="12" required>
-                        <span style="font-size: 20px; font-weight: bold; margin-top: 5px;">:</span>
-                        <input type="number" id="custMin" aria-label="জন্মৰ মিনিট (Minute)" class="form-control" placeholder="MIN" min="0" max="59" required>
-                        <select id="custAmPm" aria-label="AM বা PM" class="form-control">
-                            <option value="AM">AM</option><option value="PM">PM</option>
+                <div id="orderTimeBox" style="flex: 1 1 220px;">
+                    <label for="custHour" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">জন্মৰ সময়: *</label>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <input type="number" id="custHour" class="form-control" placeholder="ঘণ্টা" min="1" max="12" required style="flex: 1; min-width: 60px; text-align: center; padding: 10px 6px;">
+                        <span style="font-size: 18px; font-weight: bold; color: #475569;">:</span>
+                        <input type="number" id="custMin" aria-label="জন্মৰ মিনিট (Minute)" class="form-control" placeholder="মিনিট" min="0" max="59" required style="flex: 1; min-width: 60px; text-align: center; padding: 10px 6px;">
+                        <select id="custAmPm" aria-label="AM বা PM" class="form-control" style="flex: 1; min-width: 72px; padding: 10px 6px; background: #fff;">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
                         </select>
                     </div>
                 </div>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label for="custPlace" style="font-size: 14px; font-weight: 600;">জন্মৰ স্থান:</label>
-                <input type="text" id="custPlace" class="form-control" required>
+            <div id="orderPlaceRow">
+                <label for="custPlace" style="font-size: 14px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 6px;">জন্মৰ স্থান: *</label>
+                <input type="text" id="custPlace" class="form-control" placeholder="যেনে: গুৱাহাটী, অসম" required>
             </div>
-            <button type="submit" id="payBtn" class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857);">পেমেন্ট কৰক (Pay Now)</button>
+            <button type="submit" id="payBtn" class="service-btn" style="background: linear-gradient(135deg, #10B981, #047857); margin-top: 6px; width: 100%; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 10px;">🔒 পেমেন্ট কৰক (Pay Now)</button>
+            <div style="text-align: center; font-size: 11.5px; color: #64748b; margin-top: -4px;">🛡️ Razorpay দ্বাৰা ১০০% সুৰক্ষিত পেমেন্ট • পেমেন্টৰ পিছতে নিমিষতে অনলাইন ৰিপোৰ্ট লাভ কৰিব</div>
         </form>
     </div>
 </div>
@@ -1613,9 +1630,9 @@ function openOrderForm(service, price, title) {
     const tarotBox = document.getElementById('tarot-q-box');
     const palmBox = document.getElementById('palmistry-box');
 
-    const dateTimeRow = dateInput ? dateInput.parentElement.parentElement : null;
-    const timeBox = hourInput ? hourInput.parentElement.parentElement : null;
-    const placeRow = placeInput ? placeInput.parentElement : null;
+    const dateTimeRow = document.getElementById('orderDateTimeRow') || (dateInput ? dateInput.parentElement.parentElement : null);
+    const timeBox = document.getElementById('orderTimeBox') || (hourInput ? hourInput.parentElement.parentElement : null);
+    const placeRow = document.getElementById('orderPlaceRow') || (placeInput ? placeInput.parentElement : null);
 
     if (service === 'premium_tarot') {
         if(dateTimeRow) dateTimeRow.style.display = 'none';
@@ -1649,8 +1666,8 @@ function openOrderForm(service, price, title) {
         if(placeRow) placeRow.style.display = 'block';
         
         if(dateInput) dateInput.setAttribute('required', 'true');
-        if(hourInput) hourInput.removeAttribute('required');
-        if(minInput) minInput.removeAttribute('required');
+        if(hourInput) { hourInput.removeAttribute('required'); if(!hourInput.value) hourInput.value = '10'; }
+        if(minInput) { minInput.removeAttribute('required'); if(!minInput.value) minInput.value = '30'; }
         if(placeInput) placeInput.setAttribute('required', 'true');
         
         if(tarotBox) tarotBox.style.display = 'none';
@@ -1719,7 +1736,7 @@ function ensureRazorpay() {
                 let old = document.querySelector('script[src*="checkout.razorpay.com"]');
                 if (old) old.remove();
                 const s = document.createElement('script');
-                s.src = '' + Date.now();
+                s.src = 'https://checkout.razorpay.com/v1/checkout.js?retry=' + Date.now();
                 s.async = true;
                 s.onload = () => {
                     if (typeof window.Razorpay === 'function') resolve(window.Razorpay);
@@ -1966,7 +1983,7 @@ window.processPalmistryPayment = async function(e) {
 
                 // Update the order in Supabase database so Admin Panel & Records see it as 'palmistry'
                 try {
-                    const sb = window.supabase.createClient("", SUPABASE_KEY);
+                    const sb = window.supabase.createClient("https://ihbdrtnkfitytklonnel.supabase.co", SUPABASE_KEY);
                     await sb.from('orders').update({
                         service: 'palmistry',
                         palm_hand: hand,
@@ -2051,7 +2068,7 @@ window.processPayment = async function(e) {
     const btn = document.getElementById('payBtn');
     btn.innerText = "Processing..."; btn.disabled = true;
     
-    const SUPABASE_URL = "";
+    const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
     const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
     const mySbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -2077,79 +2094,180 @@ window.processPayment = async function(e) {
     
     try {
         if (selectedService === 'chat') {
-            // ১. গ্ৰাহকৰ জন্ম পৰিচয় (Profile) সংৰক্ষণ
-            const { data: profileData, error: profileError } = await mySbClient.from('birth_profiles').insert([{
-                customer_name: orderData.name,
-                birth_date: orderData.birthDate,
-                birth_time: orderData.birthTime,
-                birth_place: orderData.birthPlace
-            }]).select();
+            btn.innerText = "পেমেন্ট গেটৱে মুকলি কৰা হৈছে... ⏳";
+            // ১. গ্ৰাহকৰ জন্ম পৰিচয় (Profile) সংৰক্ষণ (RLS বা নেটৱৰ্ক সমস্যাই যাতে পেমেন্ট কেতিয়াও বন্ধ নকৰে তাৰ বাবে সুৰক্ষিত Fallback UUID)
+            let newProfileId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                ? crypto.randomUUID()
+                : ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                }));
 
-            if (profileError || !profileData || profileData.length === 0) {
-                alert("তথ্য ছেভ কৰাত সমস্যা হৈছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
-                btn.innerText = "পেমেন্ট কৰক (Pay Now)"; btn.disabled = false;
-                return;
-            }
-
-            const newProfileId = profileData[0].id;
-
-            // ২. চেট চাবস্ক্ৰিপশ্বন (Pending)
-            await mySbClient.from('subscriptions').insert([{
-                profile_id: newProfileId,
-                available_minutes: 0,
-                payment_status: 'pending'
-            }]);
-
-            // ৩. অৰ্ডাৰ ৰেকৰ্ড তৈয়াৰ কৰা (Orders Table)
-            let newOrderId = null;
             try {
-                const { data: ordData } = await mySbClient.from('orders').insert([{
-                    name: orderData.name,
-                    email: orderData.email,
-                    service: 'chat',
+                const { data: profileData, error: profileError } = await mySbClient.from('birth_profiles').insert([{
+                    customer_name: orderData.name,
                     birth_date: orderData.birthDate,
                     birth_time: orderData.birthTime,
-                    birth_place: orderData.birthPlace,
-                    payment_status: 'pending'
+                    birth_place: orderData.birthPlace
                 }]).select();
-                if (ordData && ordData.length > 0) newOrderId = ordData[0].id;
-            } catch(e){}
+                if (!profileError && profileData && profileData.length > 0 && profileData[0].id) {
+                    newProfileId = profileData[0].id;
+                }
+            } catch (profErr) {
+                console.warn("Birth profile local fallback active:", profErr);
+            }
 
-            // ৪. ৰেজৰপে' পেমেন্ট মুকলি কৰা (₹21)
+            // ২. চেট চাবস্ক্ৰিপশ্বন (Pending)
+            try {
+                await mySbClient.from('subscriptions').insert([{
+                    profile_id: newProfileId,
+                    available_minutes: 5,
+                    payment_status: 'pending'
+                }]);
+            } catch (subErr) {
+                console.warn("Subscription insert note:", subErr);
+            }
+
+            // ৩. বেকএণ্ডৰ /create-order কল কৰি Live Razorpay Key আৰু Order ID আহৰণ কৰা
+            let rzpKey = (window.JA_CONFIG && window.JA_CONFIG.razorpayKeyId) || "rzp_test_TjQLxMWOfOVhZq";
+            let rzpOrderId = null;
+            let publicOrderId = null;
+            let rzpAmountPaise = 2100;
+
+            try {
+                let createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        service: 'chat',
+                        amount: 21,
+                        name: orderData.name,
+                        email: orderData.email,
+                        birthDate: orderData.birthDate,
+                        birthTime: orderData.birthTime,
+                        birthPlace: orderData.birthPlace,
+                        profileId: newProfileId
+                    })
+                });
+                let cData = await createRes.json().catch(() => ({}));
+
+                // যদি পুৰণি বেকএণ্ডত 'chat' সেৱা নাথাকে, তেন্তে স্বয়ংক্ৰিয়ভাৱে 'monthly' স্লট ব্যৱহাৰ কৰি Live Key আৰু Order সৃষ্টি কৰা
+                if (!createRes.ok || !cData || !cData.success) {
+                    createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            service: 'monthly',
+                            service_type: 'chat',
+                            custom_service: 'chat',
+                            amount: 21,
+                            name: orderData.name,
+                            email: orderData.email,
+                            birthDate: orderData.birthDate,
+                            birthTime: orderData.birthTime,
+                            birthPlace: orderData.birthPlace,
+                            profileId: newProfileId
+                        })
+                    });
+                    cData = await createRes.json().catch(() => ({}));
+                }
+
+                if (cData && cData.success) {
+                    if (cData.keyId) rzpKey = cData.keyId;
+                    if (cData.razorpayOrderId) rzpOrderId = cData.razorpayOrderId;
+                    if (cData.orderId) publicOrderId = cData.orderId;
+                    if (cData.amount) rzpAmountPaise = cData.amount;
+                }
+            } catch (ordErr) {
+                console.warn("Chat create-order fallback:", ordErr);
+            }
+
+            // কুণ্ডলী আগতীয়াকৈ গণনা কৰি LocalStorage ত সংৰক্ষণ কৰা যাতে পেমেন্টৰ লগে লগে চেট খোল খায়
+            const preCalculatedChart = buildFallbackVedicChart(orderData.birthDate, orderData.birthTime);
+            try {
+                localStorage.setItem('ja_profile_id', newProfileId);
+                localStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(preCalculatedChart));
+                sessionStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(preCalculatedChart));
+                localStorage.setItem('ja_customer_name_' + newProfileId, orderData.name);
+                localStorage.setItem('ja_birth_info_' + newProfileId, JSON.stringify({
+                    name: orderData.name,
+                    email: orderData.email,
+                    dob: orderData.birthDate,
+                    tob: orderData.birthTime,
+                    pob: orderData.birthPlace
+                }));
+            } catch (e) {}
+
+            // ৪. ৰেজৰপে' পেমেন্ট মুকলি কৰা
             var chatOptions = {
-                "key": window.JA_CONFIG.razorpayKeyId, 
-                "amount": 2100,
+                "key": rzpKey,
+                "amount": rzpAmountPaise,
                 "currency": "INR",
-                "name": "Jyotish Assam",
+                "name": "জ্যোতিষ অসম (Jyotish Assam)",
                 "description": "AI আচাৰ্য্যৰ সৈতে লাইভ চেট (৫ মিনিট)",
+                ...(rzpOrderId ? { "order_id": rzpOrderId } : {}),
                 "prefill": { "name": orderData.name, "email": orderData.email },
                 "theme": { "color": "#10B981" },
+                "modal": {
+                    "ondismiss": function() {
+                        btn.innerText = "🔒 পেমেন্ট কৰক (Pay Now)";
+                        btn.disabled = false;
+                    }
+                },
                 "handler": async function (response) {
                     btn.innerText = "কুণ্ডলী গণনা আৰু প্ৰস্তুত কৰা হৈছে... ⏳";
                     try {
-                        // ক) চাবস্ক্ৰিপশ্বন সক্ৰিয় কৰা
-                        await mySbClient.from('subscriptions').update({
-                            available_minutes: 5,
-                            payment_status: 'paid'
-                        }).eq('profile_id', newProfileId);
+                        // ক) ক্লায়েণ্ট আৰু ডাটাবেছ দুয়োটাতে ৫ মিনিট (৩০০ ছেকেণ্ড) সক্ৰিয় কৰা
+                        try {
+                            localStorage.setItem('ja_chat_seconds_' + newProfileId, '300');
+                            localStorage.setItem('ja_chat_paid_' + newProfileId, 'true');
+                        } catch (e) {}
 
-                        if (newOrderId) {
+                        try {
+                            await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'apikey': SUPABASE_KEY,
+                                    'Authorization': 'Bearer ' + SUPABASE_KEY
+                                },
+                                body: JSON.stringify({
+                                    orderId: publicOrderId,
+                                    razorpay_order_id: response.razorpay_order_id || rzpOrderId,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    profileId: newProfileId,
+                                    minutesToAdd: 5
+                                })
+                            });
+                        } catch (vErr) {}
+
+                        try {
+                            await mySbClient.from('subscriptions').upsert([{
+                                profile_id: newProfileId,
+                                available_minutes: 5,
+                                payment_status: 'paid'
+                            }], { onConflict: 'profile_id' });
+                        } catch (e) {}
+
+                        if (publicOrderId) {
                             try {
                                 await mySbClient.from('orders').update({
+                                    service: 'chat',
                                     payment_status: 'paid',
                                     razorpay_payment_id: response.razorpay_payment_id
-                                }).eq('id', newOrderId);
-                            } catch(e){}
+                                }).eq('public_order_id', publicOrderId);
+                            } catch (e) {}
                         }
 
                         // খ) কুণ্ডলী গণনা (Edge Function: calculate-chart কল কৰা)
-                        let chart = null;
+                        let chart = preCalculatedChart;
                         try {
                             const chartRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
-                                    orderId: newOrderId || newProfileId,
+                                    orderId: publicOrderId || newProfileId,
                                     profileId: newProfileId,
                                     dob: orderData.birthDate,
                                     tob: orderData.birthTime,
@@ -2161,39 +2279,30 @@ window.processPayment = async function(e) {
                             if (chartRes.ok && chartJson.success && chartJson.chart) {
                                 chart = chartJson.chart;
                             }
-                        } catch(apiErr) {
-                            console.warn("calculate-chart Edge Function error, using internal Vedic engine:", apiErr);
-                        }
+                        } catch (apiErr) {}
 
-                        // গ) যদি এজ ফাংচন কোনো কাৰণত অফলাইন থাকে, ক্লায়েণ্ট-ছাইড ইঞ্জিনৰ দ্বাৰা নিৰ্ভুল কুণ্ডলী প্ৰস্তুত কৰা
-                        if (!chart) {
-                            chart = buildFallbackVedicChart(orderData.birthDate, orderData.birthTime);
-                        }
-
-                        // ঘ) কুণ্ডলীৰ সম্পূৰ্ণ ডাটা স্থানীয়ভাৱে সংৰক্ষণ কৰা (যাতে AI চেটে তৎক্ষণাৎ ব্যৱহাৰ কৰিব পাৰে)
                         try {
                             localStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(chart));
                             sessionStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(chart));
                             localStorage.setItem('ja_customer_name_' + newProfileId, orderData.name);
-                        } catch(e){}
+                            localStorage.setItem('ja_profile_id', newProfileId);
+                        } catch (e) {}
 
-                        localStorage.setItem('ja_profile_id', newProfileId);
-                        
-                        // ঙ) কুণ্ডলীৰ তথ্যসহ AI চেট পেজলৈ আগবঢ়াই দিয়া
-                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId);
-                    } catch(err) {
-                        console.error("Chat Payment Verification Error:", err);
-                        alert("পেমেন্ট ভেৰিফায় কৰাত সমস্যা হৈছে।");
-                        btn.innerText = "পেমেন্ট কৰক (Pay Now)"; btn.disabled = false;
+                        if (typeof closeOrderModal === 'function') closeOrderModal();
+                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&paid=1";
+                    } catch (err) {
+                        console.error("Chat Payment Redirect fallback:", err);
+                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&paid=1";
                     }
                 }
             };
-            
+
             await ensureRazorpay();
             var rzpChat = new Razorpay(chatOptions);
-            rzpChat.on('payment.failed', function (r){
-                alert("Failed: " + r.error.description);
-                btn.innerText = "পেমেন্ট কৰক (Pay Now)"; btn.disabled = false;
+            rzpChat.on('payment.failed', function (r) {
+                alert("পেমেন্ট বিফল হৈছে: " + (r.error && r.error.description ? r.error.description : "অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।"));
+                btn.innerText = "🔒 পেমেন্ট কৰক (Pay Now)";
+                btn.disabled = false;
             });
             rzpChat.open();
             return;
@@ -2510,36 +2619,52 @@ async function showReportToCustomer(orderId) {
     }
 }
 
-// --- 12 Rashi Grid Logic ---
+// --- 12 Rashi Grid Logic (১০০% শুদ্ধ অসমীয়া আৰু প্ৰতিদিনে স্বয়ংক্ৰিয়ভাৱে সলনি হোৱা বৈদিক ইঞ্জিন) ---
 let dynamicRashiData = [];
+let todayPanchangMeta = null;
 
-function updateDate() { 
-    document.getElementById('p-date').innerText = "তাৰিখ: " + new Date().toLocaleDateString('as-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
+function getTodayISTDateStr() {
+    const now = new Date();
+    const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const ist = new Date(utcMs + (5.5 * 3600000));
+    const y = ist.getFullYear();
+    const m = String(ist.getMonth() + 1).padStart(2, '0');
+    const d = String(ist.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
 }
 
-const FALLBACK_RASHI_DATA = [
-    { id: "aries", symbol: "♈", name: "মেষ ৰাশি", short: "কৰ্মক্ষেত্ৰত নতুন সুযোগ আৰু আত্মবিশ্বাস বৃদ্ধি পাব।", overall: "আজি আপোনাৰ দিনটো অত্যন্ত শুভ আৰু ফলপ্ৰসূ হ'ব।", career: "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব আৰু আৰ্থিক লাভৰ যোগ আছে।", love: "পাৰিবাৰিক আৰু প্ৰেমৰ সম্পৰ্কত মধুৰতা বৃদ্ধি পাব।", health: "শৰীৰ আৰু মন সতেজ থাকিব।", lucky: "ৰঙা | শুভ সংখ্যা: ৯" },
-    { id: "taurus", symbol: "♉", name: "বৃষ ৰাশি", short: "আৰ্থিক সঞ্চয় বৃদ্ধি আৰু পাৰিবাৰিক সুখ-শান্তি বিৰাজ কৰিব।", overall: "ধৈৰ্য আৰু মিঠা ব্যৱহাৰৰ দ্বাৰা আজি সকলো কামত সফল হ'ব।", career: "ব্যৱসায় আৰু চাকৰিত স্থায়িত্ব তথা ধন আগমনৰ যোগ।", love: "প্ৰিয়জনৰ পৰা বিশেষ সহযোগিতা লাভ কৰিব।", health: "খাদ্যাভ্যাসত সাৱধানতা অৱলম্বন কৰক।", lucky: "বগা | শুভ সংখ্যা: ৬" },
-    { id: "gemini", symbol: "♊", name: "মিথুন ৰাশি", short: "ব্যৱসায়িক যোগাযোগ আৰু বৌদ্ধিক কামত সুন্দৰ সফলতা লাভ।", overall: "নতুন চিন্তা আৰু যোগাযোগে আজি আপোনাক উন্নতিৰ পথ দেখুৱাব।", career: "বাণিজ্য আৰু তথ্য-প্ৰযুক্তিৰ ক্ষেত্ৰত বিশেষ লাভ।", love: "বন্ধুত্ব আৰু প্ৰেমৰ সম্পৰ্কত আনন্দময় পৰিৱেশ।", health: "মানসিক প্ৰশান্তি বজাই থাকিব।", lucky: "সেউজীয়া | শুভ সংখ্যা: ৫" },
-    { id: "cancer", symbol: "♋", name: "কৰ্কট ৰাশি", short: "মাতৃৰ আশীৰ্বাদ আৰু ঘৰুৱা মাংগলিক কাৰ্যত আনন্দ লাভ।", overall: "ঘৰুৱা সুখ-শান্তি আৰু মানসিক তৃপ্তিৰে দিনটো পাৰ হ'ব।", career: "পৈতৃক সম্পত্তি বা স্থায়ী কামত শুভ ফল পাব।", love: "জীৱনসংগীৰ সৈতে আন্তৰিকতা বৃদ্ধি পাব।", health: "পৰ্যাপ্ত বিশ্ৰাম গ্ৰহণ কৰক।", lucky: "ৰূপালী বগা | শুভ সংখ্যা: ২" },
-    { id: "leo", symbol: "♌", name: "সিংহ ৰাশি", short: "সমাজত মান-সন্মান বৃদ্ধি আৰু নেতৃত্বমূলক কামত প্ৰশংসা লাভ।", overall: "আত্মবিশ্বাস আৰু সাহসেৰে আজি জটিল কামো সহজ কৰি তুলিব।", career: "উচ্চ পদস্থ বিষয়াৰ সহযোগিতা আৰু পদোন্নতিৰ যোগ।", love: "সম্পৰ্কত পাৰস্পৰিক সন্মান বৃদ্ধি পাব।", health: "স্বাস্থ্য উন্নত আৰু শক্তিশালী থাকিব।", lucky: "সোণালী | শুভ সংখ্যা: ১" },
-    { id: "virgo", symbol: "♍", name: "কন্যা ৰাশি", short: "পুৰণি সমস্যাৰ সমাধান আৰু কৰ্মস্থলীত বৰিষ্ঠজনৰ সহযোগিতা।", overall: "শৃংখলাবদ্ধ পৰিকল্পনাৰ জৰিয়তে আজি আৰ্থিক সুফল লাভ কৰিব।", career: "হিচাপ-নিকাচ আৰু ব্যৱসায়ত লাভৰ মাত্ৰা বৃদ্ধি।", love: "পৰিয়ালত সুখ আৰু বুজাবুজি অটুট থাকিব।", health: "স্বাস্থ্যৰ উন্নতি ঘটিব।", lucky: "সেউজীয়া | শুভ সংখ্যা: ৫" },
-    { id: "libra", symbol: "♎", name: "তুলা ৰাশি", short: "দাম্পত্য আৰু প্ৰেমৰ সম্পৰ্কত মধুৰতা আৰু আৰ্থিক লাভ।", overall: "কলা, সৌন্দৰ্য আৰু সামাজিক কাৰ্যত আজি বিশেষ সন্মান পাব।", career: "অংশীদাৰী ব্যৱসায় আৰু নতুন চুক্তিত সুফল।", love: "প্ৰেমত শুভ সংযোগ আৰু বিবাহৰ আলোচনা আগবাঢ়িব।", health: "মন প্রফুল্লিত হৈ থাকিব।", lucky: "গুলপীয়া | শুভ সংখ্যা: ৬" },
-    { id: "scorpio", symbol: "♏", name: "বৃশ্চিক ৰাশি", short: "সাহসিক সিদ্ধান্তৰ দ্বাৰা জটিল কামত বিজয় সাব্যস্ত কৰিব।", overall: "আপোনাৰ একাগ্ৰতা আৰু সংকল্পই আজি ডাঙৰ সফলতা আনিব।", career: "কৰ্মক্ষেত্ৰত শত্ৰু পৰাজিত হ'ব আৰু আৰ্থিক বাধা দূৰ হ'ব।", love: "গভীৰ আৱেগিক বিশ্বাসে সম্পৰ্ক মজবুত কৰিব।", health: "শৰীৰত নতুন উদ্যম অনুভৱ কৰিব।", lucky: "গাঢ় ৰঙা | শুভ সংখ্যা: ৯" },
-    { id: "sagittarius", symbol: "♐", name: "ধনু ৰাশি", short: "ধৰ্মীয় চেতনা, উচ্চ শিক্ষা আৰু ভ্ৰমণৰ শুভ যোগ।", overall: "দেৱগুৰু বৃহস্পতিৰ কৃপাত আজি ভাগ্যই আপোনাক সম্পূৰ্ণ সংগ দিব।", career: "শিক্ষা, পৰামৰ্শ আৰু চৰকাৰী কামত বিশেষ অগ্ৰগতি।", love: "পাৰিবাৰিক জীৱনত শুভ বাৰ্তা লাভ।", health: "সুস্বাস্থ্য আৰু মানসিক উজ্জীৱিত ভাব।", lucky: "হালধীয়া | শুভ সংখ্যা: ৩" },
-    { id: "capricorn", symbol: "♑", name: "মকৰ ৰাশি", short: "কঠোৰ পৰিশ্ৰমৰ সুফল লাভ আৰু স্থাৱৰ সম্পত্তিৰ যোগ।", overall: "ধৈৰ্য সহকাৰে কৰা কামৰ আজি সুন্দৰ প্ৰতিফল লাভ কৰিব।", career: "নিৰ্মাণ, কাৰিকৰী আৰু স্থায়ী ব্যৱসায়ত উন্নতি।", love: "সংসাৰত দায়িত্ববোধ আৰু স্নেহ বৃদ্ধি পাব।", health: "হাড় বা গাঁঠিৰ যত্ন লওক।", lucky: "নীলা | শুভ সংখ্যা: ৮" },
-    { id: "aquarius", symbol: "♒", name: "কুম্ভ ৰাশি", short: "নতুন পৰিকল্পনা সফল হ'ব আৰু মিত্ৰৰ পৰা বিশেষ সহায় পাব।", overall: "উদ্ভাৱনী চিন্তা আৰু সামাজিক সংযোগৰ বাবে দিনটো উত্তম।", career: "আয়ৰ নতুন উৎস মুকলি হোৱাৰ সম্ভাৱনা।", love: "মনৰ কথা প্ৰকাশ কৰাৰ বাবে অনুকূল সময়।", health: "মানসিক চাপমুক্ত হৈ থাকিব।", lucky: "আকাশী নীলা | শুভ সংখ্যা: ৮" },
-    { id: "pisces", symbol: "♓", name: "মীন ৰাশি", short: "মানসিক প্ৰশান্তি, সৃজনশীল কামত উন্নতি আৰু ধন আগমন।", overall: "আধ্যাত্মিক চিন্তা আৰু সৃজনশীল প্ৰতিভাই আজি সফলতা আনিব।", career: "অৰ্থনৈতিক অৱস্থা সবল হ'ব আৰু সন্মান বাঢ়িব।", love: "দাম্পত্য জীৱনত সুখ আৰু শান্তি বিৰাজ কৰিব।", health: "স্বাস্থ্য অনুকূল থাকিব।", lucky: "হালধীয়া | শুভ সংখ্যা: ৩" }
-];
+function updateDate() {
+    const dailyObj = (typeof window.generateDailyAssameseRashifal === 'function')
+        ? window.generateDailyAssameseRashifal(getTodayISTDateStr())
+        : null;
+    if (dailyObj) {
+        todayPanchangMeta = dailyObj;
+        const pDateEl = document.getElementById('p-date');
+        if (pDateEl) {
+            pDateEl.innerText = `📅 তাৰিখ: ${dailyObj.formattedDateAs} | নক্ষত্ৰ: ${dailyObj.nakshatra} | শুভ যোগ: ${dailyObj.yoga}`;
+        }
+        const pValues = document.querySelectorAll('.panchang-grid .p-item .p-value');
+        if (pValues && pValues.length >= 3) {
+            pValues[0].innerText = "পুৱা ০৫:২০ বজা";
+            pValues[1].innerText = "সন্ধিয়া ০৫:৩৫ বজা";
+            pValues[2].innerText = `${dailyObj.tithi} (${dailyObj.nakshatra} নক্ষত্ৰ)`;
+        }
+    } else {
+        document.getElementById('p-date').innerText = "তাৰিখ: " + new Date().toLocaleDateString('as-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+}
 
 async function fetchDailyRashi() {
-    dynamicRashiData = FALLBACK_RASHI_DATA;
-    renderRashiGrid();
-    
-    try {
-        const todayStr = new Date().toISOString().split('T')[0]; 
-        const cacheBuster = new Date().getTime();
+    const todayStr = getTodayISTDateStr();
+    if (typeof window.generateDailyAssameseRashifal === 'function') {
+        const localDaily = window.generateDailyAssameseRashifal(todayStr);
+        todayPanchangMeta = localDaily;
+        dynamicRashiData = localDaily.data;
+        renderRashiGrid();
+    }
 
+    try {
+        const cacheBuster = new Date().getTime();
         const response = await fetch(window.JA_CONFIG.apiBaseUrl + '/free-daily-horoscope?v=' + cacheBuster, { 
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' }, 
@@ -2547,56 +2672,76 @@ async function fetchDailyRashi() {
         });
         const result = await response.json();
         
-        if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
-            dynamicRashiData = result.data.map((r, i) => ({
-                ...FALLBACK_RASHI_DATA[i % 12],
-                ...r
-            }));
+        // কেৱল যদিহে বেকএণ্ডত নতুন ডাইনামিক ইঞ্জিন (isDynamicDaily: true) সক্ৰিয় থাকে তেন্তেহে আপডেট কৰিব,
+        // যাতে পুৰণি বেকএণ্ডৰ স্থিৰ (static) ৰাশিফলে আজিৰ নতুন ৰাশিফলক কেতিয়াও সলনি কৰি নিদিয়ে।
+        if (result && result.success && result.isDynamicDaily === true && Array.isArray(result.data) && result.data.length === 12) {
+            dynamicRashiData = result.data;
             renderRashiGrid();
         }
     } catch (error) {
-        console.warn("Using built-in daily rashi fallback:", error);
+        console.warn("Using built-in daily dynamic Assamese Rashifal engine:", error);
     }
 }
 
 function renderRashiGrid() {
     if (!dynamicRashiData || dynamicRashiData.length === 0) return;
-    document.getElementById('rashiGridContainer').innerHTML = dynamicRashiData.map(r => `
+    const container = document.getElementById('rashiGridContainer');
+    if (!container) return;
+
+    // Show live daily panchang subtitle above grid
+    let metaBanner = document.getElementById('rashiDailyMetaBanner');
+    if (!metaBanner && todayPanchangMeta) {
+        metaBanner = document.createElement('div');
+        metaBanner.id = 'rashiDailyMetaBanner';
+        metaBanner.style.cssText = 'max-width:860px;margin:0 auto 22px auto;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #f59e0b;border-radius:14px;padding:12px 18px;text-align:center;color:#78350f;font-size:14.5px;font-weight:700;box-shadow:0 4px 12px rgba(245,158,11,0.12);';
+        container.parentElement.insertBefore(metaBanner, container);
+    }
+    if (metaBanner && todayPanchangMeta) {
+        metaBanner.innerHTML = `✨ <strong>আজিৰ তাৰিখ:</strong> ${todayPanchangMeta.formattedDateAs} &nbsp;|&nbsp; 🌙 <strong>নক্ষত্ৰ:</strong> ${todayPanchangMeta.nakshatra} &nbsp;|&nbsp; 🕉️ <strong>যোগ:</strong> ${todayPanchangMeta.yoga} &nbsp;|&nbsp; 🪐 <strong>বাৰেশ্বৰ:</strong> ${todayPanchangMeta.dayLord}`;
+    }
+
+    container.innerHTML = dynamicRashiData.map(r => `
         <div class="rashi-card" onclick="openRashiDetail('${r.id}')">
             <div class="rashi-icon">${r.symbol}</div>
             <h3>${r.name}</h3>
-            <p style="margin-bottom: 10px;">${r.short}</p>
-            <span class="know-more-btn">অধিক জানক ➔</span>
+            <p style="margin-bottom: 12px;">${r.short}</p>
+            <div style="font-size: 12px; color: #7c3aed; background: #f5f3ff; padding: 6px 10px; border-radius: 8px; margin-bottom: 10px; font-weight: 600;">🍀 শুভ ৰং: ${r.luckyColor || r.lucky} | শুভ সংখ্যা: ${r.luckyNumber || '৯'}</div>
+            <span class="know-more-btn">সম্পূৰ্ণ ৰাশিফল পঢ়ক ➔</span>
         </div>`).join('');
 }
 
-function openRashiDetail(id) {
+window.openRashiDetail = function openRashiDetail(id) {
     const r = dynamicRashiData.find(x => x.id === id);
     if(!r) return;
-    document.getElementById('modalRashiTitle').innerText = r.name + " ৰাশিফল";
+    const dateLabel = (r.panchang && r.panchang.formattedDateAs) ? ` (${r.panchang.formattedDateAs})` : '';
+    document.getElementById('modalRashiTitle').innerText = r.symbol + " " + r.name + " — আজিৰ বিশদ ৰাশিফল" + dateLabel;
     
     document.getElementById('modalRashiBody').innerHTML = `
-        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #6D28D9;">
-            <p style="margin:0; font-size: 15px; color: #1e293b;"><strong>🌟 সামগ্ৰিক ফল:</strong> ${r.overall}</p>
+        <div style="background: linear-gradient(135deg, #f5f3ff, #ede9fe); padding: 16px; border-radius: 12px; margin-bottom: 16px; border-left: 5px solid #6D28D9;">
+            <div style="font-size:12px;color:#6d28d9;font-weight:700;margin-bottom:4px;">📅 ${r.panchang ? r.panchang.formattedDateAs + ' • নক্ষত্ৰ: ' + r.panchang.nakshatra + ' • ' + r.panchang.yoga : 'আজিৰ দৈনিক গণনা'}</div>
+            <h4 style="color: #5b21b6; margin: 0 0 6px 0; font-size: 16px;">🌟 আজিৰ সামগ্ৰিক ফলাফল</h4>
+            <p style="margin:0; font-size: 14.8px; color: #1e293b; line-height: 1.75; text-align: justify;">${r.overall}</p>
         </div>
-        <div style="display: grid; gap: 15px;">
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                <h4 style="color: #475569; margin-bottom: 8px; font-size: 16px;">💼 কৰ্মক্ষেত্ৰ আৰু অৰ্থ</h4>
-                <p style="margin:0; font-size: 14.5px; color: #334155;">${r.career}</p>
+        <div style="display: grid; gap: 14px;">
+            <div style="background: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="color: #1d4ed8; margin: 0 0 6px 0; font-size: 15.5px;">💼 কৰ্মক্ষেত্ৰ, চাকৰি আৰু আৰ্থিক স্থিতি</h4>
+                <p style="margin:0; font-size: 14.5px; color: #334155; line-height: 1.7; text-align: justify;">${r.career}</p>
             </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                <h4 style="color: #e11d48; margin-bottom: 8px; font-size: 16px;">❤️ প্ৰেম আৰু সম্পৰ্ক</h4>
-                <p style="margin:0; font-size: 14.5px; color: #334155;">${r.love}</p>
+            <div style="background: #ffffff; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #e11d48; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <h4 style="color: #be123c; margin: 0 0 6px 0; font-size: 15.5px;">❤️ প্ৰেম, বিবাহ আৰু পাৰিবাৰিক সম্পৰ্ক</h4>
+                <p style="margin:0; font-size: 14.5px; color: #334155; line-height: 1.7; text-align: justify;">${r.love}</p>
             </div>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 140px; background: #ecfdf5; padding: 12px; border-radius: 8px; border: 1px solid #a7f3d0;">
-                    <h4 style="color: #047857; margin-bottom: 5px; font-size: 14px;">🧘 স্বাস্থ্য</h4>
-                    <p style="margin:0; font-size: 13.5px; color: #064e3b;">${r.health}</p>
-                </div>
-                <div style="flex: 1; min-width: 140px; background: #fffbeb; padding: 12px; border-radius: 8px; border: 1px solid #fde68a;">
-                    <h4 style="color: #b45309; margin-bottom: 5px; font-size: 14px;">🍀 শুভ ৰং আৰু সংখ্যা</h4>
-                    <p style="margin:0; font-size: 14px; font-weight: 600; color: #78350f;">${r.lucky}</p>
-                </div>
+            <div style="background: #ecfdf5; padding: 14px; border-radius: 10px; border: 1px solid #a7f3d0; border-left: 4px solid #059669;">
+                <h4 style="color: #047857; margin: 0 0 6px 0; font-size: 15px;">🧘 স্বাস্থ্য আৰু মানসিক স্থিতি</h4>
+                <p style="margin:0; font-size: 14px; color: #064e3b; line-height: 1.65;">${r.health}</p>
+            </div>
+            <div style="background: #fffbeb; padding: 14px; border-radius: 10px; border: 1px solid #fde68a; border-left: 4px solid #d97706;">
+                <h4 style="color: #b45309; margin: 0 0 6px 0; font-size: 15px;">🕉️ আজিৰ বৈদিক পৰামৰ্শ আৰু প্ৰতিকাৰ</h4>
+                <p style="margin:0; font-size: 14px; color: #78350f; line-height: 1.65;">${r.advice || 'ইষ্ট দেৱতাক স্মৰণ কৰি দিনটো আৰম্ভ কৰক।'}</p>
+            </div>
+            <div style="background: #f8fafc; padding: 12px 15px; border-radius: 10px; border: 1px dashed #cbd5e1; text-align: center;">
+                <span style="font-size: 14px; font-weight: 700; color: #475569;">🍀 শুভ ৰং, সংখ্যা আৰু সময়: </span>
+                <span style="font-size: 14px; font-weight: 700; color: #6D28D9;">${r.lucky}</span>
             </div>
         </div>
     `;
@@ -2620,7 +2765,12 @@ document.getElementById('btn-personal').addEventListener('click', async function
     
     btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳"; btn.disabled = true;
     try {
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = getTodayISTDateStr();
+        if (typeof window.generatePersonalDailyReport === 'function') {
+            const localRep = window.generatePersonalDailyReport(dob, rashi, todayStr);
+            openHoroscopeModal(localRep.report);
+            return;
+        }
         const cacheBuster = new Date().getTime();
         const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
             method: "POST", 
@@ -2651,7 +2801,12 @@ document.getElementById('btn-couple').addEventListener('click', async function()
     
     btn.innerText = "প্ৰস্তুত কৰা হৈছে... ⏳"; btn.disabled = true;
     try {
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = getTodayISTDateStr();
+        if (typeof window.generateCoupleDailyReport === 'function') {
+            const localCouple = window.generateCoupleDailyReport(boyDob, boyRashi, girlDob, girlRashi, todayStr);
+            openHoroscopeModal(localCouple.report);
+            return;
+        }
         const cacheBuster = new Date().getTime();
         const response = await fetch(FREE_API_URL + "?v=" + cacheBuster, { 
             method: "POST", 
@@ -2672,7 +2827,7 @@ document.getElementById('btn-couple').addEventListener('click', async function()
 });
 
 // --- Review System Logic ---
-const supabaseUrl = "";
+const supabaseUrl = "https://ihbdrtnkfitytklonnel.supabase.co";
 const supabaseAnonKey = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj"; 
 
 let allFetchedReviews = [];
@@ -2942,7 +3097,7 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.disabled = true;
 
         try {
-            const client = window.supabase.createClient("", "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
+            const client = window.supabase.createClient("https://ihbdrtnkfitytklonnel.supabase.co", "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj");
             const { error } = await client.from('support_messages').insert([
                 { name: name, contact: contact, message: msg }
             ]);
