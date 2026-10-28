@@ -2220,6 +2220,10 @@ window.processPayment = async function(e) {
                         // ক) ক্লায়েণ্ট আৰু ডাটাবেছ দুয়োটাতে ৫ মিনিট (৩০০ ছেকেণ্ড) সক্ৰিয় কৰা
                         try {
                             localStorage.setItem('ja_chat_seconds_' + newProfileId, '300');
+                            localStorage.setItem('ja_active_timer_v7_' + newProfileId, '300');
+                            localStorage.setItem('ja_timer_finished_v7_' + newProfileId, 'no');
+                            localStorage.setItem('ja_active_timer_v7_' + newProfileId, '300');
+                            localStorage.setItem('ja_timer_finished_v7_' + newProfileId, 'no');
                             localStorage.setItem('ja_chat_paid_' + newProfileId, 'true');
                         } catch (e) {}
 
