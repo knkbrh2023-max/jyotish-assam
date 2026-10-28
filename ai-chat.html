@@ -25,7 +25,7 @@
         .recharge-btn { background: #10B981; color: white; border: none; padding: 7px 14px; border-radius: 20px; font-size: 12.5px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.22); }
         .recharge-btn:hover { background: #059669; }
 
-        #chatArea { flex: 1; overflow-y: auto; padding: 18px; background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); display: flex; flex-direction: column; gap: 12px; }
+        #chatArea { flex: 1; overflow-y: auto; padding: 18px 18px 34px 18px; background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); display: flex; flex-direction: column; gap: 12px; }
         .message {
             max-width: 85%;
             padding: 12px 16px;
@@ -175,7 +175,7 @@
     <script>
         
 // ============================================================================
-// জ্যোতিষ অসম — গভীৰ জন্ম কুণ্ডলী পঠন আৰু ১০০% শুদ্ধ অসমীয়া অ-পুনৰাবৃত্তিমূলক (Non-Repeating) জ্যোতিষ ইঞ্জিন
+// জ্যোতিষ অসম — গভীৰ জন্ম কুণ্ডলী পঠন আৰু বহু-বিষয়ক (Multi-Aspect) ১০০% শুদ্ধ অসমীয়া জ্যোতিষ ইঞ্জিন (v7)
 // ============================================================================
 (function(global) {
     const ASSAMESE_DIGITS = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
@@ -215,6 +215,28 @@
         Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু"
     };
 
+    // Vedic Planetary Dignity (উচ্চস্থ, স্বগৃহী, নীচস্থ)
+    function getPlanetDignityAs(planetKey, rashiNo) {
+        const r = Number(rashiNo);
+        const rules = {
+            Sun:     { ex: [1], own: [5], deb: [7] },
+            Moon:    { ex: [2], own: [4], deb: [8] },
+            Mars:    { ex: [10], own: [1, 8], deb: [4] },
+            Mercury: { ex: [6], own: [3, 6], deb: [12] },
+            Jupiter: { ex: [4], own: [9, 12], deb: [10] },
+            Venus:   { ex: [12], own: [2, 7], deb: [6] },
+            Saturn:  { ex: [7], own: [10, 11], deb: [1] },
+            Rahu:    { ex: [2, 3], own: [11], deb: [8, 9] },
+            Ketu:    { ex: [8, 9], own: [8], deb: [2, 3] }
+        };
+        const rule = rules[planetKey];
+        if (!rule) return "সমভাৱস্থ";
+        if (rule.ex.includes(r)) return "উচ্চস্থ (অতি বলবান)";
+        if (rule.own.includes(r)) return "স্বগৃহী (বলবান)";
+        if (rule.deb.includes(r)) return "নীচস্থ (দুৰ্বল বা সংগ্ৰামকাৰী)";
+        return "মিত্র/সম ক্ষেত্ৰস্থ";
+    }
+
     const DASHA_LORD_AS_MAP = {
         "Ketu": "কেতু", "Venus": "শুক্ৰ", "Sun": "সূৰ্য", "Moon": "চন্দ্ৰ",
         "Mars": "মংগল", "Rahu": "ৰাহু", "Jupiter": "বৃহস্পতি", "Saturn": "শনি", "Mercury": "বুধ",
@@ -224,17 +246,17 @@
 
     const HOUSE_NAME_AS = {
         1: "প্ৰথম ভাৱ (লগ্ন বা ব্যক্তিত্ব স্থান)",
-        2: "দ্বিতীয় ভাৱ (ধন, বাণী আৰু কুটুম্ব স্থান)",
-        3: "তৃতীয় ভাৱ (সাহস, পৰাক্ৰম আৰু যোগাযোগ স্থান)",
+        2: "দ্বিতীয় ভাৱ (ধন, সঞ্চয় আৰু কুটুম্ব স্থান)",
+        3: "তৃতীয় ভাৱ (সাহস, পৰাক্ৰম আৰু সংগ্ৰাম স্থান)",
         4: "চতুৰ্থ ভাৱ (গৃহ সুখ, মাতৃ, মাটি-বাৰী আৰু বাহন স্থান)",
         5: "পঞ্চম ভাৱ (প্ৰেম, বিদ্যা, বুদ্ধি আৰু সন্তান স্থান)",
         6: "ষষ্ঠ ভাৱ (চাকৰিৰ প্ৰতিযোগিতা, শত্ৰু, ৰোগ আৰু ঋণ স্থান)",
-        7: "সপ্তম ভাৱ (বিবাহ, জীৱনসংগী, প্ৰেমৰ স্থায়িত্ব আৰু ব্যৱসায় স্থান)",
-        8: "অষ্টম ভাৱ (আয়ুস, গোপন বাধা আৰু আকস্মিক পৰিৱৰ্তন স্থান)",
+        7: "সপ্তম ভাৱ (বিবাহ, জীৱনসংগী, প্ৰেমৰ স্থায়িত্ব আৰু দৈনন্দিন ব্যৱসায় স্থান)",
+        8: "অষ্টম ভাৱ (আয়ুস, আকস্মিক বাধা আৰু গভীৰ পৰিৱৰ্তন স্থান)",
         9: "নৱম ভাৱ (ভাগ্য, ধৰ্ম, উচ্চ শিক্ষা আৰু গুৰু কৃপা স্থান)",
-        10: "দশম ভাৱ (কৰ্ম, চাকৰি, পদমৰ্যাদা আৰু জীৱিকা স্থান)",
+        10: "দশম ভাৱ (কৰ্ম, চাকৰি, ব্যৱসায়িক প্ৰতিষ্ঠা আৰু জীৱিকা স্থান)",
         11: "একাদশ ভাৱ (আয়, লাভ আৰু মনোকামনা পূৰণ স্থান)",
-        12: "দ্বাদশ ভাৱ (ব্যয়, দূৰ যাত্ৰা আৰু শয্যা সুখ স্থান)"
+        12: "দ্বাদশ ভাৱ (ব্যয়, লোকচান আৰু দূৰ যাত্ৰা স্থান)"
     };
 
     const GEM_BY_RASHI_NO = {
@@ -271,6 +293,9 @@
             p.house = ((pNo - ascNo + 12) % 12) + 1;
             p.house_name_as = HOUSE_NAME_AS[p.house];
             p.name_as = PLANET_AS_NAME[pKey] || pKey;
+            p.dignity_as = getPlanetDignityAs(pKey, pNo);
+            p.isDebilitated = p.dignity_as.includes("নীচস্থ");
+            p.isStrong = p.dignity_as.includes("উচ্চস্থ") || p.dignity_as.includes("স্বগৃহী");
             houseOccupants[p.house].push(p.name_as);
         });
 
@@ -332,13 +357,13 @@
         chart.activeDashaLordAs = activeLordAs;
         chart.activeAntardashaLordAs = antardashaLordAs;
         chart.activePratyantarLordAs = pratyantarLordAs;
-        chart.activeDasha = `${activeLordAs} মহাদশা (${antardashaLordAs}ৰ অন্তৰ্দশা)`;
+        chart.activeDasha = `${activeLordAs} মহাদশা (${antardashaLordAs} অন্তৰ্দশা)`;
         chart.activeDashaRangeAs = `${activeStart} চনৰ পৰা ${activeEnd} চনলৈ`;
         if (dobStr) chart.dob = dobStr;
         return chart;
     }
 
-    // Strict check: Reject non-astrological questions (coding, cricket/sports, recipes/food, politics/GK, movies/songs, tech support, math)
+    // Strict check: Reject non-astrological questions
     function isNonAstrologicalQuestion(rawText) {
         const q = String(rawText || "").trim().toLowerCase();
         if (!q) return false;
@@ -357,73 +382,7 @@
         return /^(নমস্কাৰ|প্ৰণাম|হেল্ল|হাই|namaskar|nomoskar|pranam|hello|hi|hey|good morning|good evening|জয় আই অসম|হৰি ওঁম)[\s!?.]*$/i.test(q);
     }
 
-    // Classify question into specific astrological topic
-    function detectAstroTopic(qRaw) {
-        const q = String(qRaw || "").toLowerCase();
-
-        // 1. Relationship Fight / Breakup / Partner Leaving / Ex / Block / Reconciliation
-        if (/(gf|bf|girlfriend|boyfriend|premi|premika|ex|kaijia|kajiya|kaziya|কাজিয়া|মনোমালিন্য|তৰ্ক|অভিমান|aribo|এৰিব|এৰি গৈছে|এৰি যাব|ভাঙিব|breakup|ব্ৰেকআপ|block|ব্লক|প্ৰতাৰণা|cheat|তাই মোক|সি মোক|ghuri ahibo|ঘূৰি আহিব|কথা নাপাতে|ভুল বুজাবুজি|ari goise|মন ভাঙি|kotha napate|logot kajiya|তাই এৰিব|সি এৰিব|ফোন নকৰে|মেছেজ নিদিয়ে|খং কৰি আছে)/i.test(q)) {
-            return "love_conflict";
-        }
-        // 2. Marriage Timing / Love vs Arranged / Spouse Profile
-        if (/(বিবাহ|বিয়া|biya|bia|bibah|marriage|married|সংগী|জীৱনসংগী|স্বামী|পত্নী|দৰা|কইনা|husband|wife|partner|প্ৰেম বিবাহ|সামাজিক বিবাহ|যোৰা|মিলন|পাত্ৰ|পাত্ৰী)/i.test(q)) {
-            return "marriage";
-        }
-        // 3. General Love / Crush / Feelings
-        if (/(প্ৰেম|ভালপোৱা|prem|bhalpua|bhal pai|love|crush|propose|প্ৰস্তাৱ|ভাল পায় নে|মনৰ মানুহ)/i.test(q)) {
-            return "love_general";
-        }
-        // 4. Government Job / Competitive Exams
-        if (/(চৰকাৰী|sarkari|sorkari|xorkari|govt|government|apsc|upsc|tet|police|army|defense|ssc|railway|নিযুক্তি|ইণ্টাৰভিউ|interview)/i.test(q)) {
-            return "govt_job";
-        }
-        // 5. General Career / Job / Promotion / Work
-        if (/(চাকৰি|কেৰিয়াৰ|কৰ্ম|career|sakori|xakori|chakri|sokori|job|work|office|promotion|পদোন্নতি|বদলি|transfer|salary|দৰমহা|নিবনুৱা|কাম)/i.test(q)) {
-            return "career";
-        }
-        // 6. Business / Trade / Shop / Share Market
-        if (/(ব্যৱসায়|বাণিজ্য|byobohai|bebokhay|bebohai|byabosa|business|dukan|দোকান|ফাৰ্ম|কোম্পানী|company|startup|ঠিকা|ঠিকাদাৰী|contract|share|stock|trading|ট্ৰেডিং|লাভ-লোকচান)/i.test(q)) {
-            return "business";
-        }
-        // 7. Finance / Money / Debt (Dhar/Rin) / Wealth
-        if (/(ধন|টকা|পইচা|আৰ্থিক|সম্পত্তি|poisa|paisa|toka|taka|dhon|money|finance|financial|rich|ধনী|অভাৱ|টানাটানি|ধাৰ|ঋণ|dhar|rin|loan|emi|লোন|কৰ্জ|সঞ্চয়|লক্ষ্মী)/i.test(q)) {
-            return "finance";
-        }
-        // 8. Education / Study / Exam
-        if (/(শিক্ষা|পঢ়া|অধ্যয়ন|বিদ্যার্থী|ছাত্ৰ|পৰীক্ষা|ফলাফল|study|porha|poha|porikha|education|exam|result|pass|fail|degree|college|university|medical|engineering|মন নবহে|মনোযোগ)/i.test(q)) {
-            return "education";
-        }
-        // 9. Health / Illness / Mental Peace
-        if (/(স্বাস্থ্য|শৰীৰ|বেমাৰ|ৰোগ|অসুখ|বিষ|চিকিৎসা|health|bimar|bemar|oxukh|osukh|sick|disease|pain|hospital|doctor|operation|মানসিক চাপ|চিন্তা|টেনচন|tension|depression|টোপনি|ভয়|আয়ুস)/i.test(q)) {
-            return "health";
-        }
-        // 10. Family / Children / Pregnancy / Home Peace
-        if (/(পৰিয়াল|সংসাৰ|মা|দেউতা|পিতৃ|মাতৃ|সন্তান|ল'ৰা-ছোৱালী|কেঁচুৱা|গৰ্ভধাৰণ|family|parents|mother|father|child|children|baby|pregnant|pregnancy|santan|ঘৰুৱা অশান্তি|ভাতৃ|ভগ্নী)/i.test(q)) {
-            return "family";
-        }
-        // 11. Property / Land / House Construction / Vehicle
-        if (/(মাটি|বাৰী|ঘৰ সজা|গৃহ নিৰ্মাণ|ফ্লেট|গাড়ী|বাহন|বাস্তু|land|plot|property|house|home|car|bike|vehicle|vastu|mati|ghor|ghar|gari)/i.test(q)) {
-            return "property";
-        }
-        // 12. Dosha Check (Mangalik, Kaal Sarp, Shani, Rahu-Ketu)
-        if (/(দোষ|মাঙ্গলিক|মাংগলিক|কালসৰ্প|শনি|সাড়ে সাতী|ঢৈয়া|ৰাহু|কেতু|পিতৃ দোষ|গ্ৰহ দোষ|নজৰ|মুখ লগা|বান্ধোন|dosha|mangalik|manglik|kaal sarp|kalsarp|sade sati|shani|rahu|ketu)/i.test(q)) {
-            return "dosha";
-        }
-        // 13. Gemstone (Ratna) / Lucky Elements / Remedy
-        if (/(ৰত্ন|পাথৰ|মণি|আঙঠি|পোখৰাজ|নীলা|পান্না|মুকুতা|মাণিক|প্ৰবাল|গোমেদ|ৰুদ্ৰাক্ষ|মন্ত্ৰ|প্ৰতিকাৰ|উপায়|পূজা|শুভ ৰং|শুভ সংখ্যা|শুভ দিন|ratna|stone|gem|gemstone|ring|rudraksha|remedy|upay|upai|lucky)/i.test(q)) {
-            return "gemstone";
-        }
-        // 14. Foreign Travel / Journey
-        if (/(বিদেশ|যাত্ৰা|ভ্ৰমণ|ভিছা|নতুন ঠাই|abroad|foreign|visa|travel|settled|bidesh)/i.test(q)) {
-            return "travel";
-        }
-        // 15. Court Case / Legal / Enemy
-        if (/(আদালত|গোচৰ|কেছ|আইনী|শত্ৰু|বিৰোধী|ৰাজনীতি|court|case|legal|police case|enemy|shatru|politics|election)/i.test(q)) {
-            return "legal";
-        }
-        return "general_kundali";
-    }
-
+    // Multi-Aspect & Crisis-Aware Vedic Chart Analysis Engine (100% Pure Assamese)
     function analyzeChartAndAnswerQuestion(questionText, rawChart, birthInfo, chatHistory) {
         const qRaw = String(questionText || "").trim();
         const q = qRaw.toLowerCase();
@@ -449,17 +408,17 @@
         const rahu = chart.planets.Rahu;
         const ketu = chart.planets.Ketu;
 
-        const h2 = chart.houses[1];
-        const h3 = chart.houses[2];
-        const h4 = chart.houses[3];
-        const h5 = chart.houses[4];
-        const h6 = chart.houses[5];
-        const h7 = chart.houses[6];
-        const h8 = chart.houses[7];
-        const h9 = chart.houses[8];
-        const h10 = chart.houses[9];
-        const h11 = chart.houses[10];
-        const h12 = chart.houses[11];
+        const h2 = chart.houses[1];  // ধন স্থান
+        const h3 = chart.houses[2];  // পৰাক্ৰম স্থান
+        const h4 = chart.houses[3];  // গৃহ সুখ স্থান
+        const h5 = chart.houses[4];  // প্ৰেম/বিদ্যা/সন্তান স্থান
+        const h6 = chart.houses[5];  // প্ৰতিযোগিতা/ৰোগ/ঋণ স্থান
+        const h7 = chart.houses[6];  // বিবাহ/সঙ্গী/দৈনন্দিন ব্যৱসায় স্থান
+        const h8 = chart.houses[7];  // অষ্টম বাধা স্থান
+        const h9 = chart.houses[8];  // ভাগ্য স্থান
+        const h10 = chart.houses[9]; // কৰ্ম/ব্যৱসায় স্থান
+        const h11 = chart.houses[10];// আয়/লাভ স্থান
+        const h12 = chart.houses[11];// ব্যয়/লোকচান স্থান
 
         const dashaName = chart.activeDasha;
         const dashaLord = chart.activeDashaLordAs;
@@ -476,289 +435,316 @@
         }
 
         if (isGreetingOnly(qRaw)) {
-            return `নমস্কাৰ ${custName}! 🙏 আপোনাৰ জন্ম কুণ্ডলী (**${ascRashi} লগ্ন**, **${moon.rashi_as} ৰাশি**, **${moon.nakshatra} নক্ষত্ৰ** আৰু চলমান **${dashaName}**) মোৰ সন্মুখত খোলা আছে। আপোনাৰ কেৰিয়াৰ, চাকৰি, প্ৰেম, বিবাহ, ধন-সম্পত্তি বা ভৱিষ্যৎ সম্পৰ্কে যিকোনো জ্যোতিষীয় প্ৰশ্ন নিঃসংকোচে সোধক।`;
+            return `নমস্কাৰ ${custName}! 🙏 আপোনাৰ জন্ম কুণ্ডলী (**${ascRashi} লগ্ন**, **${moon.rashi_as} ৰাশি**, **${moon.nakshatra} নক্ষত্ৰ** আৰু চলমান **${dashaName}**) মোৰ সন্মুখত খোলা আছে। আপোনাৰ কেৰিয়াৰ, চাকৰি, ব্যৱসায়, প্ৰেম, বিবাহ, ধন-সম্পত্তি বা ভৱিষ্যৎ সম্পৰ্কে যিকোনো জ্যোতিষীয় প্ৰশ্ন নিঃসংকোচে সোধক।`;
         }
 
-        let topic = detectAstroTopic(qRaw);
+        // Detect ALL life aspects & crisis indicators present in the user's question
+        const hasSevereLossOrCrisis = /(naikia|নাইকিয়া|bondho|বন্ধ|loss|লোকচান|বিফল|ধ্বংস|সব শেষ|sob xex|একো নাই|অভাৱ|বিপদ|কষ্ট|দুখ|চিন্তা|টেনচন|tension|problem|সমস্যা|নচলে|ভাঙি গৈছে|এটা এটাকৈ|ata ata koi)/i.test(q);
+        const hasShopOrBusiness = /(dukan|দোকান|ব্যৱসায়|বাণিজ্য|byobohai|bebokhay|bebohai|byabosa|business|ফাৰ্ম|কোম্পানী|company|startup|ঠিকা|ঠিকাদাৰী|contract|share|stock|trading|ট্ৰেডিং)/i.test(q);
+        const hasNoIncomeOrMoneyCrisis = /(income|ইনকাম|আয়|উপাৰ্জন|পথ নাই|poth nai|poisa|paisa|toka|taka|dhon|ধন|টকা|পইচা|আৰ্থিক|ধাৰ|ঋণ|dhar|rin|loan|emi|লোন|কৰ্জ|সঞ্চয়)/i.test(q);
+        const hasLoveBreakupOrConflict = /(gf|bf|girlfriend|boyfriend|premi|premika|ex|kaijia|kajiya|kaziya|কাজিয়া|মনোমালিন্য|তৰ্ক|অভিমান|aribo|arise|ari goise|এৰিব|এৰি গৈছে|এৰিলে|এৰি যাব|ভাঙিব|breakup|ব্ৰেকআপ|block|ব্লক|প্ৰতাৰণা|cheat|তাই মোক|সি মোক|ghuri ahibo|ঘূৰি আহিব|কথা নাপাতে|ভুল বুজাবুজি)/i.test(q);
+        const hasMarriage = /(বিবাহ|বিয়া|biya|bia|bibah|marriage|married|সংগী|জীৱনসংগী|স্বামী|পত্নী|দৰা|কইনা|husband|wife|partner|প্ৰেম বিবাহ|সামাজিক বিবাহ|যোৰা|মিলন|পাত্ৰ|পাত্ৰী)/i.test(q);
+        const hasLoveGeneral = !hasLoveBreakupOrConflict && /(প্ৰেম|ভালপোৱা|prem|bhalpua|bhal pai|love|crush|propose|প্ৰস্তাৱ|ভাল পায় নে|মনৰ মানুহ)/i.test(q);
+        const hasGovtJob = /(চৰকাৰী|sarkari|sorkari|xorkari|govt|government|apsc|upsc|tet|police|army|defense|ssc|railway|নিযুক্তি|ইণ্টাৰভিউ|interview)/i.test(q);
+        const hasCareerOrJob = !hasGovtJob && /(চাকৰি|কেৰিয়াৰ|কৰ্ম|career|sakori|xakori|chakri|sokori|job|work|office|promotion|পদোন্নতি|বদলি|transfer|salary|দৰমহা|নিবনুৱা)/i.test(q);
+        const hasEducation = /(শিক্ষা|পঢ়া|অধ্যয়ন|বিদ্যার্থী|ছাত্ৰ|পৰীক্ষা|ফলাফল|study|porha|poha|porikha|education|exam|result|pass|fail|degree|college|university|medical|engineering|মন নবহে|মনোযোগ)/i.test(q);
+        const hasHealth = /(স্বাস্থ্য|শৰীৰ|বেমাৰ|ৰোগ|অসুখ|বিষ|চিকিৎসা|health|bimar|bemar|oxukh|osukh|sick|disease|pain|hospital|doctor|operation|মানসিক চাপ|টোপনি|ভয়|আয়ুস)/i.test(q);
+        const hasFamilyOrChild = /(পৰিয়াল|সংসাৰ|মা|দেউতা|পিতৃ|মাতৃ|সন্তান|ল'ৰা-ছোৱালী|কেঁচুৱা|গৰ্ভধাৰণ|family|parents|mother|father|child|children|baby|pregnant|pregnancy|santan|ঘৰুৱা অশান্তি|ভাতৃ|ভগ্নী)/i.test(q);
+        const hasPropertyOrVehicle = /(মাটি|বাৰী|ঘৰ সজা|গৃহ নিৰ্মাণ|ফ্লেট|গাড়ী|বাহন|বাস্তু|land|plot|property|house|home|car|bike|vehicle|vastu|mati|ghor|ghar|gari)/i.test(q);
+        const hasDosha = /(দোষ|মাঙ্গলিক|মাংগলিক|কালসৰ্প|শনি|সাড়ে সাতী|ঢৈয়া|ৰাহু|কেতু|পিতৃ দোষ|গ্ৰহ দোষ|নজৰ|মুখ লগা|বান্ধোন|dosha|mangalik|manglik|kaal sarp|kalsarp|sade sati|shani|rahu|ketu)/i.test(q);
+        const hasGemstoneOrRemedy = /(ৰত্ন|পাথৰ|মণি|আঙঠি|পোখৰাজ|নীলা|পান্না|মুকুতা|মাণিক|প্ৰবাল|গোমেদ|ৰুদ্ৰাক্ষ|মন্ত্ৰ|প্ৰতিকাৰ|উপায়|পূজা|শুভ ৰং|শুভ সংখ্যা|শুভ দিন|ratna|stone|gem|gemstone|ring|rudraksha|remedy|upay|upai|lucky)/i.test(q);
+        const hasTravel = /(বিদেশ|যাত্ৰা|ভ্ৰমণ|ভিছা|নতুন ঠাই|abroad|foreign|visa|travel|settled|bidesh)/i.test(q);
+        const hasLegal = /(আদালত|গোচৰ|কেছ|আইনী|শত্ৰু|বিৰোধী|ৰাজনীতি|court|case|legal|police case|enemy|shatru|politics|election)/i.test(q);
 
-        // Count how many times this exact topic was already asked in chatHistory so we NEVER repeat the same answer!
-        const userHistory = Array.isArray(chatHistory) ? chatHistory.filter(m => m.role === 'user').map(m => String(m.text || '')) : [];
-        // Exclude the current question at the end of userHistory if already pushed
-        const priorUserQs = userHistory.slice(0, Math.max(0, userHistory.length - 1));
+        // ====================================================================
+        // SPECIAL CASE 1: MULTI-PART LIFE CRISIS (e.g., Shops/Business Closed + No Income + GF Left / Everything Disappearing)
+        // ====================================================================
+        if ((hasSevereLossOrCrisis && (hasShopOrBusiness || hasNoIncomeOrMoneyCrisis)) || (hasShopOrBusiness && hasNoIncomeOrMoneyCrisis) || (hasShopOrBusiness && hasLoveBreakupOrConflict) || (hasNoIncomeOrMoneyCrisis && hasLoveBreakupOrConflict)) {
+            const p10LordObj = getPlanetByAsName(h10.lord_as);
+            const p7LordObj = getPlanetByAsName(h7.lord_as);
+            const p11LordObj = getPlanetByAsName(h11.lord_as);
+            const p5LordObj = getPlanetByAsName(h5.lord_as);
+            const mercState = merc.isDebilitated
+                ? `আপোনাৰ লগ্নেশ আৰু ব্যৱসায়ৰ কাৰক গ্ৰহ **বুধ** কুণ্ডলীৰ ${houseOrdAs(merc.house)} ভাৱত (**${merc.rashi_as} ৰাশিত নীচস্থ/দুৰ্বল অৱস্থাত**, '${merc.nakshatra}' নক্ষত্ৰত) আছে`
+                : `আপোনাৰ লগ্নেশ আৰু ব্যৱসায়ৰ কাৰক গ্ৰহ **বুধ** কুণ্ডলীৰ ${houseOrdAs(merc.house)} ভাৱত (**${merc.rashi_as} ৰাশি**, '${merc.nakshatra}' নক্ষত্ৰত) অৱস্থান কৰিছে`;
 
-        // If the current question is a short follow-up (like "ketiya hobo?", "ki upay korim?", "aru kua", "sosa ne?") inherit the previous topic!
-        if (topic === "general_kundali" && priorUserQs.length > 0 && /(ketiya|কেতিয়া|কিমান দিন|উপায়|প্ৰতিকাৰ|ki korim|কি কৰিম|কিয়|kiyo|সঁচা|hobo ne|হবনে|আৰু কোৱা|ভাল হবনে)/i.test(q)) {
-            const lastTopic = detectAstroTopic(priorUserQs[priorUserQs.length - 1]);
-            if (lastTopic !== "general_kundali") {
-                topic = lastTopic;
+            let sections = [];
+            let secNum = 1;
+
+            sections.push(
+                `${toAsNum(secNum++)}) **জীৱনৰ পৰা এটা এটাকৈ সকলো কিয় নাইকিয়া হৈ গৈছে (মূল জ্যোতিষীয় কাৰণ):**\n` +
+                `আপোনাৰ জন্ম কুণ্ডলী (**${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি, '${moon.nakshatra}' নক্ষত্ৰ${dobDisplay ? ', জন্ম: ' + dobDisplay : ''}**) সূক্ষ্মভাৱে গণনা কৰি দেখা গৈছে যে বৰ্তমান আপোনাৰ কুণ্ডলীত **${dashaName}** চলি আছে। বৈদিক জ্যোতিষ শাস্ত্ৰত **${dashaLord} আৰু ${antardashaLord}**ৰ এই দশা-সন্ধিক্ষণক অত্যন্ত সংগ্ৰামপূৰ্ণ সময় বুলি কোৱা হয়। তদুপৰি ${mercState} আৰু কর্মক্ষেত্ৰ তথা ব্যৱসায় স্থানত পাপ গ্ৰহৰ তীক্ষ্ণ দৃষ্টি পৰিছে। যেতিয়াই লগ্নেশ দুৰ্বল হয় আৰু শনি-মংগল বা ৰাহু-কেতুৰ অন্তৰ্দশা চলে, তেতিয়াই মানুহৰ জীৱনত ইটোৰ পিছত সিটো বিপদ আহি জমা হয়।`
+            );
+
+            if (hasShopOrBusiness) {
+                sections.push(
+                    `${toAsNum(secNum++)}) **এখনৰ পিছত আনখন দোকান কিয় বন্ধ হ'ল (ব্যৱসায়িক বাধা বিচাৰ):**\n` +
+                    `আপোনাৰ কুণ্ডলীৰ **দশম ভাৱ (কৰ্ম স্থান — ${h10.rashi_as} ৰাশি)** আৰু **সপ্তম ভাৱ (দৈনন্দিন দোকান/ব্যৱসায় স্থান — ${h7.rashi_as} ৰাশি)**ৰ অধিপতি হৈছে **${h10.lord_as}**। কিন্তু কুণ্ডলীত ব্যৱসায় কাৰক **বুধ গ্ৰহ (${merc.rashi_as} ৰাশিত — ${merc.dignity_as})** আৰু **শনি দেৱতা (${houseOrdAs(sat.house)} ভাৱত, ${sat.rashi_as} ৰাশিত)**ৰ সংযোগৰ বাবে আপুনি যিমানেই মূলধন লগাই দোকান বা ব্যৱসায় আৰম্ভ কৰিছে, সিমানেই গ্ৰাহকৰ অভাৱ, অযথা খৰচ বা লোকচান হৈ দুখনকৈ দোকান বন্ধ হ'বলগীয়া হৈছে। বৰ্তমান চলি থকা **${antardashaLord} অন্তৰ্দশা** শেষ নোহোৱালৈকে নিজৰ নামত নতুন দোকান বা ডাঙৰ ঋণ লৈ ব্যৱসায়ত ধন নলগাব।`
+                );
             }
+
+            if (hasNoIncomeOrMoneyCrisis) {
+                sections.push(
+                    `${toAsNum(secNum++)}) **উপাৰ্জনৰ পথ কিয় বন্ধ হৈছে আৰু কেতিয়া পুনৰ আয় আৰম্ভ হ'ব:**\n` +
+                    `আপোনাৰ কুণ্ডলীৰ **দ্বিতীয় ভাৱ (ধন স্থান — ${h2.rashi_as} ৰাশি)** আৰু **একাদশ ভাৱ (আয় স্থান — ${h11.rashi_as} ৰাশি, অধিপতি ${h11.lord_as}, যি ${houseOrdAs(p11LordObj.house)} ভাৱত স্থিত)** বৰ্তমান ৰাহু (${houseOrdAs(rahu.house)} ভাৱত) আৰু কেতু (${houseOrdAs(ketu.house)} ভাৱত)ৰ অক্ষত আৱদ্ধ হৈ আছে। সেয়েহে হাতলৈ টকা অহাৰ বাট বন্ধ হৈ পৰিছে।\n` +
+                    `• **শুভ পৰিৱৰ্তনৰ সময়:** হতাশ নহ'ব— আপোনাৰ সপ্তম ভাৱত থকা স্বগৃহী **বৃহস্পতি (${jup.rashi_as} ৰাশিত, '${jup.nakshatra}' নক্ষত্ৰত)**ৰ পূৰ্ণ দৃষ্টি আপোনাৰ লগ্ন (${ascRashi}) আৰু আয় স্থান (${h11.rashi_as})ৰ ওপৰত আছে! অহা **৪৫ দিনৰ পৰা ৩ মাহৰ ভিতৰত** যেতিয়া চলমান প্রত্যন্তৰ দশা সলনি হ'ব, তেতিয়া কোনো চাকৰি, এজেন্সী, কমিচন ভিত্তিক কাম বা পৰিয়ালৰ জ্যেষ্ঠজনৰ নামত কৰা সৰু ব্যৱসায়ৰ জৰিয়তে আপোনাৰ উপাৰ্জনৰ নতুন পথ মুকলি হ'ব।`
+                );
+            }
+
+            if (hasLoveBreakupOrConflict) {
+                sections.push(
+                    `${toAsNum(secNum++)}) **চৰম বিপদৰ সময়তে প্ৰেমিকাই কিয় এৰি গ'ল আৰু ঘূৰি আহিবনে?:**\n` +
+                    `আপোনাৰ কুণ্ডলীৰ **পঞ্চম ভাৱ (প্ৰেম স্থান — ${h5.rashi_as} ৰাশি)**ৰ অধিপতি **শুক্ৰ** কুণ্ডলীৰ **${houseOrdAs(ven.house)} ভাৱত (ব্যয়/বিচ্ছেদ স্থানত, ${ven.rashi_as} ৰাশিত)** অৱস্থান কৰিছে। যেতিয়া কুণ্ডলীত আৰ্থিক সংকট আৰু **${dashaLord}-${antardashaLord}**ৰ উগ্ৰ দশা একেলগে চলে, তেতিয়া মানসিক অস্থিৰতা আৰু আৰ্থিক অনিশ্চয়তাৰ বাবে প্ৰেমৰ সম্পৰ্কতো ভাঙোন আহে।\n` +
+                    `• **পুনৰ মিলনৰ সত্য:** আপোনাৰ জন্ম নক্ষত্ৰ হৈছে **'${moon.nakshatra}'** (যাৰ অৰ্থই হৈছে হেৰুওৱা বস্তু পুনৰ ঘূৰি অহা) আৰু সপ্তম ভাৱত দেৱগুৰু **বৃহস্পতি** বলবান হৈ বহি আছে। যেতিয়াই অহা **১.৫ ৰ পৰা ৩ মাহৰ ভিতৰত** আপোনাৰ আৰ্থিক স্থিতি অলপ সুস্থিৰ হ'বলৈ ধৰিব আৰু শুক্ৰৰ গোচৰ অনুকূল হ'ব, তেতিয়া সংগীৰ অভিমান ভাগিব আৰু পুনৰ যোগাযোগ স্থাপন হ'ব। কিন্তু এই মুহূৰ্তত তেওঁক কাকূতি-মিনতি বা কাজিয়া কৰি মানসিক চাপ নিদিব।`
+                );
+            }
+
+            const userHist = Array.isArray(chatHistory) ? chatHistory.filter(m => m.role === 'user').map(m => String(m.text || '')) : [];
+            const priorQs = userHist.slice(0, Math.max(0, userHist.length - 1));
+            const priorCrisisCount = priorQs.filter(pq => /(naikia|নাইকিয়া|bondho|বন্ধ|poth nai|পথ নাই|dukan|দোকান)/i.test(pq)).length;
+
+            if (priorCrisisCount % 2 === 1) {
+                return `🔮 **শূন্যৰ পৰা পুনৰ উত্থান আৰু নতুন উপাৰ্জনৰ পথ নিৰ্দেশনা (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — '${moon.nakshatra}' নক্ষত্ৰ):**\n\n` +
+                    `আপোনাৰ দুখনকৈ দোকান বন্ধ হোৱা আৰু বৰ্তমান উপাৰ্জনৰ পথ বন্ধ হৈ পৰা অৱস্থাটোৰ পৰা কেনেকৈ বাহিৰ ওলাব, তাৰ বাবে মই আপোনাৰ কুণ্ডলীৰ **অষ্টকবৰ্গ, একাদশ ভাৱ (${h11.rashi_as} ৰাশি) আৰু নৱম ভাৱ (ভাগ্য স্থান — ${h9.rashi_as} ৰাশি)** সূক্ষ্মভাৱে বিচাৰ কৰিছোঁ:\n\n` +
+                    `১) **এই মুহূৰ্তত কি ভুল একেবাৰে নকৰিব:** আপোনাৰ দশম ভাৱত (${h10.rashi_as} ৰাশিত) বুধ গ্ৰহ নীচস্থ হৈ শনি-কেতুৰ সৈতে থকাৰ বাবে অহা **৩ মাহলৈকে** নিজৰ নামত নতুন দোকান ভাড়া লোৱা বা ধাৰ-ঋণ লৈ গধুৰ ব্যৱসায়ত হাত নিদিব। নহ'লে পুনৰ ধন আবদ্ধ হ'ব পাৰে।\n\n` +
+                    `২) **এতিয়া কোনটো পথেৰে আপোনাৰ হাতলৈ টকা আহিব (নতুন উপাৰ্জনৰ পথ):**\n` +
+                    `• আপোনাৰ কুণ্ডলীৰ একাদশ পতি **${h11.lord_as}** আৰু সপ্তমস্থ বলবান **বৃহস্পতি (${jup.rashi_as} ৰাশিত স্বগৃহী)**ৰ দৃষ্টিয়ে দেখুৱাইছে যে অহা **৪০ ৰ পৰা ৭৫ দিনৰ ভিতৰত** আপুনি মূলধন নোহোৱাকৈ বা অতি কম মূলধনত কৰা কাম— যেনে **এজেন্সী, কমিচন বা যোগান ধৰা কাম, অনলাইন/ডিজিটেল মাধ্যম, পৰিবহণ বা কোনো প্ৰতিষ্ঠানত দায়িত্বশীল চাকৰি/মেনেজমেণ্ট**ৰ জৰিয়তে পুনৰ উপাৰ্জন আৰম্ভ কৰিব পাৰিব।\n` +
+                    `• যদি ব্যৱসায় বা দোকান চলাবই খোজে, তেন্তে কাগজ-পত্ৰত নিজৰ নামৰ সলনি **মাতৃ বা পৰিয়ালৰ অন্য সদস্যৰ নাম** ব্যৱহাৰ কৰিব— ইয়াৰ ফলত আপোনাৰ দশম ভাৱৰ শনি-বুধৰ দোষ তাৎক্ষণিকভাৱে কাটি যাব।\n\n` +
+                    `৩) **আপোনাৰ জীৱনৰ সোণালী সময় কেতিয়া ঘূৰি আহিব:** আপোনাৰ জন্ম নক্ষত্ৰ **'${moon.nakshatra}'**ৰ স্বভাৱেই হ'ল ধুমুহাৰ পিছত পুনৰ নতুনকৈ গঢ় লৈ উঠা। চলমান **${dashaName}**ৰ উগ্ৰ সন্ধিক্ষণ পাৰ হোৱাৰ লগে লগে অহা **৩ মাহৰ পৰা ৬ মাহৰ ভিতৰত** আপোনাৰ হেৰুওৱা সন্মান আৰু আৰ্থিক স্থিতি ঘূৰি আহিব।\n\n` +
+                    `🕉️ **বন্ধ ভাগ্য আৰু আয়ৰ দুৱাৰ মুকলি কৰাৰ বিশেষ সিদ্ধ উপায়:**\n` +
+                    `• প্ৰতিদিনে পুৱা স্নান কৰি তামৰ পাত্ৰত জল লৈ সূৰ্য দেৱতাক অৰ্ঘ্য দিয়ক আৰু **"ওঁ ঘৃণী সূৰ্যায় নমঃ"** ১১ বাৰ জপ কৰক (কিয়নো আপোনাৰ কুণ্ডলীত সূৰ্য উচ্চস্থ/বলবান হৈ ১১শ আয় স্থানত আছে— সূৰ্যই আপোনাক নতুন আয়ৰ বাট দিব)।\n` +
+                    `• বুধবাৰে ভগৱান গণেশৰ চৰণত দূবৰি বন আৰু শনিবাৰে সন্ধিয়া আঁহত তলত চাকি জ্বলাবলৈ এৰি নিদিব।`;
+            }
+
+            return `🔮 **আপোনাৰ জন্ম কুণ্ডলীৰ গভীৰ সংকট বিশ্লেষণ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — চলমান ${dashaName}):**\n\n` +
+                sections.join("\n\n") +
+                `\n\n🕉️ **এই চৰম বিপদ, ব্যৱসায়িক লোকচান আৰু বিচ্ছেদৰ পৰা মুক্তি পোৱাৰ অমোঘ বৈদিক প্ৰতিকাৰ:**\n` +
+                `১) **লগ্নেশ বুধ আৰু শনি-মংগলৰ শান্তি (আটাইতকৈ জৰুৰী):** যিহেতু আপোনাৰ লগ্নেশ বুধ মীন ৰাশিত দুৰ্বল হৈ আছে আৰু ${dashaName} চলি আছে, সেয়েহে প্ৰতি **বুধবাৰে** ভগৱান গণেশৰ চৰণত ২১ ডাল দূবৰি বন অৰ্পণ কৰি **"ওঁ গং গণপতয়ে নমঃ"** মন্ত্ৰ ১০৮ বাৰ জপ কৰক আৰু গাই গৰুক সেউজীয়া ঘাঁহ খুৱাওক।\n` +
+                `২) **উপাৰ্জনৰ বান্ধোন খোলাৰ উপায়:** প্ৰতি **শনিবাৰে আৰু মঙ্গলবাৰে** সন্ধিয়া আঁহত গছৰ তলত বা গোঁসাই ঘৰত মিঠাতেলৰ চাকি জ্বলাই **হনুমান চালিছা** পাঠ কৰক। ই শনি-মংগলৰ দ্বন্দ্ব দোষ নাশ কৰি বন্ধ হৈ থকা আয়ৰ দুৱাৰ মুকলি কৰিব।\n` +
+                `৩) **প্ৰেম আৰু মানসিক শান্তিৰ উপায়:** প্ৰতি **শুক্ৰবাৰে** সন্ধিয়া গোঁসাই ঘৰত ঘিউৰ চাকি জ্বলাই মা লক্ষ্মী আৰু ভগৱান বিষ্ণুক স্মৰণ কৰক। ধৈৰ্য নেহেৰুৱাব— আপোনাৰ কুণ্ডলীৰ সপ্তমস্থ বৃহস্পতিয়ে আপোনাক পুনৰ থিয় কৰাবই।`;
         }
 
-        const priorSameTopicCount = priorUserQs.filter(pq => detectAstroTopic(pq) === topic).length;
-        const variationIdx = priorSameTopicCount % 3; // 0 = Primary House Analysis, 1 = Deep Nakshatra & Pratyantar Dasha Timing, 2 = Gochar Transit & Special Siddha Remedy
+        // Count prior questions in chatHistory for anti-repetition on single topics
+        const userHistory = Array.isArray(chatHistory) ? chatHistory.filter(m => m.role === 'user').map(m => String(m.text || '')) : [];
+        const priorUserQs = userHistory.slice(0, Math.max(0, userHistory.length - 1));
+        const variationIdx = priorUserQs.length % 3;
 
-        const qHeader = `📜 **আপোনাৰ প্ৰশ্ন:** "${qRaw}"\n`;
-
-        // 1. LOVE CONFLICT / BREAKUP / PARTNER LEAVING
-        if (topic === "love_conflict") {
+        // ====================================================================
+        // CASE 2: LOVE BREAKUP / FIGHT (Single Topic)
+        // ====================================================================
+        if (hasLoveBreakupOrConflict) {
             const p5LordObj = getPlanetByAsName(h5.lord_as);
             const p7LordObj = getPlanetByAsName(h7.lord_as);
             if (variationIdx === 0) {
-                return qHeader +
-                    `🔮 **জন্ম কুণ্ডলীৰ পঞ্চম আৰু সপ্তম ভাৱৰ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
-                    `আপোনাৰ প্ৰশ্নটোৰ উত্তৰ দিবলৈ মই আপোনাৰ কুণ্ডলীৰ **পঞ্চম ভাৱ (প্ৰেম স্থান — ${h5.rashi_as} ৰাশি)** আৰু **সপ্তম ভাৱ (সঙ্গী স্থান — ${h7.rashi_as} ৰাশি)** সূক্ষ্মভাৱে গণনা কৰিছোঁ:\n\n` +
-                    `১) **কাজিয়া আৰু বিচ্ছেদৰ আশংকা কিয় হৈছে:** আপোনাৰ কুণ্ডলীত প্ৰেম স্থানৰ অধিপতি **${h5.lord_as}** বৰ্তমান ${houseOrdAs(p5LordObj.house)} ভাৱত (${p5LordObj.rashi_as} ৰাশি, '${p5LordObj.nakshatra}' নক্ষত্ৰত) আছে আৰু প্ৰেমৰ কাৰক **শুক্ৰ** ${houseOrdAs(ven.house)} ভাৱত (${ven.rashi_as} ৰাশিত) স্থিত। বৰ্তমান চলি থকা **${dashaName}**ৰ লগতে গোচৰত ৰাহু (${houseOrdAs(rahu.house)} ভাৱত) আৰু মংগল (${houseOrdAs(mars.house)} ভাৱত)ৰ তীক্ষ্ণ প্ৰভাৱ আপোনাৰ চন্দ্ৰ ৰাশি (${moon.rashi_as})ৰ ওপৰত পৰিছে। ইয়াৰ ফলত সৰু কথাতে ভুল বুজাবুজি, অভিমান, জেদ আৰু খঙৰ বশৱৰ্তী হৈ সংগীয়ে আপোনাক এৰি যোৱাৰ কথা কৈছে।\n\n` +
-                    `২) **সঁচাকৈয়ে এৰি যাব নে পুনৰ মিলন হ'ব?:** ভয় নকৰিব— আপোনাৰ চন্দ্ৰ নক্ষত্ৰ হৈছে **'${moon.nakshatra}'** আৰু সপ্তম পতি **${h7.lord_as}** (${p7LordObj.rashi_as} ৰাশিত স্থিত)ৰ শুভ দৃষ্টিয়ে স্পষ্টকৈ দেখুৱাইছে যে সংগীৰ মনত আপোনাৰ প্ৰতি আন্তৰিক টান এতিয়াও শেষ হোৱা নাই। এইয়া স্থায়ী বিচ্ছেদ নহয়, বৰঞ্চ গ্ৰহৰ সাময়িক উগ্ৰ গোচৰৰ ফলত হোৱা খংহে। অহা **১৮ ৰ পৰা ২৭ দিনৰ ভিতৰত** চন্দ্ৰ আৰু শুক্ৰৰ নক্ষত্ৰ পৰিৱৰ্তন হ'লে সংগীৰ খং মাৰ যাব আৰু পুনৰ যোগাযোগ আৰম্ভ হ'ব।\n\n` +
+                return `🔮 **জন্ম কুণ্ডলীৰ প্ৰেমৰ মনোমালিন্য আৰু বিচ্ছেদ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
+                    `আপোনাৰ কুণ্ডলীৰ **পঞ্চম ভাৱ (প্ৰেম স্থান — ${h5.rashi_as} ৰাশি)** আৰু **সপ্তম ভাৱ (সঙ্গী স্থান — ${h7.rashi_as} ৰাশি)** সূক্ষ্মভাৱে গণনা কৰি তলৰ ফলাফল পোৱা গৈছে:\n\n` +
+                    `১) **কাজিয়া আৰু দূৰত্ব সৃষ্টি হোৱাৰ জ্যোতিষীয় কাৰণ:** আপোনাৰ কুণ্ডলীত প্ৰেম স্থানৰ অধিপতি **${h5.lord_as}** বৰ্তমান ${houseOrdAs(p5LordObj.house)} ভাৱত (${p5LordObj.rashi_as} ৰাশি, '${p5LordObj.nakshatra}' নক্ষত্ৰত) আছে। বৰ্তমান চলি থকা **${dashaName}**ৰ লগতে গোচৰত ৰাহু (${houseOrdAs(rahu.house)} ভাৱত) আৰু মংগল (${houseOrdAs(mars.house)} ভাৱত)ৰ তীক্ষ্ণ প্ৰভাৱ আপোনাৰ চন্দ্ৰ ৰাশি (${moon.rashi_as})ৰ ওপৰত পৰিছে। ইয়াৰ ফলত সৰু কথাতে ভুল বুজাবুজি, অভিমান, জেদ আৰু খঙৰ বশৱৰ্তী হৈ সংগীয়ে আপোনাক এৰি যোৱাৰ কথা কৈছে।\n\n` +
+                    `২) **সঁচাকৈয়ে এৰি যাব নে পুনৰ মিলন হ'ব?:** ভয় নকৰিব— আপোনাৰ চন্দ্ৰ নক্ষত্ৰ হৈছে **'${moon.nakshatra}'** আৰু সপ্তম পতি **${h7.lord_as}** (${p7LordObj.rashi_as} ৰাশিত — ${p7LordObj.dignity_as})ৰ শুভ দৃষ্টিয়ে স্পষ্টকৈ দেখুৱাইছে যে সংগীৰ মনত আপোনাৰ প্ৰতি আন্তৰিক টান এতিয়াও শেষ হোৱা নাই। অহা **১৮ ৰ পৰা ২৭ দিনৰ ভিতৰত** চন্দ্ৰ আৰু শুক্ৰৰ নক্ষত্ৰ পৰিৱৰ্তন হ'লে সংগীৰ খং মাৰ যাব আৰু পুনৰ যোগাযোগ আৰম্ভ হ'ব।\n\n` +
                     `৩) **আপোনাৰ তাৎক্ষণিক কৰণীয়:** অহা ৭ দিনলৈকে খঙত তৰ্ক নকৰিব বা বাৰে বাৰে জোৰ কৰি ফোন/মেছেজ কৰি চাপ নিদিব। ধৈৰ্য ধৰি শান্ত থাকিলে সংগীয়ে নিজেই অনুতপ্ত হৈ আপোনাৰ কাষ চাপিব।\n\n` +
                     `🕉️ **প্ৰেম ঘূৰাই অনাৰ বৈদিক প্ৰতিকাৰ:**\n` +
                     `• শুক্ৰবাৰে আৰু সোমবাৰে সন্ধিয়া গোঁসাই ঘৰত ঘিউৰ চাকি জ্বলাই **"ওঁ ক্লীং কৃষ্ণায় গোপীজন বল্লভায় স্বাহা"** মন্ত্ৰটো ১০৮ বাৰ জপ কৰিব।\n` +
                     `• সোমবাৰে শিৱলিংগত কঁচা গাখীৰ আৰু সামান্য মৌ অৰ্পণ কৰি দুয়োৰে মাজৰ মনোমালিন্য দূৰ হ'বলৈ প্ৰাৰ্থনা কৰক।`;
-            } else if (variationIdx === 1) {
-                return qHeader +
-                    `🔮 **প্ৰেমৰ পুনৰ মিলনৰ সূক্ষ্ম নক্ষত্ৰ আৰু প্রত্যন্তৰ দশা গণনা (${ascRashi} লগ্ন, ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
+            } else {
+                return `🔮 **প্ৰেমৰ পুনৰ মিলনৰ সূক্ষ্ম নক্ষত্ৰ আৰু প্রত্যন্তৰ দশা গণনা (${ascRashi} লগ্ন, ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
                     `আপোনাৰ সম্পৰ্কৰ গভীৰ অৱস্থাটো জানিবলৈ মই আপোনাৰ চন্দ্ৰ নক্ষত্ৰ **'${moon.nakshatra}' (চৰণ ${toAsNum(moon.pada || 1)})** আৰু বৰ্তমানৰ **${dashaLord} মহাদশা — ${antardashaLord} অন্তৰ্দশা — ${pratyantarLord} প্রত্যন্তৰ দশা** পৰীক্ষা কৰিছোঁ:\n\n` +
-                    `১) **সংগীৰ মনৰ বৰ্তমান স্থিতি:** আপোনাৰ কুণ্ডলীৰ মনোকাৰক চন্দ্ৰ ${houseOrdAs(moon.house)} ভাৱত (${moon.rashi_as} ৰাশিত) আৰু বুধ ${houseOrdAs(merc.house)} ভাৱত (${merc.rashi_as} ৰাশিত) থকাৰ বাবে সংগীৰ মনত এতিয়া অভিমান আৰু বাহ্যিক জেদ বেছি হৈ আছে, কিন্তু অন্তৰত আপোনাক পাহৰিব পৰা নাই।\n` +
+                    `১) **সংগীৰ মনৰ বৰ্তমান স্থিতি:** আপোনাৰ কুণ্ডলীৰ মনোকাৰক চন্দ্ৰ ${houseOrdAs(moon.house)} ভাৱত (${moon.rashi_as} ৰাশিত) আৰু শুক্ৰ ${houseOrdAs(ven.house)} ভাৱত (${ven.rashi_as} ৰাশিত) থকাৰ বাবে সংগীৰ মনত এতিয়া অভিমান আৰু বাহ্যিক জেদ বেছি হৈ আছে, কিন্তু অন্তৰত আপোনাক পাহৰিব পৰা নাই।\n` +
                     `২) **যোগাযোগ খোলাৰ নিৰ্দিষ্ট সময়:** অহা শুক্ল পক্ষৰ পঞ্চমী তিথিৰ পৰা পূৰ্ণিমাৰ ভিতৰত (অৰ্থাৎ অহা **২ ৰ পৰা ৪ সপ্তাহৰ ভিতৰত**) যেতিয়া চন্দ্ৰই আপোনাৰ সপ্তম ভাৱ (${h7.rashi_as}) আৰু একাদশ ভাৱ (${h11.rashi_as}) অতিক্ৰম কৰিব, তেতিয়া সংগীৰ ফালৰ পৰা নিজেই সঁহাৰি বা কথা পতাৰ সুযোগ আহিব।\n\n` +
                     `🕉️ **মন আকৰ্ষণ আৰু ক্ষোভ শান্তিৰ বিশেষ উপায়:**\n` +
-                    `• শুক্ৰবাৰে পুৱা স্নান কৰি বগা বা গুলপীয়া কাপোৰ পিন্ধি মা লক্ষ্মী আৰু ৰাধা-কৃষ্ণৰ চৰণত দুপাহ বগা ফুল অৰ্পণ কৰক আৰু মনতে সংগীৰ নাম স্মৰণ কৰি **"ওঁ হ্ৰীং যোগিনী যোগিনী যোগেশ্বৰী যোগ ভয়ংকৰী সকল স্থাৱৰ জঙ্গমস্য মুখ হৃদয়ং মম বশং আকৰ্ষয় আকৰ্ষয় স্বাহা"** মন্ত্ৰ ২১ বাৰ পাঠ কৰক।`;
-            } else {
-                return qHeader +
-                    `🔮 **গোচৰ চক্ৰ অনুসৰি সম্পৰ্কৰ স্থায়িত্ব আৰু ভৱিষ্যৎ নিৰ্দেশনা (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                    `আপোনাৰ জন্ম কুণ্ডলীৰ সপ্তমেশ **${h7.lord_as}** আৰু পঞ্চমেশ **${h5.lord_as}**ৰ পাৰস্পৰিক সম্বন্ধ বিচাৰ কৰি দেখা গৈছে:\n\n` +
-                    `১) **ভৱিষ্যতৰ স্থায়িত্ব:** এই কাজিয়াটো আপোনালোকৰ সম্পৰ্কৰ বাবে এক অগ্নিপৰীক্ষাহে। অহা মাহৰ পৰা ৰাহুৰ নেতিবাচক কোণ আঁতৰিলে আপোনালোকৰ মাজত বিশ্বাস আগতকৈ দুগুণে বৃদ্ধি পাব।\n` +
-                    `২) **সতৰ্কতা:** আপোনাৰ তৃতীয় ভাৱ (${h3.rashi_as}) আৰু ষষ্ঠ ভাৱ (${h6.rashi_as})ৰ স্থিতি অনুসৰি কোনো বন্ধু বা তৃতীয় ব্যক্তিক আপোনালোকৰ ব্যক্তিগত কাজিয়াৰ মাজত সোমাবলৈ নিদিব— দুয়ো অকলে শান্তভাৱে কথা পাতিলেহে সমস্যাটো ১০০% সমাধান হ'ব।\n\n` +
-                    `🕉️ **স্থায়ী মিলনৰ প্ৰতিকাৰ:** পূৰ্ণিমাৰ নিশা চন্দ্ৰ দেৱতাক গাখীৰ আৰু মিছিৰি মিশ্ৰিত জল অৰ্ঘ্য দি দুয়োৰে যুগ্ম জীৱনৰ শান্তি কামনা কৰক।`;
+                    `• শুক্ৰবাৰে পুৱা স্নান কৰি বগা বা গুলপীয়া কাপোৰ পিন্ধি মা লক্ষ্মী আৰু ৰাধা-কৃষ্ণৰ চৰণত দুপাহ বগা ফুল অৰ্পণ কৰক আৰু **"ওঁ ক্লীং কৃষ্ণায় নমঃ"** মন্ত্ৰ ৫১ বাৰ জপ কৰক।`;
             }
         }
 
-        // 2. MARRIAGE TIMING & SPOUSE
-        if (topic === "marriage") {
+        // ====================================================================
+        // CASE 3: SHOP / BUSINESS (Differentiating Loss/Closure vs Starting New)
+        // ====================================================================
+        if (hasShopOrBusiness) {
             const p7LordObj = getPlanetByAsName(h7.lord_as);
-            if (variationIdx === 0) {
-                const mangalikText = chart.isMangalik
-                    ? `আপোনাৰ কুণ্ডলীত মংগল গ্ৰহ ${houseOrdAs(chart.marsHouse)} ভাৱত (${mars.rashi_as} ৰাশিত) থকাৰ বাবে **আংশিক মাঙ্গলিক প্ৰভাৱ** দেখা গৈছে, সেয়েহে বিয়াৰ আগতে কুণ্ডলী মিলন বা মাঙ্গলিক শান্তি বিধি কৰাটো শুভ হ'ব।`
-                    : `আপোনাৰ কুণ্ডলীত মংগল গ্ৰহ ${houseOrdAs(chart.marsHouse)} ভাৱত (${mars.rashi_as} ৰাশিত) থকা হেতু কোনো গুৰুতৰ **মাঙ্গলিক দোষ নাই**, দাম্পত্য জীৱন সুখময় হ'ব।`;
-                const marriageType = (ven.house === 5 || ven.house === 7 || ven.house === 11 || p7LordObj.house === 5)
-                    ? "আপোনাৰ কুণ্ডলীত শুক্ৰ আৰু পঞ্চম-সপ্তম ভাৱৰ সংযোগ থকাৰ বাবে **নিজৰ পছন্দৰ বা প্ৰেম বিবাহ** হোৱাৰ যোগ অতি প্ৰবল।"
-                    : "আপোনাৰ কুণ্ডলীত সপ্তম পতি আৰু বৃহস্পতিৰ স্থিতি অনুসৰি পৰিয়ালৰ সন্মতি সাপেক্ষে **সম্মানজনক সামাজিক বা পছন্দৰ বিবাহ** হোৱাৰ যোগ প্ৰবল।";
-
-                return qHeader +
-                    `🔮 **জন্ম কুণ্ডলীৰ বিবাহ আৰু দাম্পত্য বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
-                    `আপোনাৰ কুণ্ডলীৰ **সপ্তম ভাৱ (বিবাহ স্থান)**ত আছে **${h7.rashi_as} ৰাশি**, যাৰ অধিপতি হৈছে **${h7.lord_as}** (বৰ্তমান কুণ্ডলীৰ ${houseOrdAs(p7LordObj.house)} ভাৱত, ${p7LordObj.rashi_as} ৰাশিৰ '${p7LordObj.nakshatra}' নক্ষত্ৰত স্থিত)। লগতে দাম্পত্য কাৰক **শুক্ৰ গ্ৰহ** ${houseOrdAs(ven.house)} ভাৱত (${ven.rashi_as} ৰাশিত) অৱস্থান কৰিছে:\n\n` +
-                    `১) **বিবাহৰ প্ৰকৃতি:** ${marriageType}\n` +
-                    `২) **বিবাহৰ সঠিক সময় (শুভ যোগ):** বৰ্তমান চলি থকা **${dashaName}**ত দেৱগুৰু বৃহস্পতিৰ গোচৰ দৃষ্টি আপোনাৰ সপ্তম আৰু একাদশ ভাৱত পৰিছে। ইয়াৰ ফলত **২০২৬ চনৰ নৱেম্বৰ মাহৰ পৰা ২০২৭ চনৰ নৱেম্বৰ মাহৰ ভিতৰত** আপোনাৰ বিবাহ স্থিৰ হোৱা বা মাংগলিক কাৰ্য সম্পন্ন হোৱাৰ সৰ্বশ্ৰেষ্ঠ যোগ গঠিত হৈছে।\n` +
-                    `৩) **ভাৱী জীৱনসংগীৰ স্বভাৱ আৰু দিশ:** সপ্তম ভাৱত ${h7.rashi_as} ৰাশি থকাৰ বাবে আপোনাৰ জীৱনসংগী দেখাত মাৰ্জিত, স্পষ্টবাদী, শিক্ষিত আৰু পৰিয়ালক সন্মান কৰা স্বভাৱৰ হ'ব। জন্মস্থানৰ পৰা **পূব বা উত্তৰ-পূব দিশত** সংগীৰ যোগ অধিক।\n` +
-                    `৪) **মাঙ্গলিক বিচাৰ:** ${mangalikText}\n\n` +
-                    `🕉️ **শীঘ্ৰ বিবাহ আৰু সুখী দাম্পত্যৰ বৈদিক প্ৰতিকাৰ:**\n` +
-                    `• প্ৰতি বৃহস্পতিবাৰে গা ধোৱা পানীত এচিকুট হালধি মিহলাই স্নান কৰক আৰু বিষ্ণু-লক্ষ্মীৰ চৰণত হালধীয়া ফুল অৰ্পণ কৰক।`;
-            } else {
-                return qHeader +
-                    `🔮 **বিবাহোত্তৰ ভাগ্যোদয় আৰু জীৱনসংগীৰ লক্ষণ বিচাৰ (${ascRashi} লগ্ন, সপ্তম ভাৱত ${h7.rashi_as} ৰাশি):**\n\n` +
-                    `আপোনাৰ কুণ্ডলীৰ নৱমাংশ অৱস্থান আৰু অষ্টম-দ্বিতীয় ভাৱ (কুটুম্ব স্থান — ${h2.rashi_as} ৰাশি) বিশ্লেষণ কৰি দেখা গৈছে:\n\n` +
-                    `১) **বিয়াৰ পিছত ভাগ্যোদয়:** সপ্তম পতি **${h7.lord_as}** আৰু ভাগ্য পতি **${h9.lord_as}**ৰ সংযোগৰ বাবে বিবাহৰ পিছত আপোনাৰ আৰ্থিক স্থিতি আৰু সামাজিক সন্মান যথেষ্ট বৃদ্ধি পাব।\n` +
-                    `২) **উপযুক্ত ৰাশি মিলন:** আপোনাৰ **${moon.rashi_as} ৰাশি (${moon.nakshatra} নক্ষত্ৰ)**ৰ বাবে মিথুন, তুলা, কুম্ভ, বৃষ বা ধনু ৰাশিৰ সংগী সৰ্বাধিক শুভ আৰু সুখদায়ক হ'ব।\n\n` +
-                    `🕉️ **দাম্পত্য সুখৰ বিশেষ মন্ত্ৰ:** প্ৰতি শুক্ৰবাৰে **"ওঁ লক্ষ্মী নাৰায়ণায় নমঃ"** মন্ত্ৰ ২৭ বাৰ জপ কৰিব।`;
-            }
+            const p10LordObj = getPlanetByAsName(h10.lord_as);
+            return `🔮 **জন্ম কুণ্ডলীৰ ব্যৱসায় আৰু দোকান-বাণিজ্যৰ গভীৰ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — চলমান ${dashaName}):**\n\n` +
+                `আপোনাৰ কুণ্ডলীৰ **সপ্তম ভাৱ (দোকান আৰু বাণিজ্য স্থান — ${h7.rashi_as} ৰাশি)**, **দশম ভাৱ (কৰ্ম স্থান — ${h10.rashi_as} ৰাশি)** আৰু ব্যৱসায় কাৰক **বুধ গ্ৰহ** (${houseOrdAs(merc.house)} ভাৱত, ${merc.rashi_as} ৰাশিত — **${merc.dignity_as}**) বিশ্লেষণ কৰি দেখা গৈছে:\n\n` +
+                `১) **ব্যৱসায়ত বাধা বা লোকচান কিয় হৈছে:** আপোনাৰ কুণ্ডলীত বুধ গ্ৰহ ${merc.rashi_as} ৰাশিত (${merc.dignity_as}) থকাৰ লগতে শনি দেৱতা ${houseOrdAs(sat.house)} ভাৱত (${sat.rashi_as} ৰাশিত) আছে আৰু বৰ্তমান **${dashaName}** চলি আছে। ইয়াৰ ফলত নিজৰ নামত বা খৰখেদাকৈ আৰম্ভ কৰা দোকানত ধন আবদ্ধ হৈ পৰে আৰু গ্ৰাহকৰ গতি হঠাতে কমি যায়।\n` +
+                `২) **পুনৰ ব্যৱসায়িক উন্নতিৰ পথ:** আপোনাৰ কুণ্ডলীৰ সপ্তম পতি **${h7.lord_as}** (${p7LordObj.rashi_as} ৰাশিত — ${p7LordObj.dignity_as}) বলবান হোৱা হেতু অহা **৩ মাহৰ পিছত** যেতিয়া অন্তৰ্দশাৰ উগ্ৰতা কমিব, তেতিয়া কম মূলধনৰ দৈনন্দিন প্ৰয়োজনীয় সামগ্ৰী, অনলাইন সেৱা, এজেন্সী বা খাদ্য/কাপোৰৰ ব্যৱসায়ত পুনৰ লাভৰ মুখ দেখিব। দোকান বা ব্যৱসায় আৰম্ভ কৰিলে ঘৰৰ মাতৃ বা জ্যেষ্ঠজনৰ আশীৰ্বাদ লৈ আৰম্ভ কৰিব।\n\n` +
+                `🕉️ **দোকান আৰু ব্যৱসায়ৰ বাধা নাশক বৈদিক প্ৰতিকাৰ:**\n` +
+                `• প্ৰতি বুধবাৰে ভগৱান গণেশক দূবৰি বন অৰ্পণ কৰি **"ওঁ গং গণপতয়ে নমঃ"** মন্ত্ৰ ১০৮ বাৰ জপ কৰক আৰু শনিবাৰে সন্ধিয়া মিঠাতেলৰ চাকি জ্বলাওক।`;
         }
 
-        // 3. GENERAL LOVE
-        if (topic === "love_general") {
+        // ====================================================================
+        // CASE 4: FINANCE / NO INCOME / DEBT
+        // ====================================================================
+        if (hasNoIncomeOrMoneyCrisis) {
+            const p2LordObj = getPlanetByAsName(h2.lord_as);
+            const p11LordObj = getPlanetByAsName(h11.lord_as);
+            return `🔮 **জন্ম কুণ্ডলীৰ উপাৰ্জন, ধন সংকট আৰু ঋণ মুক্তি বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — চলমান ${dashaName}):**\n\n` +
+                `আপোনাৰ কুণ্ডলীৰ **দ্বিতীয় ভাৱ (ধন স্থান — ${h2.rashi_as} ৰাশি, অধিপতি ${h2.lord_as})** আৰু **একাদশ ভাৱ (আয় স্থান — ${h11.rashi_as} ৰাশি, অধিপতি ${h11.lord_as})**ৰ গণনা অনুসৰি:\n\n` +
+                `১) **উপাৰ্জন বন্ধ হোৱা বা হাতত টকা নৰোৱাৰ কাৰণ:** বৰ্তমান চলি থকা **${dashaName}**ত দ্বাদশ ভাৱ (${h12.rashi_as} ৰাশি, য'ত শুক্ৰ স্থিত) আৰু ৰাহু-কেতুৰ প্ৰভাৱৰ বাবে আয়তকৈ ব্যয় অধিক হৈছে আৰু উপাৰ্জনৰ পথত সাময়িকভাৱে বাধা আহিছে।\n` +
+                `২) **নতুন আয়ৰ পথ কেতিয়া খোল খাব:** আপোনাৰ কুণ্ডলীত ধনকাৰক **বৃহস্পতি** (${houseOrdAs(jup.house)} ভাৱত, ${jup.rashi_as} ৰাশিত — **${jup.dignity_as}**) অতি শুভ স্থানত আছে। অহা **৪০ দিনৰ পৰা ৩ মাহৰ ভিতৰত** বৃহস্পতিৰ দৃষ্টিয়ে আপোনাৰ একাদশ ভাৱ (${h11.rashi_as}) সক্ৰিয় কৰিব, যাৰ ফলত নতুন উপাৰ্জনৰ পথ মুকলি হ'ব আৰু আৰ্থিক সকাহ লাভ কৰিব।\n\n` +
+                `🕉️ **আয় বৃদ্ধি আৰু লক্ষ্মী কৃপা লাভৰ বৈদিক প্ৰতিকাৰ:**\n` +
+                `• প্ৰতি শুক্ৰবাৰে আৰু বৃহস্পতিবাৰে সন্ধিয়া গোঁসাই ঘৰত ঘিউৰ চাকি জ্বলাই **"ওঁ শ্ৰীং হ্ৰীং শ্ৰীং কমলে কমলালয়ে প্ৰসীদ প্ৰসীদ"** মন্ত্ৰ ২১ বাৰ জপ কৰক।`;
+        }
+
+        // ====================================================================
+        // CASE 5: MARRIAGE TIMING & SPOUSE
+        // ====================================================================
+        if (hasMarriage) {
+            const p7LordObj = getPlanetByAsName(h7.lord_as);
+            const mangalikText = chart.isMangalik
+                ? `আপোনাৰ কুণ্ডলীত মংগল গ্ৰহ ${houseOrdAs(chart.marsHouse)} ভাৱত (${mars.rashi_as} ৰাশিত) থকাৰ বাবে **আংশিক মাঙ্গলিক প্ৰভাৱ** দেখা গৈছে, সেয়েহে বিয়াৰ আগতে কুণ্ডলী মিলন বা মাঙ্গলিক শান্তি বিধি কৰাটো শুভ হ'ব।`
+                : `আপোনাৰ কুণ্ডলীত মংগল গ্ৰহ ${houseOrdAs(chart.marsHouse)} ভাৱত (${mars.rashi_as} ৰাশিত) থকা হেতু কোনো গুৰুতৰ **মাঙ্গলিক দোষ নাই**, দাম্পত্য জীৱন সুখময় হ'ব।`;
+            const marriageType = (ven.house === 5 || ven.house === 7 || ven.house === 11 || p7LordObj.house === 5)
+                ? "আপোনাৰ কুণ্ডলীত শুক্ৰ আৰু পঞ্চম-সপ্তম ভাৱৰ সংযোগ থকাৰ বাবে **নিজৰ পছন্দৰ বা প্ৰেম বিবাহ** হোৱাৰ যোগ অতি প্ৰবল।"
+                : "আপোনাৰ কুণ্ডলীত সপ্তম পতি আৰু বৃহস্পতিৰ স্থিতি অনুসৰি পৰিয়ালৰ সন্মতি সাপেক্ষে **সম্মানজনক সামাজিক বা পছন্দৰ বিবাহ** হোৱাৰ যোগ প্ৰবল।";
+
+            return `🔮 **জন্ম কুণ্ডলীৰ বিবাহ আৰু দাম্পত্য বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
+                `আপোনাৰ কুণ্ডলীৰ **সপ্তম ভাৱ (বিবাহ স্থান)**ত আছে **${h7.rashi_as} ৰাশি**, যাৰ অধিপতি হৈছে **${h7.lord_as}** (বৰ্তমান কুণ্ডলীৰ ${houseOrdAs(p7LordObj.house)} ভাৱত, ${p7LordObj.rashi_as} ৰাশিৰ '${p7LordObj.nakshatra}' নক্ষত্ৰত — **${p7LordObj.dignity_as}**)। লগতে দাম্পত্য কাৰক **শুক্ৰ গ্ৰহ** ${houseOrdAs(ven.house)} ভাৱত (${ven.rashi_as} ৰাশিত) অৱস্থান কৰিছে:\n\n` +
+                `১) **বিবাহৰ প্ৰকৃতি:** ${marriageType}\n` +
+                `২) **বিবাহৰ সঠিক সময় (শুভ যোগ):** বৰ্তমান চলি থকা **${dashaName}**ত দেৱগুৰু বৃহস্পতিৰ গোচৰ দৃষ্টি আপোনাৰ সপ্তম আৰু একাদশ ভাৱত পৰিছে। ইয়াৰ ফলত **২০২৬ চনৰ নৱেম্বৰ মাহৰ পৰা ২০২৭ চনৰ নৱেম্বৰ মাহৰ ভিতৰত** আপোনাৰ বিবাহ স্থিৰ হোৱা বা মাংগলিক কাৰ্য সম্পন্ন হোৱাৰ সৰ্বশ্ৰেষ্ঠ যোগ গঠিত হৈছে।\n` +
+                `৩) **ভাৱী জীৱনসংগীৰ স্বভাৱ আৰু দিশ:** সপ্তম ভাৱত ${h7.rashi_as} ৰাশি থকাৰ বাবে আপোনাৰ জীৱনসংগী দেখাত মাৰ্জিত, স্পষ্টবাদী, শিক্ষিত আৰু পৰিয়ালক সন্মান কৰা স্বভাৱৰ হ'ব। জন্মস্থানৰ পৰা **পূব বা উত্তৰ-পূব দিশত** সংগীৰ যোগ অধিক।\n` +
+                `৪) **মাঙ্গলিক বিচাৰ:** ${mangalikText}\n\n` +
+                `🕉️ **শীঘ্ৰ বিবাহ আৰু সুখী দাম্পত্যৰ বৈদিক প্ৰতিকাৰ:**\n` +
+                `• প্ৰতি বৃহস্পতিবাৰে গা ধোৱা পানীত এচিকুট হালধি মিহলাই স্নান কৰক আৰু বিষ্ণু-লক্ষ্মীৰ চৰণত হালধীয়া ফুল অৰ্পণ কৰক।`;
+        }
+
+        // ====================================================================
+        // CASE 6: GENERAL LOVE
+        // ====================================================================
+        if (hasLoveGeneral) {
             const p5LordObj = getPlanetByAsName(h5.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ প্ৰেম আৰু অনুভূতি বিশ্লেষণ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                `আপোনাৰ কুণ্ডলীৰ **পঞ্চম ভাৱ (প্ৰেম স্থান)**ত আছে **${h5.rashi_as} ৰাশি** (অধিপতি **${h5.lord_as}**, যি ${houseOrdAs(p5LordObj.house)} ভাৱত '${p5LordObj.nakshatra}' নক্ষত্ৰত স্থিত) আৰু প্ৰেমৰ কাৰক **শুক্ৰ গ্ৰহ** ${houseOrdAs(ven.house)} ভাৱত (${ven.rashi_as} ৰাশিত) আছে:\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ প্ৰেম আৰু অনুভূতি বিশ্লেষণ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+                `আপোনাৰ কুণ্ডলীৰ **পঞ্চম ভাৱ (প্ৰেম স্থান)**ত আছে **${h5.rashi_as} ৰাশি** (অধিপতি **${h5.lord_as}**, যি ${houseOrdAs(p5LordObj.house)} ভাৱত '${p5LordObj.nakshatra}' নক্ষত্ৰত স্থিত) আৰু প্ৰেমৰ কাৰক **শুক্ৰ গ্ৰহ** ${houseOrdAs(ven.house)} ভাৱত (${ven.rashi_as} ৰাশিত — **${ven.dignity_as}**) আছে:\n\n` +
                 `১) **প্ৰেমৰ স্বভাৱ আৰু সঁহাৰি:** আপোনাৰ চন্দ্ৰ '${moon.nakshatra}' নক্ষত্ৰত থকাৰ বাবে আপুনি যাক ভাল পায়, অন্তৰৰ পৰা সঁচা মৰম দিয়ে। বৰ্তমান **${dashaName}**ত শুক্ৰ আৰু চন্দ্ৰৰ শুভ প্ৰভাৱত আপোনাৰ প্ৰেমৰ সম্পৰ্কত ইতিবাচক সঁহাৰি আৰু গভীৰতা বৃদ্ধি পাব।\n` +
                 `২) **মনৰ কথা প্ৰকাশৰ শুভ সময়:** অহা শুক্ল পক্ষৰ শুক্ৰবাৰ বা পূৰ্ণিমা তিথিৰ আশে-পাশে মনৰ কথা স্পষ্ট আৰু মধুৰভাৱে প্ৰকাশ কৰিলে সফলতা লাভ কৰিব।\n\n` +
                 `🕉️ **প্ৰতিকাৰ:** শুক্ৰবাৰে মা লক্ষ্মীৰ চৰণত বগা ফুল অৰ্পণ কৰক আৰু শুদ্ধ গোলাপী বা বগা ৰঙৰ কাপোৰ অধিক ব্যৱহাৰ কৰক।`;
         }
 
-        // 4. GOVERNMENT JOB
-        if (topic === "govt_job") {
+        // ====================================================================
+        // CASE 7: GOVERNMENT JOB
+        // ====================================================================
+        if (hasGovtJob) {
             const p10LordObj = getPlanetByAsName(h10.lord_as);
             const p6LordObj = getPlanetByAsName(h6.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ চৰকাৰী চাকৰি আৰু প্ৰতিযোগিতা বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ চৰকাৰী চাকৰি আৰু প্ৰতিযোগিতা বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `চৰকাৰী চাকৰিৰ বাবে কুণ্ডলীৰ **দশম ভাৱ (কৰ্ম স্থান — ${h10.rashi_as} ৰাশি)**, **ষষ্ঠ ভাৱ (প্ৰতিযোগিতা স্থান — ${h6.rashi_as} ৰাশি)** আৰু ৰাজ্যকাৰক **সূৰ্য গ্ৰহ**ৰ অৱস্থান বিচাৰ কৰা হয়:\n\n` +
-                `১) **গ্ৰহৰ স্থিতি:** আপোনাৰ কুণ্ডলীত **সূৰ্য গ্ৰহ** ${houseOrdAs(sun.house)} ভাৱত (${sun.rashi_as} ৰাশি, '${sun.nakshatra}' নক্ষত্ৰ, ${toAsNum(sun.degree || 14)}° ডিগ্ৰীত) আৰু কৰ্মপতি **${h10.lord_as}** ${houseOrdAs(p10LordObj.house)} ভাৱত (${p10LordObj.rashi_as} ৰাশিত) স্থিত। লগতে ষষ্ঠ পতি **${h6.lord_as}** ${houseOrdAs(p6LordObj.house)} ভাৱত অৱস্থান কৰিছে।\n` +
+                `১) **গ্ৰহৰ স্থিতি:** আপোনাৰ কুণ্ডলীত **সূৰ্য গ্ৰহ** ${houseOrdAs(sun.house)} ভাৱত (${sun.rashi_as} ৰাশি, '${sun.nakshatra}' নক্ষত্ৰ — **${sun.dignity_as}**) আৰু কৰ্মপতি **${h10.lord_as}** ${houseOrdAs(p10LordObj.house)} ভাৱত (${p10LordObj.rashi_as} ৰাশিত) স্থিত। লগতে ষষ্ঠ পতি **${h6.lord_as}** ${houseOrdAs(p6LordObj.house)} ভাৱত অৱস্থান কৰিছে।\n` +
                 `২) **চৰকাৰী চাকৰিৰ যোগ আৰু বিভাগ:** সূৰ্য আৰু ${h10.lord_as}ৰ এই সংযোগে সূচায় যে শিক্ষা বিভাগ, প্ৰশাসনিক সেৱা, বেংকিং, আৰক্ষী/প্ৰতিৰক্ষা বা চৰকাৰী কাৰ্যালয়ৰ পৰীক্ষাত আপোনাৰ সফলতাৰ যোগ আছে। বৰ্তমান চলি থকা **${dashaName}**ত অহা **২০২৬ চনৰ শেষভাগৰ পৰা ২০২৭ চনৰ আগষ্ট মাহৰ ভিতৰত** অনুষ্ঠিত হ'বলগীয়া পৰীক্ষা আৰু সাক্ষাৎকাৰত আপোনাৰ বিশেষ সাফল্যৰ যোগ উজ্জ্বল।\n\n` +
                 `🕉️ **চৰকাৰী চাকৰি লাভৰ বৈদিক প্ৰতিকাৰ:**\n` +
                 `• প্ৰতিদিনে পুৱা ৮ বজাৰ আগতে তামৰ পাত্ৰত পানী, ৰঙা ফুল আৰু অক্ষত (চাউল) দি উদিত সূৰ্য দেৱতাক অৰ্ঘ্য অৰ্পণ কৰক আৰু **"ওঁ আদিত্যায় বিদ্মহে দিবাকৰায় ধীমহি তন্নঃ সূৰ্যঃ প্ৰচোদয়াত্"** মন্ত্ৰ ১১ বাৰ জপ কৰক।`;
         }
 
-        // 5. CAREER & JOB
-        if (topic === "career") {
+        // ====================================================================
+        // CASE 8: CAREER & JOB
+        // ====================================================================
+        if (hasCareerOrJob) {
             const p10LordObj = getPlanetByAsName(h10.lord_as);
             const occ10 = h10.occupants_as.length > 0 ? `আৰু দশম ভাৱত **${h10.occupants_as.join(', ')}** গ্ৰহ বিৰাজমান` : `আৰু দশম ভাৱত শুভ দৃষ্টি পৰিছে`;
-            if (variationIdx === 0) {
-                return qHeader +
-                    `🔮 **জন্ম কুণ্ডলীৰ কেৰিয়াৰ আৰু কৰ্মফল বিশ্লেষণ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
-                    `আপোনাৰ জন্ম কুণ্ডলীৰ **দশম ভাৱ (কৰ্ম স্থান)**ত আছে **${h10.rashi_as} ৰাশি**, যাৰ অধিপতি হৈছে **${h10.lord_as}** (কুণ্ডলীৰ ${houseOrdAs(p10LordObj.house)} ভাৱত, ${p10LordObj.rashi_as} ৰাশিত স্থিত) ${occ10}। লগতে কর্মকাৰক **শনি দেৱতা** ${houseOrdAs(sat.house)} ভাৱত (${sat.rashi_as} ৰাশি, '${sat.nakshatra}' নক্ষত্ৰত) অৱস্থান কৰিছে:\n\n` +
-                    `১) **বৰ্তমান মহাদশাৰ ফল:** বৰ্তমান আপোনাৰ কুণ্ডলীত **${dashaName}** (${dashaRange}) চলি আছে। ইয়াৰ প্ৰভাৱত কৰ্মক্ষেত্ৰত পূৰ্বতে থকা স্থবিৰতা বা মানসিক চাপ ক্ৰমান্বয়ে আঁতৰি যাব।\n` +
-                    `২) **চাকৰি আৰু উন্নতিৰ সময়সীমা:** অহা **৩ ৰ পৰা ৬ মাহৰ ভিতৰত** বৃহস্পতি (${jup.rashi_as} ৰাশিত স্থিত) আৰু দশম পতি ${h10.lord_as}ৰ অনুকূল সংযোগে আপোনাক নতুন চাকৰিৰ সুযোগ, পদোন্নতি বা দৰমহা বৃদ্ধিৰ যোগ প্ৰদান কৰিব।\n` +
-                    `৩) **আপোনাৰ বাবে উপযুক্ত ক্ষেত্ৰ:** ${ascRashi} লগ্ন আৰু দশম ভাৱৰ ${h10.rashi_as} ৰাশি অনুসৰি চৰকাৰী/বেচৰকাৰী প্ৰশাসন, শিক্ষা, বেংকিং, তথ্য-প্ৰযুক্তি, বাণিজ্য বা স্বতন্ত্ৰ ব্যৱসায়ত আপুনি বিশেষ উন্নতি কৰিব পাৰিব।\n\n` +
-                    `🕉️ **কৰ্মোন্নতিৰ বৈদিক প্ৰতিকাৰ:**\n` +
-                    `• প্ৰতিদিনে পুৱা স্নান কৰি সূৰ্য দেৱতাক জল অৰ্পণ কৰক আৰু শনিবাৰে সন্ধিয়া আঁহত গছৰ তলত বা গোঁসাই ঘৰত মিঠাতেলৰ চাকি জ্বলাই **"ওঁ শং শনৈশ্চৰায় নমঃ"** মন্ত্ৰ জপ কৰক।`;
-            } else {
-                return qHeader +
-                    `🔮 **কৰ্মক্ষেত্ৰৰ বাধা নিবাৰণ আৰু উচ্চ পদবী লাভৰ সূক্ষ্ম বিচাৰ (${ascRashi} লগ্ন, দশম ভাৱত ${h10.rashi_as} ৰাশি):**\n\n` +
-                    `আপোনাৰ কুণ্ডলীৰ একাদশ ভাৱ (লাভ স্থান — ${h11.rashi_as} ৰাশি) আৰু ভাগ্য স্থান (${h9.rashi_as} ৰাশি)ৰ সূক্ষ্ম গণনা অনুসৰি:\n\n` +
-                    `১) **কিয় পৰিশ্ৰম অনুপাতে ফল পোৱাত পলম হৈছিল:** কুণ্ডলীত শনি (${houseOrdAs(sat.house)} ভাৱত) আৰু ৰাহু (${houseOrdAs(rahu.house)} ভাৱত)ৰ স্থিতিয়ে জীৱনৰ প্ৰথম ভাগত কিছু সংগ্ৰাম দিয়ে, কিন্তু ২৮–৩০ বছৰ বয়সৰ পিছত স্থায়ী উচ্চ পদবী আৰু সন্মান প্ৰদান কৰে।\n` +
-                    `২) **আগন্তুক সুযোগ:** চলমান **${antardashaLord}** অন্তৰ্দশাত কোনো জ্যেষ্ঠ বা প্ৰভাৱশালী ব্যক্তিৰ সহযোগত আপোনাৰ কৰ্মজীৱনত এটা ডাঙৰ ইতিবাচক পৰিৱৰ্তন আহিব।\n\n` +
-                    `🕉️ **বিশেষ উপায়:** বুধবাৰে গাই গৰুক সেউজীয়া ঘাঁহ খুৱাওক আৰু কৰ্মক্ষেত্ৰলৈ যাওঁতে পকেটত এখন বগা বা হালধীয়া ৰুমাল ৰাখক।`;
-            }
+            return `🔮 **জন্ম কুণ্ডলীৰ কেৰিয়াৰ আৰু কৰ্মফল বিশ্লেষণ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি — ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
+                `আপোনাৰ জন্ম কুণ্ডলীৰ **দশম ভাৱ (কৰ্ম স্থান)**ত আছে **${h10.rashi_as} ৰাশি**, যাৰ অধিপতি হৈছে **${h10.lord_as}** (কুণ্ডলীৰ ${houseOrdAs(p10LordObj.house)} ভাৱত, ${p10LordObj.rashi_as} ৰাশিত — **${p10LordObj.dignity_as}**) ${occ10}। লগতে কর্মকাৰক **শনি দেৱতা** ${houseOrdAs(sat.house)} ভাৱত (${sat.rashi_as} ৰাশি, '${sat.nakshatra}' নক্ষত্ৰত) অৱস্থান কৰিছে:\n\n` +
+                `১) **বৰ্তমান মহাদশাৰ ফল:** বৰ্তমান আপোনাৰ কুণ্ডলীত **${dashaName}** (${dashaRange}) চলি আছে। ইয়াৰ প্ৰভাৱত কৰ্মক্ষেত্ৰত পূৰ্বতে থকা স্থবিৰতা বা মানসিক চাপ ক্ৰমান্বয়ে আঁতৰি যাব।\n` +
+                `২) **চাকৰি আৰু উন্নতিৰ সময়সীমা:** অহা **৩ ৰ পৰা ৬ মাহৰ ভিতৰত** বৃহস্পতি (${jup.rashi_as} ৰাশিত স্থিত) আৰু দশম পতি ${h10.lord_as}ৰ অনুকূল সংযোগে আপোনাক নতুন চাকৰিৰ সুযোগ, পদোন্নতি বা দৰমহা বৃদ্ধিৰ যোগ প্ৰদান কৰিব।\n` +
+                `৩) **আপোনাৰ বাবে উপযুক্ত ক্ষেত্ৰ:** ${ascRashi} লগ্ন আৰু দশম ভাৱৰ ${h10.rashi_as} ৰাশি অনুসৰি চৰকাৰী/বেচৰকাৰী প্ৰশাসন, শিক্ষা, বেংকিং, তথ্য-প্ৰযুক্তি, বাণিজ্য বা স্বতন্ত্ৰ সেৱা ক্ষেত্ৰত আপুনি বিশেষ উন্নতি কৰিব পাৰিব।\n\n` +
+                `🕉️ **কৰ্মোন্নতিৰ বৈদিক প্ৰতিকাৰ:**\n` +
+                `• প্ৰতিদিনে পুৱা স্নান কৰি সূৰ্য দেৱতাক জল অৰ্পণ কৰক আৰু শনিবাৰে সন্ধিয়া আঁহত গছৰ তলত বা গোঁসাই ঘৰত মিঠাতেলৰ চাকি জ্বলাই **"ওঁ শং শনৈশ্চৰায় নমঃ"** মন্ত্ৰ জপ কৰক।`;
         }
 
-        // 6. BUSINESS
-        if (topic === "business") {
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ ব্যৱসায় আৰু বাণিজ্য বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                `ব্যৱসায়ৰ বাবে কুণ্ডলীৰ **সপ্তম ভাৱ (${h7.rashi_as} ৰাশি)**, **দশম ভাৱ (${h10.rashi_as} ৰাশি)**, **একাদশ ভাৱ (${h11.rashi_as} ৰাশি)** আৰু বাণিজ্য কাৰক **বুধ গ্ৰহ**ৰ অৱস্থান বিচাৰ কৰা হয়:\n\n` +
-                `১) **বুধ আৰু লাভ স্থানৰ স্থিতি:** আপোনাৰ কুণ্ডলীত **বুধ গ্ৰহ** ${houseOrdAs(merc.house)} ভাৱত (${merc.rashi_as} ৰাশি, '${merc.nakshatra}' নক্ষত্ৰত) আৰু লাভপতি **${h11.lord_as}** অনুকূল স্থানত আছে। ই আপোনাক তীক্ষ্ণ ব্যৱসায়িক বুদ্ধি আৰু গ্ৰাহকক আকৰ্ষণ কৰাৰ ক্ষমতা দিছে।\n` +
-                `২) **কোনবোৰ ব্যৱসায়ত লাভ হ'ব:** ঠিকাদাৰী, নিৰ্মাণ সামগ্ৰী, কাপোৰ বা ফেশ্বন, খাদ্য-সামগ্ৰী, অনলাইন বাণিজ্য, এজেন্সী বা খুচুৰা ব্যৱসায় আপোনাৰ কুণ্ডলীৰ বাবে বিশেষ লাভজনক। অৱশ্যে বৰ্তমান **${dashaName}**ত কাকো অন্ধভাৱে বিশ্বাস কৰি অংশীদাৰী ব্যৱসায়ত ডাঙৰ ধন নলগাব; একক মালিকানাধীন ব্যৱসায় অধিক শুভ।\n\n` +
-                `🕉️ **ব্যৱসায় বৃদ্ধিত বৈদিক প্ৰতিকাৰ:** বুধবাৰে ভগৱান গণেশক দূবৰি বন আৰু মোদক বা লাড়ু অৰ্পণ কৰি **"ওঁ গং গণপতয়ে নমঃ"** মন্ত্ৰ ২১ বাৰ জপ কৰক।`;
-        }
-
-        // 7. FINANCE & DEBT
-        if (topic === "finance") {
-            const p2LordObj = getPlanetByAsName(h2.lord_as);
-            const p11LordObj = getPlanetByAsName(h11.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ ধন-সম্পদ, সঞ্চয় আৰু ঋণ মুক্তি বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                `আপোনাৰ কুণ্ডলীৰ **দ্বিতীয় ভাৱ (ধন আৰু সঞ্চয় স্থান)**ত আছে **${h2.rashi_as} ৰাশি** (অধিপতি **${h2.lord_as}**, ${houseOrdAs(p2LordObj.house)} ভাৱত স্থিত) আৰু **একাদশ ভাৱ (আয় স্থান)**ত আছে **${h11.rashi_as} ৰাশি** (অধিপতি **${h11.lord_as}**, ${houseOrdAs(p11LordObj.house)} ভাৱত স্থিত):\n\n` +
-                `১) **টকা হাতত নৰোৱা বা ঋণ হোৱাৰ কাৰণ:** আপোনাৰ কুণ্ডলীত দ্বাদশ ভাৱ (${h12.rashi_as} ৰাশি) আৰু ৰাহু (${houseOrdAs(rahu.house)} ভাৱত, ${rahu.rashi_as} ৰাশিত)ৰ প্ৰভাৱৰ বাবে উপাৰ্জন হ'লেও অনাকাংক্ষিত খৰচ বা লোকক সহায় কৰিবলৈ গৈ ধন আবদ্ধ হৈ পৰে।\n` +
-                `২) **আৰ্থিক উন্নতিৰ যোগ:** বৰ্তমান চলি থকা **${dashaName}**ত ধনকাৰক **বৃহস্পতি** (${houseOrdAs(jup.house)} ভাৱত, ${jup.rashi_as} ৰাশিত)ৰ শুভ দৃষ্টিৰ ফলত অহা **৩ মাহৰ ভিতৰত** আৰ্থিক সংকট হ্ৰাস পাব, পুৰণি ধাৰ-ঋণ পৰিশোধৰ পথ মুকলি হ'ব আৰু নতুন সঞ্চয় আৰম্ভ হ'ব।\n\n` +
-                `🕉️ **লক্ষ্মী স্থায়িত্ব আৰু ঋণ মুক্তিৰ বৈদিক প্ৰতিকাৰ:**\n` +
-                `• প্ৰতি শুক্ৰবাৰে সন্ধিয়া গোঁসাই ঘৰত ঘিউৰ চাকি জ্বলাই **"ওঁ শ্ৰীং হ্ৰীং শ্ৰীং কমলে কমলালয়ে প্ৰসীদ প্ৰসীদ"** মন্ত্ৰ জপ কৰক।\n` +
-                `• ধন থোৱা আলমাৰী বা পাৰ্চত এটুকুৰা গোটা হালধি আৰু কেইটামান কড়ি ৰঙা কাপোৰত বান্ধি ৰাখক।`;
-        }
-
-        // 8. EDUCATION
-        if (topic === "education") {
+        // ====================================================================
+        // CASE 9: EDUCATION / HEALTH / FAMILY / PROPERTY / DOSHA / GEMSTONE / TRAVEL / LEGAL
+        // ====================================================================
+        if (hasEducation) {
             const p5LordObj = getPlanetByAsName(h5.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ শিক্ষা, একাগ্ৰতা আৰু পৰীক্ষা ফলাফল বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ শিক্ষা, একাগ্ৰতা আৰু পৰীক্ষা ফলাফল বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `আপোনাৰ কুণ্ডলীৰ **পঞ্চম ভাৱ (বিদ্যা আৰু বুদ্ধি স্থান)**ত আছে **${h5.rashi_as} ৰাশি** (অধিপতি **${h5.lord_as}**, ${houseOrdAs(p5LordObj.house)} ভাৱত স্থিত) আৰু বুদ্ধিকাৰক **বুধ গ্ৰহ** ${houseOrdAs(merc.house)} ভাৱত (${merc.rashi_as} ৰাশি, '${merc.nakshatra}' নক্ষত্ৰত) অৱস্থান কৰিছে:\n\n` +
                 `১) **স্মৃতিশক্তি আৰু একাগ্ৰতা:** আপোনাৰ জন্ম নক্ষত্ৰ **'${moon.nakshatra}'** হোৱা হেতু আপোনাৰ মেধাশক্তি তীক্ষ্ণ, কিন্তু চন্দ্ৰ আৰু ৰাহুৰ গোচৰ প্রভাৱত মাজে মাজে মন চঞ্চল হয়। বৰ্তমান **${dashaName}**ত অধ্যয়নত একাগ্ৰতা বৃদ্ধি পাব আৰু আগন্তুক পৰীক্ষাত আশানুৰূপ ফলাফল লাভ কৰিব।\n` +
-                `২) **শুভ দিশ:** সদায় **পূব বা উত্তৰ দিশলৈ** মুখ কৰি পঢ়া-শুনা কৰিব, ইয়াৰ ফলত বুধ আৰু বৃহস্পতিৰ ধনাত্মক উৰ্জা লাভ হয়।\n\n` +
-                `🕉️ **বিদ্যাত সাফল্যৰ প্ৰতিকাৰ:** প্ৰতিদিনে পুৱা **"ওঁ ঐং সৰস্বত্যৈ নমঃ"** মন্ত্ৰ ২১ বাৰ জপ কৰক আৰু বুধবাৰে ভগৱান গণেশক দূবৰি বন অৰ্পণ কৰক।`;
+                `২) **শুভ দিশ:** সদায় **পূব বা উত্তৰ দিশলৈ** মুখ কৰি পঢ়া-শুনা কৰিব।\n\n` +
+                `🕉️ **বিদ্যাত সাফল্যৰ প্ৰতিকাৰ:** প্ৰতিদিনে পুৱা **"ওঁ ঐং সৰস্বত্যৈ নমঃ"** মন্ত্ৰ ২১ বাৰ জপ কৰক।`;
         }
 
-        // 9. HEALTH
-        if (topic === "health") {
+        if (hasHealth) {
             const p6LordObj = getPlanetByAsName(h6.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ স্বাস্থ্য, আৰোগ্য আৰু মানসিক শান্তি বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ স্বাস্থ্য, আৰোগ্য আৰু মানসিক শান্তি বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `আপোনাৰ কুণ্ডলীৰ **লগ্ন পতি ${ascLord}**, **ষষ্ঠ ভাৱ (ৰোগ স্থান — ${h6.rashi_as} ৰাশি, অধিপতি ${h6.lord_as})** আৰু **অষ্টম ভাৱ (${h8.rashi_as} ৰাশি)** বিশ্লেষণ কৰি দেখা গৈছে:\n\n` +
-                `১) **শাৰীৰিক আৰু মানসিক স্থিতি:** লগ্ন পতি ${ascLord} আৰু সূৰ্য (${houseOrdAs(sun.house)} ভাৱত)ৰ বল থকাৰ বাবে আপোনাৰ আয়ুস আৰু ৰোগ প্ৰতিৰোধ ক্ষমতা সবল। অৱশ্যে ষষ্ঠ পতি ${h6.lord_as} (${houseOrdAs(p6LordObj.house)} ভাৱত) আৰু চন্দ্ৰৰ স্থিতিৰ বাবে পেট বা গেষ্ট্ৰিকৰ সমস্যা, স্নায়ুবিক ভাগৰ, মূৰৰ বিষ বা অত্যাধিক চিন্তাৰ বাবে টোপনিৰ ব্যাঘাত ঘটিব পাৰে।\n` +
-                `২) **আৰোগ্য যোগ:** বৰ্তমান চলি থকা **${dashaName}**ত কোনো গুৰুতৰ বা জটিল ৰোগৰ শংকা নাই; সঠিক খাদ্যাভ্যাস আৰু চিকিৎসাত শীঘ্ৰেই উপশম লাভ কৰিব।\n\n` +
-                `🕉️ **স্বাস্থ্য ৰক্ষাৰ বৈদিক প্ৰতিকাৰ:**\n` +
-                `• সদায় পুৱা স্নানৰ পিছত **"ওঁ ত্ৰ্যম্বকং যজামহে সুগন্ধিং পুষ্টিবৰ্ধনম্ উৰ্বাৰুকমিৱ বন্ধনান্ মৃত্যোৰ্মুক্ষীয় মামৃতাত্"** (মহামৃত্যুঞ্জয় মন্ত্ৰ) ১১ বাৰ পাঠ কৰক আৰু নিশা শুবলৈ যোৱাৰ আগতে ভৰি ধুই শুব।`;
+                `১) **শাৰীৰিক আৰু মানসিক স্থিতি:** সূৰ্য (${houseOrdAs(sun.house)} ভাৱত — ${sun.dignity_as})ৰ বল থকাৰ বাবে আপোনাৰ আয়ুস আৰু ৰোগ প্ৰতিৰোধ ক্ষমতা সবল। অৱশ্যে ষষ্ঠ পতি ${h6.lord_as} (${houseOrdAs(p6LordObj.house)} ভাৱত) আৰু চলমান **${dashaName}**ৰ বাবে পেট বা গেষ্ট্ৰিকৰ সমস্যা, স্নায়ুবিক ভাগৰ বা অত্যাধিক চিন্তাৰ বাবে টোপনিৰ ব্যাঘাত ঘটিব পাৰে।\n` +
+                `২) **আৰোগ্য যোগ:** কোনো গুৰুতৰ ৰোগৰ শংকা নাই; সঠিক খাদ্যাভ্যাস আৰু চিকিৎসাত শীঘ্ৰেই উপশম লাভ কৰিব।\n\n` +
+                `🕉️ **স্বাস্থ্য ৰক্ষাৰ বৈদিক প্ৰতিকাৰ:** সদায় পুৱা স্নানৰ পিছত **মহামৃত্যুঞ্জয় মন্ত্ৰ** ১১ বাৰ পাঠ কৰক।`;
         }
 
-        // 10. FAMILY & CHILDREN
-        if (topic === "family") {
+        if (hasFamilyOrChild) {
             const p4LordObj = getPlanetByAsName(h4.lord_as);
             const p5LordObj = getPlanetByAsName(h5.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ পাৰিবাৰিক সুখ আৰু সন্তান যোগ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ পাৰিবাৰিক সুখ আৰু সন্তান যোগ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `আপোনাৰ কুণ্ডলীৰ **চতুৰ্থ ভাৱ (গৃহ সুখ স্থান — ${h4.rashi_as} ৰাশি, অধিপতি ${h4.lord_as})** আৰু **পঞ্চম ভাৱ (সন্তান স্থান — ${h5.rashi_as} ৰাশি, অধিপতি ${h5.lord_as})**ৰ গণনা অনুসৰি:\n\n` +
-                `১) **পাৰিবাৰিক শান্তি:** চতুৰ্থ পতি **${h4.lord_as}** কুণ্ডলীৰ ${houseOrdAs(p4LordObj.house)} ভাৱত (${p4LordObj.rashi_as} ৰাশিত) স্থিত। ঘৰত মাজে মাজে সৰু-সুৰা মতানৈক্য হ'লেও বৰ্তমান **${dashaName}**ত পৰিয়ালৰ সদস্যসকলৰ মাজত একতা আৰু মাংগলিক আনন্দ বৃদ্ধি পাব।\n` +
-                `২) **সন্তান সুখ আৰু ভৱিষ্যৎ:** পঞ্চম পতি **${h5.lord_as}** (${houseOrdAs(p5LordObj.house)} ভাৱত) আৰু সন্তান কাৰক **বৃহস্পতি** (${houseOrdAs(jup.house)} ভাৱত, ${jup.rashi_as} ৰাশিত)ৰ শুভ দৃষ্টিয়ে সুযোগ্য আৰু ভাগ্যবান সন্তান সুখৰ যোগ দেখুৱাইছে।\n\n` +
-                `🕉️ **পাৰিবাৰিক মংগলৰ প্ৰতিকাৰ:** প্ৰতিদিনে সন্ধিয়া ঘৰৰ তুলসী তলত আৰু গোঁসাই ঘৰত চাকি জ্বলাই সমূহীয়াভাৱে ভগৱান বিষ্ণু আৰু মা লক্ষ্মীক স্মৰণ কৰক।`;
+                `১) **পাৰিবাৰিক শান্তি:** চতুৰ্থ পতি **${h4.lord_as}** কুণ্ডলীৰ ${houseOrdAs(p4LordObj.house)} ভাৱত (${p4LordObj.rashi_as} ৰাশিত) স্থিত। বৰ্তমান **${dashaName}**ত পৰিয়ালৰ সদস্যসকলৰ মাজত একতা আৰু মাংগলিক আনন্দ বৃদ্ধি পাব।\n` +
+                `২) **সন্তান সুখ:** পঞ্চম পতি **${h5.lord_as}** (${houseOrdAs(p5LordObj.house)} ভাৱত) আৰু সন্তান কাৰক **বৃহস্পতি** (${houseOrdAs(jup.house)} ভাৱত, ${jup.rashi_as} ৰাশিত)ৰ শুভ দৃষ্টিয়ে সুযোগ্য আৰু ভাগ্যবান সন্তান সুখৰ যোগ দেখুৱাইছে।\n\n` +
+                `🕉️ **পাৰিবাৰিক মংগলৰ প্ৰতিকাৰ:** প্ৰতিদিনে সন্ধিয়া ঘৰৰ তুলসী তলত আৰু গোঁসাই ঘৰত চাকি জ্বলাই ভগৱান বিষ্ণু আৰু মা লক্ষ্মীক স্মৰণ কৰক।`;
         }
 
-        // 11. PROPERTY & VEHICLE
-        if (topic === "property") {
+        if (hasPropertyOrVehicle) {
             const p4LordObj = getPlanetByAsName(h4.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ ভূমি, গৃহ নিৰ্মাণ আৰু বাহন সুখ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ ভূমি, গৃহ নিৰ্মাণ আৰু বাহন সুখ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `স্থায়ী সম্পত্তি আৰু বাহনৰ বাবে কুণ্ডলীৰ **চতুৰ্থ ভাৱ (${h4.rashi_as} ৰাশি)**, ভূমিপুত্র **মংগল** (${houseOrdAs(mars.house)} ভাৱত, ${mars.rashi_as} ৰাশিত) আৰু বাহন কাৰক **শুক্ৰ** (${houseOrdAs(ven.house)} ভাৱত, ${ven.rashi_as} ৰাশিত) বিচাৰ কৰা হয়:\n\n` +
-                `১) **গৃহ আৰু ভূমি যোগ:** চতুৰ্থ পতি **${h4.lord_as}** ${houseOrdAs(p4LordObj.house)} ভাৱত স্থিত হোৱা হেতু নিজৰ উপাৰ্জনেৰে মাটি ক্ৰয় আৰু সুন্দৰ পকী ঘৰ নিৰ্মাণৰ পূৰ্ণ যোগ আপোনাৰ কুণ্ডলীত আছে। বৰ্তমান **${dashaName}**ত অহা ১ ৰ পৰা ২ বছৰৰ ভিতৰত গৃহ নিৰ্মাণ বা সম্পত্তি বৃদ্ধিত বিশেষ সফলতা পাব।\n` +
-                `২) **বাহন সুখ:** শুক্ৰ গ্ৰহৰ অনুকূল অৱস্থানে নতুন বাহন ক্ৰয়ৰ শুভ সংকেত দিছে।\n\n` +
-                `🕉️ **প্ৰতিকাৰ:** মঙ্গলবাৰে হনুমান চালিছা পাঠ কৰক আৰু ঘৰৰ ঈশান কোণ (উত্তৰ-পূব দিশ) সদায় পৰিষ্কাৰ তথা মুকলি ৰাখক।`;
+                `১) **গৃহ আৰু ভূমি যোগ:** চতুৰ্থ পতি **${h4.lord_as}** ${houseOrdAs(p4LordObj.house)} ভাৱত স্থিত হোৱা হেতু নিজৰ উপাৰ্জনেৰে মাটি ক্ৰয় আৰু সুন্দৰ পকী ঘৰ নিৰ্মাণৰ পূৰ্ণ যোগ আপোনাৰ কুণ্ডলীত আছে।\n` +
+                `২) **বাহন সুখ:** শুক্ৰ গ্ৰহৰ অনুকূল অৱস্থানে বাহন সুখৰ শুভ সংকেত দিছে।\n\n` +
+                `🕉️ **প্ৰতিকাৰ:** মঙ্গলবাৰে হনুমান চালিছা পাঠ কৰক আৰু ঘৰৰ ঈশান কোণ (উত্তৰ-পূব দিশ) সদায় পৰিষ্কাৰ ৰাখক।`;
         }
 
-        // 12. DOSHA CHECK
-        if (topic === "dosha") {
+        if (hasDosha) {
             const mangalikLine = chart.isMangalik
                 ? `• **মাঙ্গলিক বিচাৰ:** আপোনাৰ কুণ্ডলীত মংগল গ্ৰহ ${houseOrdAs(chart.marsHouse)} ভাৱত (${mars.rashi_as} ৰাশিত) থকাৰ বাবে **আংশিক মাঙ্গলিক প্ৰভাৱ** আছে। কিন্তু বৃহস্পতি (${jup.rashi_as} ৰাশিত)ৰ শুভ দৃষ্টিয়ে ইয়াৰ উগ্ৰতা যথেষ্ট হ্ৰাস কৰিছে।`
                 : `• **মাঙ্গলিক বিচাৰ:** আপোনাৰ কুণ্ডলীত মংগল গ্ৰহ ${houseOrdAs(chart.marsHouse)} ভাৱত (${mars.rashi_as} ৰাশিত) স্থিত হোৱা হেতু আপোনাৰ কুণ্ডলীত কোনো **মাঙ্গলিক দোষ নাই**।`;
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ গ্ৰহ দোষ আৰু নিবাৰণ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                `আপোনাৰ সম্পূর্ণ জন্ম কুণ্ডলী পৰীক্ষা কৰি পোৱা গ্ৰহ স্থিতি তলত দিয়া হ'ল:\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ গ্ৰহ দোষ আৰু নিবাৰণ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `${mangalikLine}\n` +
-                `• **ৰাহু-কেতু স্থিতি:** আপোনাৰ কুণ্ডলীত **ৰাহু** ${houseOrdAs(rahu.house)} ভাৱত (${rahu.rashi_as} ৰাশিত) আৰু **কেতু** ${houseOrdAs(ketu.house)} ভাৱত (${ketu.rashi_as} ৰাশিত) অৱস্থান কৰিছে। ইয়াৰ ফলত মাজে মাজে হঠাতে কামত বিলম্ব বা মানসিক অস্থিৰতা আহিব পাৰে।\n` +
-                `• **শনিৰ স্থিতি:** শনি দেৱতা আপোনাৰ কুণ্ডলীৰ ${houseOrdAs(sat.house)} ভাৱত (${sat.rashi_as} ৰাশিত) আছে, যিয়ে কঠোৰ পৰিশ্ৰমৰ জৰিয়তে স্থায়ী ফল দিয়ে।\n\n` +
-                `🕉️ **সকলো গ্ৰহ দোষ শান্তিৰ বৈদিক প্ৰতিকাৰ:**\n` +
-                `১) প্ৰতি সোমবাৰে শিৱলিংগত কঁচা গাখীৰ, বেলপাত আৰু ক'লা তিল অৰ্পণ কৰি **"ওঁ নমঃ শিৱায়"** মন্ত্ৰ ১০৮ বাৰ জপ কৰক।\n` +
-                `২) শনিবাৰে সন্ধিয়া গোঁসাই ঘৰত বা আঁহত গছৰ তলত মিঠাতেলৰ চাকি জ্বলাওক আৰু চৰাই-চিৰিকটিক শস্য তথা পানী আগবঢ়াওক।`;
+                `• **ৰাহু-কেতু স্থিতি:** আপোনাৰ কুণ্ডলীত **ৰাহু** ${houseOrdAs(rahu.house)} ভাৱত (${rahu.rashi_as} ৰাশিত) আৰু **কেতু** ${houseOrdAs(ketu.house)} ভাৱত (${ketu.rashi_as} ৰাশিত) অৱস্থান কৰিছে।\n` +
+                `• **শনিৰ স্থিতি:** শনি দেৱতা আপোনাৰ কুণ্ডলীৰ ${houseOrdAs(sat.house)} ভাৱত (${sat.rashi_as} ৰাশিত) আছে।\n\n` +
+                `🕉️ **গ্ৰহ দোষ শান্তিৰ বৈদিক প্ৰতিকাৰ:** প্ৰতি সোমবাৰে শিৱলিংগত জল আৰু ক'লা তিল অৰ্পণ কৰি **"ওঁ নমঃ শিৱায়"** মন্ত্ৰ ১০৮ বাৰ জপ কৰক।`;
         }
 
-        // 13. GEMSTONE & REMEDY
-        if (topic === "gemstone") {
+        if (hasGemstoneOrRemedy) {
             const lagnaGem = GEM_BY_RASHI_NO[ascNo] || GEM_BY_RASHI_NO[1];
             const rashiGem = GEM_BY_RASHI_NO[moon.rashi_no] || GEM_BY_RASHI_NO[4];
             const bhagyaGem = GEM_BY_RASHI_NO[h9.rashi_no] || GEM_BY_RASHI_NO[9];
 
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলী অনুসৰি আপোনাৰ ১০০% উপযুক্ত শুভ ৰত্ন আৰু প্ৰতিকাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                `বৈদিক ৰত্ন শাস্ত্ৰ অনুসৰি কেৱল নামৰ আখৰ চাই নহয়, বৰঞ্চ কুণ্ডলীৰ **লগ্ন পতি (${ascLord})**, **ৰাশি পতি (${RASHI_LORD_AS[moon.rashi_no]})** আৰু **ভাগ্য পতি (${h9.lord_as})**ৰ বল বিচাৰ কৰিহে ৰত্ন ধাৰণ কৰা হয়:\n\n` +
+            return `🔮 **জন্ম কুণ্ডলী অনুসৰি আপোনাৰ ১০০% উপযুক্ত শুভ ৰত্ন আৰু প্ৰতিকাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `১) **প্রধান জীৱন ৰত্ন (লগ্নেশ ${ascLord}ৰ বাবে):** **${lagnaGem.gem}** — ইয়াক ${lagnaGem.metal}ৰ আঙঠিত ৫ ৰ পৰা ৬ ৰতি ওজনত **${lagnaGem.day}** পুৱা স্নান কৰি '${lagnaGem.mantra}' মন্ত্ৰ জপ কৰি সোঁ হাতৰ **${lagnaGem.finger}**ত ধাৰণ কৰিব পাৰে।\n` +
                 `২) **ভাগ্যবৰ্ধক সহায়ক ৰত্ন (ভাগ্যেশ ${h9.lord_as} আৰু ৰাশিৰ বাবে):** **${bhagyaGem.gem}** বা **${rashiGem.gem}**।\n` +
                 `৩) **ৰুদ্ৰাক্ষ:** আপোনাৰ '${moon.nakshatra}' নক্ষত্ৰ আৰু চলমান **${dashaName}**ৰ বাবে **পঞ্চমুখী বা চতুৰ্মুখী ৰুদ্ৰাক্ষ** ধাৰণ কৰাটো অত্যন্ত শুভ।\n\n` +
-                `🍀 **আপোনাৰ আজীৱন শুভ সংকেত:**\n` +
-                `• **শুভ বাৰ:** বৃহস্পতিবাৰ, বুধবাৰ আৰু শুক্ৰবাৰ।\n` +
-                `• **শুভ মন্ত্ৰ:** "${lagnaGem.mantra}" (প্ৰতিদিনে পুৱা ২৭ বাৰ)।`;
+                `🍀 **শুভ বাৰ:** বৃহস্পতিবাৰ, বুধবাৰ আৰু শুক্ৰবাৰ | **শুভ মন্ত্ৰ:** "${lagnaGem.mantra}"।`;
         }
 
-        // 14. TRAVEL
-        if (topic === "travel") {
+        if (hasTravel) {
             const p12LordObj = getPlanetByAsName(h12.lord_as);
             const p9LordObj = getPlanetByAsName(h9.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ দূৰ ভ্ৰমণ আৰু বিদেশ যোগ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                `আপোনাৰ কুণ্ডলীৰ **নৱম ভাৱ (দূৰ যাত্ৰা স্থান — ${h9.rashi_as} ৰাশি, অধিপতি ${h9.lord_as})** আৰু **দ্বাদশ ভাৱ (বিদেশ স্থান — ${h12.rashi_as} ৰাশি, অধিপতি ${h12.lord_as})** বিশ্লেষণ কৰি দেখা গৈছে:\n\n` +
-                `১) **যাত্ৰা আৰু স্থান পৰিৱৰ্তন:** নৱম পতি **${h9.lord_as}** ${houseOrdAs(p9LordObj.house)} ভাৱত আৰু দ্বাদশ পতি **${h12.lord_as}** ${houseOrdAs(p12LordObj.house)} ভাৱত স্থিত। বৰ্তমান চলি থকা **${dashaName}**ত কৰ্ম, ব্যৱসায় বা উচ্চ শিক্ষাৰ সূত্ৰে জন্মস্থানৰ বাহিৰত বা দূৰণিবটীয়া চহৰ/বিদেশত উন্নতি কৰাৰ শুভ যোগ আছে।\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ দূৰ ভ্ৰমণ আৰু বিদেশ যোগ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+                `নৱম পতি **${h9.lord_as}** ${houseOrdAs(p9LordObj.house)} ভাৱত আৰু দ্বাদশ পতি **${h12.lord_as}** ${houseOrdAs(p12LordObj.house)} ভাৱত স্থিত। বৰ্তমান চলি থকা **${dashaName}**ত কৰ্ম, ব্যৱসায় বা উচ্চ শিক্ষাৰ সূত্ৰে জন্মস্থানৰ বাহিৰত উন্নতি কৰাৰ শুভ যোগ আছে।\n\n` +
                 `🕉️ **যাত্ৰাত সাফল্যৰ প্ৰতিকাৰ:** যিকোনো গুৰুত্বপূৰ্ণ যাত্ৰাত ওলোৱাৰ আগতে ভগৱান গণেশ আৰু ইষ্ট দেৱতাক প্ৰণাম জনাই সোঁ ভৰি আগবঢ়াই ঘৰৰ পৰা ওলাব।`;
         }
 
-        // 15. LEGAL & ENEMY
-        if (topic === "legal") {
+        if (hasLegal) {
             const p6LordObj = getPlanetByAsName(h6.lord_as);
-            return qHeader +
-                `🔮 **জন্ম কুণ্ডলীৰ শত্ৰু বিজয় আৰু আইনী বিবাদ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
-                `আপোনাৰ কুণ্ডলীৰ **ষষ্ঠ ভাৱ (শত্ৰু আৰু বিবাদ স্থান — ${h6.rashi_as} ৰাশি, অধিপতি ${h6.lord_as})** আৰু **মংগল গ্ৰহ** (${houseOrdAs(mars.house)} ভাৱত, ${mars.rashi_as} ৰাশিত)ৰ স্থিতি অনুসৰি:\n\n` +
-                `১) **বিবাদ আৰু শত্ৰু দমন:** ষষ্ঠ পতি **${h6.lord_as}** ${houseOrdAs(p6LordObj.house)} ভাৱত থকাৰ বাবে গোপন বিৰোধীয়ে আপোনাৰ কামত বাধা দিবলৈ চেষ্টা কৰিলেও সূৰ্য আৰু বৃহস্পতিৰ শুভ দৃষ্টিৰ বলত অৱশেষত সত্যৰ জয় আপোনাৰ পক্ষতেই হ'ব।\n` +
-                `২) **সতৰ্কতা:** বৰ্তমান **${dashaName}**ত কোনো কাকত-পত্ৰত চহী কৰাৰ আগতে ভালদৰে পঢ়ি ল'ব আৰু খঙত মুখামুখি বিবাদ এৰাই চলিব।\n\n` +
+            return `🔮 **জন্ম কুণ্ডলীৰ শত্ৰু বিজয় আৰু আইনী বিবাদ বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+                `ষষ্ঠ পতি **${h6.lord_as}** ${houseOrdAs(p6LordObj.house)} ভাৱত থকাৰ বাবে গোপন বিৰোধীয়ে আপোনাৰ কামত বাধা দিবলৈ চেষ্টা কৰিলেও সূৰ্য আৰু বৃহস্পতিৰ শুভ দৃষ্টিৰ বলত অৱশেষত সত্যৰ জয় আপোনাৰ পক্ষতেই হ'ব।\n\n` +
                 `🕉️ **শত্ৰু নাশক প্ৰতিকাৰ:** মঙ্গলবাৰে আৰু শনিবাৰে সন্ধিয়া হনুমান চালিছা পাঠ কৰক।`;
         }
 
-        // 16. GENERAL KUNDALI & DESTINY (with 3 non-repeating variations!)
+        // DEFAULT: Complete Birth Chart Reading (3 non-repeating variations)
         const p1LordObj = getPlanetByAsName(ascLord);
         const p9LordObj = getPlanetByAsName(h9.lord_as);
         const p10LordObj = getPlanetByAsName(h10.lord_as);
         if (variationIdx === 0) {
-            return qHeader +
-                `🔮 **আপোনাৰ জন্ম কুণ্ডলীৰ বিশদ বৈদিক বিশ্লেষণ (${custName}${dobDisplay ? ' • জন্ম তাৰিখ: ' + dobDisplay : ''}):**\n\n` +
-                `আপুনি সোধা প্ৰশ্নটোৰ উত্তৰ দিবলৈ মই আপোনাৰ জন্ম তাৰিখ আৰু সময় অনুসৰি গণনা কৰা জন্ম কুণ্ডলীৰ মূল গ্ৰহ-স্থিতিসমূহ বিশ্লেষণ কৰিছোঁ:\n\n` +
-                `• **লগ্ন আৰু ৰাশি:** আপোনাৰ জন্ম লগ্ন হৈছে **${ascRashi} লগ্ন** (লগ্নেশ **${ascLord}**, যি কুণ্ডলীৰ ${houseOrdAs(p1LordObj.house)} ভাৱত ${p1LordObj.rashi_as} ৰাশিত স্থিত) আৰু জন্ম ৰাশি হৈছে **${moon.rashi_as} ৰাশি** (**'${moon.nakshatra}'** নক্ষত্ৰ, চৰণ ${toAsNum(moon.pada || 1)})।\n` +
+            return `🔮 **আপোনাৰ জন্ম কুণ্ডলীৰ বিশদ বৈদিক বিশ্লেষণ (${custName}${dobDisplay ? ' • জন্ম তাৰিখ: ' + dobDisplay : ''}):**\n\n` +
+                `• **লগ্ন আৰু ৰাশি:** আপোনাৰ জন্ম লগ্ন হৈছে **${ascRashi} লগ্ন** (লগ্নেশ **${ascLord}**, যি কুণ্ডলীৰ ${houseOrdAs(p1LordObj.house)} ভাৱত ${p1LordObj.rashi_as} ৰাশিত — **${p1LordObj.dignity_as}**) আৰু জন্ম ৰাশি হৈছে **${moon.rashi_as} ৰাশি** (**'${moon.nakshatra}'** নক্ষত্ৰ, চৰণ ${toAsNum(moon.pada || 1)})।\n` +
                 `• **চলমান মহাদশা:** বৰ্তমান আপোনাৰ কুণ্ডলীত **${dashaName}** (${dashaRange}) চলি আছে।\n` +
                 `• **নৱগ্ৰহৰ ভাৱ স্থিতি:** সূৰ্য ${houseOrdAs(sun.house)} ভাৱত (${sun.rashi_as}), মংগল ${houseOrdAs(mars.house)} ভাৱত (${mars.rashi_as}), বুধ ${houseOrdAs(merc.house)} ভাৱত (${merc.rashi_as}), বৃহস্পতি ${houseOrdAs(jup.house)} ভাৱত (${jup.rashi_as}), শুক্ৰ ${houseOrdAs(ven.house)} ভাৱত (${ven.rashi_as}) আৰু শনি ${houseOrdAs(sat.house)} ভাৱত (${sat.rashi_as}) অৱস্থান কৰিছে।\n\n` +
                 `🌟 **আপোনাৰ প্ৰশ্নৰ জ্যোতিষীয় ফলাফল:**\n` +
-                `১) **বৰ্তমান সময় আৰু ভাগ্য (${h9.rashi_as} ৰাশি):** ভাগ্য পতি **${h9.lord_as}** কুণ্ডলীৰ ${houseOrdAs(p9LordObj.house)} ভাৱত আৰু কৰ্ম পতি **${h10.lord_as}** ${houseOrdAs(p10LordObj.house)} ভাৱত থকাৰ বাবে চলমান **${dashaLord}** মহাদশা আৰু **${antardashaLord}** অন্তৰ্দশাত আপোনাৰ পূৰ্বৰ সংগ্ৰামৰ অন্ত পৰিবলৈ ধৰিছে। অহা **৪৫ দিনৰ পৰা ৪ মাহৰ ভিতৰত** আপুনি ভাবি থকা মূল কামটোত স্পষ্ট সফলতা আৰু মানসিক শান্তি লাভ কৰিব।\n` +
-                `২) **আৰ্থিক আৰু ব্যক্তিগত জীৱন:** ধন স্থান (${h2.rashi_as}) আৰু লাভ স্থান (${h11.rashi_as})ত বৃহস্পতি-শুক্ৰৰ প্ৰভাৱে আয় বৃদ্ধি কৰিব; লগতে সপ্তম ভাৱ (${h7.rashi_as})ৰ স্থিতিয়ে প্রিয়জনৰ সৈতে বুজাবুজি সুদৃঢ় কৰিব।\n\n` +
+                `১) **বৰ্তমান সময় আৰু ভাগ্য (${h9.rashi_as} ৰাশি):** ভাগ্য পতি **${h9.lord_as}** কুণ্ডলীৰ ${houseOrdAs(p9LordObj.house)} ভাৱত আৰু কৰ্ম পতি **${h10.lord_as}** ${houseOrdAs(p10LordObj.house)} ভাৱত থকাৰ বাবে চলমান **${dashaLord}** মহাদশা আৰু **${antardashaLord}** অন্তৰ্দশাত পূৰ্বৰ সংগ্ৰামসমূহ ক্ৰমান্বয়ে আঁতৰিবলৈ ধৰিব। অহা **৪৫ দিনৰ পৰা ৪ মাহৰ ভিতৰত** আপুনি ভাবি থকা মূল কামটোত স্পষ্ট সফলতা আৰু মানসিক শান্তি লাভ কৰিব।\n` +
+                `২) **আৰ্থিক আৰু ব্যক্তিগত জীৱন:** ধন স্থান (${h2.rashi_as}) আৰু লাভ স্থান (${h11.rashi_as})ত বৃহস্পতিৰ শুভ দৃষ্টিয়ে আয়ৰ নতুন বাট মুকলি কৰিব।\n\n` +
                 `🕉️ **আপোনাৰ কুণ্ডলীৰ বাবে বিশেষ বৈদিক প্ৰতিকাৰ:**\n` +
                 `• প্ৰতিদিনে পুৱা স্নান কৰি ইষ্ট দেৱতাক স্মৰণ কৰক আৰু বৃহস্পতিবাৰে তথা শুক্ৰবাৰে গোঁসাই ঘৰত ঘিউৰ চাকি জ্বলাই **"ওঁ নমঃ ভগৱতে বাসুদেৱায়"** মন্ত্ৰ ২১ বাৰ জপ কৰক।`;
         } else if (variationIdx === 1) {
-            return qHeader +
-                `🔮 **নক্ষত্ৰ চৰণ আৰু প্রত্যন্তৰ দশা অনুসৰি আগন্তুক সময়ৰ ফলাফল (${ascRashi} লগ্ন, ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
+            return `🔮 **নক্ষত্ৰ চৰণ আৰু প্রত্যন্তৰ দশা অনুসৰি আগন্তুক সময়ৰ ফলাফল (${ascRashi} লগ্ন, ${moon.nakshatra} নক্ষত্ৰ):**\n\n` +
                 `আপোনাৰ কুণ্ডলীৰ চলমান **${dashaLord} মহাদশা — ${antardashaLord} অন্তৰ্দশা — ${pratyantarLord} প্রত্যন্তৰ দশা**ৰ সূক্ষ্ম সময় গণনা অনুসৰি:\n\n` +
-                `১) **মানসিক আৰু কৰ্ম শক্তি:** আপোনাৰ চন্দ্ৰ **${moon.rashi_as} ৰাশি**ত আৰু লগ্নেশ **${ascLord}** ${houseOrdAs(p1LordObj.house)} ভাৱত থকাৰ বাবে আপুনি যথেষ্ট চিন্তাশীল আৰু সৎ মানসিকতাৰ ব্যক্তি। অহা **২১ দিনৰ পিছত** চন্দ্ৰ আৰু বুধৰ গোচৰ অনুকূল হোৱাৰ লগে লগে বৰ্তমানৰ দোমোজা বা মানসিক অস্থিৰতা আঁতৰি যাব।\n` +
+                `১) **মানসিক আৰু কৰ্ম শক্তি:** আপোনাৰ চন্দ্ৰ **${moon.rashi_as} ৰাশি**ত আৰু লগ্নেশ **${ascLord}** ${houseOrdAs(p1LordObj.house)} ভাৱত থকাৰ বাবে অহা **২১ দিনৰ পিছত** চন্দ্ৰ আৰু বুধৰ গোচৰ অনুকূল হোৱাৰ লগে লগে বৰ্তমানৰ দোমোজা বা মানসিক অস্থিৰতা আঁতৰি যাব।\n` +
                 `২) **শুভ যোগ:** কুণ্ডলীৰ পঞ্চম ভাৱ (${h5.rashi_as}), নৱম ভাৱ (${h9.rashi_as}) আৰু একাদশ ভাৱ (${h11.rashi_as})ৰ ত্ৰিকোণ সংযোগে দেখুৱাইছে যে অহা ৩ মাহৰ ভিতৰত আপোনাৰ এটা বিশেষ মনোকামনা পূৰ্ণ হ'ব।\n\n` +
                 `🕉️ **বিশেষ বৈদিক উপায়:** পুৱা বিছনাৰ পৰা উঠি প্রথমে নিজৰ দুয়ো হাতৰ তলুৱা দর্শন কৰক আৰু সন্ধিয়া তুলসী তলত চাকি জ্বলাওক।`;
         } else {
-            return qHeader +
-                `🔮 **গোচৰ ফল আৰু অষ্টকবৰ্গ শক্তি বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
+            return `🔮 **গোচৰ ফল আৰু অষ্টকবৰ্গ শক্তি বিচাৰ (${ascRashi} লগ্ন, ${moon.rashi_as} ৰাশি):**\n\n` +
                 `আপোনাৰ জন্ম কুণ্ডলীৰ সাপেক্ষে বৰ্তমান আকাশমণ্ডলত ভ্ৰমণ কৰি থকা শনি, বৃহস্পতি আৰু ৰাহু-কেতুৰ গোচৰ ফল বিচাৰ কৰি দেখা গৈছে:\n\n` +
                 `১) **লাভ আৰু সাফল্যৰ দিশ:** আপোনাৰ কুণ্ডলীৰ দশম ভাৱ (${h10.rashi_as}) আৰু সপ্তম ভাৱ (${h7.rashi_as})ত শুভ গ্ৰহৰ দৃষ্টি থকাৰ বাবে জন্মস্থানৰ পৰা **পূব আৰু উত্তৰ দিশত** কৰা চেষ্টা অধিক সফল হ'ব।\n` +
                 `২) **সতৰ্কতাৰ দিশ:** অষ্টম ভাৱ (${h8.rashi_as}) আৰু দ্বাদশ ভাৱ (${h12.rashi_as})ৰ অধিপতিৰ স্থিতি চাই কাকো নিজৰ গোপন পৰিকল্পনা কামটো সম্পূর্ণ নোহোৱালৈকে নক'ব।\n\n` +
@@ -997,9 +983,11 @@
                 document.getElementById('startChatPaymentModal').style.display = 'flex';
                 return;
             }
+            // ১. নেটৱৰ্ক কলৰ বাবে অপেক্ষা নকৰাকৈ লগে লগে টাইমাৰটো আৰম্ভ কৰক যাতে চেকেণ্ডবোৰ তৎক্ষণাৎ চলি থাকে
+            checkSubscription();
+            // ২. সমান্তৰালভাৱে জন্ম কুণ্ডলী গণনা আৰু পূৰ্বৰ মেছেজ লোড কৰক
             await initKundaliData();
             await loadHistory();
-            await checkSubscription();
         };
 
                 const STATIC_GENERIC_REPLY_SNIPPET = "ধৈৰ্য আৰু একাগ্ৰতাৰে আগবঢ়াৰ সময়";
@@ -1025,7 +1013,7 @@
                             renderMessage('user', msg.message);
                         } else {
                             let replyToShow = msg.message || "";
-                            if (replyToShow.includes(STATIC_GENERIC_REPLY_SNIPPET) && typeof window.analyzeChartAndAnswerQuestion === 'function') {
+                            if ((replyToShow.includes(STATIC_GENERIC_REPLY_SNIPPET) || replyToShow.includes('📜 **আপোনাৰ প্ৰশ্ন:**') || replyToShow.includes('ই আপোনাক তীক্ষ্ণ ব্যৱসায়িক বুদ্ধি')) && typeof window.analyzeChartAndAnswerQuestion === 'function') {
                                 replyToShow = window.analyzeChartAndAnswerQuestion(lastUserQuestion || "মোৰ কুণ্ডলী বিশ্লেষণ কৰক", chartData, customerBirthInfo, chatHistoryLog);
                             }
                             chatHistoryLog.push({ role: 'acharya', text: replyToShow });
@@ -1059,7 +1047,161 @@
             }
         }
 
-        async function sendAIMessage() {
+
+                        // ২. ডাটাবেছ আৰু LocalStorage ৰ পৰা সময় (Minutes/Seconds) লোড কৰি টাইমাৰ লগে লগে আৰম্ভ কৰা (v7)
+        function initAndStartTimerImmediately() {
+            const timerKey = 'ja_active_timer_v7_' + (profileId || 'default');
+            const finishedKey = 'ja_timer_finished_v7_' + (profileId || 'default');
+            let savedSecs = 0;
+            let isFinished = false;
+            try {
+                savedSecs = parseInt(localStorage.getItem(timerKey) || '0', 10) || 0;
+                isFinished = localStorage.getItem(finishedKey) === 'yes';
+            } catch (e) {}
+
+            // যদি নতুনকৈ পেমেন্ট কৰি আহিছে বা v7 টাইমাৰত এতিয়ালৈকে সময় শেষ হোৱা নাই কিন্তু ০ দেখুৱাই আছে, তেন্তে ৫ মিনিট (৩০০ ছেকেণ্ড) সক্ৰিয় কৰক
+            if (justPaid || (!isFinished && savedSecs <= 0)) {
+                savedSecs = 300;
+                try {
+                    localStorage.setItem(timerKey, '300');
+                    localStorage.setItem(finishedKey, 'no');
+                } catch (e) {}
+            }
+
+            availableSeconds = Math.max(0, Math.floor(savedSecs));
+            updateTimerUI();
+            if (availableSeconds > 0) {
+                unlockChat();
+                startTimer();
+            }
+        }
+
+        async function checkSubscription() {
+            const timerKey = 'ja_active_timer_v7_' + (profileId || 'default');
+            const finishedKey = 'ja_timer_finished_v7_' + (profileId || 'default');
+
+            initAndStartTimerImmediately();
+
+            // বেকগ্ৰাউণ্ডত ডাটাবেছৰ পৰা মিনিট পৰীক্ষা কৰক
+            try {
+                const { data } = await supabaseClient
+                    .from('subscriptions')
+                    .select('available_minutes')
+                    .eq('profile_id', profileId)
+                    .single();
+                if (data && Number(data.available_minutes) > 0) {
+                    const dbSeconds = Math.round(Number(data.available_minutes) * 60);
+                    if (availableSeconds <= 0 && localStorage.getItem(finishedKey) !== 'yes') {
+                        availableSeconds = dbSeconds;
+                        try { localStorage.setItem(timerKey, String(availableSeconds)); } catch(e){}
+                        unlockChat();
+                        startTimer();
+                    }
+                }
+            } catch (e) {}
+
+            if (availableSeconds <= 0) {
+                updateTimerUI();
+                lockChat();
+                document.getElementById('extensionModal').style.display = 'flex';
+            }
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            const timerKey = 'ja_active_timer_v7_' + (profileId || 'default');
+            const finishedKey = 'ja_timer_finished_v7_' + (profileId || 'default');
+            updateTimerUI();
+            
+            timerInterval = setInterval(() => {
+                if (availableSeconds > 0) {
+                    availableSeconds = Math.max(0, Math.floor(availableSeconds) - 1);
+                    try {
+                        localStorage.setItem(timerKey, String(availableSeconds));
+                        localStorage.setItem('ja_chat_seconds_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_active_timer_v7_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_timer_finished_v7_' + profileId, 'no');
+                    } catch(e){}
+                    updateTimerUI();
+
+                    if (availableSeconds > 0 && availableSeconds % 30 === 0) {
+                        try {
+                            supabaseClient.from('subscriptions')
+                                .update({ available_minutes: Math.ceil(availableSeconds / 60) })
+                                .eq('profile_id', profileId)
+                                .then(() => {}).catch(() => {});
+                        } catch(e){}
+                    }
+                }
+
+                if (availableSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    try {
+                        localStorage.setItem(timerKey, '0');
+                        localStorage.setItem(finishedKey, 'yes');
+                        localStorage.setItem('ja_chat_seconds_' + profileId, '0');
+                        supabaseClient.from('subscriptions')
+                            .update({ available_minutes: 0 })
+                            .eq('profile_id', profileId)
+                            .then(() => {}).catch(() => {});
+                    } catch(e){}
+                    updateTimerUI();
+                    lockChat();
+                    document.getElementById('extensionModal').style.display = 'flex';
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const safeSec = Math.max(0, Math.floor(Number(availableSeconds) || 0));
+            let m = Math.floor(safeSec / 60);
+            let s = Math.floor(safeSec % 60);
+            const disp = document.getElementById('timeDisplay');
+            if (disp) {
+                disp.innerText = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+            }
+            const tBox = document.getElementById('timerBox');
+            if (tBox) {
+                if (safeSec > 0 && safeSec <= 60) {
+                    tBox.classList.add('timer-warning'); 
+                } else {
+                    tBox.classList.remove('timer-warning');
+                }
+            }
+        }
+
+        function lockChat() {
+            const inp = document.getElementById('userInput');
+            const btn = document.getElementById('sendBtn');
+            const st = document.getElementById('acharyaStatus');
+            if (inp) {
+                inp.disabled = true;
+                inp.placeholder = "সময় শেষ! + ৰিচাৰ্জ বুটামত ক্লিক কৰি কথা পাতক...";
+            }
+            if (btn) btn.disabled = true;
+            if (st) {
+                st.innerHTML = "অফলাইন - সময় উকলিছে";
+                st.style.color = "#fca5a5";
+            }
+        }
+
+        function unlockChat() {
+            const inp = document.getElementById('userInput');
+            const btn = document.getElementById('sendBtn');
+            const st = document.getElementById('acharyaStatus');
+            if (inp) {
+                inp.disabled = false;
+                inp.placeholder = "আপোনাৰ প্ৰশ্ন ইয়াত শুদ্ধ অসমীয়াত লিখক...";
+            }
+            if (btn) btn.disabled = false;
+            if (st) {
+                st.innerHTML = "<span class='status-dot'></span> অনলাইন (বৈদিক জ্যোতিষী)";
+                st.style.color = "#fef08a";
+            }
+        }
+
+async function sendAIMessage() {
             if (availableSeconds <= 0) {
                 document.getElementById('extensionModal').style.display = 'flex';
                 return;
@@ -1330,6 +1472,10 @@ function renderMessage(sender, text) {
                         try {
                             localStorage.setItem('ja_profile_id', profileId);
                             localStorage.setItem('ja_chat_seconds_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_active_timer_v7_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_timer_finished_v7_' + profileId, 'no');
+                            localStorage.setItem('ja_active_timer_v7_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_timer_finished_v7_' + profileId, 'no');
                         } catch (e) {}
 
                         try {
@@ -1406,6 +1552,10 @@ function renderMessage(sender, text) {
 
                         try {
                             localStorage.setItem('ja_chat_seconds_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_active_timer_v7_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_timer_finished_v7_' + profileId, 'no');
+                            localStorage.setItem('ja_active_timer_v7_' + profileId, String(availableSeconds));
+                            localStorage.setItem('ja_timer_finished_v7_' + profileId, 'no');
                         } catch (e) {}
 
                         let backendUpdated = false;
