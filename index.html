@@ -267,15 +267,31 @@
     <style>
     .services-grid { 
         display: grid !important; 
-        grid-template-columns: repeat(3, 1fr) !important; 
+        grid-template-columns: repeat(6, 1fr) !important; 
         gap: 28px !important; 
         align-items: stretch !important; 
     }
+    .services-grid > .service-card {
+        grid-column: span 2 !important;
+        max-width: none !important;
+        width: 100% !important;
+    }
+    .services-grid > .service-card.horoscope-half-card {
+        grid-column: span 3 !important;
+    }
     @media (max-width: 980px) {
         .services-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        .services-grid > .service-card,
+        .services-grid > .service-card.horoscope-half-card {
+            grid-column: span 1 !important;
+        }
     }
     @media (max-width: 640px) {
         .services-grid { grid-template-columns: 1fr !important; }
+        .services-grid > .service-card,
+        .services-grid > .service-card.horoscope-half-card {
+            grid-column: 1 / -1 !important;
+        }
     }
 
     .service-card { 
@@ -616,8 +632,8 @@
             <h2>আপোনাৰ জীৱনৰ <span>বৈদিক মাৰ্গদৰ্শন</span></h2>
             <p>জন্ম তাৰিখ, সময় আৰু স্থানৰ নিৰ্ভুল বৈদিক গণনাৰ ভিত্তিত প্ৰেম-বিবাহ, কেৰিয়াৰ, ধন-সম্পদ, মাহেকীয়া-বাৰ্ষিক ৰাশিফল আৰু হস্তৰেখাৰ বিস্তৃত অসমীয়া প্ৰতিবেদন লাভ কৰক।</p>
             <div class="ja20-ai-actions">
-                <a href="#premium-services" class="ja20-btn ja20-btn-gold">🔮 প্ৰিমিয়াম ৰিপোৰ্টসমূহ চাওক</a>
-                <a href="#free-tools-section" class="ja20-btn ja20-btn-ghost">🎁 বিনামূলীয়া দৈনিক ৰাশিফল</a>
+                <button type="button" class="ja20-btn ja20-btn-gold" onclick="openPalmistryModal()">🖐️ হস্তৰেখা বিশদ বিচাৰ</button>
+                <a href="#premium-services" class="ja20-btn ja20-btn-ghost">প্ৰিমিয়াম সেৱাসমূহ চাওক</a>
             </div>
             <div class="ja20-trust-row"><span>🔐 ১০০% সুৰক্ষিত</span><span>⚡ তাৎক্ষণিক PDF ৰিপোৰ্ট</span><span>🌙 শুদ্ধ অসমীয়া মাধ্যম</span></div>
         </div>
@@ -1119,7 +1135,7 @@
         <p class="section-subtitle">আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক</p>
                 <div class="services-grid">
 
-            <!-- CARD 2: Complete Birth Chart -->
+            <!-- CARD 1: Complete Birth Chart -->
             <div class="service-card">
                 <div class="service-icon">🔮</div>
                 <h3>সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
@@ -1128,13 +1144,22 @@
                 <button class="service-btn" onclick="openOrderForm('birth', 299, 'সম্পূৰ্ণ জন্ম কুণ্ডলী')">সেৱা গ্ৰহণ কৰক</button>
             </div>
             
-            <!-- CARD 3: Love & Relationship -->
+            <!-- CARD 2: Love & Relationship -->
             <div class="service-card">
                 <div class="service-icon">❤️</div>
                 <h3>প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
                 <p>প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
                 <div class="service-price"><span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹299</span>₹99 <span style="background: #fee2e2; color: #dc2626; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 700; vertical-align: middle;">৬৭% ৰেহাই</span></div>
                 <button class="service-btn" onclick="openOrderForm('love', 99, 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ')">সেৱা গ্ৰহণ কৰক</button>
+            </div>
+
+            <!-- CARD 3: Career & Business -->
+            <div class="service-card">
+                <div class="service-icon">💼</div>
+                <h3>কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
+                <p>চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
+                <div class="service-price"><span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹499</span>₹199 <span style="background: #fee2e2; color: #dc2626; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 700; vertical-align: middle;">৬০% ৰেহাই</span></div>
+                <button class="service-btn" onclick="openOrderForm('career', 199, 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস')">সেৱা গ্ৰহণ কৰক</button>
             </div>
 
             <!-- CARD 4 (পঠালী / HORIZONTAL 3D FEATURED BANNER): Palmistry Reading -->
@@ -1215,17 +1240,8 @@
                 </div>
             </div>
 
-            <!-- CARD 5: Career & Business -->
-            <div class="service-card">
-                <div class="service-icon">💼</div>
-                <h3>কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
-                <p>চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
-                <div class="service-price"><span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹499</span>₹199 <span style="background: #fee2e2; color: #dc2626; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 700; vertical-align: middle;">৬০% ৰেহাই</span></div>
-                <button class="service-btn" onclick="openOrderForm('career', 199, 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস')">সেৱা গ্ৰহণ কৰক</button>
-            </div>
-
-            <!-- CARD 6: Monthly Horoscope -->
-            <div class="service-card">
+            <!-- CARD 5: Monthly Horoscope -->
+            <div class="service-card horoscope-half-card">
                 <div class="service-icon">📅</div>
                 <h3>মাহেকীয়া ৰাশিফল</h3>
                 <p>অহা ৩০ দিনৰ বাবে আপোনাৰ স্বাস্থ্য, অৰ্থ, আৰু কৰ্মৰ বিস্তাৰিত জ্যোতিষীয় ভৱিষ্যদ্বাণী।</p>
@@ -1233,8 +1249,8 @@
                 <button class="service-btn" onclick="openOrderForm('monthly', 19, 'মাহেকীয়া ৰাশিফল')">সেৱা গ্ৰহণ কৰক</button>
             </div>
             
-            <!-- CARD 7: Yearly Horoscope -->
-            <div class="service-card">
+            <!-- CARD 6: Yearly Horoscope -->
+            <div class="service-card horoscope-half-card">
                 <div class="service-icon">📜</div>
                 <h3>বাৰ্ষিক ৰাশিফল</h3>
                 <p>সম্পূৰ্ণ এবছৰৰ বাবে আপোনাৰ জীৱনৰ গুৰুত্বপূৰ্ণ পৰিৱৰ্তন আৰু সাৱধানতাৰ নিৰ্দেশনা।</p>
