@@ -68,7 +68,7 @@
             }
         }
     </style>
-    <script src="grand_report_engine.js"></script>
+    <script src="grand_report_engine.js?v=9"></script>
 </head>
 <body>
 
@@ -124,71 +124,12 @@
 
 
 // --- Fallback Vedic Chart Calculation Engine ---
-    function buildFallbackVedicChart(dobStr, tobStr) {
-            const rashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
-            const naks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্বা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
-            
-            const parts = String(dobStr || "1993-05-01").split(/[-/]/);
-            const y = parseInt(parts[0], 10) || 1993;
-            const m = parseInt(parts[1], 10) || 5;
-            const d = parseInt(parts[2], 10) || 1;
-
-            const tParts = String(tobStr || "10:30").split(":");
-            const hr = parseInt(tParts[0], 10) || 10;
-            const mn = parseInt(tParts[1], 10) || 30;
-
-            let sunRashiIdx = ((m - 4 + 12) % 12);
-            if (d < 14) sunRashiIdx = (sunRashiIdx + 11) % 12;
-
-            const hoursSinceSunrise = ((hr + mn / 60) - 6 + 24) % 24;
-            const ascIdx = (sunRashiIdx + Math.floor(hoursSinceSunrise / 2)) % 12;
-
-            const jd = Math.floor(365.25 * y) + Math.floor(30.6001 * (m + 1)) + d + (hr / 24);
-            const moonDeg = (((jd * 13.176396) % 360) + 360) % 360;
-            const moonIdx = Math.floor(moonDeg / 30) % 12;
-            const moonNak = naks[Math.floor(moonDeg / (360 / 27)) % 27];
-
-            const seed = y + m * 31 + d;
-            const makePlanet = (rIdx, offset) => ({
-                rashi: rashis[rIdx % 12],
-                rashi_no: (rIdx % 12) + 1,
-                nakshatra: naks[(rIdx * 2 + offset) % 27],
-                pada: ((seed + offset) % 4) + 1
-            });
-
-            const planets = {
-                Sun: makePlanet(sunRashiIdx, 1),
-                Moon: { rashi: rashis[moonIdx], rashi_no: moonIdx + 1, nakshatra: moonNak, pada: (d % 4) + 1 },
-                Mars: makePlanet((sunRashiIdx + (seed % 7)) % 12, 2),
-                Mercury: makePlanet((sunRashiIdx + (d % 2 === 0 ? 0 : 1)) % 12, 3),
-                Jupiter: makePlanet((Math.floor((y - 1980) * 1.01) + 3) % 12, 4),
-                Venus: makePlanet((sunRashiIdx + (m % 2 === 0 ? 0 : 11)) % 12, 5),
-                Saturn: makePlanet(Math.floor(((y - 1980) * 0.4) + 5) % 12, 6),
-                Rahu: makePlanet((12 - Math.floor(((y - 1980) * 0.65) % 12)) % 12, 7)
-            };
-            const ketuIdx = (planets.Rahu.rashi_no - 1 + 6) % 12;
-            planets.Ketu = makePlanet(ketuIdx, 8);
-
-            const houses = [];
-            for (let i = 0; i < 12; i++) {
-                houses.push({ house: i + 1, rashi: rashis[(ascIdx + i) % 12], rashi_no: ((ascIdx + i) % 12) + 1 });
-            }
-
-            const dashaLords = ["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"];
-            const dashaYears = [7, 20, 6, 10, 7, 18, 16, 19, 17];
-            const startLordIdx = Math.floor(moonDeg / (360 / 27)) % 9;
-            const dashas = [];
-            let curYear = y;
-            for (let i = 0; i < 8; i++) {
-                const lIdx = (startLordIdx + i) % 9;
-                const sDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                curYear += dashaYears[lIdx];
-                const eDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                dashas.push({ lord: dashaLords[lIdx], start_date: sDate, end_date: eDate });
-            }
-
-            return { ascendant: { rashi: rashis[ascIdx], rashi_no: ascIdx + 1 }, planets: planets, houses: houses, dashas: dashas };
+    function buildFallbackVedicChart(dobStr, tobStr, placeStr) {
+        if (typeof window.calculateAccurateVedicChart === 'function') {
+            return window.calculateAccurateVedicChart(dobStr, tobStr, placeStr);
         }
+        return null;
+    }
 
     // --- Complete Rich Vedic Report Generation Function ---
     function renderFullReport(order, chart) {
@@ -212,26 +153,27 @@
         const rzpOrderId = urlParams.get('razorpay_order_id');
         const rzpSignature = urlParams.get('razorpay_signature');
 
-        // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত পূৰ্বৰে পৰা তৈয়াৰী ৰিপোৰ্ট মজুত আছে
+        // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
-            const cached = sessionStorage.getItem('ja_report_' + orderId) || localStorage.getItem('ja_report_' + orderId);
-            const isPalmOrder = (localStorage.getItem('ja_service_' + orderId) === 'palmistry') ||
-                                (sessionStorage.getItem('ja_service_' + orderId) === 'palmistry');
-            // If cached report is a birth chart but this is actually a palmistry order, ignore the bad cache!
-            if (cached && !(isPalmOrder && cached.includes('Complete Grand Birth Chart'))) {
+            const cached = sessionStorage.getItem('ja_report_v8_' + orderId) || localStorage.getItem('ja_report_v8_' + orderId);
+            const savedSvc = (localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || '').toLowerCase();
+            const isValidMonthly = !(savedSvc === 'monthly' || (cached && cached.includes('মাহেকীয়া ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('মাহটোৰ ৪টা সপ্তাহৰ বিস্তৃত সাপ্তাহিক ফলাফল'));
+            const isValidYearly = !(savedSvc === 'yearly' || (cached && cached.includes('বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('বাৰ্ষিক ১২ মাহৰ বিস্তৃত মাহেকীয়া ফলাফল'));
+            const isValidPalm = !(savedSvc === 'palmistry') || (cached && !cached.includes('Complete Grand Birth Chart'));
+            if (cached && isValidMonthly && isValidYearly && isValidPalm) {
                 try {
-                const sw = document.getElementById('support-widget-btn');
-                if (sw) sw.remove();
-                const sc = document.getElementById('support-chat-window');
-                if (sc) sc.remove();
-                const hd = document.querySelector('header');
-                if (hd) hd.remove();
-                const mn = document.querySelector('main');
-                if (mn) mn.remove();
-            } catch(e){}
-            document.open();
-            document.write(cached);
-            document.close();
+                    const sw = document.getElementById('support-widget-btn');
+                    if (sw) sw.remove();
+                    const sc = document.getElementById('support-chat-window');
+                    if (sc) sc.remove();
+                    const hd = document.querySelector('header');
+                    if (hd) hd.remove();
+                    const mn = document.querySelector('main');
+                    if (mn) mn.remove();
+                } catch(e){}
+                document.open();
+                document.write(cached);
+                document.close();
                 return;
             }
         }
@@ -328,6 +270,8 @@
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
             try {
+                localStorage.setItem('ja_report_v8_' + saveId, reportHtml);
+                sessionStorage.setItem('ja_report_v8_' + saveId, reportHtml);
                 localStorage.setItem('ja_report_' + saveId, reportHtml);
                 sessionStorage.setItem('ja_report_' + saveId, reportHtml);
                 localStorage.setItem('ja_latest_order_id', saveId);
@@ -395,6 +339,7 @@
                 const chart = buildFallbackVedicChart(dobStr, tobStr);
                 const reportHtml = renderFullReport(order, chart);
 
+                localStorage.setItem('ja_report_v8_' + order.id, reportHtml);
                 localStorage.setItem('ja_report_' + order.id, reportHtml);
                 localStorage.setItem('ja_latest_order_id', order.id);
 
