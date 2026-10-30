@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jyotish-assam-v10-clean';
+const CACHE_NAME = 'jyotish-assam-v11-personalized-birth';
 const STATIC_ASSETS = [
   '/fav.png',
   '/icon.png',
