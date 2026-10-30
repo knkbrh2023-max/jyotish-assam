@@ -257,7 +257,7 @@
     </style>
     <script src="config.js"></script>
     <script src="rashifal.js"></script>
-    <script src="grand_report_engine.js?v=10"></script>
+    <script src="grand_report_engine.js?v=13"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
     
@@ -1791,6 +1791,36 @@ function closePalmistryModal() {
     if (preview) { preview.src = ''; preview.style.display = 'none'; }
 }
 
+function compressPalmImageDataUrl(dataUrl, maxDim, quality) {
+    return new Promise((resolve) => {
+        try {
+            const img = new Image();
+            img.onload = function() {
+                try {
+                    let w = img.width || 600;
+                    let h = img.height || 600;
+                    if (w > maxDim || h > maxDim) {
+                        if (w >= h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+                        else { w = Math.round((w * maxDim) / h); h = maxDim; }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', quality || 0.72));
+                } catch (err) {
+                    resolve(dataUrl);
+                }
+            };
+            img.onerror = function() { resolve(dataUrl); };
+            img.src = dataUrl;
+        } catch (e) {
+            resolve(dataUrl);
+        }
+    });
+}
+
 function handleDedicatedPalmPhoto(evt) {
     const file = evt.target.files && evt.target.files[0];
     if (!file) return;
@@ -1800,11 +1830,13 @@ function handleDedicatedPalmPhoto(evt) {
         fn.style.display = 'block';
     }
     const reader = new FileReader();
-    reader.onload = function(e) {
-        window.currentPalmPhotoBase64 = e.target.result;
+    reader.onload = async function(e) {
+        const rawDataUrl = e.target.result;
+        const compressed = await compressPalmImageDataUrl(rawDataUrl, 650, 0.72);
+        window.currentPalmPhotoBase64 = compressed;
         const preview = document.getElementById('palmModalPhotoPreview');
         if (preview) {
-            preview.src = e.target.result;
+            preview.src = compressed;
             preview.style.display = 'block';
         }
     };
@@ -1823,9 +1855,13 @@ window.processPalmistryPayment = async function(e) {
     const gender = document.getElementById('palmCustGender').value || 'male';
     const photo = window.currentPalmPhotoBase64 || null;
 
-    // The backend /create-order Edge Function has a price dictionary: { birth: 299, career: 199, love: 99, monthly: 19, yearly: 49 }.
-    // Because 'palmistry' is a newly added frontend service (₹99), passing service: 'love' ensures /create-order
-    // maps directly to the exact ₹99 tier without throwing 'amount: is required'.
+    if (!photo) {
+        alert("অনুগ্ৰহ কৰি আপোনাৰ হাতৰ তলুৱাৰ এখন স্পষ্ট ফটো আপলোড কৰক!");
+        btn.innerText = "🔒 পেমেন্ট কৰক — মাত্ৰ ₹১৯৯";
+        btn.disabled = false;
+        return;
+    }
+
     const orderPayload = {
         service: 'palmistry',
         name: name,
@@ -1837,6 +1873,8 @@ window.processPalmistryPayment = async function(e) {
         palmHand: hand,
         palmGender: gender,
         palmPhoto: photo,
+        tarot_question: photo,
+        tarot_topic: hand + '|' + gender,
         language: typeof currentLang !== 'undefined' ? currentLang : 'as'
     };
 
@@ -1848,6 +1886,26 @@ window.processPalmistryPayment = async function(e) {
         });
         const responseData = await createRes.json();
         if (!responseData.success) throw new Error(responseData.error || "Order creation failed");
+
+        const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
+        try {
+            const sbInit = window.supabase.createClient("https://ihbdrtnkfitytklonnel.supabase.co", SUPABASE_KEY);
+            // ১. হাতৰ ফটোখন ডাটাবেছত (birth_profiles আৰু orders) সংৰক্ষণ কৰা যাতে এডমিনে পেনেলত সদায় দেখিবলৈ পায়
+            await sbInit.from('birth_profiles').insert([{
+                customer_name: 'PALM:' + responseData.orderId + ':' + email,
+                birth_date: '1995-01-01',
+                birth_time: (hand || 'right') + '|' + (gender || 'male'),
+                birth_place: photo
+            }]);
+            await sbInit.from('orders').update({
+                service: 'palmistry',
+                palm_hand: hand,
+                palm_gender: gender,
+                tarot_question: photo
+            }).eq('public_order_id', responseData.orderId);
+        } catch(dbSaveErr) {
+            console.warn("Palm photo DB save fallback:", dbSaveErr);
+        }
 
         try {
             localStorage.setItem('ja_latest_order_id', responseData.orderId);
@@ -1908,8 +1966,13 @@ window.processPalmistryPayment = async function(e) {
                     await sb.from('orders').update({
                         service: 'palmistry',
                         palm_hand: hand,
-                        palm_gender: gender
-                    }).eq('id', responseData.orderId);
+                        palm_gender: gender,
+                        tarot_question: photo,
+                        payment_status: 'paid',
+                        status: 'paid',
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id
+                    }).eq('public_order_id', responseData.orderId);
                 } catch(e){}
                 
                 try {
@@ -2007,10 +2070,7 @@ window.processPayment = async function(e) {
         birthDate: (document.getElementById('custDate') && document.getElementById('custDate').value) ? document.getElementById('custDate').value : '1995-01-01',
         birthTime: dbTime || '10:30:00',
         birthPlace: (document.getElementById('custPlace') && document.getElementById('custPlace').value) ? document.getElementById('custPlace').value : 'অসম',
-        language: typeof currentLang !== 'undefined' ? currentLang : 'as',
-        palmHand: document.getElementById('custPalmHand') ? document.getElementById('custPalmHand').value : 'right',
-        palmGender: document.getElementById('custPalmGender') ? document.getElementById('custPalmGender').value : 'male',
-        palmPhoto: window.currentPalmPhotoBase64 || null
+        language: typeof currentLang !== 'undefined' ? currentLang : 'as'
     };
     
     try {
@@ -2123,7 +2183,7 @@ window.processPayment = async function(e) {
 };
 
 
-// generatePalmistryReportHtml is loaded from grand_report_engine.js
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=13
 
 
 async function showReportToCustomer(orderId) {
@@ -2141,9 +2201,7 @@ async function showReportToCustomer(orderId) {
     const dob = document.getElementById('custDate') ? document.getElementById('custDate').value : 'N/A';
     const place = document.getElementById('custPlace') ? document.getElementById('custPlace').value : 'N/A';
 
-    const isPalm = service === 'palmistry' || 
-                   (document.getElementById('palmCustName') && document.getElementById('palmCustName').value.trim() !== '') ||
-                   window.currentPalmPhotoBase64;
+    const isPalm = (service === 'palmistry');
 
     if (isPalm) {
         const hand = (document.getElementById('palmCustHand') && document.getElementById('palmCustHand').value) || 
@@ -2164,8 +2222,8 @@ async function showReportToCustomer(orderId) {
         };
         const reportHtml = generatePalmistryReportHtml(palmOrder);
         try {
-            sessionStorage.setItem('ja_report_v8_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v8_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v13_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v13_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);
@@ -2299,7 +2357,7 @@ async function showReportToCustomer(orderId) {
         }
 
         if (!chart) {
-            chart = buildFallbackVedicChart(dob, tob);
+            chart = buildFallbackVedicChart(dob, tob, place);
         }
 
         const orderObj = {
@@ -2315,8 +2373,8 @@ async function showReportToCustomer(orderId) {
         const reportHtml = generateGrandVedicReport(orderObj, chart);
 
         try {
-            sessionStorage.setItem('ja_report_v8_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v8_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v13_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v13_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);
@@ -2753,9 +2811,9 @@ window.addEventListener('DOMContentLoaded', () => {
         <div class="support-msg">
             নমস্কাৰ! 🙏 পেমেন্ট বা ৰিপোৰ্ট সম্পৰ্কীয় যিকোনো সমস্যা তলত লিখক। আমাৰ টীমে চেক কৰি লগে লগে সমাধান কৰিব।
         </div>
-        <input type="text" id="sup-name" aria-label="সহায়ৰ বাবে নাম" class="sup-input" required>
-        <input type="text" id="sup-contact" aria-label="যোগাযোগৰ ইমেইল" class="sup-input">
-        <textarea id="sup-msg" aria-label="সমস্যাৰ বিৱৰণ" class="sup-input" rows="3" required></textarea>
+        <input type="text" id="sup-name" aria-label="সহায়ৰ বাবে নাম" class="sup-input" placeholder="আপোনাৰ নাম *" required>
+        <input type="email" id="sup-contact" aria-label="যোগাযোগৰ ইমেইল" class="sup-input" placeholder="আপোনাৰ ইমেইল (Email) *" required>
+        <textarea id="sup-msg" aria-label="সমস্যাৰ বিৱৰণ" class="sup-input" rows="3" placeholder="সমস্যাৰ বিৱৰণ লিখক (Order ID বা Payment ID উল্লেখ কৰিব) *" required></textarea>
     </div>
     
     <div class="support-footer">
@@ -2787,7 +2845,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     .sup-input {
         width: 100%; padding: 10px 12px; margin-bottom: 10px; border: 1px solid #cbd5e1;
-        border-radius: 8px; font-family: inherit; font-size: 13.5px; outline: none; box-sizing: border-box; background: #fff;
+        border-radius: 8px; font-family: inherit; font-size: 13.5px; outline: none; box-sizing: border-box; background: #fff; color: #0f172a;
     }
     .sup-input:focus { border-color: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
     .support-footer { padding: 0 15px 15px 15px; }
@@ -2809,8 +2867,13 @@ window.addEventListener('DOMContentLoaded', () => {
         const contact = document.getElementById('sup-contact').value.trim();
         const msg = document.getElementById('sup-msg').value.trim();
         
-        if (!name || !msg) {
-            alert("অনুগ্ৰহ কৰি আপোনাৰ নাম আৰু সমস্যাটো লিখক!");
+        if (!name || !contact || !msg) {
+            alert("অনুগ্ৰহ কৰি আপোনাৰ নাম, ইমেইল (Email) আৰু সমস্যাৰ বিৱৰণ সম্পূৰ্ণকৈ লিখক!");
+            return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(contact)) {
+            alert("অনুগ্ৰহ কৰি এটা সঠিক ইমেইল ঠিকনা (যেনে: example@gmail.com) প্ৰদান কৰক!");
             return;
         }
 

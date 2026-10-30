@@ -68,7 +68,7 @@
             }
         }
     </style>
-    <script src="grand_report_engine.js?v=10"></script>
+    <script src="grand_report_engine.js?v=13"></script>
 </head>
 <body>
 
@@ -109,7 +109,7 @@
                 নমস্কাৰ! 🙏 পেমেন্ট বা ৰিপোৰ্ট সম্পৰ্কীয় যিকোনো সমস্যা তলত লিখক। আমাৰ টীমে চেক কৰি লগে লগে সমাধান কৰিব।
             </div>
             <input type="text" id="sup-name" aria-label="সহায়ৰ বাবে নাম" class="sup-input" placeholder="আপোনাৰ নাম" required>
-            <input type="text" id="sup-contact" aria-label="যোগাযোগৰ ইমেইল" class="sup-input" placeholder="ইমেইল বা ফোন নম্বৰ">
+            <input type="email" id="sup-contact" aria-label="যোগাযোগৰ ইমেইল" class="sup-input" placeholder="আপোনাৰ ইমেইল (Email) *" required>
             <textarea id="sup-msg" aria-label="সমস্যাৰ বিৱৰণ" class="sup-input" rows="3" placeholder="সমস্যাৰ বিৱৰণ (Order ID বা Payment ID উল্লেখ কৰিব)" required></textarea>
         </div>
         
@@ -120,7 +120,7 @@
 
     <script>
     
-// generatePalmistryReportHtml is loaded from grand_report_engine.js
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=13
 
 
 // --- Fallback Vedic Chart Calculation Engine ---
@@ -133,13 +133,14 @@
 
     // --- Complete Rich Vedic Report Generation Function ---
     function renderFullReport(order, chart) {
-        if (order && (
-            order.service === 'palmistry' || 
-            String(order.service).toLowerCase().includes('palm') ||
-            order.palmHand || 
-            order.palmGender || 
-            order.palmPhoto
-        )) {
+        const rawSvc = String((order && (order.service || order.service_type || order.custom_service)) || '').toLowerCase().trim();
+        const amt = Number((order && order.amount) || 0);
+        const rupees = amt >= 1000 ? Math.round(amt / 100) : amt;
+        const isExplicitNonPalm = (
+            rawSvc === 'birth' || rawSvc === 'monthly' || rawSvc === 'yearly' || rawSvc === 'love' || rawSvc === 'career' ||
+            rupees === 299 || rupees === 19 || rupees === 49 || rupees === 99
+        );
+        if (!isExplicitNonPalm && (rawSvc === 'palmistry' || rawSvc.includes('palm') || rawSvc.includes('হস্তৰেখা'))) {
             return generatePalmistryReportHtml(order);
         }
         return generateGrandVedicReport(order, chart);
@@ -155,7 +156,7 @@
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
-            const cached = sessionStorage.getItem('ja_report_v8_' + orderId) || localStorage.getItem('ja_report_v8_' + orderId);
+            const cached = sessionStorage.getItem('ja_report_v13_' + orderId) || localStorage.getItem('ja_report_v13_' + orderId);
             const savedSvc = (localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || '').toLowerCase();
             const isValidMonthly = !(savedSvc === 'monthly' || (cached && cached.includes('মাহেকীয়া ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('মাহটোৰ ৪টা সপ্তাহৰ বিস্তৃত সাপ্তাহিক ফলাফল'));
             const isValidYearly = !(savedSvc === 'yearly' || (cached && cached.includes('বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('বাৰ্ষিক ১২ মাহৰ বিস্তৃত মাহেকীয়া ফলাফল'));
@@ -209,8 +210,19 @@
             const sKey = order.public_order_id || order.id || orderId;
             const savedSvc = localStorage.getItem('ja_service_' + sKey) || sessionStorage.getItem('ja_service_' + sKey);
             if (savedSvc) order.service = savedSvc;
-            if (order.service === 'palmistry') {
-                const pPhoto = localStorage.getItem('ja_palm_photo_' + sKey);
+            if (String(order.service || '').toLowerCase().includes('palm')) {
+                let pPhoto = order.palmPhoto || order.palm_photo ||
+                    ((order.tarot_question && String(order.tarot_question).startsWith('data:image/')) ? order.tarot_question : null) ||
+                    localStorage.getItem('ja_palm_photo_' + sKey) ||
+                    localStorage.getItem('ja_palm_photo_' + order.id);
+                if (!pPhoto) {
+                    try {
+                        const { data: bpData } = await sb.from('birth_profiles').select('*').ilike('customer_name', `PALM:${sKey}%`).order('created_at', { ascending: false }).limit(1);
+                        if (bpData && bpData.length > 0 && bpData[0].birth_place && String(bpData[0].birth_place).startsWith('data:image/')) {
+                            pPhoto = bpData[0].birth_place;
+                        }
+                    } catch(e){}
+                }
                 if (pPhoto) order.palmPhoto = pPhoto;
             }
 
@@ -265,13 +277,14 @@
 
             const dobStr = order.birth_date || order.birthDate || '1996-01-01';
             const tobStr = order.birth_time || order.birthTime || '10:30:00';
-            const chart = buildFallbackVedicChart(dobStr, tobStr);
+            const placeStr = order.birth_place || order.birthPlace || 'অসম';
+            const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
             const reportHtml = renderFullReport(order, chart);
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
             try {
-                localStorage.setItem('ja_report_v8_' + saveId, reportHtml);
-                sessionStorage.setItem('ja_report_v8_' + saveId, reportHtml);
+                localStorage.setItem('ja_report_v13_' + saveId, reportHtml);
+                sessionStorage.setItem('ja_report_v13_' + saveId, reportHtml);
                 localStorage.setItem('ja_report_' + saveId, reportHtml);
                 sessionStorage.setItem('ja_report_' + saveId, reportHtml);
                 localStorage.setItem('ja_latest_order_id', saveId);
@@ -336,10 +349,11 @@
 
                 const dobStr = order.birth_date || '1996-01-01';
                 const tobStr = order.birth_time || '10:30:00';
-                const chart = buildFallbackVedicChart(dobStr, tobStr);
+                const placeStr = order.birth_place || order.birthPlace || 'অসম';
+            const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
                 const reportHtml = renderFullReport(order, chart);
 
-                localStorage.setItem('ja_report_v8_' + order.id, reportHtml);
+                localStorage.setItem('ja_report_v13_' + order.id, reportHtml);
                 localStorage.setItem('ja_report_' + order.id, reportHtml);
                 localStorage.setItem('ja_latest_order_id', order.id);
 
@@ -376,8 +390,13 @@
         const contact = document.getElementById('sup-contact').value.trim();
         const msg = document.getElementById('sup-msg').value.trim();
         
-        if (!name || !msg) {
-            alert("অনুগ্ৰহ কৰি আপোনাৰ নাম আৰু সমস্যাটো লিখক!");
+        if (!name || !contact || !msg) {
+            alert("অনুগ্ৰহ কৰি আপোনাৰ নাম, ইমেইল (Email) আৰু সমস্যাৰ বিৱৰণ সম্পূৰ্ণকৈ লিখক!");
+            return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(contact)) {
+            alert("অনুগ্ৰহ কৰি এটা সঠিক ইমেইল ঠিকনা (যেনে: example@gmail.com) প্ৰদান কৰক!");
             return;
         }
 
