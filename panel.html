@@ -3,199 +3,658 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>এডমিন ডেশ্ববৰ্ড - জ্যোতিষ অসম</title>
+    <title>ৰাজকীয় এডমিন ডেশ্ববৰ্ড | জ্যোতিষ অসম</title>
+    <link rel="icon" type="image/png" href="fav.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
+    <script src="grand_report_engine.js?v=9"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-deep: #070b14;
+            --bg-panel: #0f172a;
+            --bg-card: rgba(17, 25, 45, 0.88);
+            --bg-card-hover: rgba(24, 35, 62, 0.95);
+            --gold-light: #fef08a;
+            --gold-main: #eab308;
+            --gold-dark: #ca8a04;
+            --gold-border: rgba(234, 179, 8, 0.28);
+            --gold-glow: rgba(234, 179, 8, 0.16);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --emerald: #10b981;
+            --royal-blue: #3b82f6;
+            --crimson: #ef4444;
+            --violet: #8b5cf6;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; background-color: #f8fafc; color: #1e293b; padding: 20px; }
-        .container { max-width: 1320px; margin: 0 auto; display: none; }
-        
-        #loginOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .login-card h2 { color: #6D28D9; margin-bottom: 20px; font-size: 22px; }
-        .login-input { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; }
-        .login-btn { width: 100%; padding: 12px; background: #6D28D9; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; }
-        .login-btn:hover { background: #5b21b6; }
-        .error-msg { color: #e11d48; font-size: 13px; margin-top: 10px; display: none; }
+        body {
+            font-family: 'Noto Sans Assamese', 'Poppins', sans-serif;
+            background: radial-gradient(circle at 15% 0%, #171332 0%, #090d1a 45%, #050811 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 22px 18px 50px;
+            line-height: 1.55;
+        }
 
-        header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; flex-wrap: wrap; gap: 10px; border-bottom: 4px solid #6D28D9; }
-        h1 { color: #6D28D9; font-size: 22px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 18px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 4px solid #6D28D9; }
-        .stat-card h3 { font-size: 13.5px; color: #64748b; margin-bottom: 6px; }
-        .stat-card p { font-size: 24px; font-weight: 700; color: #1e293b; }
+        /* ================= LUXURY LOGIN OVERLAY ================= */
+        #loginOverlay {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at 50% 25%, #1e153a 0%, #090d18 65%, #04060c 100%);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; padding: 20px;
+        }
+        .login-card {
+            background: linear-gradient(155deg, rgba(22, 29, 53, 0.95), rgba(11, 15, 29, 0.98));
+            border: 1.5px solid rgba(234, 179, 8, 0.45);
+            border-radius: 24px;
+            width: 100%; max-width: 440px;
+            padding: 42px 34px 36px;
+            text-align: center;
+            box-shadow: 0 25px 65px rgba(0,0,0,0.75), 0 0 40px rgba(234, 179, 8, 0.14);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, transparent, #fde047, #eab308, #fde047, transparent);
+        }
+        .login-emblem {
+            width: 68px; height: 68px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.25), rgba(15, 23, 42, 0.9));
+            border: 2px solid rgba(234, 179, 8, 0.65);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.3);
+        }
+        .login-kicker {
+            font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+            color: var(--gold-light); text-transform: uppercase; margin-bottom: 6px;
+        }
+        .login-card h2 {
+            color: #ffffff; margin-bottom: 8px; font-size: 24px; font-weight: 800;
+        }
+        .login-sub {
+            font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px;
+        }
+        .login-input-wrap {
+            position: relative; margin-bottom: 15px; text-align: left;
+        }
+        .login-input-wrap label {
+            display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 5px;
+        }
+        .login-input {
+            width: 100%; padding: 13px 42px 13px 15px;
+            background: rgba(9, 13, 24, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 12px; font-size: 14.5px; color: #ffffff;
+            outline: none; font-family: inherit; transition: 0.25s;
+        }
+        .login-input:focus {
+            border-color: var(--gold-main);
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.18);
+        }
+        .toggle-pass-btn {
+            position: absolute; right: 12px; bottom: 11px;
+            background: none; border: none; color: #94a3b8;
+            cursor: pointer; font-size: 17px; padding: 2px;
+        }
+        .login-btn {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #fde047 0%, #eab308 55%, #ca8a04 100%);
+            color: #0f172a; border: none; border-radius: 12px;
+            font-weight: 800; cursor: pointer; font-size: 15.5px;
+            font-family: inherit; margin-top: 6px;
+            box-shadow: 0 8px 24px rgba(234, 179, 8, 0.35);
+            transition: transform 0.2s, filter 0.2s;
+        }
+        .login-btn:hover { transform: translateY(-2px); filter: brightness(1.06); }
+        .error-msg {
+            color: #fda4af; background: rgba(225, 29, 72, 0.16);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            padding: 10px 12px; border-radius: 10px;
+            font-size: 13px; margin-top: 14px; display: none;
+        }
 
-        .manual-card { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border: 2px solid #c084fc; border-radius: 14px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.08); }
-        .manual-header { display: flex; justify-content: space-between; align-items: center; }
-        .manual-header h2 { font-size: 18px; color: #5b21b6; display: flex; align-items: center; gap: 8px; }
-        .manual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
-        .manual-field label { display: block; font-size: 12.5px; font-weight: 600; color: #4c1d95; margin-bottom: 5px; }
-        .manual-field input, .manual-field select { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-family: inherit; background: white; outline: none; }
-        .btn-manual-submit { background: #6D28D9; color: white; border: none; padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; margin-top: 15px; box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3); }
-        .btn-manual-submit:hover { background: #5b21b6; }
-        
-        .table-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 30px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-        th, td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-        th { background: #f1f5f9; color: #475569; font-weight: 600; }
-        tr:hover { background: #f8fafc; }
-        
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; line-height: 1.4; }
-        .badge.auto-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-        .badge.admin-verified { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
-        .badge.pending { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
-        
-        /* Support Messages Badges */
-        .badge.resolved { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-        .badge.pending-support { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-        
-        .price-tag { font-weight: 700; color: #0f172a; font-size: 15px; }
-        .btn-action { padding: 7px 12px; background: #6D28D9; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; margin: 2px; font-family: inherit; }
-        .btn-action:hover { background: #5b21b6; }
-        
-        .btn-resolve { padding: 7px 12px; background: #10B981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .btn-resolve:hover { background: #047857; }
-        
-        .btn-reset { padding: 5px 8px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-left: 4px; }
-        .btn-reset:hover { background: #e2e8f0; color: #0f172a; }
-        
-        .search-box { width: 100%; padding: 10px 15px; margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; }
+        /* ================= MAIN EXECUTIVE DASHBOARD ================= */
+        .container { max-width: 1380px; margin: 0 auto; display: none; }
+
+        header.lux-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(135deg, rgba(22, 30, 54, 0.95), rgba(12, 18, 34, 0.96));
+            padding: 20px 26px; border-radius: 20px;
+            border: 1px solid var(--gold-border);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+            margin-bottom: 26px; flex-wrap: wrap; gap: 14px;
+            position: relative; overflow: hidden;
+        }
+        header.lux-header::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-main), transparent);
+        }
+        .brand-cluster { display: flex; align-items: center; gap: 14px; }
+        .brand-orb {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.22), rgba(139, 92, 246, 0.22));
+            border: 1.5px solid rgba(234, 179, 8, 0.55);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; box-shadow: 0 0 18px rgba(234, 179, 8, 0.2);
+        }
+        .brand-titles h1 {
+            font-size: 22px; font-weight: 800;
+            background: linear-gradient(90deg, #ffffff, #fef08a, #eab308);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .brand-titles p { font-size: 12.5px; color: var(--text-muted); }
+
+        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .live-clock-pill {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+            color: #e2e8f0; padding: 8px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+        }
+        .hdr-btn {
+            padding: 9px 16px; border-radius: 10px; font-size: 13.5px; font-weight: 700;
+            cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+            font-family: inherit; transition: 0.2s; border: 1px solid transparent;
+        }
+        .hdr-btn-refresh {
+            background: rgba(59, 130, 246, 0.16); color: #93c5fd; border-color: rgba(59, 130, 246, 0.35);
+        }
+        .hdr-btn-refresh:hover { background: rgba(59, 130, 246, 0.28); color: #fff; }
+        .hdr-btn-site {
+            background: rgba(234, 179, 8, 0.15); color: var(--gold-light); border-color: rgba(234, 179, 8, 0.4);
+        }
+        .hdr-btn-site:hover { background: rgba(234, 179, 8, 0.28); }
+        .hdr-btn-logout {
+            background: rgba(239, 68, 68, 0.16); color: #fca5a5; border-color: rgba(239, 68, 68, 0.35);
+        }
+        .hdr-btn-logout:hover { background: rgba(239, 68, 68, 0.3); color: #fff; }
+
+        /* ================= KPI STATS GRID ================= */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px; margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px; padding: 20px 22px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+            position: relative; overflow: hidden;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--gold-border); }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+            background: var(--stat-accent, #8b5cf6);
+        }
+        .stat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .stat-top h3 { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+        .stat-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .stat-val { font-size: 28px; font-weight: 800; color: #ffffff; letter-spacing: 0.3px; }
+        .stat-sub { font-size: 11.5px; color: #64748b; margin-top: 4px; }
+        .stat-card.gold-revenue {
+            background: linear-gradient(135deg, rgba(30, 27, 15, 0.92), rgba(17, 25, 45, 0.95));
+            border-color: rgba(234, 179, 8, 0.45);
+            --stat-accent: #eab308;
+        }
+        .stat-card.gold-revenue .stat-val { color: var(--gold-light); }
+
+        /* ================= LUXURY MANUAL ORDER STUDIO ================= */
+        .manual-card {
+            background: linear-gradient(145deg, rgba(23, 21, 50, 0.92) 0%, rgba(13, 20, 38, 0.96) 100%);
+            border: 1.5px solid rgba(234, 179, 8, 0.38);
+            border-radius: 22px; padding: 26px; margin-bottom: 30px;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.45), 0 0 30px rgba(139, 92, 246, 0.12);
+        }
+        .manual-header {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px; padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .manual-header h2 {
+            font-size: 19px; color: var(--gold-light);
+            display: flex; align-items: center; gap: 10px; font-weight: 800;
+        }
+        .manual-badge {
+            font-size: 12px; background: rgba(234, 179, 8, 0.16);
+            color: #fde047; border: 1px solid rgba(234, 179, 8, 0.35);
+            padding: 4px 12px; border-radius: 999px; font-weight: 600;
+        }
+        .manual-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+            gap: 15px; margin-top: 18px;
+        }
+        .manual-field label {
+            display: block; font-size: 12.5px; font-weight: 600;
+            color: #cbd5e1; margin-bottom: 6px;
+        }
+        .manual-field input, .manual-field select {
+            width: 100%; padding: 11px 13px;
+            background: rgba(9, 13, 25, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 10px; font-size: 14px;
+            font-family: inherit; color: #ffffff; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .manual-field input:focus, .manual-field select:focus {
+            border-color: var(--gold-main);
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
+        }
+        .manual-field select option { background: #0f172a; color: #ffffff; }
+        .palm-extra-fields {
+            display: none; grid-column: 1 / -1;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px dashed rgba(16, 185, 129, 0.45);
+            border-radius: 14px; padding: 15px; margin-top: 4px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;
+        }
+        .palm-extra-fields.active { display: grid; }
+        .manual-actions-row {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px; margin-top: 20px;
+        }
+        .btn-manual-submit {
+            background: linear-gradient(135deg, #fde047 0%, #eab308 55%, #ca8a04 100%);
+            color: #0f172a; border: none; padding: 13px 26px;
+            border-radius: 12px; font-weight: 800; font-size: 14.5px;
+            cursor: pointer; font-family: inherit;
+            box-shadow: 0 8px 25px rgba(234, 179, 8, 0.32);
+            transition: transform 0.2s, filter 0.2s;
+        }
+        .btn-manual-submit:hover { transform: translateY(-2px); filter: brightness(1.06); }
+
+        /* ================= LUXURY TABLE CONTAINERS ================= */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.09);
+            padding: 24px; border-radius: 20px;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+        }
+        .table-top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 14px; margin-bottom: 18px;
+        }
+        .table-top-bar h2 {
+            font-size: 19px; color: #ffffff; display: flex; align-items: center; gap: 8px;
+        }
+        .controls-bar {
+            display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 18px;
+        }
+        .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-pill {
+            padding: 8px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+            background: rgba(255,255,255,0.05); color: #cbd5e1;
+            border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+            font-family: inherit; transition: 0.2s;
+        }
+        .filter-pill:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .filter-pill.active {
+            background: linear-gradient(135deg, #fde047, #eab308);
+            color: #0f172a; border-color: #fde047;
+        }
+        .search-box {
+            flex: 1; min-width: 240px; padding: 10px 15px;
+            background: rgba(9, 13, 25, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 10px; font-size: 14px; color: #ffffff;
+            outline: none; font-family: inherit;
+        }
+        .search-box:focus { border-color: var(--gold-main); }
+        .service-filter-select {
+            padding: 10px 14px; background: rgba(9, 13, 25, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 10px; font-size: 13.5px; color: #ffffff;
+            outline: none; font-family: inherit;
+        }
+        .service-filter-select option { background: #0f172a; color: #fff; }
+
+        .table-scroll { overflow-x: auto; border-radius: 14px; border: 1px solid rgba(255,255,255,0.07); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.8px; }
+        th, td { padding: 13px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: middle; }
+        th {
+            background: rgba(15, 23, 42, 0.95); color: var(--gold-light);
+            font-weight: 700; font-size: 12.8px; text-transform: uppercase; letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+        tbody tr { transition: background 0.18s; }
+        tbody tr:hover { background: rgba(255,255,255,0.04); }
+
+        .svc-pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 11px; border-radius: 8px; font-size: 12.5px; font-weight: 700;
+            background: rgba(139, 92, 246, 0.16); color: #ddd6fe;
+            border: 1px solid rgba(139, 92, 246, 0.32); white-space: nowrap;
+        }
+        .svc-pill.monthly { background: rgba(59, 130, 246, 0.16); color: #bfdbfe; border-color: rgba(59, 130, 246, 0.35); }
+        .svc-pill.yearly { background: rgba(234, 179, 8, 0.16); color: #fef08a; border-color: rgba(234, 179, 8, 0.38); }
+        .svc-pill.love { background: rgba(244, 63, 94, 0.16); color: #fecdd3; border-color: rgba(244, 63, 94, 0.35); }
+        .svc-pill.career { background: rgba(16, 185, 129, 0.16); color: #a7f3d0; border-color: rgba(16, 185, 129, 0.35); }
+        .svc-pill.palmistry { background: rgba(20, 184, 166, 0.18); color: #99f6e4; border-color: rgba(20, 184, 166, 0.4); }
+
+        .badge {
+            padding: 5px 11px; border-radius: 999px; font-size: 11.8px;
+            font-weight: 700; display: inline-block; line-height: 1.35; white-space: nowrap;
+        }
+        .badge.auto-success {
+            background: rgba(16, 185, 129, 0.16); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .badge.admin-verified {
+            background: rgba(59, 130, 246, 0.16); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+        .badge.pending {
+            background: rgba(234, 179, 8, 0.16); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.4);
+        }
+        .badge.resolved {
+            background: rgba(16, 185, 129, 0.16); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .badge.pending-support {
+            background: rgba(239, 68, 68, 0.18); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .price-tag {
+            font-weight: 800; color: var(--gold-light); font-size: 15px;
+            background: rgba(234, 179, 8, 0.12); padding: 4px 10px;
+            border-radius: 8px; border: 1px solid rgba(234, 179, 8, 0.25);
+        }
+        .action-group { display: flex; gap: 6px; align-items: center; flex-wrap: nowrap; }
+        .btn-action {
+            padding: 7px 13px;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: white; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 12.5px; font-weight: 700;
+            font-family: inherit; white-space: nowrap; transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.35);
+        }
+        .btn-action:hover { filter: brightness(1.12); transform: translateY(-1px); }
+        .btn-copy-link {
+            padding: 7px 10px; background: rgba(234, 179, 8, 0.15);
+            color: var(--gold-light); border: 1px solid rgba(234, 179, 8, 0.35);
+            border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700;
+            font-family: inherit; white-space: nowrap; transition: 0.2s;
+        }
+        .btn-copy-link:hover { background: rgba(234, 179, 8, 0.28); }
+        .btn-resolve {
+            padding: 7px 12px; background: linear-gradient(135deg, #10b981, #059669);
+            color: white; border: none; border-radius: 8px; cursor: pointer;
+            font-size: 12px; font-weight: 700; font-family: inherit; white-space: nowrap;
+        }
+        .btn-resolve:hover { filter: brightness(1.1); }
+        .btn-reset {
+            padding: 6px 9px; background: rgba(255,255,255,0.06);
+            color: #cbd5e1; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px; cursor: pointer; font-size: 11.5px; font-weight: 600;
+            font-family: inherit; transition: 0.2s;
+        }
+        .btn-reset:hover { background: rgba(239, 68, 68, 0.22); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); }
+
+        #luxToast {
+            position: fixed; bottom: 26px; right: 26px;
+            background: linear-gradient(135deg, #065f46, #047857);
+            color: #ffffff; border: 1px solid #34d399;
+            padding: 12px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 700;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5); z-index: 10000;
+            display: none; align-items: center; gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px 10px 40px; }
+            header.lux-header { padding: 16px; }
+            .manual-card, .table-container { padding: 16px; }
+            .brand-titles h1 { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- 🔒 LUXURY LOGIN OVERLAY -->
     <div id="loginOverlay">
         <div class="login-card">
-            <h2>🔒 সুৰক্ষিত এডমিন লগইন</h2>
-            <p style="font-size: 13.5px; color: #64748b; margin-bottom: 18px;">Supabase Auth ইমেইল আৰু পাছৱৰ্ড বা এডমিন ছিক্ৰেট কী প্ৰদান কৰক</p>
-            <input type="email" id="adminEmail" class="login-input" placeholder="এডমিন ইমেইল (ঐচ্ছিক যদি ছিক্ৰেট কী ব্যৱহাৰ কৰে)">
-            <input type="password" id="adminPassword" class="login-input" placeholder="পাছৱৰ্ড বা এডমিন কী লিখক..." onkeypress="if(event.key==='Enter') checkPassword()">
-            <button class="login-btn" id="adminLoginBtn" onclick="checkPassword()">সুৰক্ষিতভাৱে লগইন কৰক</button>
+            <div class="login-emblem">👑</div>
+            <div class="login-kicker">✦ JYOTISH ASSAM EXECUTIVE ✦</div>
+            <h2>ৰাজকীয় এডমিন লগইন</h2>
+            <p class="login-sub">আপোনাৰ এডমিন ইমেইল আৰু পাছৱৰ্ড বা ছিক্ৰেট কী প্ৰদান কৰক</p>
+
+            <div class="login-input-wrap">
+                <label for="adminEmail">এডমিন ইমেইল (ঐচ্ছিক যদি ছিক্ৰেট কী ব্যৱহাৰ কৰে)</label>
+                <input type="email" id="adminEmail" class="login-input" placeholder="admin@jyotishassam.com">
+            </div>
+
+            <div class="login-input-wrap">
+                <label for="adminPassword">পাছৱৰ্ড বা এডমিন কী *</label>
+                <input type="password" id="adminPassword" class="login-input" placeholder="পাছৱৰ্ড লিখক..." onkeypress="if(event.key==='Enter') checkPassword()">
+                <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility()" title="পাছৱৰ্ড চাওক">👁️</button>
+            </div>
+
+            <button class="login-btn" id="adminLoginBtn" onclick="checkPassword()">🔓 সুৰক্ষিতভাৱে ডেশ্ববৰ্ড খোলক</button>
             <p id="errorMsg" class="error-msg">লগইন বিফল হৈছে! অনুগ্ৰহ কৰি সঠিক ইমেইল/পাছৱৰ্ড দিয়ক।</p>
         </div>
     </div>
 
+    <!-- 🏛️ MAIN LUXURY ADMIN DASHBOARD -->
     <div class="container" id="mainDashboard">
-        <header>
-            <h1>🛠️ জ্যোতিষ অসম - এডমিন ডেশ্ববৰ্ড</h1>
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <a href="index.html" style="color: #6D28D9; text-decoration: none; font-weight: 600;">← ৱেবছাইটলৈ যাওক</a>
-                <button onclick="logout()" style="padding: 6px 12px; background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">লগআউট</button>
+        <header class="lux-header">
+            <div class="brand-cluster">
+                <div class="brand-orb">🔮</div>
+                <div class="brand-titles">
+                    <h1>জ্যোতিষ অসম — ৰাজকীয় এডমিন ডেশ্ববৰ্ড</h1>
+                    <p>গ্ৰাহকৰ অৰ্ডাৰ, বৈদিক ৰিপোৰ্ট প্ৰস্তুতকৰণ আৰু সহায়ক বাৰ্তা নিয়ন্ত্ৰণ কক্ষ</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <span class="live-clock-pill" id="liveAdminClock">🕒 অসম সময়</span>
+                <button type="button" class="hdr-btn hdr-btn-refresh" onclick="refreshAllAdminData()">🔄 ডাটা ৰিফ্ৰেছ</button>
+                <a href="index.html" class="hdr-btn hdr-btn-site">🌐 মূল ৱেবছাইট</a>
+                <button type="button" class="hdr-btn hdr-btn-logout" onclick="logout()">🚪 লগআউট</button>
             </div>
         </header>
 
+        <!-- 📊 KPI STATS -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <h3>মুঠ অৰ্ডাৰ (Total Orders)</h3>
-                <p id="totalOrders">লোড হৈ আছে...</p>
+            <div class="stat-card" style="--stat-accent: #8b5cf6;">
+                <div class="stat-top">
+                    <h3>মুঠ অৰ্ডাৰ (Total Orders)</h3>
+                    <span class="stat-icon">📦</span>
+                </div>
+                <div class="stat-val" id="totalOrders">০</div>
+                <div class="stat-sub">সকলো পঞ্জীয়নভুক্ত অৰ্ডাৰ</div>
             </div>
-            <div class="stat-card" style="border-left-color: #059669; background: #ecfdf5;">
-                <h3 style="color: #065f46; font-weight: 600;">💰 মুঠ উপাৰ্জন (Total Revenue)</h3>
-                <p id="totalRevenue" style="color: #047857;">₹0</p>
+
+            <div class="stat-card gold-revenue">
+                <div class="stat-top">
+                    <h3 style="color: #fef08a;">মুঠ উপাৰ্জন (Total Revenue)</h3>
+                    <span class="stat-icon">💰</span>
+                </div>
+                <div class="stat-val" id="totalRevenue">₹0</div>
+                <div class="stat-sub" style="color: #fde047;">সফল আৰু পৰীক্ষিত অৰ্ডাৰৰ মুঠ মূল্য</div>
             </div>
-            <div class="stat-card" style="border-left-color: #15803d;">
-                <h3>🟢 স্বয়ংক্ৰিয়ভাৱে সফল (গ্ৰাহকে নিজে পালে)</h3>
-                <p id="autoSuccessOrders">লোড হৈ আছে...</p>
+
+            <div class="stat-card" style="--stat-accent: #10b981;">
+                <div class="stat-top">
+                    <h3>স্বয়ংক্ৰিয়ভাৱে সফল (Auto Paid)</h3>
+                    <span class="stat-icon">🟢</span>
+                </div>
+                <div class="stat-val" id="autoSuccessOrders" style="color: #6ee7b7;">০</div>
+                <div class="stat-sub">গ্ৰাহকে অনলাইন পেমেন্ট কৰি নিজে পালে</div>
             </div>
-            <div class="stat-card" style="border-left-color: #1d4ed8;">
-                <h3>🔵 এডমিনৰ দ্বাৰা পৰীক্ষিত (আপুনি খুলি চালে)</h3>
-                <p id="adminVerifiedOrders">লোড হৈ আছে...</p>
+
+            <div class="stat-card" style="--stat-accent: #3b82f6;">
+                <div class="stat-top">
+                    <h3>এডমিনৰ দ্বাৰা পৰীক্ষিত (Verified)</h3>
+                    <span class="stat-icon">🔵</span>
+                </div>
+                <div class="stat-val" id="adminVerifiedOrders" style="color: #93c5fd;">০</div>
+                <div class="stat-sub">আপুনি পোনপটীয়াকৈ প্রস্তুত বা পৰীক্ষা কৰা</div>
+            </div>
+
+            <div class="stat-card" style="--stat-accent: #eab308;">
+                <div class="stat-top">
+                    <h3>পেনণ্ডিং অৰ্ডাৰ (Pending)</h3>
+                    <span class="stat-icon">🟡</span>
+                </div>
+                <div class="stat-val" id="pendingOrdersCount" style="color: #fde047;">০</div>
+                <div class="stat-sub">পেমেন্ট অসম্পূৰ্ণ বা পৰীক্ষাধীন</div>
             </div>
         </div>
 
-        <!-- পোনপটীয়াকৈ নতুন ৰিপোৰ্ট বনোৱা বক্স -->
+        <!-- ⚡ MANUAL ORDER & INSTANT PDF REPORT STUDIO -->
         <div class="manual-card">
             <div class="manual-header">
-                <h2>➕ পোনপটীয়াকৈ নতুন ৰিপোৰ্ট বনাওক (Manual Order)</h2>
+                <h2>✨ পোনপটীয়াকৈ নতুন ৰিপোৰ্ট বনাওক (Instant Manual Report Studio)</h2>
+                <span class="manual-badge">⚡ ১ ক্লিকতে সম্পূৰ্ণ বৈদিক PDF ৰিপোৰ্ট</span>
             </div>
+
             <div class="manual-grid">
                 <div class="manual-field">
-                    <label>গ্ৰাহকৰ নাম *</label>
-                    <input type="text" id="mName" placeholder="যেনে: মৌপ্ৰিয়া ৰাভা">
+                    <label for="mName">গ্ৰাহকৰ নাম *</label>
+                    <input type="text" id="mName" placeholder="যেনে: কনক বৰা">
                 </div>
                 <div class="manual-field">
-                    <label>ইমেইল বা ফোন (ঐচ্ছিক)</label>
-                    <input type="text" id="mEmail" placeholder="ইমেইল বা ফোন নম্বৰ...">
+                    <label for="mEmail">ইমেইল বা ফোন নম্বৰ (ঐচ্ছিক)</label>
+                    <input type="text" id="mEmail" placeholder="WhatsApp বা ইমেইল...">
                 </div>
                 <div class="manual-field">
-                    <label>সেৱাৰ প্ৰকাৰ *</label>
+                    <label for="mService">সেৱাৰ প্ৰকাৰ *</label>
                     <select id="mService" onchange="updateManualPrice()">
-                                                <option value="monthly">মাহেকীয়া ৰাশিফল (₹19)</option>
-                        <option value="yearly">বাৰ্ষিক ৰাশিফল (₹49)</option>
-                        <option value="love">প্ৰেম আৰু সম্পৰ্ক (₹99)</option>
-                        <option value="career">কেৰিয়াৰ আৰু ব্যৱসায় (₹199)</option>
-                        <option value="birth">সম্পূৰ্ণ জন্ম কুণ্ডলী (₹299)</option>
-                        <option value="palmistry">হস্তৰেখা বিশদ বিচাৰ (₹199)</option>
+                        <option value="monthly">📅 মাহেকীয়া ৰাশিফল (₹19)</option>
+                        <option value="yearly">📜 বাৰ্ষিক ৰাশিফল (₹49)</option>
+                        <option value="love">❤️ প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (₹99)</option>
+                        <option value="career">💼 কেৰিয়াৰ আৰু ব্যৱসায় পূৰ্বাভাস (₹199)</option>
+                        <option value="birth">🔮 সম্পূৰ্ণ জন্ম কুণ্ডলী (₹299)</option>
+                        <option value="palmistry">🖐️ হস্তৰেখা বিশদ বিচাৰ (₹199)</option>
                     </select>
                 </div>
                 <div class="manual-field">
-                    <label>মূল্য (₹) *</label>
-                    <input type="number" id="mAmount" value="21">
+                    <label for="mAmount">মূল্য (₹) *</label>
+                    <input type="number" id="mAmount" value="19">
                 </div>
-                <div class="manual-field">
-                    <label>জন্ম তাৰিখ (DOB) *</label>
+                <div class="manual-field" id="mDobWrap">
+                    <label for="mDob" id="mDobLabel">জন্ম তাৰিখ (DOB) *</label>
                     <input type="date" id="mDob">
                 </div>
-                <div class="manual-field">
-                    <label>জন্মৰ সময় (Time)</label>
+                <div class="manual-field" id="mTobWrap">
+                    <label for="mTob">জন্মৰ সময় (Time)</label>
                     <input type="time" id="mTob" value="10:30">
                 </div>
                 <div class="manual-field">
-                    <label>জন্ম স্থান (Place) *</label>
-                    <input type="text" id="mPlace" placeholder="যেনে: গুৱাহাটী, অসম">
+                    <label for="mPlace">জন্ম স্থান (Place) *</label>
+                    <input type="text" id="mPlace" placeholder="যেনে: বিহপুৰীয়া, লখিমপুৰ">
+                </div>
+
+                <!-- Dynamic Palmistry Fields when Palmistry is chosen -->
+                <div class="palm-extra-fields" id="mPalmExtraFields">
+                    <div class="manual-field">
+                        <label for="mPalmHand">🖐️ হাত বাছনি কৰক</label>
+                        <select id="mPalmHand">
+                            <option value="right">সোঁহাত (Right Hand)</option>
+                            <option value="left">বাওঁহাত (Left Hand)</option>
+                        </select>
+                    </div>
+                    <div class="manual-field">
+                        <label for="mPalmGender">👤 লিংগ (Gender)</label>
+                        <select id="mPalmGender">
+                            <option value="male">পুৰুষ (Male)</option>
+                            <option value="female">মহিলা (Female)</option>
+                        </select>
+                    </div>
+                    <div class="manual-field">
+                        <label for="mPalmFile">📸 হাতৰ তলুৱাৰ ফটো (ঐচ্ছিক)</label>
+                        <input type="file" id="mPalmFile" accept="image/*" onchange="handleManualPalmPhoto(event)">
+                    </div>
                 </div>
             </div>
-            <button class="btn-manual-submit" onclick="createManualOrderAndReport()">⚡ সম্পূৰ্ণ ৰিপোৰ্ট উলিয়াওক আৰু তালিকাত ছেভ কৰক</button>
+
+            <div class="manual-actions-row">
+                <span style="font-size: 12.5px; color: var(--text-muted);">💡 টিপ: ইয়াত ৰিপোৰ্ট উলিওৱাৰ লগে লগে নতুন টেবত ৰিপোৰ্ট খোল খাব আৰু তলৰ অৰ্ডাৰ তালিকাতো সংৰক্ষিত হ'ব।</span>
+                <button type="button" class="btn-manual-submit" onclick="createManualOrderAndReport()">⚡ সম্পূৰ্ণ ৰিপোৰ্ট উলিয়াওক আৰু ছেভ কৰক</button>
+            </div>
         </div>
 
-        <!-- গ্ৰাহকৰ অৰ্ডাৰৰ তালিকা -->
+        <!-- 📜 CUSTOMER ORDERS & PAYMENT TABLE -->
         <div class="table-container">
-            <h2 style="margin-bottom: 15px; font-size: 18px; color: #1e293b;">📜 গ্ৰাহকৰ অৰ্ডাৰ আৰু পেমেন্ট তালিকা</h2>
-            <input type="text" id="searchInput" class="search-box" placeholder="নাম, ঠাই বা ইমেইল দি বিচাৰক..." onkeyup="filterTable()">
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>তাৰিখ</th>
-                        <th>নাম</th>
-                        <th>ইমেইল / ফোন</th>
-                        <th>সেৱা (Service)</th>
-                        <th>মূল্য (Amount)</th>
-                        <th>জন্মৰ বিৱৰণ (DOB / Time / Place)</th>
-                        <th>স্থিতি (Status)</th>
-                        <th>ৰিপোৰ্ট (Action)</th>
-                    </tr>
-                </thead>
-                <tbody id="ordersTableBody">
-                    <tr><td colspan="8" style="text-align: center; padding: 20px;">ডাটা লোড হৈ আছে...</td></tr>
-                </tbody>
-            </table>
+            <div class="table-top-bar">
+                <h2>📜 গ্ৰাহকৰ অৰ্ডাৰ আৰু পেমেন্ট তালিকা</h2>
+                <span id="filteredCountBadge" style="font-size: 13px; color: var(--gold-light); font-weight: 600;"></span>
+            </div>
+
+            <div class="controls-bar">
+                <div class="filter-pills" id="statusFilterPills">
+                    <button type="button" class="filter-pill active" data-status="all" onclick="setStatusFilter('all', this)">সকলো অৰ্ডাৰ</button>
+                    <button type="button" class="filter-pill" data-status="auto" onclick="setStatusFilter('auto', this)">🟢 স্বয়ংক্ৰিয় সফল</button>
+                    <button type="button" class="filter-pill" data-status="admin" onclick="setStatusFilter('admin', this)">🔵 এডমিন পৰীক্ষিত</button>
+                    <button type="button" class="filter-pill" data-status="pending" onclick="setStatusFilter('pending', this)">🟡 পেনণ্ডিং</button>
+                </div>
+
+                <select id="serviceFilterSelect" class="service-filter-select" onchange="filterTable()">
+                    <option value="all">সকলো সেৱা (All Services)</option>
+                    <option value="monthly">📅 মাহেকীয়া ৰাশিফল</option>
+                    <option value="yearly">📜 বাৰ্ষিক ৰাশিফল</option>
+                    <option value="birth">🔮 সম্পূৰ্ণ জন্ম কুণ্ডলী</option>
+                    <option value="love">❤️ প্ৰেম আৰু সম্পৰ্ক</option>
+                    <option value="career">💼 কেৰিয়াৰ আৰু ব্যৱসায়</option>
+                    <option value="palmistry">🖐️ হস্তৰেখা বিচাৰ</option>
+                </select>
+
+                <input type="text" id="searchInput" class="search-box" placeholder="🔍 নাম, ঠাই, ইমেইল বা অৰ্ডাৰ আইডি দি বিচাৰক..." oninput="filterTable()">
+            </div>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>তাৰিখ</th>
+                            <th>গ্ৰাহকৰ নাম</th>
+                            <th>ইমেইল / যোগাযোগ</th>
+                            <th>সেৱা (Service)</th>
+                            <th>মূল্য</th>
+                            <th>জন্মৰ বিৱৰণ (DOB / Time / Place)</th>
+                            <th>স্থিতি (Status)</th>
+                            <th>ৰিপোৰ্ট একচন (Actions)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="8" style="text-align: center; padding: 28px; color: #94a3b8;">ডাটা লোড হৈ আছে... ⏳</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- 🔥 নতুন: গ্ৰাহকৰ সমস্যা (Support Messages) তালিকা 🔥 -->
-        <div class="table-container" style="border-top: 4px solid #10B981;">
-            <h2 style="margin-bottom: 15px; font-size: 18px; color: #047857;">🎧 গ্ৰাহকৰ সহায়ক বাৰ্তা (Support Messages)</h2>
-            <button onclick="fetchSupportMessages()" style="padding: 5px 10px; margin-bottom: 15px; background: #e2e8f0; border: none; border-radius: 5px; cursor: pointer;">🔄 ৰিফ্ৰেছ কৰক</button>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 12%;">তাৰিখ</th>
-                        <th style="width: 15%;">নাম</th>
-                        <th style="width: 15%;">যোগাযোগ (Contact)</th>
-                        <th style="width: 35%;">সমস্যা (Message)</th>
-                        <th style="width: 13%;">স্থিতি (Status)</th>
-                        <th style="width: 10%;">একচন</th>
-                    </tr>
-                </thead>
-                <tbody id="supportTableBody">
-                    <tr><td colspan="6" style="text-align: center; padding: 20px;">মেছেজ লোড হৈ আছে...</td></tr>
-                </tbody>
-            </table>
-        </div>
+        <!-- 🎧 CUSTOMER SUPPORT MESSAGES TABLE -->
+        <div class="table-container" style="border-top: 3px solid #10b981;">
+            <div class="table-top-bar">
+                <h2 style="color: #6ee7b7;">🎧 গ্ৰাহকৰ সহায়ক বাৰ্তা (Customer Support Desk)</h2>
+                <button type="button" class="hdr-btn hdr-btn-refresh" onclick="fetchSupportMessages()">🔄 বাৰ্তা ৰিফ্ৰেছ কৰক</button>
+            </div>
 
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 13%;">তাৰিখ</th>
+                            <th style="width: 16%;">গ্ৰাহকৰ নাম</th>
+                            <th style="width: 16%;">যোগাযোগ (Contact)</th>
+                            <th style="width: 34%;">সমস্যাৰ বিৱৰণ (Message)</th>
+                            <th style="width: 11%;">স্থিতি</th>
+                            <th style="width: 10%;">একচন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="supportTableBody">
+                        <tr><td colspan="6" style="text-align: center; padding: 24px; color: #94a3b8;">মেছেজ লোড হৈ আছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <div id="luxToast">✅ সম্পন্ন হ'ল!</div>
 
     <script>
         const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
@@ -205,41 +664,122 @@
         const SERVICE_PRICES = {
             'monthly': 19,
             'yearly': 49,
-            'chat': 21,
             'love': 99,
             'career': 199,
             'birth': 299,
             'palmistry': 199
         };
 
+        const SERVICE_LABELS_AS = {
+            'monthly': { label: '📅 মাহেকীয়া ৰাশিফল', cls: 'monthly' },
+            'yearly': { label: '📜 বাৰ্ষিক ৰাশিফল', cls: 'yearly' },
+            'love': { label: '❤️ প্ৰেম আৰু সম্পৰ্ক', cls: 'love' },
+            'career': { label: '💼 কেৰিয়াৰ আৰু ব্যৱসায়', cls: 'career' },
+            'birth': { label: '🔮 সম্পূৰ্ণ জন্ম কুণ্ডলী', cls: 'birth' },
+            'palmistry': { label: '🖐️ হস্তৰেখা বিচাৰ', cls: 'palmistry' }
+        };
+
         let allOrders = [];
-        let localAdminViewedIds = JSON.parse(localStorage.getItem('ja_admin_viewed_ids') || '[]');
-        let localManualOrders = JSON.parse(localStorage.getItem('ja_manual_orders') || '[]');
-        let localCustomAmounts = JSON.parse(localStorage.getItem('ja_custom_amounts') || '{}');
+        let currentStatusFilter = 'all';
+        let manualPalmPhotoBase64 = null;
+
+        let localAdminViewedIds = [];
+        let localManualOrders = [];
+        let localCustomAmounts = {};
+        let localResolvedSupportIds = [];
+        try {
+            localAdminViewedIds = JSON.parse(localStorage.getItem('ja_admin_viewed_ids') || '[]');
+            localManualOrders = JSON.parse(localStorage.getItem('ja_manual_orders') || '[]');
+            localCustomAmounts = JSON.parse(localStorage.getItem('ja_custom_amounts') || '{}');
+            localResolvedSupportIds = JSON.parse(localStorage.getItem('ja_resolved_support_ids') || '[]');
+        } catch (e) {}
+
+        function showToast(msg) {
+            const t = document.getElementById('luxToast');
+            if (!t) return;
+            t.innerText = msg;
+            t.style.display = 'inline-flex';
+            clearTimeout(window._luxToastTimer);
+            window._luxToastTimer = setTimeout(() => { t.style.display = 'none'; }, 3000);
+        }
+
+        function updateLiveClock() {
+            const el = document.getElementById('liveAdminClock');
+            if (!el) return;
+            const now = new Date();
+            el.innerText = '🕒 ' + now.toLocaleTimeString('as-IN', { hour: '2-digit', minute: '2-digit' }) + ' • ' + now.toLocaleDateString('as-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        setInterval(updateLiveClock, 15000);
+        updateLiveClock();
+
+        function togglePassVisibility() {
+            const p = document.getElementById('adminPassword');
+            if (!p) return;
+            p.type = p.type === 'password' ? 'text' : 'password';
+        }
+
+        function normalizeServiceKey(o) {
+            const raw = String(o.service || o.service_type || o.custom_service || '').toLowerCase().trim();
+            if (raw.includes('palm') || o.palmHand || o.palm_hand || o.palmPhoto) return 'palmistry';
+            if (raw === 'monthly' || raw.includes('month') || raw.includes('মাহেকীয়া')) return 'monthly';
+            if (raw === 'yearly' || raw.includes('year') || raw.includes('বাৰ্ষিক')) return 'yearly';
+            if (raw === 'love' || raw.includes('love') || raw.includes('প্ৰেম')) return 'love';
+            if (raw === 'career' || raw.includes('career') || raw.includes('কেৰিয়াৰ')) return 'career';
+            if (raw === 'birth' || raw.includes('birth') || raw.includes('কুণ্ডলী')) return 'birth';
+            const amt = Number(o.amount || 0);
+            const rupees = amt > 2000 ? Math.round(amt / 100) : amt;
+            if (rupees === 19) return 'monthly';
+            if (rupees === 49) return 'yearly';
+            if (rupees === 99) return 'love';
+            if (rupees === 199) return 'career';
+            if (rupees === 299) return 'birth';
+            return raw || 'birth';
+        }
 
         function updateManualPrice() {
             const srv = document.getElementById('mService').value;
-            document.getElementById('mAmount').value = SERVICE_PRICES[srv] || 49;
+            document.getElementById('mAmount').value = SERVICE_PRICES[srv] || 19;
+            const palmBox = document.getElementById('mPalmExtraFields');
+            const dobLabel = document.getElementById('mDobLabel');
+            if (srv === 'palmistry') {
+                if (palmBox) palmBox.classList.add('active');
+                if (dobLabel) dobLabel.innerText = 'জন্ম তাৰিখ (ঐচ্ছিক)';
+            } else {
+                if (palmBox) palmBox.classList.remove('active');
+                if (dobLabel) dobLabel.innerText = 'জন্ম তাৰিখ (DOB) *';
+            }
+        }
+
+        function handleManualPalmPhoto(evt) {
+            const file = evt.target.files && evt.target.files[0];
+            if (!file) { manualPalmPhotoBase64 = null; return; }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                manualPalmPhotoBase64 = e.target.result;
+                showToast("📸 হাতৰ ফটো সংযুক্ত কৰা হ'ল!");
+            };
+            reader.readAsDataURL(file);
         }
 
         function getOrderAmount(o) {
             if (localCustomAmounts[String(o.id)]) {
                 return Number(localCustomAmounts[String(o.id)]);
             }
-            const srv = String(o.service || '').toLowerCase().trim();
-            if (SERVICE_PRICES[srv]) {
-                return SERVICE_PRICES[srv];
-            }
-            if (o.amount && !isNaN(Number(o.amount))) {
+            if (o.amount && !isNaN(Number(o.amount)) && Number(o.amount) > 0) {
                 const val = Number(o.amount);
                 return val > 2000 ? Math.round(val / 100) : val;
+            }
+            const srv = normalizeServiceKey(o);
+            if (SERVICE_PRICES[srv]) {
+                return SERVICE_PRICES[srv];
             }
             return 49;
         }
 
         function getOrderStatusType(o) {
             const payId = String(o.razorpay_payment_id || '');
-            if (payId && !payId.startsWith('pay_Admin')) {
+            const pStatus = String(o.payment_status || o.status || '').toLowerCase();
+            if ((payId && !payId.startsWith('pay_Admin')) || (pStatus === 'paid' && !payId.startsWith('pay_Admin') && !localAdminViewedIds.includes(String(o.id)))) {
                 return 'auto';
             }
             if (payId.startsWith('pay_Admin') || localAdminViewedIds.includes(String(o.id))) {
@@ -256,7 +796,7 @@
             errEl.style.display = 'none';
 
             if (!enteredPass) {
-                errEl.innerText = "অনুগ্ৰহ কৰি পাছৱৰ্ড প্ৰদান কৰক।";
+                errEl.innerText = "অনুগ্ৰহ কৰি আপোনাৰ পাছৱৰ্ড বা এডমিন কী প্ৰদান কৰক।";
                 errEl.style.display = 'block';
                 return;
             }
@@ -267,53 +807,56 @@
             try {
                 let isAuthenticated = false;
 
-                // ১. যদি ইমেইল দিয়া হৈছে, প্ৰথমে Supabase Auth (Email + Password) চেষ্টা কৰক
+                // ১. যদি ইমেইল দিয়া হৈছে, প্ৰথমে Supabase Auth চেষ্টা কৰক
                 if (emailVal) {
-                    const { data, error } = await sbClient.auth.signInWithPassword({
-                        email: emailVal,
-                        password: enteredPass
-                    });
-                    if (!error && data && data.session) {
-                        isAuthenticated = true;
-                        sessionStorage.setItem('ja_admin_token', data.session.access_token);
-                    }
+                    try {
+                        const { data, error } = await sbClient.auth.signInWithPassword({
+                            email: emailVal,
+                            password: enteredPass
+                        });
+                        if (!error && data && data.session) {
+                            isAuthenticated = true;
+                            sessionStorage.setItem('ja_admin_token', data.session.access_token);
+                        }
+                    } catch (e) {}
                 }
 
-                // ২. যদি Supabase Auth নহয়, তেন্তে Backend Edge Function (/admin-verify)-ৰ জৰিয়তে পৰীক্ষা কৰক
+                // ২. Backend Edge Function (/admin-verify)-ৰ জৰিয়তে পৰীক্ষা কৰক
                 if (!isAuthenticated) {
-                    const verifyRes = await fetch(SUPABASE_URL + '/functions/v1/admin-verify', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': 'Bearer ' + SUPABASE_KEY
-                        },
-                        body: JSON.stringify({ email: emailVal, password: enteredPass })
-                    });
-                    if (verifyRes.ok) {
-                        const vJson = await verifyRes.json();
-                        if (vJson && vJson.success) {
-                            isAuthenticated = true;
-                            sessionStorage.setItem('ja_admin_key', enteredPass);
+                    try {
+                        const verifyRes = await fetch(SUPABASE_URL + '/functions/v1/admin-verify', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': 'Bearer ' + SUPABASE_KEY
+                            },
+                            body: JSON.stringify({ email: emailVal, password: enteredPass })
+                        });
+                        if (verifyRes.ok) {
+                            const vJson = await verifyRes.json();
+                            if (vJson && vJson.success) {
+                                isAuthenticated = true;
+                                sessionStorage.setItem('ja_admin_key', enteredPass);
+                            }
                         }
-                    }
+                    } catch (e) {}
                 }
 
                 if (isAuthenticated) {
                     document.getElementById('loginOverlay').style.display = 'none';
                     document.getElementById('mainDashboard').style.display = 'block';
                     sessionStorage.setItem('isAdminLoggedIn', 'true');
-                    fetchOrders();
-                    fetchSupportMessages();
+                    refreshAllAdminData();
                 } else {
-                    errEl.innerText = "ভুল ইমেইল বা পাছৱৰ্ড! পুনৰ চেষ্টা কৰক।";
+                    errEl.innerText = "ভুল ইমেইল বা পাছৱৰ্ড! অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।";
                     errEl.style.display = 'block';
                 }
             } catch (err) {
                 errEl.innerText = "চাৰ্ভাৰ সংযোগৰ সমস্যা: " + (err.message || "পুনৰ চেষ্টা কৰক");
                 errEl.style.display = 'block';
             } finally {
-                btnEl.innerText = "সুৰক্ষিতভাৱে লগইন কৰক";
+                btnEl.innerText = "🔓 সুৰক্ষিতভাৱে ডেশ্ববৰ্ড খোলক";
                 btnEl.disabled = false;
             }
         }
@@ -326,18 +869,34 @@
             location.reload();
         }
 
+        function refreshAllAdminData() {
+            fetchOrders();
+            fetchSupportMessages();
+            showToast("🔄 শেহতীয়া ডাটা আপডেট কৰা হৈছে...");
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
-            const { data: sessionData } = await sbClient.auth.getSession();
-            if ((sessionData && sessionData.session) || sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('mainDashboard').style.display = 'block';
-                fetchOrders();
-                fetchSupportMessages();
+            updateManualPrice();
+            try {
+                const { data: sessionData } = await sbClient.auth.getSession();
+                if ((sessionData && sessionData.session) || sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainDashboard').style.display = 'block';
+                    fetchOrders();
+                    fetchSupportMessages();
+                }
+            } catch (e) {
+                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainDashboard').style.display = 'block';
+                    fetchOrders();
+                    fetchSupportMessages();
+                }
             }
         });
 
         // -----------------------------------------------------
-        // 1. ORDERS ENGINE (আগৰখিনি একেই আছে)
+        // 1. ORDERS ENGINE
         // -----------------------------------------------------
         async function fetchOrders() {
             try {
@@ -353,10 +912,16 @@
                 const unsyncedManual = localManualOrders.filter(m => !dbIds.has(String(m.id)));
 
                 allOrders = [...unsyncedManual, ...dbOrders];
-                renderTable(allOrders);
+                filterTable();
                 updateStats(allOrders);
             } catch (err) {
-                document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="8" style="text-align: center; color: red;">ডাটা লোড কৰাত সমস্যা হৈছে: ${err.message}</td></tr>`;
+                if (localManualOrders.length > 0) {
+                    allOrders = [...localManualOrders];
+                    filterTable();
+                    updateStats(allOrders);
+                } else {
+                    document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="8" style="text-align: center; color: #fda4af; padding: 24px;">ডাটা লোড কৰাত সমস্যা হৈছে: ${err.message}</td></tr>`;
+                }
             }
         }
 
@@ -364,63 +929,125 @@
             document.getElementById('totalOrders').innerText = orders.length;
             const autoOrders = orders.filter(o => getOrderStatusType(o) === 'auto');
             const adminOrders = orders.filter(o => getOrderStatusType(o) === 'admin');
-            
+            const pendingOrders = orders.filter(o => getOrderStatusType(o) === 'pending');
+
             document.getElementById('autoSuccessOrders').innerText = autoOrders.length;
             document.getElementById('adminVerifiedOrders').innerText = adminOrders.length;
+            const pendEl = document.getElementById('pendingOrdersCount');
+            if (pendEl) pendEl.innerText = pendingOrders.length;
 
             const totalRev = [...autoOrders, ...adminOrders].reduce((sum, o) => sum + getOrderAmount(o), 0);
             document.getElementById('totalRevenue').innerText = '₹' + totalRev.toLocaleString('en-IN');
         }
 
+        function setStatusFilter(status, btnEl) {
+            currentStatusFilter = status;
+            document.querySelectorAll('#statusFilterPills .filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            filterTable();
+        }
+
         function renderTable(orders) {
             const tbody = document.getElementById('ordersTableBody');
+            const countBadge = document.getElementById('filteredCountBadge');
+            if (countBadge) {
+                countBadge.innerText = `দেখুওৱা হৈছে: ${orders.length} টা অৰ্ডাৰ`;
+            }
+
             if (orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 28px; color: #94a3b8;">এই ফিল্টাৰত কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = orders.map(o => {
                 const statusType = getOrderStatusType(o);
                 const amount = getOrderAmount(o);
-                let badgeHtml = '';
+                const svcKey = normalizeServiceKey(o);
+                const svcInfo = SERVICE_LABELS_AS[svcKey] || { label: o.service || 'জ্যোতিষ সেৱা', cls: 'birth' };
 
+                let badgeHtml = '';
                 if (statusType === 'auto') {
-                    badgeHtml = `<span class="badge auto-success">🟢 স্বয়ংক্ৰিয়ভাৱে সফল<br><small style="font-weight:400;">(গ্ৰাহকে নিজে পালে)</small></span>`;
+                    badgeHtml = `<span class="badge auto-success">🟢 স্বয়ংক্ৰিয় সফল<br><small style="font-weight:400;opacity:0.85;">(গ্ৰাহকে নিজে পালে)</small></span>`;
                 } else if (statusType === 'admin') {
-                    badgeHtml = `<span class="badge admin-verified">🔵 এডমিনৰ দ্বাৰা পৰীক্ষিত</span>`;
+                    badgeHtml = `<span class="badge admin-verified">🔵 এডমিন পৰীক্ষিত</span>`;
                 } else {
-                    badgeHtml = `<span class="badge pending">🟡 পেনণ্ডিং (Pending)</span>`;
+                    badgeHtml = `<span class="badge pending">🟡 পেনণ্ডিং</span>`;
                 }
+
+                const dateFormatted = o.created_at ? new Date(o.created_at).toLocaleDateString('as-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'আজি';
+                const orderCode = o.public_order_id || o.id || '';
+                const birthDetails = svcKey === 'palmistry'
+                    ? `🖐️ হস্তৰেখা (${(o.palmHand || o.palm_hand) === 'left' ? 'বাওঁহাত' : 'সোঁহাত'}) | ${o.birth_place || 'অসম'}`
+                    : `🎂 ${o.birth_date || 'N/A'} | ⏰ ${o.birth_time || '10:30'} | 📍 ${o.birth_place || 'অসম'}`;
 
                 return `
                 <tr>
-                    <td>${new Date(o.created_at).toLocaleDateString('as-IN')}</td>
-                    <td><strong>${o.name || 'N/A'}</strong></td>
-                    <td>${o.email || 'N/A'}</td>
-                    <td>${o.service || 'N/A'}</td>
+                    <td>
+                        <div style="font-weight:600;color:#e2e8f0;">${dateFormatted}</div>
+                        <div style="font-size:11px;color:#64748b;">${String(orderCode).slice(0, 16)}</div>
+                    </td>
+                    <td><strong style="color:#ffffff;font-size:14.5px;">${o.name || 'গ্ৰাহক'}</strong></td>
+                    <td style="color:#cbd5e1;">${o.email || 'N/A'}</td>
+                    <td><span class="svc-pill ${svcInfo.cls}">${svcInfo.label}</span></td>
                     <td><span class="price-tag">₹${amount}</span></td>
-                    <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
+                    <td style="color:#cbd5e1;font-size:13px;">${birthDetails}</td>
                     <td>${badgeHtml}</td>
                     <td>
-                        <button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button>
-                        ${statusType === 'admin' ? `<button class="btn-reset" title="আকৌ পেনণ্ডিং কৰক" onclick="resetToPending('${o.id}')">↺</button>` : ''}
+                        <div class="action-group">
+                            <button type="button" class="btn-action" onclick="generateAndShowReport('${o.id}')">📄 ৰিপোৰ্ট চাওক</button>
+                            <button type="button" class="btn-copy-link" title="গ্ৰাহকক পঠিয়াবলৈ ৰিপোৰ্ট লিংক কপি কৰক" onclick="copyCustomerReportLink('${o.id}')">🔗 লিংক</button>
+                            ${statusType === 'admin' ? `<button type="button" class="btn-reset" title="আকৌ পেনণ্ডিং কৰক" onclick="resetToPending('${o.id}')">↺</button>` : ''}
+                        </div>
                     </td>
                 </tr>
-            `}).join('');
+                `;
+            }).join('');
         }
 
         function filterTable() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allOrders.filter(o => 
-                (o.name && o.name.toLowerCase().includes(query)) || 
-                (o.email && o.email.toLowerCase().includes(query)) ||
-                (o.birth_place && o.birth_place.toLowerCase().includes(query))
-            );
+            const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            const svcFilter = document.getElementById('serviceFilterSelect') ? document.getElementById('serviceFilterSelect').value : 'all';
+
+            const filtered = allOrders.filter(o => {
+                const statusType = getOrderStatusType(o);
+                if (currentStatusFilter !== 'all' && statusType !== currentStatusFilter) return false;
+
+                const svcKey = normalizeServiceKey(o);
+                if (svcFilter !== 'all' && svcKey !== svcFilter) return false;
+
+                if (!query) return true;
+                return (
+                    (o.name && String(o.name).toLowerCase().includes(query)) ||
+                    (o.email && String(o.email).toLowerCase().includes(query)) ||
+                    (o.birth_place && String(o.birth_place).toLowerCase().includes(query)) ||
+                    (o.birth_date && String(o.birth_date).toLowerCase().includes(query)) ||
+                    (o.public_order_id && String(o.public_order_id).toLowerCase().includes(query)) ||
+                    (o.id && String(o.id).toLowerCase().includes(query))
+                );
+            });
             renderTable(filtered);
         }
 
+        function copyCustomerReportLink(orderId) {
+            const order = allOrders.find(o => String(o.id) === String(orderId));
+            if (!order) return;
+            const code = order.public_order_id || order.id;
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            const fullUrl = window.location.origin + basePath + 'report.html?order=' + encodeURIComponent(code);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullUrl).then(() => {
+                    showToast("🔗 ৰিপোৰ্ট লিংক কপি হ'ল! এতিয়া WhatsApp-ত পঠিয়াব পাৰিব।");
+                }).catch(() => {
+                    prompt("তলৰ ৰিপোৰ্ট লিংকটো কপি কৰি লওক:", fullUrl);
+                });
+            } else {
+                prompt("তলৰ ৰিপোৰ্ট লিংকটো কপি কৰি লওক:", fullUrl);
+            }
+        }
+
         // -----------------------------------------------------
-        // 2. SUPPORT MESSAGES ENGINE (নতুনকৈ যোগ কৰা)
+        // 2. SUPPORT MESSAGES ENGINE
         // -----------------------------------------------------
         async function fetchSupportMessages() {
             try {
@@ -428,38 +1055,37 @@
                     .from('support_messages')
                     .select('*')
                     .order('created_at', { ascending: false });
-                
+
                 if (error) throw error;
                 renderSupportTable(data || []);
             } catch (err) {
-                document.getElementById('supportTableBody').innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">সমস্যা লোড কৰাত বিজুতি: ${err.message}</td></tr>`;
+                document.getElementById('supportTableBody').innerHTML = `<tr><td colspan="6" style="text-align: center; color: #fda4af; padding: 20px;">সমস্যা লোড কৰাত বিজুতি: ${err.message}</td></tr>`;
             }
         }
 
         function renderSupportTable(messages) {
             const tbody = document.getElementById('supportTableBody');
             if (messages.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">এতিয়ালৈকে কোনো গ্ৰাহকৰ সমস্যা বা মেছেজ নাই।</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 24px; color: #94a3b8;">এতিয়ালৈকে কোনো গ্ৰাহকৰ সমস্যা বা মেছেজ নাই।</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = messages.map(m => {
-                const isResolved = m.status === 'resolved';
-                
-                const badge = isResolved 
-                    ? `<span class="badge resolved">✅ সমাধান হ'ল</span>` 
+                const isResolved = m.status === 'resolved' || localResolvedSupportIds.includes(String(m.id));
+                const badge = isResolved
+                    ? `<span class="badge resolved">✅ সমাধান হ'ল</span>`
                     : `<span class="badge pending-support">⏳ পেনণ্ডিং</span>`;
-                
-                const actionBtn = isResolved 
-                    ? `<button class="btn-reset" onclick="updateSupportStatus('${m.id}', 'pending')">↺ পেনণ্ডিং কৰক</button>` 
-                    : `<button class="btn-resolve" onclick="updateSupportStatus('${m.id}', 'resolved')">✔️ সমাধান কৰক</button>`;
-                
+
+                const actionBtn = isResolved
+                    ? `<button type="button" class="btn-reset" onclick="updateSupportStatus('${m.id}', 'pending')">↺ পেনণ্ডিং কৰক</button>`
+                    : `<button type="button" class="btn-resolve" onclick="updateSupportStatus('${m.id}', 'resolved')">✔️ সমাধান কৰক</button>`;
+
                 return `
                 <tr>
-                    <td>${new Date(m.created_at).toLocaleDateString('as-IN')}</td>
-                    <td><strong>${m.name}</strong></td>
-                    <td>${m.contact || 'N/A'}</td>
-                    <td style="word-break: break-word;">${m.message}</td>
+                    <td style="color:#cbd5e1;">${m.created_at ? new Date(m.created_at).toLocaleDateString('as-IN') : 'আজি'}</td>
+                    <td><strong style="color:#fff;">${m.name || 'গ্ৰাহক'}</strong></td>
+                    <td style="color:#fde047;">${m.contact || 'N/A'}</td>
+                    <td style="word-break: break-word; color:#e2e8f0;">${m.message || ''}</td>
                     <td>${badge}</td>
                     <td>${actionBtn}</td>
                 </tr>
@@ -469,50 +1095,82 @@
 
         async function updateSupportStatus(id, newStatus) {
             try {
-                const btnText = newStatus === 'resolved' ? "সমাধান কৰি আছোঁ..." : "আপডেট কৰি আছোঁ...";
+                if (newStatus === 'resolved') {
+                    if (!localResolvedSupportIds.includes(String(id))) localResolvedSupportIds.push(String(id));
+                } else {
+                    localResolvedSupportIds = localResolvedSupportIds.filter(x => x !== String(id));
+                }
+                localStorage.setItem('ja_resolved_support_ids', JSON.stringify(localResolvedSupportIds));
                 await sbClient.from('support_messages').update({ status: newStatus }).eq('id', id);
-                fetchSupportMessages(); // টেবুলখন ৰিফ্ৰেছ কৰক
-            } catch (err) {
-                alert("ষ্টেটাছ আপডেট কৰাত সমস্যা হৈছে!");
-            }
+            } catch (err) {}
+            fetchSupportMessages();
+            showToast(newStatus === 'resolved' ? "✅ বাৰ্তাটো সমাধান হিচাপে চিহ্নিত কৰা হ'ল!" : "↺ বাৰ্তাটো পুনৰ পেনণ্ডিং কৰা হ'ল।");
         }
 
-
         // -----------------------------------------------------
-        // 3. MANUAL ORDER & PDF GENERATOR (পুৰণি লজিকসমূহ)
+        // 3. MANUAL ORDER & INSTANT PDF REPORT GENERATOR
         // -----------------------------------------------------
         async function createManualOrderAndReport() {
             const name = document.getElementById('mName').value.trim();
             const email = document.getElementById('mEmail').value.trim() || 'WhatsApp/Manual';
             const service = document.getElementById('mService').value;
             const amount = Number(document.getElementById('mAmount').value) || SERVICE_PRICES[service] || 19;
-            const birth_date = document.getElementById('mDob').value;
+            const birth_date = document.getElementById('mDob').value || (service === 'palmistry' ? 'N/A' : '');
             const birth_time = document.getElementById('mTob').value || '10:30';
             const birth_place = document.getElementById('mPlace').value.trim() || 'অসম';
+            const palmHand = document.getElementById('mPalmHand') ? document.getElementById('mPalmHand').value : 'right';
+            const palmGender = document.getElementById('mPalmGender') ? document.getElementById('mPalmGender').value : 'male';
 
-            if (!name || !birth_date) {
+            if (!name || (service !== 'palmistry' && !birth_date)) {
                 alert("অনুগ্ৰহ কৰি গ্ৰাহকৰ নাম আৰু জন্ম তাৰিখ পূৰণ কৰক!");
                 return;
             }
 
             const manualPayId = "pay_AdminManual_" + Date.now();
+            const publicOrderId = "JA-ADM-" + Date.now().toString(36).toUpperCase();
             let newOrder = {
-                id: "manual_" + Date.now(),
+                id: publicOrderId,
+                public_order_id: publicOrderId,
                 created_at: new Date().toISOString(),
-                name: name, email: email, service: service,
-                birth_date: birth_date, birth_time: birth_time, birth_place: birth_place,
-                razorpay_payment_id: manualPayId, payment_status: 'paid', status: 'paid', amount: amount
+                name: name,
+                email: email,
+                service: service,
+                birth_date: birth_date,
+                birth_time: birth_time,
+                birth_place: birth_place,
+                razorpay_payment_id: manualPayId,
+                payment_status: 'paid',
+                status: 'paid',
+                amount: amount,
+                palmHand: palmHand,
+                palmGender: palmGender,
+                palmPhoto: manualPalmPhotoBase64 || null
             };
 
             try {
                 const { data, error } = await sbClient.from('orders').insert([{
-                    name: name, email: email, service: service,
-                    birth_date: birth_date, birth_time: birth_time, birth_place: birth_place,
+                    public_order_id: publicOrderId,
+                    name: name,
+                    email: email,
+                    service: service,
+                    amount: amount,
+                    birth_date: birth_date === 'N/A' ? '1995-01-01' : birth_date,
+                    birth_time: birth_time,
+                    birth_place: birth_place,
+                    payment_status: 'paid',
                     razorpay_payment_id: manualPayId
                 }]).select();
 
                 if (!error && data && data.length > 0) {
-                    newOrder = { ...data[0], amount: amount, razorpay_payment_id: manualPayId };
+                    newOrder = {
+                        ...data[0],
+                        service: service,
+                        amount: amount,
+                        razorpay_payment_id: manualPayId,
+                        palmHand: palmHand,
+                        palmGender: palmGender,
+                        palmPhoto: manualPalmPhotoBase64 || null
+                    };
                 } else {
                     localManualOrders.unshift(newOrder);
                     localStorage.setItem('ja_manual_orders', JSON.stringify(localManualOrders));
@@ -531,8 +1189,9 @@
             }
 
             allOrders.unshift(newOrder);
-            renderTable(allOrders);
+            filterTable();
             updateStats(allOrders);
+            showToast("✨ নতুন ৰিপোৰ্ট সফলতাৰে প্ৰস্তুত কৰা হ'ল!");
 
             generateAndShowReport(newOrder.id);
         }
@@ -552,11 +1211,11 @@
             order.payment_status = 'pending';
             localAdminViewedIds = localAdminViewedIds.filter(id => id !== String(order.id));
             localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
-            renderTable(allOrders);
+            filterTable();
             updateStats(allOrders);
+            showToast("↺ অৰ্ডাৰটো পেনণ্ডিং স্থিতিলৈ নিয়া হ'ল।");
         }
 
-        // ফলবেক কুষ্টি মেকাৰ
         function buildFallbackVedicChart(dobStr, tobStr, placeStr) {
             if (typeof window.calculateAccurateVedicChart === 'function') {
                 return window.calculateAccurateVedicChart(dobStr, tobStr, placeStr);
@@ -564,123 +1223,93 @@
             return null;
         }
 
-        
-// generatePalmistryReportHtml is loaded from grand_report_engine.js
+        async function generateAndShowReport(orderId) {
+            const order = allOrders.find(o => String(o.id) === String(orderId) || String(o.public_order_id) === String(orderId));
+            if (!order) return alert("অৰ্ডাৰৰ ডাটা পোৱা নগ'ল!");
 
+            const resolvedService = normalizeServiceKey(order);
+            order.service = resolvedService;
+            order.amount = getOrderAmount(order);
 
-async function generateAndShowReport(orderId) {
-            const order = allOrders.find(o => String(o.id) === String(orderId));
-            if (!order) return alert("অৰ্ডাৰৰ ডাটা পোৱা নগল!");
-
-            if (order.service === 'palmistry') {
-                const reportHtml = generatePalmistryReportHtml(order);
+            // এডমিন হিচাপে পৰীক্ষিত মাৰ্ক কৰা
+            if (!order.razorpay_payment_id) {
+                const adminTag = "pay_AdminView_" + Date.now();
                 try {
-                    localStorage.setItem('ja_report_v8_' + order.id, reportHtml);
-                    sessionStorage.setItem('ja_report_v8_' + order.id, reportHtml);
-                    localStorage.setItem('ja_report_' + order.id, reportHtml);
-                    sessionStorage.setItem('ja_report_' + order.id, reportHtml);
-                    if (order.public_order_id) {
-                        localStorage.setItem('ja_report_v8_' + order.public_order_id, reportHtml);
-                        sessionStorage.setItem('ja_report_v8_' + order.public_order_id, reportHtml);
-                        localStorage.setItem('ja_report_' + order.public_order_id, reportHtml);
-                        sessionStorage.setItem('ja_report_' + order.public_order_id, reportHtml);
-                    }
-                } catch(e){}
-                const win = window.open('', '_blank');
-                if(win && !win.closed) { win.document.open(); win.document.write(reportHtml); win.document.close(); } 
-                else { window.open('report.html?order=' + encodeURIComponent(order.public_order_id || order.id), '_blank'); }
-                return;
-            }
-
-            if (order.service === 'chat') {
-                alert("এইটো এটা 'AI আচাৰ্য্যৰ সৈতে লাইভ চেট' (Chat) অৰ্ডাৰ। ইয়াৰ কোনো PDF ৰিপোৰ্ট নাথাকে। গ্ৰাহকে ৱেবছাইটত লাইভ চেট কৰিব।");
-                
-                // এডমিন হিচাপে mark কৰা
-                if (!order.razorpay_payment_id) {
-                    const adminTag = "pay_AdminView_" + Date.now();
-                    try { await sbClient.from('orders').update({ razorpay_payment_id: adminTag, payment_status: "paid", status: "paid" }).eq('id', order.id); } catch(e){}
-                    order.razorpay_payment_id = adminTag;
-                    if (!localAdminViewedIds.includes(String(order.id))) {
-                        localAdminViewedIds.push(String(order.id));
-                        localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
-                    }
-                    renderTable(allOrders); updateStats(allOrders);
+                    await sbClient.from('orders').update({
+                        razorpay_payment_id: adminTag,
+                        payment_status: "paid",
+                        status: "paid"
+                    }).eq('id', order.id);
+                } catch (e) {}
+                order.razorpay_payment_id = adminTag;
+                if (!localAdminViewedIds.includes(String(order.id))) {
+                    localAdminViewedIds.push(String(order.id));
+                    localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
                 }
-                return;
+                filterTable();
+                updateStats(allOrders);
             }
-
-            const serviceNameMap = {
-                'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
-                'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
-                'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)',
-                'monthly': 'মাহেকীয়া ৰাশিফল (Monthly Horoscope)',
-                'yearly': 'বাৰ্ষিক ৰাশিফল (Yearly Horoscope)',
-                'palmistry': 'হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)'
-            };
-            const serviceTitle = serviceNameMap[order.service] || order.service || 'প্ৰিমিয়াম জ্যোতিষ সেৱা';
-            const service = order.service || 'birth';
-            const name = order.name || 'গ্ৰাহক';
-            const dob = order.birth_date || 'N/A';
-            const tob = order.birth_time || '10:30';
-            const place = order.birth_place || 'অসম';
-            const amount = getOrderAmount(order);
 
             try {
-                if (!order.razorpay_payment_id) {
-                    const adminTag = "pay_AdminView_" + Date.now();
-                    try { await sbClient.from('orders').update({ razorpay_payment_id: adminTag, payment_status: "paid", status: "paid" }).eq('id', order.id); } catch (e) {}
-                    order.razorpay_payment_id = adminTag;
-                    if (!localAdminViewedIds.includes(String(order.id))) {
-                        localAdminViewedIds.push(String(order.id));
-                        localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
+                if (resolvedService === 'palmistry') {
+                    const pKey = order.public_order_id || order.id;
+                    if (!order.palmPhoto) {
+                        const savedPhoto = localStorage.getItem('ja_palm_photo_' + pKey) || localStorage.getItem('ja_palm_photo_' + order.id);
+                        if (savedPhoto) order.palmPhoto = savedPhoto;
                     }
-                    renderTable(allOrders); updateStats(allOrders);
-                }
-
-                let chart = null;
-                if (order.public_order_id) {
+                    const reportHtml = generatePalmistryReportHtml(order);
                     try {
-                        const response = await fetch(SUPABASE_URL + '/functions/v1/calculate-chart', {
-                            method: 'POST', headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ orderId: order.public_order_id, adminBypass: true })
-                        });
-                        const data = await response.json();
-                        if (response.ok && data.success && data.chart) { chart = data.chart; }
-                    } catch (apiErr) {}
+                        localStorage.setItem('ja_report_v8_' + order.id, reportHtml);
+                        sessionStorage.setItem('ja_report_v8_' + order.id, reportHtml);
+                        localStorage.setItem('ja_service_' + order.id, 'palmistry');
+                        if (order.public_order_id) {
+                            localStorage.setItem('ja_report_v8_' + order.public_order_id, reportHtml);
+                            sessionStorage.setItem('ja_report_v8_' + order.public_order_id, reportHtml);
+                            localStorage.setItem('ja_service_' + order.public_order_id, 'palmistry');
+                        }
+                    } catch(e){}
+                    const win = window.open('', '_blank');
+                    if (win && !win.closed) {
+                        win.document.open();
+                        win.document.write(reportHtml);
+                        win.document.close();
+                    } else {
+                        window.open('report.html?order=' + encodeURIComponent(order.public_order_id || order.id), '_blank');
+                    }
+                    return;
                 }
 
-                if (!chart) {
-                    chart = buildFallbackVedicChart(dob, tob);
-                }
+                const dob = order.birth_date || order.birthDate || '1996-01-01';
+                const tob = order.birth_time || order.birthTime || '10:30';
+                const place = order.birth_place || order.birthPlace || 'অসম';
 
+                const chart = buildFallbackVedicChart(dob, tob, place);
                 const reportHtml = generateGrandVedicReport(order, chart);
 
                 try {
                     localStorage.setItem('ja_report_v8_' + order.id, reportHtml);
                     sessionStorage.setItem('ja_report_v8_' + order.id, reportHtml);
-                    localStorage.setItem('ja_report_' + order.id, reportHtml);
-                    sessionStorage.setItem('ja_report_' + order.id, reportHtml);
+                    localStorage.setItem('ja_service_' + order.id, resolvedService);
                     if (order.public_order_id) {
                         localStorage.setItem('ja_report_v8_' + order.public_order_id, reportHtml);
                         sessionStorage.setItem('ja_report_v8_' + order.public_order_id, reportHtml);
-                        localStorage.setItem('ja_report_' + order.public_order_id, reportHtml);
-                        sessionStorage.setItem('ja_report_' + order.public_order_id, reportHtml);
+                        localStorage.setItem('ja_service_' + order.public_order_id, resolvedService);
                     }
                 } catch(e){}
+
                 const win = window.open('', '_blank');
-                if(win && !win.closed) { 
-                    win.document.open(); 
-                    win.document.write(reportHtml); 
-                    win.document.close(); 
-                } else { 
-                    window.open('report.html?order=' + encodeURIComponent(order.public_order_id || order.id), '_blank'); 
+                if (win && !win.closed) {
+                    win.document.open();
+                    win.document.write(reportHtml);
+                    win.document.close();
+                } else {
+                    window.open('report.html?order=' + encodeURIComponent(order.public_order_id || order.id), '_blank');
                 }
             } catch (error) {
-                console.error("Error fetching chart:", error);
+                console.error("Report generation error:", error);
                 alert("ৰিপোৰ্ট খোলোঁতে সমস্যা হৈছে: " + error.message);
             }
         }
-
     </script>
 </body>
 </html>
