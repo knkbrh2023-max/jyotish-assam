@@ -257,7 +257,7 @@
     </style>
     <script src="config.js"></script>
     <script src="rashifal.js"></script>
-    <script src="grand_report_engine.js"></script>
+    <script src="grand_report_engine.js?v=10"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
     
@@ -267,15 +267,31 @@
     <style>
     .services-grid { 
         display: grid !important; 
-        grid-template-columns: repeat(3, 1fr) !important; 
+        grid-template-columns: repeat(6, 1fr) !important; 
         gap: 28px !important; 
         align-items: stretch !important; 
     }
+    .services-grid > .service-card {
+        grid-column: span 2 !important;
+        max-width: none !important;
+        width: 100% !important;
+    }
+    .services-grid > .service-card.horoscope-half-card {
+        grid-column: span 3 !important;
+    }
     @media (max-width: 980px) {
         .services-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        .services-grid > .service-card,
+        .services-grid > .service-card.horoscope-half-card {
+            grid-column: span 1 !important;
+        }
     }
     @media (max-width: 640px) {
         .services-grid { grid-template-columns: 1fr !important; }
+        .services-grid > .service-card,
+        .services-grid > .service-card.horoscope-half-card {
+            grid-column: 1 / -1 !important;
+        }
     }
 
     .service-card { 
@@ -610,16 +626,16 @@
 
 <div class="container">
     <!-- Hero Banner Section -->
-    <section class="ja20-ai-spotlight" aria-label="JyotishAssam AI">
+    <section class="ja20-ai-spotlight" aria-label="Jyotish Assam Vedic Astrology">
         <div class="ja20-ai-copy">
-            <div class="ja20-kicker">✦ JYOTISH ASSAM AI</div>
-            <h2>আপোনাৰ ব্যক্তিগত <span>AI জ্যোতিষী</span></h2>
-            <p>জন্ম তথ্য আৰু আপোনাৰ প্ৰশ্নৰ ভিত্তিত প্ৰেম, কেৰিয়াৰ, ধন-সম্পদ আৰু জীৱনৰ গুৰুত্বপূৰ্ণ দিশসমূহৰ বিষয়ে ব্যক্তিগতকৃত বৈদিক জ্যোতিষীয় মাৰ্গদৰ্শন লাভ কৰক।</p>
+            <div class="ja20-kicker">✦ জ্যোতিষ অসম • বৈদিক জ্যোতিষ কক্ষ</div>
+            <h2>আপোনাৰ জীৱনৰ <span>বৈদিক মাৰ্গদৰ্শন</span></h2>
+            <p>জন্ম তাৰিখ, সময় আৰু স্থানৰ নিৰ্ভুল বৈদিক গণনাৰ ভিত্তিত প্ৰেম-বিবাহ, কেৰিয়াৰ, ধন-সম্পদ, মাহেকীয়া-বাৰ্ষিক ৰাশিফল আৰু হস্তৰেখাৰ বিস্তৃত অসমীয়া প্ৰতিবেদন লাভ কৰক।</p>
             <div class="ja20-ai-actions">
-                <button class="ja20-btn ja20-btn-gold" onclick="openOrderForm('chat', 21, 'AI আচাৰ্য্যৰ সৈতে লাইভ চেট (৫ মিনিট)')">🤖 AI আচাৰ্য্যৰ সৈতে লাইভ চেট</button>
+                <button type="button" class="ja20-btn ja20-btn-gold" onclick="openPalmistryModal()">🖐️ হস্তৰেখা বিশদ বিচাৰ</button>
                 <a href="#premium-services" class="ja20-btn ja20-btn-ghost">প্ৰিমিয়াম সেৱাসমূহ চাওক</a>
             </div>
-            <div class="ja20-trust-row"><span>🔐 ১০০% সুৰক্ষিত</span><span>⚡ তাৎক্ষণিক উত্তৰ</span><span>🌙 শুদ্ধ অসমীয়া মাধ্যম</span></div>
+            <div class="ja20-trust-row"><span>🔐 ১০০% সুৰক্ষিত</span><span>⚡ তাৎক্ষণিক PDF ৰিপোৰ্ট</span><span>🌙 শুদ্ধ অসমীয়া মাধ্যম</span></div>
         </div>
         <div class="ja20-ai-orbit">
             <div class="ja20-orb">☽</div>
@@ -1119,19 +1135,7 @@
         <p class="section-subtitle">আপোনাৰ জীৱনৰ নিৰ্দিষ্ট দিশসমূহৰ বাবে বিশেষজ্ঞ পৰামৰ্শ লাভ কৰক</p>
                 <div class="services-grid">
 
-            <!-- CARD 1: Live Chat -->
-            <div class="service-card" style="position: relative;">
-                <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; position: absolute; top: -12px; right: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">🔥 বিশেষ অফাৰ</span>
-                <div class="service-icon">💬</div>
-                <h3>AI আচাৰ্য্যৰ সৈতে লাইভ চেট</h3>
-                <p>আপোনাৰ মনৰ যিকোনো প্ৰশ্ন সুধি AI জ্যোতিষাৰ্য্যৰ পৰা নিমিষতে লাইভ উত্তৰ লাভ কৰক। (Live Chat)</p>
-                <div class="service-price">
-                    <span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹49</span>₹21 <span style="font-size: 16px; font-weight: normal; color: #64748b;">/ ৫ মিনিট</span>
-                </div>
-                <button class="service-btn" onclick="openOrderForm('chat', 21, 'AI আচাৰ্য্যৰ সৈতে লাইভ চেট (৫ মিনিট)')">এতিয়াই চেট কৰক (₹২১)</button>
-            </div>
-
-            <!-- CARD 2: Complete Birth Chart -->
+            <!-- CARD 1: Complete Birth Chart -->
             <div class="service-card">
                 <div class="service-icon">🔮</div>
                 <h3>সম্পূৰ্ণ জন্ম কুণ্ডলী</h3>
@@ -1140,13 +1144,22 @@
                 <button class="service-btn" onclick="openOrderForm('birth', 299, 'সম্পূৰ্ণ জন্ম কুণ্ডলী')">সেৱা গ্ৰহণ কৰক</button>
             </div>
             
-            <!-- CARD 3: Love & Relationship -->
+            <!-- CARD 2: Love & Relationship -->
             <div class="service-card">
                 <div class="service-icon">❤️</div>
                 <h3>প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ</h3>
                 <p>প্ৰেম কেতিয়া হ'ব, সংগীৰ স্বভাৱ আৰু বিবাহৰ সঠিক সময়ৰ ভৱিষ্যদ্বাণী।</p>
                 <div class="service-price"><span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹299</span>₹99 <span style="background: #fee2e2; color: #dc2626; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 700; vertical-align: middle;">৬৭% ৰেহাই</span></div>
                 <button class="service-btn" onclick="openOrderForm('love', 99, 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ')">সেৱা গ্ৰহণ কৰক</button>
+            </div>
+
+            <!-- CARD 3: Career & Business -->
+            <div class="service-card">
+                <div class="service-icon">💼</div>
+                <h3>কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
+                <p>চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
+                <div class="service-price"><span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹499</span>₹199 <span style="background: #fee2e2; color: #dc2626; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 700; vertical-align: middle;">৬০% ৰেহাই</span></div>
+                <button class="service-btn" onclick="openOrderForm('career', 199, 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস')">সেৱা গ্ৰহণ কৰক</button>
             </div>
 
             <!-- CARD 4 (পঠালী / HORIZONTAL 3D FEATURED BANNER): Palmistry Reading -->
@@ -1227,17 +1240,8 @@
                 </div>
             </div>
 
-            <!-- CARD 5: Career & Business -->
-            <div class="service-card">
-                <div class="service-icon">💼</div>
-                <h3>কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস</h3>
-                <p>চাকৰি পোৱাৰ সময়, পদোন্নতি, আৰু ব্যৱসায়ৰ সঠিক দিশ নিৰ্দেশনা।</p>
-                <div class="service-price"><span style="text-decoration: line-through; font-size: 20px; color: #9ca3af; margin-right: 8px;">₹499</span>₹199 <span style="background: #fee2e2; color: #dc2626; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 700; vertical-align: middle;">৬০% ৰেহাই</span></div>
-                <button class="service-btn" onclick="openOrderForm('career', 199, 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস')">সেৱা গ্ৰহণ কৰক</button>
-            </div>
-
-            <!-- CARD 6: Monthly Horoscope -->
-            <div class="service-card">
+            <!-- CARD 5: Monthly Horoscope -->
+            <div class="service-card horoscope-half-card">
                 <div class="service-icon">📅</div>
                 <h3>মাহেকীয়া ৰাশিফল</h3>
                 <p>অহা ৩০ দিনৰ বাবে আপোনাৰ স্বাস্থ্য, অৰ্থ, আৰু কৰ্মৰ বিস্তাৰিত জ্যোতিষীয় ভৱিষ্যদ্বাণী।</p>
@@ -1245,8 +1249,8 @@
                 <button class="service-btn" onclick="openOrderForm('monthly', 19, 'মাহেকীয়া ৰাশিফল')">সেৱা গ্ৰহণ কৰক</button>
             </div>
             
-            <!-- CARD 7: Yearly Horoscope -->
-            <div class="service-card">
+            <!-- CARD 6: Yearly Horoscope -->
+            <div class="service-card horoscope-half-card">
                 <div class="service-icon">📜</div>
                 <h3>বাৰ্ষিক ৰাশিফল</h3>
                 <p>সম্পূৰ্ণ এবছৰৰ বাবে আপোনাৰ জীৱনৰ গুৰুত্বপূৰ্ণ পৰিৱৰ্তন আৰু সাৱধানতাৰ নিৰ্দেশনা।</p>
@@ -1751,94 +1755,11 @@ function ensureRazorpay() {
 
 
 // Client-side Vedic Chart calculation engine ensuring Kundali is always calculated
-function buildFallbackVedicChart(dobStr, tobStr) {
-    const rashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
-    const rashiAsMap = {
-        "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট",
-        "Leo": "সিংহ", "Virgo": "কন্যা", "Libra": "তুলা", "Scorpio": "বৃশ্চিক",
-        "Sagittarius": "ধনু", "Capricorn": "মকৰ", "Aquarius": "কুম্ভ", "Pisces": "মীন"
-    };
-    const naks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্বা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
-    
-    const parts = String(dobStr || "1995-01-01").split(/[-/]/);
-    const y = parseInt(parts[0], 10) || 1995;
-    const m = parseInt(parts[1], 10) || 1;
-    const d = parseInt(parts[2], 10) || 1;
-
-    const tParts = String(tobStr || "12:00").split(":");
-    const hr = parseInt(tParts[0], 10) || 12;
-    const mn = parseInt(tParts[1], 10) || 0;
-
-    let sunRashiIdx = ((m - 4 + 12) % 12);
-    if (d < 14) sunRashiIdx = (sunRashiIdx + 11) % 12;
-
-    const hoursSinceSunrise = ((hr + mn / 60) - 6 + 24) % 24;
-    const ascIdx = (sunRashiIdx + Math.floor(hoursSinceSunrise / 2)) % 12;
-
-    const jd = Math.floor(365.25 * y) + Math.floor(30.6001 * (m + 1)) + d + (hr / 24);
-    const moonDeg = (((jd * 13.176396) % 360) + 360) % 360;
-    const moonIdx = Math.floor(moonDeg / 30) % 12;
-    const moonNak = naks[Math.floor(moonDeg / (360 / 27)) % 27];
-
-    const seed = y + m * 31 + d;
-    const makePlanet = (rIdx, offset) => ({
-        rashi: rashis[rIdx % 12],
-        rashi_as: rashiAsMap[rashis[rIdx % 12]],
-        rashi_no: (rIdx % 12) + 1,
-        nakshatra: naks[(rIdx * 2 + offset) % 27],
-        pada: ((seed + offset) % 4) + 1
-    });
-
-    const planets = {
-        Sun: makePlanet(sunRashiIdx, 1),
-        Moon: { rashi: rashis[moonIdx], rashi_as: rashiAsMap[rashis[moonIdx]], rashi_no: moonIdx + 1, nakshatra: moonNak, pada: (d % 4) + 1 },
-        Mars: makePlanet((sunRashiIdx + (seed % 7)) % 12, 2),
-        Mercury: makePlanet((sunRashiIdx + (d % 2 === 0 ? 0 : 1)) % 12, 3),
-        Jupiter: makePlanet((Math.floor((y - 1980) * 1.01) + 3) % 12, 4),
-        Venus: makePlanet((sunRashiIdx + (m % 2 === 0 ? 0 : 11)) % 12, 5),
-        Saturn: makePlanet(Math.floor(((y - 1980) * 0.4) + 5) % 12, 6),
-        Rahu: makePlanet((12 - Math.floor(((y - 1980) * 0.65) % 12)) % 12, 7)
-    };
-    const ketuIdx = (planets.Rahu.rashi_no - 1 + 6) % 12;
-    planets.Ketu = makePlanet(ketuIdx, 8);
-
-    const houses = [];
-    for (let i = 0; i < 12; i++) {
-        const rName = rashis[(ascIdx + i) % 12];
-        houses.push({ house: i + 1, rashi: rName, rashi_as: rashiAsMap[rName], rashi_no: ((ascIdx + i) % 12) + 1 });
+function buildFallbackVedicChart(dobStr, tobStr, placeStr) {
+    if (typeof window.calculateAccurateVedicChart === 'function') {
+        return window.calculateAccurateVedicChart(dobStr, tobStr, placeStr);
     }
-
-    const dashaLords = ["কেতু (Ketu)", "শুক্ৰ (Venus)", "সূৰ্য (Sun)", "চন্দ্ৰ (Moon)", "মংগল (Mars)", "ৰাহু (Rahu)", "বৃহস্পতি (Jupiter)", "শনি (Saturn)", "বুধ (Mercury)"];
-    const dashaYears = [7, 20, 6, 10, 7, 18, 16, 19, 17];
-    const startLordIdx = Math.floor(moonDeg / (360 / 27)) % 9;
-    const dashas = [];
-    let curYear = y;
-    for (let i = 0; i < 8; i++) {
-        const lIdx = (startLordIdx + i) % 9;
-        const sDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        curYear += dashaYears[lIdx];
-        const eDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        dashas.push({ lord: dashaLords[lIdx], start_date: sDate, end_date: eDate });
-    }
-
-    let activeDasha = "শুভ মহাদশা";
-    const today = new Date();
-    for(const d of dashas) {
-        let s = new Date(d.start_date);
-        let e = new Date(d.end_date);
-        if(today >= s && today <= e) {
-            activeDasha = d.lord;
-            break;
-        }
-    }
-
-    return { 
-        ascendant: { rashi: rashis[ascIdx], rashi_as: rashiAsMap[rashis[ascIdx]], rashi_no: ascIdx + 1 }, 
-        planets: planets, 
-        houses: houses, 
-        dashas: dashas,
-        activeDasha: activeDasha
-    };
+    return null;
 }
 
 // Payment Processing
@@ -2093,224 +2014,6 @@ window.processPayment = async function(e) {
     };
     
     try {
-        if (selectedService === 'chat') {
-            btn.innerText = "পেমেন্ট গেটৱে মুকলি কৰা হৈছে... ⏳";
-            // ১. গ্ৰাহকৰ জন্ম পৰিচয় (Profile) সংৰক্ষণ (RLS বা নেটৱৰ্ক সমস্যাই যাতে পেমেন্ট কেতিয়াও বন্ধ নকৰে তাৰ বাবে সুৰক্ষিত Fallback UUID)
-            let newProfileId = (typeof crypto !== 'undefined' && crypto.randomUUID)
-                ? crypto.randomUUID()
-                : ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-                    return v.toString(16);
-                }));
-
-            try {
-                const { data: profileData, error: profileError } = await mySbClient.from('birth_profiles').insert([{
-                    customer_name: orderData.name,
-                    birth_date: orderData.birthDate,
-                    birth_time: orderData.birthTime,
-                    birth_place: orderData.birthPlace
-                }]).select();
-                if (!profileError && profileData && profileData.length > 0 && profileData[0].id) {
-                    newProfileId = profileData[0].id;
-                }
-            } catch (profErr) {
-                console.warn("Birth profile local fallback active:", profErr);
-            }
-
-            // ২. চেট চাবস্ক্ৰিপশ্বন (Pending)
-            try {
-                await mySbClient.from('subscriptions').insert([{
-                    profile_id: newProfileId,
-                    available_minutes: 5,
-                    payment_status: 'pending'
-                }]);
-            } catch (subErr) {
-                console.warn("Subscription insert note:", subErr);
-            }
-
-            // ৩. বেকএণ্ডৰ /create-order কল কৰি Live Razorpay Key আৰু Order ID আহৰণ কৰা
-            let rzpKey = (window.JA_CONFIG && window.JA_CONFIG.razorpayKeyId) || "rzp_test_TjQLxMWOfOVhZq";
-            let rzpOrderId = null;
-            let publicOrderId = null;
-            let rzpAmountPaise = 2100;
-
-            try {
-                let createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        service: 'chat',
-                        amount: 21,
-                        name: orderData.name,
-                        email: orderData.email,
-                        birthDate: orderData.birthDate,
-                        birthTime: orderData.birthTime,
-                        birthPlace: orderData.birthPlace,
-                        profileId: newProfileId
-                    })
-                });
-                let cData = await createRes.json().catch(() => ({}));
-
-                // যদি পুৰণি বেকএণ্ডত 'chat' সেৱা নাথাকে, তেন্তে স্বয়ংক্ৰিয়ভাৱে 'monthly' স্লট ব্যৱহাৰ কৰি Live Key আৰু Order সৃষ্টি কৰা
-                if (!createRes.ok || !cData || !cData.success) {
-                    createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            service: 'monthly',
-                            service_type: 'chat',
-                            custom_service: 'chat',
-                            amount: 21,
-                            name: orderData.name,
-                            email: orderData.email,
-                            birthDate: orderData.birthDate,
-                            birthTime: orderData.birthTime,
-                            birthPlace: orderData.birthPlace,
-                            profileId: newProfileId
-                        })
-                    });
-                    cData = await createRes.json().catch(() => ({}));
-                }
-
-                if (cData && cData.success) {
-                    if (cData.keyId) rzpKey = cData.keyId;
-                    if (cData.razorpayOrderId) rzpOrderId = cData.razorpayOrderId;
-                    if (cData.orderId) publicOrderId = cData.orderId;
-                    if (cData.amount) rzpAmountPaise = cData.amount;
-                }
-            } catch (ordErr) {
-                console.warn("Chat create-order fallback:", ordErr);
-            }
-
-            // কুণ্ডলী আগতীয়াকৈ গণনা কৰি LocalStorage ত সংৰক্ষণ কৰা যাতে পেমেন্টৰ লগে লগে চেট খোল খায়
-            const preCalculatedChart = buildFallbackVedicChart(orderData.birthDate, orderData.birthTime);
-            try {
-                localStorage.setItem('ja_profile_id', newProfileId);
-                localStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(preCalculatedChart));
-                sessionStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(preCalculatedChart));
-                localStorage.setItem('ja_customer_name_' + newProfileId, orderData.name);
-                localStorage.setItem('ja_birth_info_' + newProfileId, JSON.stringify({
-                    name: orderData.name,
-                    email: orderData.email,
-                    dob: orderData.birthDate,
-                    tob: orderData.birthTime,
-                    pob: orderData.birthPlace
-                }));
-            } catch (e) {}
-
-            // ৪. ৰেজৰপে' পেমেন্ট মুকলি কৰা
-            var chatOptions = {
-                "key": rzpKey,
-                "amount": rzpAmountPaise,
-                "currency": "INR",
-                "name": "জ্যোতিষ অসম (Jyotish Assam)",
-                "description": "AI আচাৰ্য্যৰ সৈতে লাইভ চেট (৫ মিনিট)",
-                ...(rzpOrderId ? { "order_id": rzpOrderId } : {}),
-                "prefill": { "name": orderData.name, "email": orderData.email },
-                "theme": { "color": "#10B981" },
-                "modal": {
-                    "ondismiss": function() {
-                        btn.innerText = "🔒 পেমেন্ট কৰক (Pay Now)";
-                        btn.disabled = false;
-                    }
-                },
-                "handler": async function (response) {
-                    btn.innerText = "কুণ্ডলী গণনা আৰু প্ৰস্তুত কৰা হৈছে... ⏳";
-                    try {
-                        // ক) ক্লায়েণ্ট আৰু ডাটাবেছ দুয়োটাতে ৫ মিনিট (৩০০ ছেকেণ্ড) সক্ৰিয় কৰা
-                        try {
-                            localStorage.setItem('ja_chat_seconds_' + newProfileId, '300');
-                            localStorage.setItem('ja_active_timer_v7_' + newProfileId, '300');
-                            localStorage.setItem('ja_timer_finished_v7_' + newProfileId, 'no');
-                            localStorage.setItem('ja_active_timer_v7_' + newProfileId, '300');
-                            localStorage.setItem('ja_timer_finished_v7_' + newProfileId, 'no');
-                            localStorage.setItem('ja_chat_paid_' + newProfileId, 'true');
-                        } catch (e) {}
-
-                        try {
-                            await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'apikey': SUPABASE_KEY,
-                                    'Authorization': 'Bearer ' + SUPABASE_KEY
-                                },
-                                body: JSON.stringify({
-                                    orderId: publicOrderId,
-                                    razorpay_order_id: response.razorpay_order_id || rzpOrderId,
-                                    razorpay_payment_id: response.razorpay_payment_id,
-                                    razorpay_signature: response.razorpay_signature,
-                                    profileId: newProfileId,
-                                    minutesToAdd: 5
-                                })
-                            });
-                        } catch (vErr) {}
-
-                        try {
-                            await mySbClient.from('subscriptions').upsert([{
-                                profile_id: newProfileId,
-                                available_minutes: 5,
-                                payment_status: 'paid'
-                            }], { onConflict: 'profile_id' });
-                        } catch (e) {}
-
-                        if (publicOrderId) {
-                            try {
-                                await mySbClient.from('orders').update({
-                                    service: 'chat',
-                                    payment_status: 'paid',
-                                    razorpay_payment_id: response.razorpay_payment_id
-                                }).eq('public_order_id', publicOrderId);
-                            } catch (e) {}
-                        }
-
-                        // খ) কুণ্ডলী গণনা (Edge Function: calculate-chart কল কৰা)
-                        let chart = preCalculatedChart;
-                        try {
-                            const chartRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/calculate-chart', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    orderId: publicOrderId || newProfileId,
-                                    profileId: newProfileId,
-                                    dob: orderData.birthDate,
-                                    tob: orderData.birthTime,
-                                    pob: orderData.birthPlace,
-                                    name: orderData.name
-                                })
-                            });
-                            const chartJson = await chartRes.json();
-                            if (chartRes.ok && chartJson.success && chartJson.chart) {
-                                chart = chartJson.chart;
-                            }
-                        } catch (apiErr) {}
-
-                        try {
-                            localStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(chart));
-                            sessionStorage.setItem('ja_chart_' + newProfileId, JSON.stringify(chart));
-                            localStorage.setItem('ja_customer_name_' + newProfileId, orderData.name);
-                            localStorage.setItem('ja_profile_id', newProfileId);
-                        } catch (e) {}
-
-                        if (typeof closeOrderModal === 'function') closeOrderModal();
-                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&dob=" + encodeURIComponent(orderData.birthDate) + "&tob=" + encodeURIComponent(orderData.birthTime) + "&pob=" + encodeURIComponent(orderData.birthPlace) + "&name=" + encodeURIComponent(orderData.name) + "&paid=1";
-                    } catch (err) {
-                        console.error("Chat Payment Redirect fallback:", err);
-                        window.location.href = "ai-chat.html?profile_id=" + encodeURIComponent(newProfileId) + "&dob=" + encodeURIComponent(orderData.birthDate) + "&tob=" + encodeURIComponent(orderData.birthTime) + "&pob=" + encodeURIComponent(orderData.birthPlace) + "&name=" + encodeURIComponent(orderData.name) + "&paid=1";
-                    }
-                }
-            };
-
-            await ensureRazorpay();
-            var rzpChat = new Razorpay(chatOptions);
-            rzpChat.on('payment.failed', function (r) {
-                alert("পেমেন্ট বিফল হৈছে: " + (r.error && r.error.description ? r.error.description : "অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।"));
-                btn.innerText = "🔒 পেমেন্ট কৰক (Pay Now)";
-                btn.disabled = false;
-            });
-            rzpChat.open();
-            return;
-        }
 
         const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
         const responseData = await createRes.json();
@@ -2324,6 +2027,8 @@ window.processPayment = async function(e) {
 
         try {
             localStorage.setItem('ja_latest_order_id', responseData.orderId);
+            localStorage.setItem('ja_service_' + responseData.orderId, selectedService);
+            sessionStorage.setItem('ja_service_' + responseData.orderId, selectedService);
             if (window.currentPalmPhotoBase64) { try { localStorage.setItem('ja_palm_photo_' + responseData.orderId, window.currentPalmPhotoBase64); } catch(e){} }
             localStorage.setItem('ja_pending_order', JSON.stringify({
                 id: responseData.orderId,
@@ -2422,7 +2127,12 @@ window.processPayment = async function(e) {
 
 
 async function showReportToCustomer(orderId) {
-    const savedSvc = localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId);
+    let pendingSvc = null;
+    try {
+        const po = JSON.parse(localStorage.getItem('ja_pending_order') || '{}');
+        if (po && (po.id === orderId || po.public_order_id === orderId) && po.service) pendingSvc = po.service;
+    } catch(e) {}
+    const savedSvc = localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || pendingSvc;
     const service = (typeof selectedService !== 'undefined' && selectedService) ? selectedService : (savedSvc || 'birth');
     const name = (document.getElementById('palmCustName') && document.getElementById('palmCustName').value.trim()) || 
                  (document.getElementById('custName') && document.getElementById('custName').value.trim()) || 'গ্ৰাহক';
@@ -2454,8 +2164,12 @@ async function showReportToCustomer(orderId) {
         };
         const reportHtml = generatePalmistryReportHtml(palmOrder);
         try {
+            sessionStorage.setItem('ja_report_v8_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v8_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
+            localStorage.setItem('ja_service_' + orderId, service);
+            sessionStorage.setItem('ja_service_' + orderId, service);
             localStorage.setItem('ja_latest_order_id', orderId);
         } catch(e) {}
         const win = window.open('', '_blank');
@@ -2601,8 +2315,12 @@ async function showReportToCustomer(orderId) {
         const reportHtml = generateGrandVedicReport(orderObj, chart);
 
         try {
+            sessionStorage.setItem('ja_report_v8_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v8_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
+            localStorage.setItem('ja_service_' + orderId, service);
+            sessionStorage.setItem('ja_service_' + orderId, service);
             localStorage.setItem('ja_latest_order_id', orderId);
         } catch(e) {
             console.warn("Storage warning:", e);
