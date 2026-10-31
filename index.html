@@ -257,7 +257,7 @@
     </style>
     <script src="config.js"></script>
     <script src="rashifal.js"></script>
-    <script src="grand_report_engine.js?v=13"></script>
+    <script src="grand_report_engine.js?v=15"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
     
@@ -2183,7 +2183,7 @@ window.processPayment = async function(e) {
 };
 
 
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=13
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=15
 
 
 async function showReportToCustomer(orderId) {
@@ -2222,8 +2222,8 @@ async function showReportToCustomer(orderId) {
         };
         const reportHtml = generatePalmistryReportHtml(palmOrder);
         try {
-            sessionStorage.setItem('ja_report_v13_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v13_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);
@@ -2356,8 +2356,19 @@ async function showReportToCustomer(orderId) {
             console.warn("calculate-chart Edge Function offline or error, using internal Vedic engine:", apiErr);
         }
 
-        if (!chart) {
-            chart = buildFallbackVedicChart(dob, tob, place);
+        const localChart3D = buildFallbackVedicChart(dob, tob, place);
+        if (!chart || (!chart.ephemerisVersion && !chart.isAccurateVedic)) {
+            chart = localChart3D;
+        } else {
+            chart = {
+                ...localChart3D,
+                ...chart,
+                ascendant: { ...localChart3D.ascendant, ...(chart.ascendant || {}) },
+                planets: chart.planets || localChart3D.planets,
+                houses: chart.houses || localChart3D.houses,
+                dashas: chart.dashas || localChart3D.dashas,
+                currentTransits: chart.currentTransits || localChart3D.currentTransits
+            };
         }
 
         const orderObj = {
@@ -2373,8 +2384,8 @@ async function showReportToCustomer(orderId) {
         const reportHtml = generateGrandVedicReport(orderObj, chart);
 
         try {
-            sessionStorage.setItem('ja_report_v13_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v13_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);

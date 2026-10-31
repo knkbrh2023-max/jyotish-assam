@@ -68,7 +68,7 @@
             }
         }
     </style>
-    <script src="grand_report_engine.js?v=13"></script>
+    <script src="grand_report_engine.js?v=15"></script>
 </head>
 <body>
 
@@ -120,7 +120,7 @@
 
     <script>
     
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=13
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=15
 
 
 // --- Fallback Vedic Chart Calculation Engine ---
@@ -156,7 +156,7 @@
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
-            const cached = sessionStorage.getItem('ja_report_v13_' + orderId) || localStorage.getItem('ja_report_v13_' + orderId);
+            const cached = sessionStorage.getItem('ja_report_v15_' + orderId) || localStorage.getItem('ja_report_v15_' + orderId);
             const savedSvc = (localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || '').toLowerCase();
             const isValidMonthly = !(savedSvc === 'monthly' || (cached && cached.includes('মাহেকীয়া ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('মাহটোৰ ৪টা সপ্তাহৰ বিস্তৃত সাপ্তাহিক ফলাফল'));
             const isValidYearly = !(savedSvc === 'yearly' || (cached && cached.includes('বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('বাৰ্ষিক ১২ মাহৰ বিস্তৃত মাহেকীয়া ফলাফল'));
@@ -278,13 +278,23 @@
             const dobStr = order.birth_date || order.birthDate || '1996-01-01';
             const tobStr = order.birth_time || order.birthTime || '10:30:00';
             const placeStr = order.birth_place || order.birthPlace || 'অসম';
-            const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
+            const chart = (typeof window.fetchOrCalculateVedicChart === 'function')
+                ? await window.fetchOrCalculateVedicChart({
+                    orderId: order.public_order_id || order.id || orderId,
+                    dob: dobStr,
+                    tob: tobStr,
+                    pob: placeStr,
+                    name: order.name,
+                    apiBaseUrl: (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1'),
+                    supabaseKey: SUPABASE_KEY
+                  })
+                : buildFallbackVedicChart(dobStr, tobStr, placeStr);
             const reportHtml = renderFullReport(order, chart);
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
             try {
-                localStorage.setItem('ja_report_v13_' + saveId, reportHtml);
-                sessionStorage.setItem('ja_report_v13_' + saveId, reportHtml);
+                localStorage.setItem('ja_report_v15_' + saveId, reportHtml);
+                sessionStorage.setItem('ja_report_v15_' + saveId, reportHtml);
                 localStorage.setItem('ja_report_' + saveId, reportHtml);
                 sessionStorage.setItem('ja_report_' + saveId, reportHtml);
                 localStorage.setItem('ja_latest_order_id', saveId);
@@ -353,7 +363,7 @@
             const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
                 const reportHtml = renderFullReport(order, chart);
 
-                localStorage.setItem('ja_report_v13_' + order.id, reportHtml);
+                localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
                 localStorage.setItem('ja_report_' + order.id, reportHtml);
                 localStorage.setItem('ja_latest_order_id', order.id);
 

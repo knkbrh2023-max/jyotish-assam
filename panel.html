@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="fav.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="grand_report_engine.js?v=13"></script>
+    <script src="grand_report_engine.js?v=15"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1534,12 +1534,12 @@
                     };
                     const reportHtml = generatePalmistryReportHtml(palmOrderObj);
                     try {
-                        localStorage.setItem('ja_report_v13_' + order.id, reportHtml);
-                        sessionStorage.setItem('ja_report_v13_' + order.id, reportHtml);
+                        localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
+                        sessionStorage.setItem('ja_report_v15_' + order.id, reportHtml);
                         localStorage.setItem('ja_service_' + order.id, 'palmistry');
                         if (order.public_order_id) {
-                            localStorage.setItem('ja_report_v13_' + order.public_order_id, reportHtml);
-                            sessionStorage.setItem('ja_report_v13_' + order.public_order_id, reportHtml);
+                            localStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
+                            sessionStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
                             localStorage.setItem('ja_service_' + order.public_order_id, 'palmistry');
                         }
                     } catch(e){}
@@ -1569,16 +1569,26 @@
                     palmPhoto: null
                 };
 
-                const chart = buildFallbackVedicChart(dob, tob, place);
+                const chart = (typeof window.fetchOrCalculateVedicChart === 'function')
+                    ? await window.fetchOrCalculateVedicChart({
+                        orderId: order.public_order_id || order.id,
+                        dob: dob,
+                        tob: tob,
+                        pob: place,
+                        name: order.name,
+                        apiBaseUrl: SUPABASE_URL + '/functions/v1',
+                        supabaseKey: SUPABASE_KEY
+                      })
+                    : buildFallbackVedicChart(dob, tob, place);
                 const reportHtml = generateGrandVedicReport(cleanVedicOrder, chart);
 
                 try {
-                    localStorage.setItem('ja_report_v13_' + order.id, reportHtml);
-                    sessionStorage.setItem('ja_report_v13_' + order.id, reportHtml);
+                    localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
+                    sessionStorage.setItem('ja_report_v15_' + order.id, reportHtml);
                     localStorage.setItem('ja_service_' + order.id, resolvedService);
                     if (order.public_order_id) {
-                        localStorage.setItem('ja_report_v13_' + order.public_order_id, reportHtml);
-                        sessionStorage.setItem('ja_report_v13_' + order.public_order_id, reportHtml);
+                        localStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
+                        sessionStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
                         localStorage.setItem('ja_service_' + order.public_order_id, resolvedService);
                     }
                 } catch(e){}
