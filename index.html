@@ -257,7 +257,7 @@
     </style>
     <script src="config.js"></script>
     <script src="rashifal.js"></script>
-    <script src="grand_report_engine.js?v=15"></script>
+    <script src="grand_report_engine.js?v=14"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
     
@@ -2047,6 +2047,32 @@ window.processPalmistryPayment = async function(e) {
 };
 
 
+// জন্মস্থানৰ নাম -> {lat, lon}. (১) অন্তৰ্নিৰ্মিত তালিকা (২) Open-Meteo geocoding (কেৱল ভাৰত)। নাপালে null
+async function jaGeocodePlace(placeText) {
+    const txt = String(placeText || '').trim();
+    if (!txt) return null;
+    try {
+        const r = jaResolvePlace(txt, null);
+        if (r && r.matched) return { lat: r.lat, lon: r.lon, source: r.source };
+    } catch (e) {}
+    try {
+        const q = txt.split(',')[0].trim();
+        if (!q) return null;
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 4000);
+        const res = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(q) + '&count=5&language=en&format=json&countryCode=IN', { signal: ctrl.signal });
+        clearTimeout(timer);
+        if (!res.ok) return null;
+        const j = await res.json();
+        const list = (j && j.results) || [];
+        if (!list.length) return null;
+        const wantAssam = /assam|অসম/i.test(txt);
+        const pick = (wantAssam && list.find(x => /assam/i.test(x.admin1 || ''))) || list[0];
+        if (pick && isFinite(pick.latitude) && isFinite(pick.longitude)) return { lat: pick.latitude, lon: pick.longitude, source: 'open-meteo' };
+    } catch (e) {}
+    return null;
+}
+
 window.processPayment = async function(e) {
     e.preventDefault();
     const btn = document.getElementById('payBtn');
@@ -2062,7 +2088,14 @@ window.processPayment = async function(e) {
     if (ampm === 'PM' && h < 12) h += 12;
     if (ampm === 'AM' && h === 12) h = 0;
     let dbTime = h.toString().padStart(2, '0') + ":" + m + ":00";
-    
+
+    // জন্মস্থানৰ অক্ষাংশ-দ্ৰাঘিমাংশ (সঠিক লগ্ন গণনাৰ বাবে): প্ৰথমে অন্তৰ্নিৰ্মিত তালিকা, নাথাকিলে অনলাইন geocoding
+    let geoLat = null, geoLon = null;
+    try {
+        const g = await jaGeocodePlace((document.getElementById('custPlace') || {}).value || '');
+        if (g) { geoLat = g.lat; geoLon = g.lon; }
+    } catch (geoErr) { console.warn('Geocode skipped:', geoErr); }
+
     const orderData = {
         service: selectedService,
         name: document.getElementById('custName').value,
@@ -2070,6 +2103,8 @@ window.processPayment = async function(e) {
         birthDate: (document.getElementById('custDate') && document.getElementById('custDate').value) ? document.getElementById('custDate').value : '1995-01-01',
         birthTime: dbTime || '10:30:00',
         birthPlace: (document.getElementById('custPlace') && document.getElementById('custPlace').value) ? document.getElementById('custPlace').value : 'অসম',
+        birthLat: geoLat,
+        birthLon: geoLon,
         language: typeof currentLang !== 'undefined' ? currentLang : 'as'
     };
     
@@ -2098,6 +2133,8 @@ window.processPayment = async function(e) {
                 birth_date: orderData.birthDate,
                 birth_time: orderData.birthTime,
                 birth_place: orderData.birthPlace,
+                birth_lat: orderData.birthLat,
+                birth_lon: orderData.birthLon,
                 service: selectedService
             }));
         } catch(e){}
@@ -2183,7 +2220,7 @@ window.processPayment = async function(e) {
 };
 
 
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=15
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=14
 
 
 async function showReportToCustomer(orderId) {
@@ -2198,8 +2235,14 @@ async function showReportToCustomer(orderId) {
                  (document.getElementById('custName') && document.getElementById('custName').value.trim()) || 'গ্ৰাহক';
     const email = (document.getElementById('palmCustEmail') && document.getElementById('palmCustEmail').value.trim()) || 
                   (document.getElementById('custEmail') && document.getElementById('custEmail').value.trim()) || 'N/A';
-    const dob = document.getElementById('custDate') ? document.getElementById('custDate').value : 'N/A';
-    const place = document.getElementById('custPlace') ? document.getElementById('custPlace').value : 'N/A';
+    // এই অৰ্ডাৰৰ সংৰক্ষিত জন্ম তথ্য (ফৰ্মত এতিয়া যি আছে তাৰ ওপৰত নিৰ্ভৰ নকৰি)
+    let savedOrd = {};
+    try {
+        const _po = JSON.parse(localStorage.getItem('ja_pending_order') || '{}');
+        if (_po && (_po.id === orderId || _po.public_order_id === orderId)) savedOrd = _po;
+    } catch(e) {}
+    const dob = savedOrd.birth_date || (document.getElementById('custDate') ? document.getElementById('custDate').value : 'N/A');
+    const place = savedOrd.birth_place || (document.getElementById('custPlace') ? document.getElementById('custPlace').value : 'N/A');
 
     const isPalm = (service === 'palmistry');
 
@@ -2222,8 +2265,8 @@ async function showReportToCustomer(orderId) {
         };
         const reportHtml = generatePalmistryReportHtml(palmOrder);
         try {
-            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v14_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v14_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);
@@ -2318,12 +2361,15 @@ async function showReportToCustomer(orderId) {
     const serviceTitle = serviceNameMap[service] || 'ব্যক্তিগত বৈদিক জন্ম-কুণ্ডলী';
 
     try {
-        let h = parseInt(document.getElementById('custHour') ? document.getElementById('custHour').value : "12");
-        let m = (document.getElementById('custMin') ? document.getElementById('custMin').value : "0").padStart(2, '0');
-        let ampm = document.getElementById('custAmPm') ? document.getElementById('custAmPm').value : "AM";
-        if (ampm === 'PM' && h < 12) h += 12;
-        if (ampm === 'AM' && h === 12) h = 0;
-        let tob = h.toString().padStart(2, '0') + ":" + m + ":00";
+        let tob = savedOrd.birth_time || '';
+        if (!tob) {
+            let h = parseInt(document.getElementById('custHour') ? document.getElementById('custHour').value : "12");
+            let m = (document.getElementById('custMin') ? document.getElementById('custMin').value : "0").padStart(2, '0');
+            let ampm = document.getElementById('custAmPm') ? document.getElementById('custAmPm').value : "AM";
+            if (ampm === 'PM' && h < 12) h += 12;
+            if (ampm === 'AM' && h === 12) h = 0;
+            tob = h.toString().padStart(2, '0') + ":" + m + ":00";
+        }
 
         const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
         let chart = null;
@@ -2341,6 +2387,8 @@ async function showReportToCustomer(orderId) {
                     dob: dob,
                     tob: tob,
                     pob: place,
+                    lat: savedOrd.birth_lat,
+                    lon: savedOrd.birth_lon,
                     name: name,
                     adminBypass: true
                 })
@@ -2356,19 +2404,8 @@ async function showReportToCustomer(orderId) {
             console.warn("calculate-chart Edge Function offline or error, using internal Vedic engine:", apiErr);
         }
 
-        const localChart3D = buildFallbackVedicChart(dob, tob, place);
-        if (!chart || (!chart.ephemerisVersion && !chart.isAccurateVedic)) {
-            chart = localChart3D;
-        } else {
-            chart = {
-                ...localChart3D,
-                ...chart,
-                ascendant: { ...localChart3D.ascendant, ...(chart.ascendant || {}) },
-                planets: chart.planets || localChart3D.planets,
-                houses: chart.houses || localChart3D.houses,
-                dashas: chart.dashas || localChart3D.dashas,
-                currentTransits: chart.currentTransits || localChart3D.currentTransits
-            };
+        if (!chart) {
+            chart = buildFallbackVedicChart(dob, tob, place);
         }
 
         const orderObj = {
@@ -2378,14 +2415,16 @@ async function showReportToCustomer(orderId) {
             birth_date: dob,
             birth_time: tob,
             birth_place: place,
+            birth_lat: savedOrd.birth_lat,
+            birth_lon: savedOrd.birth_lon,
             service: service
         };
 
         const reportHtml = generateGrandVedicReport(orderObj, chart);
 
         try {
-            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v14_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v14_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);

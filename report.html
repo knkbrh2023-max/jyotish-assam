@@ -68,7 +68,7 @@
             }
         }
     </style>
-    <script src="grand_report_engine.js?v=15"></script>
+    <script src="grand_report_engine.js?v=14"></script>
 </head>
 <body>
 
@@ -120,7 +120,7 @@
 
     <script>
     
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=15
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=14
 
 
 // --- Fallback Vedic Chart Calculation Engine ---
@@ -156,7 +156,7 @@
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
-            const cached = sessionStorage.getItem('ja_report_v15_' + orderId) || localStorage.getItem('ja_report_v15_' + orderId);
+            const cached = sessionStorage.getItem('ja_report_v14_' + orderId) || localStorage.getItem('ja_report_v14_' + orderId);
             const savedSvc = (localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || '').toLowerCase();
             const isValidMonthly = !(savedSvc === 'monthly' || (cached && cached.includes('মাহেকীয়া ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('মাহটোৰ ৪টা সপ্তাহৰ বিস্তৃত সাপ্তাহিক ফলাফল'));
             const isValidYearly = !(savedSvc === 'yearly' || (cached && cached.includes('বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('বাৰ্ষিক ১২ মাহৰ বিস্তৃত মাহেকীয়া ফলাফল'));
@@ -201,7 +201,11 @@
         if (!order) {
             const pending = localStorage.getItem('ja_pending_order');
             if (pending) {
-                try { order = JSON.parse(pending); } catch(e){}
+                try {
+                    const po = JSON.parse(pending);
+                    // শেহতীয়া পেণ্ডিং অৰ্ডাৰ কেৱল তেতিয়াহে ব্যৱহাৰ হ'ব যেতিয়া ই এই লিংকৰ অৰ্ডাৰেই
+                    if (po && (!urlParams.get('order') && !urlParams.get('orderId') || po.id === orderId || po.public_order_id === orderId)) order = po;
+                } catch(e){}
             }
         }
 
@@ -275,26 +279,24 @@
                 } catch(e) {}
             }
 
-            const dobStr = order.birth_date || order.birthDate || '1996-01-01';
+            const dobStr = order.birth_date || order.birthDate || '';
             const tobStr = order.birth_time || order.birthTime || '10:30:00';
             const placeStr = order.birth_place || order.birthPlace || 'অসম';
-            const chart = (typeof window.fetchOrCalculateVedicChart === 'function')
-                ? await window.fetchOrCalculateVedicChart({
-                    orderId: order.public_order_id || order.id || orderId,
-                    dob: dobStr,
-                    tob: tobStr,
-                    pob: placeStr,
-                    name: order.name,
-                    apiBaseUrl: (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1'),
-                    supabaseKey: SUPABASE_KEY
-                  })
-                : buildFallbackVedicChart(dobStr, tobStr, placeStr);
+            const _isPalmOrder = String(order.service || '').toLowerCase().includes('palm');
+            if (!dobStr && !_isPalmOrder) {
+                // জন্ম তাৰিখ নথকাকৈ কাল্পনিক কুণ্ডলী নবনাই গ্ৰাহকক জনোৱা হ'ব
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('statusTitle').innerText = "⚠️ জন্ম তথ্য পোৱা নগ'ল";
+                document.getElementById('statusMsg').innerText = "এই অৰ্ডাৰত জন্ম তাৰিখ সংৰক্ষিত হোৱা নাই। সঠিক ৰিপোৰ্টৰ বাবে তলৰ '🎧 সহায় (Support)' বুটামত অৰ্ডাৰ নম্বৰ লিখি জনাওক।";
+                return;
+            }
+            const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
             const reportHtml = renderFullReport(order, chart);
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
             try {
-                localStorage.setItem('ja_report_v15_' + saveId, reportHtml);
-                sessionStorage.setItem('ja_report_v15_' + saveId, reportHtml);
+                localStorage.setItem('ja_report_v14_' + saveId, reportHtml);
+                sessionStorage.setItem('ja_report_v14_' + saveId, reportHtml);
                 localStorage.setItem('ja_report_' + saveId, reportHtml);
                 sessionStorage.setItem('ja_report_' + saveId, reportHtml);
                 localStorage.setItem('ja_latest_order_id', saveId);
@@ -352,18 +354,20 @@
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         try {
-            let { data } = await sb.from('orders').select('*').or(`email.ilike.%${inputVal}%,public_order_id.eq.${inputVal},name.ilike.%${inputVal}%`).order('created_at', { ascending: false }).limit(1);
+            // সম্পূৰ্ণ মিল থাকিলেহে (অৰ্ডাৰ নম্বৰ বা পূৰ্ণ ইমেইল) — আংশিক নাম/ইমেইল মিলাই আনৰ ৰিপোৰ্ট খুলিব নালাগে
+            const cleanVal = inputVal.replace(/[,()%*]/g, '');
+            let { data } = await sb.from('orders').select('*').or(`email.ilike.${cleanVal},public_order_id.eq.${cleanVal}`).order('created_at', { ascending: false }).limit(1);
             if (data && data.length > 0) {
                 const order = data[0];
                 msgDiv.innerHTML = "<span style='color:green;'>অৰ্ডাৰ পোৱা গ'ল! ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... ✨</span>";
 
-                const dobStr = order.birth_date || '1996-01-01';
+                const dobStr = order.birth_date || '';
                 const tobStr = order.birth_time || '10:30:00';
                 const placeStr = order.birth_place || order.birthPlace || 'অসম';
             const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
                 const reportHtml = renderFullReport(order, chart);
 
-                localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
+                localStorage.setItem('ja_report_v14_' + order.id, reportHtml);
                 localStorage.setItem('ja_report_' + order.id, reportHtml);
                 localStorage.setItem('ja_latest_order_id', order.id);
 
