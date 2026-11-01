@@ -16,6 +16,8 @@ function jaN360(x/*:number*/)/*:number*/ { return ((x % 360) + 360) % 360; }
 const JA_PLACES/*:Array<[string[], number, number]>*/ = [
   [["guwahati","gauhati","guwhati","dispur","guwahati assam","গুৱাহাটী","গুৱাহাটি","দিছপুৰ"], 26.1445, 91.7362],
   [["north guwahati","উত্তৰ গুৱাহাটী"], 26.1833, 91.7500],
+  [["bihpuria","বিহপুৰীয়া"], 27.0169, 93.9150],
+  [["nij laluk","laluk","লালুক"], 27.1188, 93.9296],
   [["dibrugarh","ডিব্ৰুগড়","ডিব্ৰুগড"], 27.4728, 94.9120],
   [["jorhat","যোৰহাট"], 26.7509, 94.2037],
   [["silchar","শিলচৰ"], 24.8333, 92.7789],
