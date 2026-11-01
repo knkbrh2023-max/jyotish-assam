@@ -1,9 +1,235 @@
 // ============================================================================
-// 🪐 100% ACCURATE 3D VEDIC EPHEMERIS, SPHERICAL LAGNA, DASHA & GOCHAR ENGINE
-// (3D Paul Schlyter / Jean Meeus Orbital Mechanics + Iterative Kepler Solver +
-//  ELP2000 Moon Perturbations + Exact Spherical Ascendant + Lahiri Ayanamsa)
+// 🪐 ACCURATE VEDIC EPHEMERIS, LAGNA, VIMSHOTTARI DASHA BALANCE & GOCHAR ENGINE
+// (Meeus / Schlyter Orbital Elements + Lahiri Chitrapaksha Ayanamsa)
 // ============================================================================
-function calculateAccurateVedicChart(dobStr, tobStr, placeStr) {
+// ============================================================================
+// JA ASTRO CORE v14  (shared by grand_report_engine.js and calculate-chart/index.ts)
+//  * Real Lagna from sidereal time + birth latitude/longitude (no sunrise guess)
+//  * Moon: Meeus ch.47 main periodic terms (checked against Meeus example 47.a)
+//  * Mercury/Venus/Mars: JPL (Standish) Keplerian elements + light-time
+//  * Place -> latitude/longitude: explicit order lat/lon first, else built-in gazetteer
+// ============================================================================
+const JA_DEG = Math.PI / 180;
+function jaN360(x/*:number*/)/*:number*/ { return ((x % 360) + 360) % 360; }
+
+// [names..., latitude, longitude]  (names: lower-case latin or Assamese script)
+const JA_PLACES/*:Array<[string[], number, number]>*/ = [
+  [["guwahati","gauhati","guwhati","dispur","guwahati assam","গুৱাহাটী","গুৱাহাটি","দিছপুৰ"], 26.1445, 91.7362],
+  [["north guwahati","উত্তৰ গুৱাহাটী"], 26.1833, 91.7500],
+  [["dibrugarh","ডিব্ৰুগড়","ডিব্ৰুগড"], 27.4728, 94.9120],
+  [["jorhat","যোৰহাট"], 26.7509, 94.2037],
+  [["silchar","শিলচৰ"], 24.8333, 92.7789],
+  [["tezpur","তেজপুৰ"], 26.6528, 92.7926],
+  [["nagaon","nowgong","নগাঁও"], 26.3500, 92.6833],
+  [["tinsukia","তিনিচুকীয়া"], 27.4922, 95.3468],
+  [["sivasagar","sibsagar","shivsagar","শিৱসাগৰ"], 26.9826, 94.6425],
+  [["goalpara","গোৱালপাৰা"], 26.1667, 90.6167],
+  [["dhubri","ধুবুৰী"], 26.0207, 89.9743],
+  [["bongaigaon","বঙাইগাঁও"], 26.4780, 90.5578],
+  [["barpeta","বৰপেটা"], 26.3220, 91.0050],
+  [["nalbari","নলবাৰী"], 26.4467, 91.4400],
+  [["kokrajhar","কোকৰাঝাৰ"], 26.4000, 90.2700],
+  [["diphu","দিফু"], 25.8400, 93.4300],
+  [["haflong","হাফলং"], 25.1667, 93.0167],
+  [["karimganj","sribhumi","কৰিমগঞ্জ","শ্ৰীভূমি"], 24.8697, 92.3554],
+  [["hailakandi","হাইলাকান্দি"], 24.6847, 92.5600],
+  [["golaghat","গোলাঘাট"], 26.5167, 93.9667],
+  [["north lakhimpur","lakhimpur","লক্ষীমপুৰ","লখিমপুৰ"], 27.2360, 94.1000],
+  [["dhemaji","ধেমাজি"], 27.4833, 94.5833],
+  [["mangaldoi","mangaldai","মঙলদৈ"], 26.4420, 92.0310],
+  [["rangia","ৰঙিয়া"], 26.4500, 91.6167],
+  [["dhekiajuli","ঢেকিয়াজুলি"], 26.7000, 92.4833],
+  [["biswanath chariali","biswanath","বিশ্বনাথ চাৰিআলি","বিশ্বনাথ"], 26.7333, 93.1500],
+  [["margherita","মাৰ্ঘেৰিটা"], 27.2833, 95.6667],
+  [["digboi","ডিগবৈ"], 27.3900, 95.6200],
+  [["duliajan","দুলীয়াজান"], 27.3667, 95.3167],
+  [["naharkatia","নহৰকটীয়া"], 27.2833, 95.3500],
+  [["doomdooma","ডুমডুমা"], 27.5667, 95.5667],
+  [["sonari","চোণাৰি"], 26.9500, 95.0167],
+  [["nazira","নাজিৰা"], 26.9167, 94.7333],
+  [["dergaon","ডেৰগাঁও"], 26.7000, 94.1167],
+  [["majuli","মাজুলী"], 26.9500, 94.2167],
+  [["bokakhat","বোকাখাত"], 26.6417, 93.6000],
+  [["hojai","হোজাই"], 26.0000, 92.8500],
+  [["morigaon","মৰিগাঁও"], 26.2500, 92.3500],
+  [["udalguri","উদালগুৰি"], 26.7500, 92.1000],
+  [["abhayapuri","অভয়াপুৰী"], 26.3200, 90.6500],
+  [["gossaigaon","গোসাইগাঁও"], 26.4333, 89.9833],
+  [["lumding","লামডিং"], 25.7500, 93.1667],
+  [["jagiroad","জাগীৰোড"], 26.1667, 92.1667],
+  [["badarpur","বদৰপুৰ"], 24.8667, 92.5833],
+  [["shillong","শিলং"], 25.5788, 91.8933],
+  [["imphal","ইম্ফল"], 24.8170, 93.9368],
+  [["agartala","আগৰতলা"], 23.8315, 91.2868],
+  [["itanagar","ইটানগৰ"], 27.0844, 93.6053],
+  [["naharlagun"], 27.1000, 93.7000],
+  [["kohima","কোহিমা"], 25.6586, 94.1086],
+  [["dimapur","দিমাপুৰ"], 25.9044, 93.7266],
+  [["aizawl","আইজল"], 23.7271, 92.7176],
+  [["gangtok","গেংটক"], 27.3314, 88.6138],
+  [["tura"], 25.5142, 90.2022],
+  [["siliguri","শিলিগুড়ি"], 26.7271, 88.3953],
+  [["darjeeling","দার্জিলিং"], 27.0410, 88.2663],
+  [["jalpaiguri"], 26.5167, 88.7333],
+  [["cooch behar","coochbehar","koch bihar"], 26.3452, 89.4482],
+  [["alipurduar"], 26.4900, 89.5300],
+  [["kolkata","calcutta","কলকাতা"], 22.5726, 88.3639],
+  [["delhi","new delhi","দিল্লী"], 28.6139, 77.2090],
+  [["mumbai","bombay","মুম্বাই"], 19.0760, 72.8777],
+  [["chennai","madras","চেন্নাই"], 13.0827, 80.2707],
+  [["bengaluru","bangalore","বেংগালুৰু"], 12.9716, 77.5946],
+  [["hyderabad","হায়দৰাবাদ"], 17.3850, 78.4867],
+  [["pune","পুণে"], 18.5204, 73.8567],
+  [["ahmedabad"], 23.0225, 72.5714],
+  [["jaipur"], 26.9124, 75.7873],
+  [["lucknow"], 26.8467, 80.9462],
+  [["kanpur"], 26.4499, 80.3319],
+  [["patna"], 25.5941, 85.1376],
+  [["ranchi"], 23.3441, 85.3096],
+  [["bhubaneswar"], 20.2961, 85.8245],
+  [["cuttack"], 20.4625, 85.8830],
+  [["raipur"], 21.2514, 81.6296],
+  [["bhopal"], 23.2599, 77.4126],
+  [["indore"], 22.7196, 75.8577],
+  [["nagpur"], 21.1458, 79.0882],
+  [["surat"], 21.1702, 72.8311],
+  [["vadodara","baroda"], 22.3072, 73.1812],
+  [["chandigarh"], 30.7333, 76.7794],
+  [["amritsar"], 31.6340, 74.8723],
+  [["varanasi","benares","banaras"], 25.3176, 82.9739],
+  [["prayagraj","allahabad"], 25.4358, 81.8463],
+  [["visakhapatnam","vizag"], 17.6868, 83.2185],
+  [["vijayawada"], 16.5062, 80.6480],
+  [["thiruvananthapuram","trivandrum"], 8.5241, 76.9366],
+  [["kochi","cochin"], 9.9312, 76.2673],
+  [["coimbatore"], 11.0168, 76.9558],
+  [["madurai"], 9.9252, 78.1198],
+  [["mysuru","mysore"], 12.2958, 76.6394],
+  [["dehradun"], 30.3165, 78.0322],
+  [["haridwar"], 29.9457, 78.1642],
+  [["gaya"], 24.7955, 85.0002],
+  [["dhanbad"], 23.7957, 86.4304],
+  [["jamshedpur"], 22.8046, 86.2029],
+  [["panaji","goa"], 15.4909, 73.8278],
+  [["srinagar"], 34.0837, 74.7973],
+  [["jammu"], 32.7266, 74.8570],
+  [["shimla"], 31.1048, 77.1734]
+];
+
+function jaNormPlace(s/*:any*/)/*:string*/ {
+  return String(s == null ? "" : s).toLowerCase().replace(/[.,()\-_\/]+/g, " ").replace(/\s+/g, " ").trim();
+}
+
+// Returns {lat, lon, matched, source, name}. matched=false means the place was NOT recognised
+// and Guwahati is used as an approximation (reports show a visible note in that case).
+function jaResolvePlace(placeStr/*:any*/, opts/*:any*/)/*:{lat:number,lon:number,matched:boolean,source:string,name:string}*/ {
+  if (opts && opts.lat !== null && opts.lat !== undefined && opts.lat !== "" && opts.lon !== null && opts.lon !== undefined && opts.lon !== "") {
+    const la = Number(opts.lat), lo = Number(opts.lon);
+    if (isFinite(la) && isFinite(lo) && Math.abs(la) <= 66 && Math.abs(lo) <= 180 && !(la === 0 && lo === 0)) {
+      return { lat: la, lon: lo, matched: true, source: "order", name: String(placeStr || "") };
+    }
+  }
+  const q = jaNormPlace(placeStr);
+  const padded = " " + q + " ";
+  let best/*:any*/ = null, bestLen = 0;
+  for (const row of JA_PLACES) {
+    for (const nm of row[0]) {
+      const k = jaNormPlace(nm);
+      if (!k) continue;
+      const hasLatin = /[a-z]/.test(k);
+      const hit = hasLatin ? padded.indexOf(" " + k + " ") >= 0 : q.indexOf(k) >= 0;
+      if (hit && k.length > bestLen) { best = row; bestLen = k.length; }
+    }
+  }
+  if (best) return { lat: best[1], lon: best[2], matched: true, source: "gazetteer", name: best[0][0] };
+  return { lat: 26.1445, lon: 91.7362, matched: false, source: "default-guwahati", name: "Guwahati" };
+}
+
+// ---- Moon (Meeus ch.47, longitude, main periodic terms) ----
+const JA_MOON_TERMS/*:number[][]*/ = [
+[0,0,1,0,6288774],[2,0,-1,0,1274027],[2,0,0,0,658314],[0,0,2,0,213618],[0,1,0,0,-185116],[0,0,0,2,-114332],
+[2,0,-2,0,58793],[2,-1,-1,0,57066],[2,0,1,0,53322],[2,-1,0,0,45758],[0,1,-1,0,-40923],[1,0,0,0,-34720],
+[0,1,1,0,-30383],[2,0,0,-2,15327],[0,0,1,2,-12528],[0,0,1,-2,10980],[4,0,-1,0,10675],[0,0,3,0,10034],
+[4,0,-2,0,8548],[2,1,-1,0,-7888],[2,1,0,0,-6766],[1,0,-1,0,-5163],[1,1,0,0,4987],[2,-1,1,0,4036],
+[2,0,2,0,3994],[4,0,0,0,3861],[2,0,-3,0,3665],[0,1,-2,0,-2689],[2,0,-1,2,-2602],[2,-1,-2,0,2390],
+[1,0,1,0,-2348],[2,-2,0,0,2236],[0,1,2,0,-2120],[0,2,0,0,-2069],[2,-2,-1,0,2048],[2,0,1,-2,-1773],
+[2,0,0,2,-1595],[4,-1,-1,0,1215],[0,0,2,2,-1110],[3,0,-1,0,-892],[2,1,1,0,-810],[4,-1,-2,0,759],
+[0,2,-1,0,-713],[2,2,-1,0,-700],[2,1,-2,0,691],[2,-1,0,-2,596],[4,0,1,0,549],[0,0,4,0,537],
+[4,-1,0,0,520],[1,0,-2,0,-487],[2,1,0,-2,-399],[0,0,2,-2,-381],[1,1,1,0,351],[3,0,-2,0,-340],
+[4,0,-3,0,330],[2,-1,2,0,327],[0,2,1,0,-323],[1,1,-1,0,299],[2,0,3,0,294]
+];
+function jaMoonTropLon(jd/*:number*/)/*:number*/ {
+  const T = (jd - 2451545.0) / 36525.0;
+  const Lp = jaN360(218.3164477 + 481267.88123421 * T - 0.0015786 * T * T + T * T * T / 538841 - T * T * T * T / 65194000);
+  const D  = jaN360(297.8501921 + 445267.1114034 * T - 0.0018819 * T * T + T * T * T / 545868 - T * T * T * T / 113065000);
+  const M  = jaN360(357.5291092 + 35999.0502909 * T - 0.0001536 * T * T + T * T * T / 24490000);
+  const Mp = jaN360(134.9633964 + 477198.8675055 * T + 0.0087414 * T * T + T * T * T / 69699 - T * T * T * T / 14712000);
+  const F  = jaN360(93.2720950 + 483202.0175233 * T - 0.0036539 * T * T - T * T * T / 3526000 + T * T * T * T / 863310000);
+  const A1 = jaN360(119.75 + 131.849 * T), A2 = jaN360(53.09 + 479264.290 * T);
+  const E = 1 - 0.002516 * T - 0.0000074 * T * T;
+  let sum = 0;
+  for (const t of JA_MOON_TERMS) {
+    const am = Math.abs(t[1]);
+    const e = am === 1 ? E : (am === 2 ? E * E : 1);
+    sum += t[4] * e * Math.sin((t[0] * D + t[1] * M + t[2] * Mp + t[3] * F) * JA_DEG);
+  }
+  sum += 3958 * Math.sin(A1 * JA_DEG) + 1962 * Math.sin((Lp - F) * JA_DEG) + 318 * Math.sin(A2 * JA_DEG);
+  return jaN360(Lp + sum / 1e6);
+}
+
+// ---- Mercury / Venus / Mars: JPL approximate Keplerian elements (valid 1800-2050) ----
+const JA_EL/*:Record<string, Record<string, number[]>>*/ = {
+  Mercury: { a:[0.38709927,0.00000037], e:[0.20563593,0.00001906], I:[7.00497902,-0.00594749], L:[252.25032350,149472.67411175], w:[77.45779628,0.16047689], O:[48.33076593,-0.12534081] },
+  Venus:   { a:[0.72333566,0.00000390], e:[0.00677672,-0.00004107], I:[3.39467605,-0.00078890], L:[181.97909950,58517.81538729], w:[131.60246718,0.00268329], O:[76.67984255,-0.27769418] },
+  Earth:   { a:[1.00000261,0.00000562], e:[0.01671123,-0.00004392], I:[-0.00001531,-0.01294668], L:[100.46457166,35999.37244981], w:[102.93768193,0.32327364], O:[0,0] },
+  Mars:    { a:[1.52371034,0.00001847], e:[0.09339410,0.00007882], I:[1.84969142,-0.00813131], L:[-4.55343205,19140.30268499], w:[-23.94362959,0.44441088], O:[49.55953891,-0.29257343] }
+};
+function jaHelio(name/*:string*/, T/*:number*/)/*:number[]*/ {
+  const p = JA_EL[name];
+  const g = (k/*:string*/)/*:number*/ => p[k][0] + p[k][1] * T;
+  const a = g("a"), e = g("e"), I = g("I") * JA_DEG, L = g("L"), w = g("w"), O = g("O") * JA_DEG;
+  const M = ((jaN360(L - w) + 180) % 360) - 180;
+  const om = (w - g("O")) * JA_DEG;
+  let E = M * JA_DEG + e * Math.sin(M * JA_DEG);
+  for (let i = 0; i < 30; i++) {
+    const dE = (M * JA_DEG - (E - e * Math.sin(E))) / (1 - e * Math.cos(E));
+    E += dE;
+    if (Math.abs(dE) < 1e-12) break;
+  }
+  const xp = a * (Math.cos(E) - e), yp = a * Math.sqrt(1 - e * e) * Math.sin(E);
+  const co = Math.cos(om), so = Math.sin(om), cO = Math.cos(O), sO = Math.sin(O), cI = Math.cos(I), sI = Math.sin(I);
+  return [
+    (co * cO - so * sO * cI) * xp + (-so * cO - co * sO * cI) * yp,
+    (co * sO + so * cO * cI) * xp + (-so * sO + co * cO * cI) * yp,
+    (so * sI) * xp + (co * sI) * yp
+  ];
+}
+// geocentric, tropical-of-date ecliptic longitude (degrees), light-time corrected
+function jaKeplerGeoLon(name/*:string*/, jd/*:number*/)/*:number*/ {
+  const T = (jd - 2451545.0) / 36525.0;
+  const E0 = jaHelio("Earth", T);
+  let tau = 0, lon = 0;
+  for (let i = 0; i < 3; i++) {
+    const P = jaHelio(name, T - tau / 36525.0);
+    const dx = P[0] - E0[0], dy = P[1] - E0[1], dz = P[2] - E0[2];
+    tau = Math.sqrt(dx * dx + dy * dy + dz * dz) * 0.0057755183;
+    lon = Math.atan2(dy, dx) / JA_DEG;
+  }
+  return jaN360(lon + 1.396889 * T + 0.000307 * T * T);
+}
+
+// ---- Ascendant (tropical, degrees) from UT Julian day + geographic latitude / east longitude ----
+function jaAscendantTrop(jdUT/*:number*/, lat/*:number*/, lon/*:number*/)/*:number*/ {
+  const T = (jdUT - 2451545.0) / 36525.0;
+  const gmst = jaN360(280.46061837 + 360.98564736629 * (jdUT - 2451545.0) + 0.000387933 * T * T - T * T * T / 38710000);
+  const ramc = jaN360(gmst + lon) * JA_DEG;
+  const eps = (23.4392911 - 0.0130042 * T) * JA_DEG;
+  const asc = Math.atan2(Math.cos(ramc), -(Math.sin(ramc) * Math.cos(eps) + Math.tan(lat * JA_DEG) * Math.sin(eps))) / JA_DEG;
+  return jaN360(asc);
+}
+// ============================ END JA ASTRO CORE ============================
+
+function calculateAccurateVedicChart(dobStr, tobStr, placeStr, geoOpts) {
     const rashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
     const rashiAsMap = {
         "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট",
@@ -19,64 +245,6 @@ function calculateAccurateVedicChart(dobStr, tobStr, placeStr) {
     const norm360 = (deg) => ((deg % 360) + 360) % 360;
     const dsin = (d) => Math.sin((d * Math.PI) / 180.0);
     const dcos = (d) => Math.cos((d * Math.PI) / 180.0);
-    const dtan = (d) => Math.tan((d * Math.PI) / 180.0);
-
-    // Resolve Geographic Coordinates (Latitude & Longitude) for Assam & India
-    const resolveCoordinates = (pStr) => {
-        const s = String(pStr || "").toLowerCase().trim();
-        const coordTable = [
-            { keys: ["laluk", "লালুক", "lakhimpur", "north lakhimpur", "লখিমপুৰ", "bihpuria", "narayanpur", "dhakuakhana"], lat: 27.14, lon: 94.00 },
-            { keys: ["dhemaji", "ধেমাজি", "jonai", "silapathar"], lat: 27.48, lon: 94.56 },
-            { keys: ["dibrugarh", "ডিব্ৰুগড়", "naharkatiya", "moran", "chabua"], lat: 27.47, lon: 94.91 },
-            { keys: ["tinsukia", "তিনিচুকীয়া", "digboi", "margherita", "doomdooma", "sadiya"], lat: 27.49, lon: 95.36 },
-            { keys: ["sivasagar", "sibsagar", "শিৱসাগৰ", "nazira", "amguri", "demow"], lat: 26.98, lon: 94.64 },
-            { keys: ["charaideo", "চৰাইদেউ", "sonari", "সোণাৰি"], lat: 27.02, lon: 95.02 },
-            { keys: ["jorhat", "যোৰহাট", "titabor", "mariani", "teok"], lat: 26.75, lon: 94.22 },
-            { keys: ["majuli", "মাজুলী", "garamur", "kamalabari"], lat: 26.95, lon: 94.17 },
-            { keys: ["golaghat", "গোলাঘাট", "bokakhat", "sarupathar", "dergaon"], lat: 26.52, lon: 93.96 },
-            { keys: ["tezpur", "তেজপুৰ", "sonitpur", "শোণিতপুৰ", "dhekiajuli", "rangapara"], lat: 26.65, lon: 92.79 },
-            { keys: ["biswanath", "বিশ্বনাথ", "gohpur", "গহপুৰ", "behali"], lat: 26.73, lon: 93.15 },
-            { keys: ["nagaon", "nowgong", "নগাঁও", "kaliabor", "ranchi", "dhing", "kampur", "raha"], lat: 26.35, lon: 92.68 },
-            { keys: ["hojai", "হোজাই", "lanka", "lumding", "doboka"], lat: 26.00, lon: 92.86 },
-            { keys: ["morigaon", "মৰিগাঁও", "jagi road", "jagiroad"], lat: 26.25, lon: 92.34 },
-            { keys: ["guwahati", "gauhati", "গুৱাহাটী", "dispur", "দিশপুৰ", "kamrup", "কামৰূপ", "amingaon", "mirza", "chaygaon", "boko", "rangia", "ৰঙিয়া", "hajo"], lat: 26.14, lon: 91.74 },
-            { keys: ["mangaldoi", "mangaldai", "মঙলদৈ", "darrang", "দৰং", "kharupetia", "sipajhar"], lat: 26.44, lon: 92.03 },
-            { keys: ["udalguri", "ওদালগুৰি", "tangla", "টাংলা"], lat: 26.75, lon: 92.10 },
-            { keys: ["nalbari", "নলবাৰী", "tihu"], lat: 26.45, lon: 91.43 },
-            { keys: ["bajali", "বজালী", "pathsala", "পাঠশালা"], lat: 26.50, lon: 91.18 },
-            { keys: ["barpeta", "বৰপেটা", "howly", "sorbhog", "barpeta road"], lat: 26.32, lon: 91.00 },
-            { keys: ["baksa", "বাক্সা", "mushalpur", "tamulpur", "তামুলপুৰ"], lat: 26.58, lon: 91.42 },
-            { keys: ["bongaigaon", "বঙাইগাঁও", "abhayapuri"], lat: 26.48, lon: 90.56 },
-            { keys: ["chirang", "চিৰাং", "kajalgaon", "bijni"], lat: 26.52, lon: 90.63 },
-            { keys: ["kokrajhar", "কোকৰাঝাৰ", "gossaigaon"], lat: 26.40, lon: 90.27 },
-            { keys: ["dhubri", "ধুবুৰী", "bilasipara", "gauripur", "south salmara", "manikachar"], lat: 26.02, lon: 89.97 },
-            { keys: ["goalpara", "গোৱালপাৰা", "dudhnoi", "lakhipur"], lat: 26.17, lon: 90.62 },
-            { keys: ["diphu", "ডিফু", "karbi anglong", "কাৰ্বি আংলং", "bokajan", "hamren"], lat: 25.84, lon: 93.43 },
-            { keys: ["haflong", "হাফলং", "dima hasao", "ডিমা হাছাও"], lat: 25.17, lon: 93.02 },
-            { keys: ["silchar", "শিলচৰ", "cachar", "কাছাৰ"], lat: 24.83, lon: 92.78 },
-            { keys: ["karimganj", "কৰিমগঞ্জ", "sribhumi", "শ্ৰীভূমি", "badarpur"], lat: 24.87, lon: 92.36 },
-            { keys: ["hailakandi", "হাইলাকান্দি", "lala"], lat: 24.68, lon: 92.56 },
-            { keys: ["shillong", "শ্বিলং", "meghalaya"], lat: 25.57, lon: 91.89 },
-            { keys: ["itanagar", "arunachal"], lat: 27.08, lon: 93.61 },
-            { keys: ["dimapur", "kohima", "nagaland"], lat: 25.91, lon: 93.72 },
-            { keys: ["agartala", "tripura"], lat: 23.83, lon: 91.29 },
-            { keys: ["imphal", "manipur"], lat: 24.82, lon: 93.94 },
-            { keys: ["kolkata", "calcutta", "কলকাতা"], lat: 22.57, lon: 88.36 },
-            { keys: ["delhi", "new delhi", "দিল্লী"], lat: 28.61, lon: 77.21 },
-            { keys: ["mumbai", "bombay", "মুম্বাই"], lat: 19.08, lon: 72.88 },
-            { keys: ["bengaluru", "bangalore", "বেংগালুৰু"], lat: 12.97, lon: 77.59 },
-            { keys: ["chennai", "চেন্নাই"], lat: 13.08, lon: 80.27 },
-            { keys: ["hyderabad", "হায়দৰাবাদ"], lat: 17.39, lon: 78.49 },
-            { keys: ["pune", "পুনে"], lat: 18.52, lon: 73.86 }
-        ];
-        for (const item of coordTable) {
-            for (const k of item.keys) {
-                if (s.includes(k)) return { lat: item.lat, lon: item.lon };
-            }
-        }
-        // Default: Central Assam (Guwahati/Nagaon belt)
-        return { lat: 26.20, lon: 92.20 };
-    };
 
     // Parse DOB (supports YYYY-MM-DD or DD/MM/YYYY)
     let y = 1996, m = 4, d = 24;
@@ -132,142 +300,56 @@ function calculateAccurateVedicChart(dobStr, tobStr, placeStr) {
         );
     };
 
-    // 3D Heliocentric Orbital Solver with 5-step Newton-Raphson Kepler Iteration
-    const solvePlanetHelio3D = (N, inc, w, a, e, M_in) => {
-        const M = norm360(M_in);
-        let E = M + (180.0 / Math.PI) * e * dsin(M) * (1.0 + e * dcos(M));
-        for (let iter = 0; iter < 5; iter++) {
-            const dE = (E - (180.0 / Math.PI) * e * dsin(E) - M) / (1.0 - e * dcos(E));
-            E -= dE;
-        }
-        const xv = a * (dcos(E) - e);
-        const yv = a * Math.sqrt(1.0 - e * e) * dsin(E);
+    const helioToGeo = (ap, ep, Mp, wp, Le, Re) => {
+        const Ep = Mp + (180.0 / Math.PI) * ep * dsin(Mp) * (1.0 + ep * dcos(Mp));
+        const xv = ap * (dcos(Ep) - ep);
+        const yv = ap * Math.sqrt(1.0 - ep * ep) * dsin(Ep);
         const v = (Math.atan2(yv, xv) * 180.0) / Math.PI;
         const r = Math.hypot(xv, yv);
-        const vw = v + w;
-        const xh = r * (dcos(N) * dcos(vw) - dsin(N) * dsin(vw) * dcos(inc));
-        const yh = r * (dsin(N) * dcos(vw) + dcos(N) * dsin(vw) * dcos(inc));
-        const zh = r * (dsin(vw) * dsin(inc));
-        const lonHelio = norm360((Math.atan2(yh, xh) * 180.0) / Math.PI);
-        return { xh, yh, zh, r, lonHelio };
+        const lonHelio = norm360(v + wp);
+        const xg = r * dcos(lonHelio) - Re * dcos(Le);
+        const yg = r * dsin(lonHelio) - Re * dsin(Le);
+        return norm360((Math.atan2(yg, xg) * 180.0) / Math.PI);
     };
 
     const computeAllLongitudes = (jd) => {
         const T = (jd - 2451545.0) / 36525.0;
-        const dDays = jd - 2451543.5; // Exact Paul Schlyter epoch (1999 Dec 31.0 UT)
-        // Exact Lahiri Chitrapaksha Ayanamsa (23°51'25.532" at J2000 + 50.290966"/yr)
-        const ayanamsa = 23.857092 + (50.290966 / 3600.0) * ((jd - 2451545.0) / 365.25);
+        const dJ2000 = jd - 2451545.0;
+        const ayanamsa = 23.853 + 1.39604 * T;
 
-        // 1. Sun (Geocentric Ecliptic)
-        const wSun = 282.9404 + 4.70935e-5 * dDays;
-        const eSun = 0.016709 - 1.151e-9 * dDays;
-        const MSun = norm360(356.0470 + 0.9856002585 * dDays);
-        let ESun = MSun + (180.0 / Math.PI) * eSun * dsin(MSun) * (1.0 + eSun * dcos(MSun));
-        const xvS = dcos(ESun) - eSun;
-        const yvS = Math.sqrt(1.0 - eSun * eSun) * dsin(ESun);
-        const vS = (Math.atan2(yvS, xvS) * 180.0) / Math.PI;
-        const rS = Math.hypot(xvS, yvS);
-        const sunTrop = norm360(vS + wSun);
-        const xs = rS * dcos(sunTrop);
-        const ys = rS * dsin(sunTrop);
+        // Sun
+        const L0 = norm360(280.46646 + 36000.76983 * T);
+        const MSun = norm360(357.52911 + 35999.05029 * T);
+        const CSun = (1.914602 - 0.004817 * T) * dsin(MSun) + 0.019993 * dsin(2 * MSun);
+        const sunTrop = norm360(L0 + CSun);
+        const Le = norm360(sunTrop + 180.0);
+        const eEarth = 0.016708634 - 0.000042037 * T;
+        const Re = (1.000001018 * (1 - eEarth * eEarth)) / (1 + eEarth * dcos(MSun + CSun));
 
-        // 2. Moon (Meeus / ELP2000 Periodic Terms)
-        const Lm = norm360(218.3164477 + 481267.88123421 * T);
-        const Dm = norm360(297.8501921 + 445267.1114034 * T);
-        const MSunMeeus = norm360(357.5291092 + 35999.0502909 * T);
-        const Mm = norm360(134.9633964 + 477198.8675055 * T);
-        const Fm = norm360(93.2720950 + 483202.0175233 * T);
-        const moonTrop = norm360(
-            Lm +
-            6.288774 * dsin(Mm) +
-            1.274027 * dsin(2 * Dm - Mm) +
-            0.658314 * dsin(2 * Dm) +
-            0.213618 * dsin(2 * Mm) -
-            0.185116 * dsin(MSunMeeus) -
-            0.114332 * dsin(2 * Fm) +
-            0.058793 * dsin(2 * Dm - 2 * Mm) +
-            0.057066 * dsin(2 * Dm - MSunMeeus - Mm) +
-            0.053322 * dsin(2 * Dm + Mm) +
-            0.045758 * dsin(2 * Dm - MSunMeeus) -
-            0.040923 * dsin(MSunMeeus - Mm) -
-            0.034720 * dsin(Dm) -
-            0.030383 * dsin(MSunMeeus + Mm)
-        );
+        // Moon (Meeus ch.47 main periodic terms; verified against Meeus example 47.a)
+        const moonTrop = jaMoonTropLon(jd);
 
-        // 3. Mercury (3D Helio -> Geo)
-        const mercH = solvePlanetHelio3D(
-            48.3313 + 3.24587e-5 * dDays,
-            7.0047 + 5.00e-8 * dDays,
-            29.1241 + 1.01444e-5 * dDays,
-            0.387098,
-            0.205635 + 5.59e-10 * dDays,
-            168.6562 + 4.0923344368 * dDays
-        );
-        const mercTrop = norm360((Math.atan2(mercH.yh + ys, mercH.xh + xs) * 180.0) / Math.PI);
+        // Mercury, Venus, Mars, Jupiter, Saturn
+        const mercTrop = jaKeplerGeoLon('Mercury', jd);
+        const venTrop = jaKeplerGeoLon('Venus', jd);
+        const marsTrop = jaKeplerGeoLon('Mars', jd);
+        const MJup = norm360(19.8950 + 0.0830853001 * dJ2000);
+        const MSat = norm360(316.9670 + 0.0334442282 * dJ2000);
+        const jupPert = -0.332 * dsin(2 * MJup - 5 * MSat - 67.6);
+        const jupTrop = norm360(helioToGeo(
+            5.20256, 0.048498,
+            MJup,
+            norm360(273.8777 + 100.4542 + 0.000040 * dJ2000),
+            Le, Re
+        ) + jupPert);
+        const satPert = 0.812 * dsin(2 * MJup - 5 * MSat - 67.6) - 0.229 * dcos(2 * MJup - 4 * MSat - 2.0);
+        const satTrop = norm360(helioToGeo(
+            9.55475, 0.055546,
+            MSat,
+            norm360(339.3939 + 113.6634 + 0.000050 * dJ2000),
+            Le, Re
+        ) + satPert);
 
-        // 4. Venus (3D Helio -> Geo)
-        const venH = solvePlanetHelio3D(
-            76.6799 + 2.46590e-5 * dDays,
-            3.3946 + 2.75e-8 * dDays,
-            54.8910 + 1.38374e-5 * dDays,
-            0.723330,
-            0.006773 - 1.302e-9 * dDays,
-            48.0052 + 1.6021302244 * dDays
-        );
-        const venTrop = norm360((Math.atan2(venH.yh + ys, venH.xh + xs) * 180.0) / Math.PI);
-
-        // 5. Mars (3D Helio -> Geo)
-        const marsH = solvePlanetHelio3D(
-            49.5574 + 2.11081e-5 * dDays,
-            1.8497 - 1.78e-8 * dDays,
-            286.5016 + 2.92961e-5 * dDays,
-            1.523688,
-            0.093405 + 2.516e-9 * dDays,
-            18.6021 + 0.5240207766 * dDays
-        );
-        const marsTrop = norm360((Math.atan2(marsH.yh + ys, marsH.xh + xs) * 180.0) / Math.PI);
-
-        // 6. Jupiter (3D Helio + 7 Perturbation Terms -> Geo)
-        const MJup = norm360(19.8950 + 0.0830853001 * dDays);
-        const MSat = norm360(316.9670 + 0.0334442282 * dDays);
-        const jupH = solvePlanetHelio3D(
-            100.4542 + 2.76854e-5 * dDays,
-            1.3030 - 1.557e-7 * dDays,
-            273.8777 + 1.64505e-5 * dDays,
-            5.20256,
-            0.048498 + 4.469e-9 * dDays,
-            MJup
-        );
-        const jupPert =
-            -0.332 * dsin(2 * MJup - 5 * MSat - 67.6) -
-            0.056 * dsin(2 * MJup - 2 * MSat + 21.0) +
-            0.042 * dsin(3 * MJup - 5 * MSat + 21.0) -
-            0.036 * dsin(MJup - 2 * MSat) +
-            0.022 * dcos(MJup - MSat) +
-            0.023 * dsin(2 * MJup - 3 * MSat + 52.0) -
-            0.016 * dsin(MJup - 5 * MSat - 69.0);
-        const lonJupCorr = norm360(jupH.lonHelio + jupPert);
-        const jupTrop = norm360((Math.atan2(jupH.r * dsin(lonJupCorr) + ys, jupH.r * dcos(lonJupCorr) + xs) * 180.0) / Math.PI);
-
-        // 7. Saturn (3D Helio + 5 Perturbation Terms -> Geo)
-        const satH = solvePlanetHelio3D(
-            113.6634 + 2.38980e-5 * dDays,
-            2.4886 - 1.081e-7 * dDays,
-            339.3939 + 2.97661e-5 * dDays,
-            9.55475,
-            0.055546 - 9.499e-9 * dDays,
-            MSat
-        );
-        const satPert =
-            0.812 * dsin(2 * MJup - 5 * MSat - 67.6) -
-            0.229 * dcos(2 * MJup - 4 * MSat - 2.0) +
-            0.119 * dsin(MJup - 2 * MSat - 3.0) +
-            0.046 * dsin(2 * MJup - 6 * MSat - 69.0) +
-            0.014 * dsin(MJup - 3 * MSat + 32.0);
-        const lonSatCorr = norm360(satH.lonHelio + satPert);
-        const satTrop = norm360((Math.atan2(satH.r * dsin(lonSatCorr) + ys, satH.r * dcos(lonSatCorr) + xs) * 180.0) / Math.PI);
-
-        // 8. Rahu & Ketu (Mean Lunar Node)
         const rahuTrop = norm360(125.04452 - 1934.136261 * T);
         const ketuTrop = norm360(rahuTrop + 180.0);
 
@@ -292,8 +374,6 @@ function calculateAccurateVedicChart(dobStr, tobStr, placeStr) {
         const nakIdx = Math.floor(lon / nakSpan) % 27;
         const pada = (Math.floor((lon % nakSpan) / (nakSpan / 4.0)) % 4) + 1;
         const rName = rashis[rIdx];
-        const d9Idx = Math.floor(lon / (30.0 / 9.0)) % 12;
-        const d9Name = rashis[d9Idx];
         return {
             rashi: rName,
             rashi_as: rashiAsMap[rName],
@@ -302,26 +382,17 @@ function calculateAccurateVedicChart(dobStr, tobStr, placeStr) {
             nakshatra_idx: nakIdx,
             pada: pada,
             degree: Number((lon % 30).toFixed(2)),
-            longitude: Number(lon.toFixed(2)),
-            navamsha_rashi: d9Name,
-            navamsha_rashi_as: rashiAsMap[d9Name],
-            navamsha_rashi_no: d9Idx + 1
+            longitude: Number(lon.toFixed(2))
         };
     };
 
     const jdBirth = getJulianDay(y, m, d, hr, mn);
     const sidBirth = computeAllLongitudes(jdBirth);
 
-    // Exact Spherical Trigonometry Ascendant (Lagna) using GMST, Local Longitude & Latitude
-    const coords = resolveCoordinates(placeStr);
-    const TBirth = (jdBirth - 2451545.0) / 36525.0;
-    const gmstDeg = norm360(280.46061837 + 360.98564736629 * (jdBirth - 2451545.0) + 0.000387933 * TBirth * TBirth);
-    const ramcDeg = norm360(gmstDeg + coords.lon);
-    const epsDeg = 23.4392911 - 0.0130042 * TBirth;
-    const yAsc = dcos(ramcDeg);
-    const xAsc = -dsin(ramcDeg) * dcos(epsDeg) - dtan(coords.lat) * dsin(epsDeg);
-    const ascTropical = norm360((Math.atan2(yAsc, xAsc) * 180.0) / Math.PI);
-    const ascSidereal = norm360(ascTropical - sidBirth.ayanamsa);
+    // Ascendant (Lagna): real calculation from sidereal time + birth latitude/longitude
+    const loc = jaResolvePlace(placeStr, geoOpts);
+    const ascTrop = jaAscendantTrop(jdBirth, loc.lat, loc.lon);
+    const ascSidereal = norm360(ascTrop - sidBirth.ayanamsa);
     const ascInfo = degToInfo(ascSidereal);
 
     const planets = {
@@ -453,11 +524,22 @@ function calculateAccurateVedicChart(dobStr, tobStr, placeStr) {
         Ketu: degToInfo(sidNow.Ketu)
     };
 
+    // Planet positions for ANY date (used for real month-by-month / day-by-day forecasts)
+    const transitAt = (ms) => {
+        const dt = new Date(ms + 5.5 * 3600 * 1000);
+        const jdT = getJulianDay(dt.getUTCFullYear(), dt.getUTCMonth() + 1, dt.getUTCDate(), dt.getUTCHours(), dt.getUTCMinutes());
+        const sid = computeAllLongitudes(jdT);
+        const out = {};
+        for (const k of ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu']) out[k] = degToInfo(sid[k]);
+        return out;
+    };
+
     return {
         isAccurateVedic: true,
-        ephemerisVersion: 2,
-        coordinates: coords,
-        ayanamsa: Number(sidBirth.ayanamsa.toFixed(4)),
+        engineVersion: 14,
+        transitAt: transitAt,
+        input: { dob: dobStr, tob: tobStr, place: placeStr },
+        birthLocation: loc,
         ascendant: ascInfo,
         planets: planets,
         houses: houses,
@@ -473,65 +555,9 @@ function calculateAccurateVedicChart(dobStr, tobStr, placeStr) {
         currentTransits: currentTransits
     };
 }
-
-// Helper that calls the Supabase `calculate-chart` Edge Function AND merges/validates with the 3D Ephemeris Engine
-async function fetchOrCalculateVedicChart(params) {
-    const dob = params.dob || params.birth_date || params.birthDate || '1996-01-01';
-    const tob = params.tob || params.birth_time || params.birthTime || '10:30:00';
-    const place = params.pob || params.place || params.birth_place || params.birthPlace || 'অসম';
-    const orderId = params.orderId || params.public_order_id || params.id || '';
-    const name = params.name || 'গ্ৰাহক';
-    const apiBase = params.apiBaseUrl || (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || 'https://ihbdrtnkfitytklonnel.supabase.co/functions/v1';
-    const sbKey = params.supabaseKey || 'sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj';
-
-    const localAccurateChart = calculateAccurateVedicChart(dob, tob, place);
-
-    try {
-        const res = await fetch(apiBase + '/calculate-chart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': sbKey,
-                'Authorization': 'Bearer ' + sbKey
-            },
-            body: JSON.stringify({
-                orderId: orderId,
-                dob: dob,
-                tob: tob,
-                pob: place,
-                name: name,
-                adminBypass: true
-            })
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (data && data.success && data.chart) {
-                const srv = data.chart;
-                // If the deployed Edge Function is already v2 (3D ephemeris), use it and fill any missing runtime properties;
-                // if the deployed Edge Function on Supabase is still an older version without 3D ephemeris, enrich with localAccurateChart
-                if (srv.ephemerisVersion === 2 || srv.isAccurateVedic) {
-                    return {
-                        ...localAccurateChart,
-                        ...srv,
-                        ascendant: { ...localAccurateChart.ascendant, ...(srv.ascendant || {}) },
-                        planets: srv.planets || localAccurateChart.planets,
-                        houses: srv.houses || localAccurateChart.houses,
-                        dashas: srv.dashas || localAccurateChart.dashas,
-                        currentTransits: srv.currentTransits || localAccurateChart.currentTransits
-                    };
-                }
-            }
-        }
-    } catch (err) {
-        console.warn("calculate-chart Edge Function fallback to 3D Vedic engine:", err);
-    }
-    return localAccurateChart;
-}
-
 if (typeof window !== 'undefined') {
     window.calculateAccurateVedicChart = calculateAccurateVedicChart;
     window.buildFallbackVedicChart = calculateAccurateVedicChart;
-    window.fetchOrCalculateVedicChart = fetchOrCalculateVedicChart;
 }
 
 function generatePalmistryReportHtml(order) {
@@ -1256,9 +1282,28 @@ function generateGrandVedicReport(order, chart) {
     }
 
     // Always ensure accurate astronomical Vedic chart & true Vimshottari Dasha balance
-    if (!chart || !chart.isAccurateVedic || !chart.currentTransits) {
-        chart = calculateAccurateVedicChart(dob, tob, place);
+    // Birth data check: never invent a chart for someone whose birth date is missing
+    if (service !== 'palmistry' && !/^\s*(\d{4}[-\/]\d{1,2}[-\/]\d{1,2}|\d{1,2}[-\/]\d{1,2}[-\/]\d{4})\s*$/.test(String(dob))) {
+        return '<!DOCTYPE html><html lang="as"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>জন্ম তথ্য পোৱা নগ\'ল</title></head><body style="font-family:sans-serif;background:#fdf5e6;color:#3e2723;padding:40px;text-align:center;"><h2 style="color:#8b0000;">জন্ম তাৰিখৰ তথ্য পোৱা নগ\'ল</h2><p>এই অৰ্ডাৰত জন্ম তাৰিখ সংৰক্ষিত হোৱা নাই, সেয়ে সঠিক কুণ্ডলী গণনা কৰা সম্ভৱ নহয়। অনুগ্ৰহ কৰি আমাৰ সহায় (Support)-ৰ সৈতে যোগাযোগ কৰক।</p></body></html>';
     }
+
+    // Always rebuild the chart with the verified engine unless the supplied chart is already
+    // this engine's chart for exactly this birth data and place (older/backend charts had a guessed Lagna)
+    const _geoOpts = {
+        lat: (order.birth_lat !== undefined && order.birth_lat !== null) ? order.birth_lat : order.birthLat,
+        lon: (order.birth_lon !== undefined && order.birth_lon !== null) ? order.birth_lon : order.birthLon
+    };
+    const _loc = jaResolvePlace(place, _geoOpts);
+    const _bl = chart && chart.birthLocation;
+    const _chartOk = !!(chart && chart.isAccurateVedic && chart.currentTransits && chart.engineVersion === 14 && typeof chart.transitAt === 'function' && _bl && chart.input &&
+        String(chart.input.dob) === String(dob) && String(chart.input.tob) === String(tob) &&
+        Math.abs(_bl.lat - _loc.lat) < 1e-6 && Math.abs(_bl.lon - _loc.lon) < 1e-6);
+    if (!_chartOk) {
+        chart = calculateAccurateVedicChart(dob, tob, place, _geoOpts);
+    }
+    const placeNoteHtml = (chart.birthLocation && !chart.birthLocation.matched)
+        ? `<div class="text-section" style="color:#8b0000;font-size:13px;margin:8px 0;">⚠️ টোকা: "${String(place).replace(/</g, '&lt;')}" স্থানটোৰ সঠিক অক্ষাংশ-দ্ৰাঘিমাংশ পোৱা নগ'ল, সেয়ে লগ্ন গণনাত গুৱাহাটীৰ অৱস্থান ধৰা হৈছে। জন্মস্থান নিকটৱৰ্তী জিলা/নগৰৰ নামেৰে জনালে আমাৰ সহায় (Support)-ৰ জৰিয়তে লগ্ন সংশোধন কৰি দিয়া হ'ব।</div>`
+        : '';
 
     const serviceNameMap = {
         'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী আৰু জীৱন দৰ্পণ (Complete Grand Birth Chart)',
@@ -1416,7 +1461,7 @@ function generateGrandVedicReport(order, chart) {
         return getPlanetHouse(chart?.planets?.[lKey]?.rashi_no);
     };
 
-    // Planetary Dignity (উচ্চস্থ / স্বক্ষেত্ৰী / মিত্ৰক্ষেত্ৰী / সমক্ষেত্ৰী / শত্ৰুক্ষেত্ৰী / সংবেদনশীল)
+    // Planetary Dignity (উচ্চস্থ / স্বক্ষেত্ৰী / মিত্ৰক্ষেত্ৰী / সম / নিদানযোগ্য)
     const getPlanetDignityInfo = (pKey, rashiEn) => {
         const exaltedMap = { Sun: "Aries", Moon: "Taurus", Mars: "Capricorn", Mercury: "Virgo", Jupiter: "Cancer", Venus: "Pisces", Saturn: "Libra", Rahu: "Taurus", Ketu: "Scorpio" };
         const debilitatedMap = { Sun: "Libra", Moon: "Scorpio", Mars: "Cancer", Mercury: "Pisces", Jupiter: "Capricorn", Venus: "Virgo", Saturn: "Aries", Rahu: "Scorpio", Ketu: "Taurus" };
@@ -1425,48 +1470,16 @@ function generateGrandVedicReport(order, chart) {
             Jupiter: ["Sagittarius", "Pisces"], Venus: ["Taurus", "Libra"], Saturn: ["Capricorn", "Aquarius"],
             Rahu: ["Aquarius", "Gemini"], Ketu: ["Scorpio", "Sagittarius"]
         };
-        const friendlySignMap = {
-            Sun: ["Cancer", "Scorpio", "Sagittarius", "Pisces"],
-            Moon: ["Gemini", "Leo", "Virgo"],
-            Mars: ["Leo", "Cancer", "Sagittarius", "Pisces"],
-            Mercury: ["Taurus", "Leo", "Libra"],
-            Jupiter: ["Aries", "Leo", "Scorpio"],
-            Venus: ["Gemini", "Capricorn", "Aquarius"],
-            Saturn: ["Taurus", "Gemini", "Virgo"],
-            Rahu: ["Virgo", "Libra", "Capricorn"],
-            Ketu: ["Aries", "Cancer", "Pisces"]
-        };
         if (exaltedMap[pKey] === rashiEn) {
-            return { statusAs: "উচ্চস্থ (Exalted - সৰ্বোচ্চ বলশালী)", tone: "exalted" };
+            return { statusAs: "উচ্চস্থ (Exalted - সৰ্বোচ্চ বলশালী)", tone: "strong", note: "উচ্চস্থ অৱস্থানত থকাৰ বাবে এই গ্ৰহটোৱে আপোনাৰ জীৱনত পূৰ্ণ শুভ ফল আৰু বিশেষ ৰাজযোগসুলভ শক্তি প্ৰদান কৰিছে।" };
         }
         if ((ownSignMap[pKey] || []).includes(rashiEn)) {
-            return { statusAs: "স্বক্ষেত্ৰী (Own Sign - বিশেষ বলীয়ান)", tone: "own" };
+            return { statusAs: "স্বক্ষেত্ৰী (Own Sign - বিশেষ বলীয়ান)", tone: "strong", note: "নিজৰ স্বগৃহত অৱস্থান কৰাৰ বাবে এই গ্ৰহৰ কাৰকত্বসমূহ অত্যন্ত স্থিৰ, সুদৃঢ় আৰু আত্মনিৰ্ভৰশীল ৰূপত ফুটি উঠিছে।" };
         }
         if (debilitatedMap[pKey] === rashiEn) {
-            return { statusAs: "সংবেদনশীল স্থিতি (সচেতনতা আৰু নিদান সাপেক্ষ)", tone: "remedial" };
+            return { statusAs: "সংবেদনশীল স্থিতি (সচেতনতা আৰু নিদান সাপেক্ষ)", tone: "remedial", note: "এই ৰাশিত গ্ৰহটোৰ শক্তি কিছু সংবেদনশীল হোৱাৰ বাবে ধৈৰ্য, নিৰন্তৰ অভ্যাস আৰু বৈদিক নিদানৰ জৰিয়তে ইয়াৰ পৰা শুভ ফল আদায় কৰিব লাগিব।" };
         }
-        if ((friendlySignMap[pKey] || []).includes(rashiEn)) {
-            return { statusAs: "মিত্ৰক্ষেত্ৰী (Friendly Sign - শুভ বলশালী)", tone: "friendly" };
-        }
-        return { statusAs: "সম আৰু সক্ৰিয় অৱস্থা (Active Placement)", tone: "balanced" };
-    };
-
-    // Unique planet-specific Rashi + Nakshatra + Pada synthesis so NO two planets ever share the same note
-    const buildUniquePlanetNakshatraNote = (pKey, rName, nakshatra, pada, dig, hNo) => {
-        const padaAs = toAsDigits(pada || 1);
-        const hAs = toAsDigits(hNo);
-        const notesByPlanet = {
-            Sun: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিৰ সংযোগে সূৰ্যৰ আত্মিক তেজ আৰু নেতৃত্ব গুণক ${hAs} নং ভাৱত বিশেষভাৱে জাগ্ৰত কৰিছে; ইয়াৰ ফলত পিতৃ-কুলৰ আশীৰ্বাদ, স্বাভিমান আৰু নিজৰ সিদ্ধান্তত অটল থকাৰ সাহস আপোনাৰ জীৱনত স্পষ্টভাৱে ফুটি উঠিব।`,
-            Moon: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত চন্দ্ৰৰ অৱস্থানে আপোনাৰ মানসিক সংবেদনশীলতা, স্মৃতিশক্তি আৰু অন্তৰ্দৃষ্টিক গভীৰতা প্ৰদান কৰিছে; মাতৃৰ স্নেহ আৰু শান্ত চিত্তে লোৱা সিদ্ধান্তই আপোনাক আৱেগিকভাৱে সদায় সুৰক্ষিত ৰাখিব।`,
-            Mars: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত মংগলৰ স্থিতিয়ে আপোনাৰ শাৰীৰিক শক্তি, কৰ্মোদ্যম আৰু সংকল্পশক্তিক সুদৃঢ় কৰিছে; সঠিক দিশত এই শক্তি ব্যৱহাৰ কৰিলে ভূমি, সম্পত্তি আৰু প্রতিযোগিতামূলক ক্ষেত্ৰত আপুনি নিশ্চিত সফলতা অৰ্জন কৰিব।`,
-            Mercury: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত বুধৰ এই সংযোগে আপোনাৰ বিশ্লেষণাত্মক মেধা, বাণিজ্যিক কৌশল আৰু যোগাযোগ দক্ষতাক তীক্ষ্ণ কৰি তুলিছে; অধ্যয়ন, হিচাপ-নিকাচ আৰু চুক্তিভিত্তিক কামত আপোনাৰ বিচক্ষণতা বিশেষভাৱে ফলপ্ৰসূ হ'ব।`,
-            Jupiter: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত দেৱগুৰু বৃহস্পতিৰ স্থিতিয়ে আপোনাৰ ধৰ্মীয় প্রজ্ঞা, নৈতিক মৰ্যাদা আৰু দূৰদৰ্শী চিন্তাক শক্তিশালী কৰিছে; জীৱনৰ সংকটকালত গুৰুজনৰ আশীৰ্বাদ আৰু দৈৱিক কৃপাই আপোনাক সঠিক পথ দেখুৱাব।`,
-            Venus: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত শুক্ৰৰ সংযোগে আপোনাৰ কলাত্মক ৰুচিবোধ, আকৰ্ষণীয় ব্যক্তিত্ব আৰু পাৰিবাৰিক সুখ-স্বাচ্ছন্দ্যৰ যোগ বৃদ্ধি কৰিছে; সংসাৰ, বাহন আৰু আৰ্থিক সমৃদ্ধিৰ ক্ষেত্ৰত ই ক্ৰমান্বয়ে শুভ ফল কঢ়িয়াই আনিব।`,
-            Saturn: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত শনি দেৱতাৰ অৱস্থানে আপোনাক গভীৰ ধৈৰ্য, শৃংখলাবদ্ধতা আৰু বাস্তৱবাদী দৃষ্টিভংগী প্ৰদান কৰিছে; জীৱনত খৰখেদা নকৰি নিষ্ঠাৰে কৰা পৰিশ্ৰমে আপোনাক স্থায়ী পদমৰ্যাদা আৰু সুৰক্ষিত ভৱিষ্যত দিব।`,
-            Rahu: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত ৰাহুৰ স্থিতিয়ে আপোনাক আধুনিক চিন্তাধাৰা, উদ্ভাৱনী বুদ্ধি আৰু প্রচলিত সীমা অতিক্ৰম কৰি ডাঙৰ লক্ষ্যত উপনীত হোৱাৰ উচ্চাকাংক্ষা দিছে; কৌশলগত পদক্ষেপেৰে ই আকস্মিক উন্নতিৰ দুৱাৰ মুকলি কৰিব।`,
-            Ketu: `${nakshatra} নক্ষত্ৰৰ ${padaAs} নং চৰণত ${rName} ৰাশিত কেতুৰ অৱস্থানে আপোনাক গভীৰ আধ্যাত্মিক চেতনা, সূক্ষ্ম পৰ্যবেক্ষণ ক্ষমতা আৰু তীক্ষ্ণ ষষ্ঠ ইন্দ্ৰিয় (Intuition) প্ৰদান কৰিছে; নিস্বাৰ্থ কৰ্ম আৰু ঈশ্বৰ ভক্তিয়ে আপোনাক গোপন বাধাৰ পৰা সদায় ৰক্ষা কৰিব।`
-        };
-        return notesByPlanet[pKey] || notesByPlanet.Sun;
+        return { statusAs: "সম আৰু সক্ৰিয় অৱস্থা", tone: "balanced", note: "ভাৱ আৰু নক্ষত্ৰৰ সংযোগ অনুসৰি এই গ্ৰহটোৱে আপোনাৰ কৰ্ম আৰু বিচক্ষণতাৰ ভিত্তিত ইতিবাচক ফল প্ৰদান কৰিব।" };
     };
 
     // 12 House Placement Effects for Navagraha
@@ -1605,8 +1618,7 @@ function generateGrandVedicReport(order, chart) {
         const rName = rashiAsMap[pObj.rashi] || pObj.rashi;
         const dig = getPlanetDignityInfo(pKey, pObj.rashi);
         const hEffect = (planetHouseEffectsAs[pKey] && planetHouseEffectsAs[pKey][hNo]) || "";
-        const nakNote = buildUniquePlanetNakshatraNote(pKey, rName, pObj.nakshatra, pObj.pada || 1, dig, hNo);
-        return { pObj, hNo, rName, dig, hEffect, nakNote };
+        return { pObj, hNo, rName, dig, hEffect };
     };
 
     const pSun = getPlanetAnalysis("Sun");
@@ -1626,7 +1638,7 @@ function generateGrandVedicReport(order, chart) {
                 <strong>অৱস্থান:</strong> ${pData.rName} (${pData.pObj.rashi}) ৰাশিত (${toAsDigits(pData.pObj.degree || 12)}° অংশত), কুণ্ডলীৰ <strong>${toAsDigits(pData.hNo)} নং ঘৰত</strong> &nbsp;|&nbsp; <strong>নক্ষত্ৰ:</strong> ${pData.pObj.nakshatra} (পদ ${toAsDigits(pData.pObj.pada || 1)})<br>
                 <strong>গ্ৰহৰ বল আৰু অৱস্থা:</strong> <span style="color:#8b0000;font-weight:700;">${pData.dig.statusAs}</span><br><br>
                 • <strong>${toAsDigits(pData.hNo)} নং ভাৱত বিশেষ ফলাফল:</strong> ${pData.hEffect}<br>
-                • <strong>ৰাশি আৰু নক্ষত্ৰীয় প্ৰভাৱ:</strong> ${pData.nakNote}
+                • <strong>ৰাশি আৰু নক্ষত্ৰীয় প্ৰভাৱ:</strong> ${pData.pObj.nakshatra} নক্ষত্ৰৰ ${toAsDigits(pData.pObj.pada || 1)} নং পদত ${pData.rName} ৰাশিৰ সংযোগে সূচায় যে— ${pData.dig.note}
             </div>
         </div>`;
 
@@ -1692,126 +1704,6 @@ function generateGrandVedicReport(order, chart) {
         "শুভ ব্যয়, দূৰ ভ্ৰমণ, বিদেশ সংযোগ আৰু আধ্যাত্মিক মুক্তি"
     ];
 
-    // 12 Distinct House Nature & Rising Rashi Narratives (so Bullet 1 of each house 1..12 is 100% unique)
-    const buildUniqueHouseNatureBullet = (hIdx, rInfo) => {
-        const templates = {
-            1: `লগ্ন বা তনু ভাৱত <strong>${rInfo.asName} (${rInfo.element} তত্ত্ব)</strong> ৰাশি উদিত হোৱাত আপোনাৰ দৈহিক গঠন, আত্মমৰ্যাদা আৰু জীৱন দর্শনত ${rInfo.trait} বিশেষভাৱে ফুটি উঠিছে।`,
-            2: `দ্বিতীয় ধন আৰু কুটুম্ব স্থানত <strong>${rInfo.asName}</strong> ৰাশিৰ প্ৰভাৱে আপোনাৰ কথনশৈলী, পাৰিবাৰিক সংস্কাৰ আৰু সম্পদ সঞ্চয়ৰ ক্ষেত্ৰত ${rInfo.trait} প্ৰদান কৰিছে।`,
-            3: `তৃতীয় সহজ আৰু পৰাক্ৰম ভাৱত <strong>${rInfo.asName}</strong> ৰাশি স্থিত হোৱাত আপোনাৰ কর্মোদ্যম, যোগাযোগ কৌশল আৰু ভাতৃ-ভগ্নীৰ সৈতে সম্পৰ্কত ${rInfo.trait} স্পষ্টভাৱে দেখা যায়।`,
-            4: `চতুৰ্থ সুখ, মাতৃ আৰু গৃহ স্থানত <strong>${rInfo.asName}</strong> ৰাশিৰ অৱস্থানে আপোনাৰ ঘৰুৱা পৰিৱেশ, মাটি-বাৰী গঠন আৰু মানসিক শান্তিৰ ক্ষেত্ৰত ${rInfo.trait} সূচায়।`,
-            5: `পঞ্চম বিদ্যা, বুদ্ধি আৰু সুতা ভাৱত <strong>${rInfo.asName}</strong> ৰাশি উদিত হোৱাত আপোনাৰ অধ্যয়ন, সৃজনশীল মেধা, প্ৰেম আৰু সন্তানৰ দিশত ${rInfo.trait} সংযুক্ত হৈছে।`,
-            6: `ষষ্ঠ ৰোগ, ঋণ আৰু শত্ৰু ভাৱত <strong>${rInfo.asName}</strong> ৰাশিৰ প্ৰভাৱে দৈনন্দিন সংগ্ৰাম, স্বাস্থ্য সচেতনতা আৰু প্ৰতিযোগিতামূলক ক্ষেত্ৰত ${rInfo.trait}ৰ বল প্ৰদান কৰে।`,
-            7: `সপ্তম জায়া আৰু অংশীদাৰীত্ব ভাৱত <strong>${rInfo.asName}</strong> ৰাশি বিৰাজমান হোৱাত বিবাহ, জীৱনসংগীৰ স্বভাৱ আৰু সামাজিক চুক্তিৰ ক্ষেত্ৰত ${rInfo.trait} মুখ্য ভূমিকা ল'ব।`,
-            8: `অষ্টম আয়ু আৰু গুপ্ত ৰহস্য ভাৱত <strong>${rInfo.asName}</strong> ৰাশিৰ স্থিতিয়ে আপোনাৰ জীৱনীশক্তি, সংকট মোচন ক্ষমতা আৰু গভীৰ অনুসন্ধিৎসাত ${rInfo.trait} যোগ কৰিছে।`,
-            9: `নৱম ধৰ্ম, পিতৃ আৰু সৌভাগ্য স্থানত <strong>${rInfo.asName}</strong> ৰাশি উদিত হোৱাত আপোনাৰ নৈতিক আদৰ্শ, উচ্চ শিক্ষা আৰু ভাগ্যোন্নতিৰ পথত ${rInfo.trait} সহায়ক হ'ব।`,
-            10: `দশম কৰ্ম আৰু ৰাজ্য ভাৱত <strong>${rInfo.asName}</strong> ৰাশিৰ অৱস্থানে আপোনাৰ বৃত্তিগত জীৱন, পদমৰ্যাদা আৰু সামাজিক খ্যাতিৰ ক্ষেত্ৰত ${rInfo.trait} সুনিশ্চিত কৰিছে।`,
-            11: `একাদশ আয় আৰু ইচ্ছাপূৰণ ভাৱত <strong>${rInfo.asName}</strong> ৰাশি উদিত হোৱাত আপোনাৰ উপাৰ্জনৰ পৰিসৰ, জ্যেষ্ঠ মিত্ৰৰ সংগ আৰু দীৰ্ঘদিনীয়া লক্ষ্য পূৰণত ${rInfo.trait} ফলপ্ৰসূ হ'ব।`,
-            12: `দ্বাদশ ব্যয়, দূৰ ভ্ৰমণ আৰু মোক্ষ স্থানত <strong>${rInfo.asName}</strong> ৰাশিৰ প্ৰভাৱে আপোনাৰ আৰ্থিক ব্যৱস্থাপনা, বাহিৰা সংযোগ আৰু আধ্যাত্মিক চিন্তাত ${rInfo.trait} প্ৰদান কৰিছে।`
-        };
-        return templates[hIdx] || templates[1];
-    };
-
-    // 12 Distinct House Lord & Occupant Narratives (so Bullet 2 of each house 1..12 is 100% unique even when multiple houses share the same lordHouseNo!)
-    const buildUniqueHouseLordBullet = (hIdx, rInfo, lordHouseNo, lordRashiAs, lordNak, hasPlanets, pInH) => {
-        const lhAs = toAsDigits(lordHouseNo);
-        const occPrefixes = {
-            1: hasPlanets ? `লগ্ন স্থানত <strong>${pInH}</strong> বিৰাজমান আৰু লগ্নেষ <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> অৱস্থিত। ` : `লগ্নত আন গ্ৰহ নথকা অৱস্থাত লগ্নপতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> স্থিত হৈ লগ্নক শক্তি যোগাইছে। `,
-            2: hasPlanets ? `ধন স্থানত <strong>${pInH}</strong>ৰ উপস্থিতি আৰু ধনপতি <strong>${rInfo.lord}</strong>ৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> সংযোগ ঘটিছে। ` : `দ্বিতীয় ধন ভাৱটো ভাৱাধিপতি <strong>${rInfo.lord}</strong>ৰ দ্বাৰা পৰিচালিত হৈছে, যি কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> অৱস্থিত। `,
-            3: hasPlanets ? `সহজ ভাৱত <strong>${pInH}</strong> স্থিত হোৱাৰ লগতে ভাতৃপতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> বিৰাজমান। ` : `তৃতীয় পৰাক্ৰম স্থানৰ স্বামী <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> থাকি আপোনাৰ সাহস নিয়ন্ত্ৰণ কৰিছে। `,
-            4: hasPlanets ? `চতুৰ্থ সুখ স্থানত <strong>${pInH}</strong>ৰ অৱস্থান আৰু সুখেশ <strong>${rInfo.lord}</strong>ৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> সংযোগ দেখা গৈছে। ` : `চতুৰ্থ গৃহ ভাৱত কোনো গ্ৰহ নথকাত ইয়াৰ সম্পূৰ্ণ ফল চতুৰ্থ পতি <strong>${rInfo.lord}</strong> (${lhAs} নং ঘৰ, ${lordRashiAs} ৰাশি)ৰ ওপৰত নিৰ্ভৰশীল। `,
-            5: hasPlanets ? `পঞ্চম ত্ৰিকোণত <strong>${pInH}</strong> অধিষ্ঠিত আৰু পঞ্চমেশ <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> স্থিত। ` : `পঞ্চম বিদ্যা আৰু বুদ্ধি স্থানৰ অধিপতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> বিৰাজমান। `,
-            6: hasPlanets ? `ষষ্ঠ ৰিপু ভাৱত <strong>${pInH}</strong>ৰ স্থিতি আৰু ষষ্ঠেশ <strong>${rInfo.lord}</strong>ৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> অৱস্থান ঘটিছে। ` : `ষষ্ঠ স্থানটো গ্ৰহশূন্য হোৱাত ষষ্ঠ পতি <strong>${rInfo.lord}</strong>য়ে কুণ্ডলীৰ <strong>${lhAs} নং ঘৰ (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰ)</strong>ৰ পৰা এই ভাৱক পৰিচালনা কৰিছে। `,
-            7: hasPlanets ? `সপ্তম জায়া স্থানত <strong>${pInH}</strong> অৱস্থিত আৰু সপ্তমেশ <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> স্থিত। ` : `সপ্তম দাম্পত্য ভাৱৰ অধিপতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> অৱস্থান কৰি বৈবাহিক যোগ নিৰ্ধাৰণ কৰিছে। `,
-            8: hasPlanets ? `অষ্টম আয়ু স্থানত <strong>${pInH}</strong>ৰ সংযোগ আৰু অষ্টমেশ <strong>${rInfo.lord}</strong>ৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> স্থিতি দেখা গৈছে। ` : `অষ্টম স্থানত কোনো গ্ৰহ নথকাটো শুভ লক্ষণ, আৰু অষ্টম পতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> অৱস্থিত। `,
-            9: hasPlanets ? `নৱম ভাগ্য ত্ৰিকোণত <strong>${pInH}</strong> বিৰাজমান আৰু ভাগ্যেশ <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> অৱস্থিত। ` : `নৱম ধৰ্ম আৰু সৌভাগ্য স্থানৰ অধিপতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> স্থিত হৈ ভাগ্য চক্ৰ চলাইছে। `,
-            10: hasPlanets ? `দশম কৰ্ম কেন্দ্ৰত <strong>${pInH}</strong> অধিষ্ঠিত আৰু কৰ্মেশ <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> বিৰাজমান। ` : `দশম বৃত্তি স্থানৰ স্বামী <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> থাকি আপোনাৰ কৰ্মজীৱনক দিশ দিছে। `,
-            11: hasPlanets ? `একাদশ লাভ স্থানত <strong>${pInH}</strong>ৰ শুভ স্থিতি আৰু একাদশ পতি <strong>${rInfo.lord}</strong>ৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> সংযোগ আছে। ` : `একাদশ আয় ভাৱৰ অধিপতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰত)</strong> অৱস্থান কৰি লাভৰ পথ নিৰ্ণয় কৰিছে। `,
-            12: hasPlanets ? `দ্বাদশ ব্যয় আৰু মোক্ষ স্থানত <strong>${pInH}</strong> অৱস্থিত আৰু দ্বাদশ পতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${lhAs} নং ঘৰত (${lordRashiAs} ৰাশি)</strong> স্থিত। ` : `দ্বাদশ স্থানত কোনো গ্ৰহ পোনপটীয়াকৈ নথকাত ব্যয়পতি <strong>${rInfo.lord}</strong>য়ে <strong>${lhAs} নং ঘৰ (${lordRashiAs} ৰাশি, ${lordNak} নক্ষত্ৰ)</strong>ৰ পৰা ইয়াৰ ফল নিয়ন্ত্ৰণ কৰিছে। `
-        };
-        const occPrefix = occPrefixes[hIdx] || occPrefixes[1];
-
-        const houseSpecificOutcomes = {
-            1: `লগ্নেষৰ ${lhAs}ম ভাৱৰ সংযোগে সূচায় যে আপুনি নিজৰ ব্যক্তিত্ব, আত্মবল আৰু সচেতন সিদ্ধান্তৰ জৰিয়তে সমাজত এক স্বতন্ত্ৰ পৰিচয় গঢ়ি তুলিব।`,
-            2: `ধনপতিৰ ${lhAs}ম ভাৱত অৱস্থানে সূচায় যে সুপৰিকল্পিত সঞ্চয়, মিঠা বাণী আৰু কুটুম্বৰ সহযোগিতাত আপোনাৰ কোষাগাৰ আৰু আৰ্থিক ভেটি উত্তৰোত্তৰ মজবুত হ'ব।`,
-            3: `তৃতীয় পতিৰ ${lhAs}ম ভাৱৰ স্থিতিয়ে আপোনাক নিজৰ বাহুবল, সাহসী পদক্ষেপ আৰু যোগাযোগ দক্ষতাৰ জৰিয়তে নতুন সুযোগ আদায় কৰাৰ শক্তি দিছে।`,
-            4: `চতুৰ্থ পতি ${lhAs} নং ভাৱত থকাত নিজৰ উপাৰ্জনেৰে গৃহ সংস্কাৰ, ভূমি-বাহনৰ সুখ আৰু মাতৃৰ আশীৰ্বাদত ঘৰুৱা শান্তি লাভৰ যোগ সুদৃঢ় হৈছে।`,
-            5: `পঞ্চম পতিৰ ${lhAs}ম ভাৱৰ সংযোগে আপোনাৰ তীক্ষ্ণ মেধা, পূৰ্বপুণ্যৰ ফল, শিক্ষা আৰু সন্তান বা সৃজনশীল কৰ্মৰ জৰিয়তে বিশেষ গৌৰৱ কঢ়িয়াই আনিব।`,
-            6: `ষষ্ঠ পতি ${lhAs} নং ঘৰত স্থিত হোৱাত আপোনাৰ কর্মশৃংখলা আৰু মানসিক দৃঢ়তাই সকলো বিৰোধী, ঋণ বা স্বাস্থ্যজনিত বাধাক পরাস্ত কৰি বিজয় নিশ্চিত কৰিব।`,
-            7: `সপ্তম পতিৰ ${lhAs}ম ভাৱৰ অৱস্থানে সূচায় যে বিবাহোত্তৰ জীৱনত সংগীৰ সহযোগিতা আৰু ব্যৱসায়িক বা সামাজিক অংশীদাৰীত্বই আপোনাৰ ভাগ্যলৈ নতুন সমৃদ্ধি আনিব।`,
-            8: `অষ্টম পতি ${lhAs} নং ভাৱত থকাৰ বাবে গভীৰ ধৈৰ্য, গৱেষণামূলক দৃষ্টিভংগী আৰু ঈশ্বৰীয় সুৰক্ষা কৱচে আপোনাক আকস্মিক বিপদৰ পৰা ৰক্ষা কৰি দীৰ্ঘায়ু প্ৰদান কৰিব।`,
-            9: `ভাগ্যপতি ${lhAs} নং ঘৰত অৱস্থিত হোৱাত ধৰ্মীয় নিষ্ঠা, পিতৃ-গুৰুৰ আশীৰ্বাদ আৰু সৎ কৰ্মৰ জৰিয়তে জীৱনৰ গুৰুত্বপূৰ্ণ সময়ত আপোনাৰ ভাগ্যৰ দুৱাৰ খোল খাব।`,
-            10: `দশম কৰ্মপতি ${lhAs} নং ভাৱত স্থিত হোৱাত নিজৰ বৃত্তিগত দক্ষতা, কৰ্তৃত্ব আৰু একাগ্ৰ পৰিশ্ৰমৰ বলত কৰ্মক্ষেত্ৰত উচ্চ পদবী আৰু সুনাম অৰ্জন কৰিব।`,
-            11: `একাদশ লাভপতিৰ ${lhAs}ম ভাৱৰ সংযোগে একাধিক উৎসৰ পৰা ধন আগমন, প্ৰভাৱশালী মিত্ৰৰ সহযোগিতা আৰু জীৱনৰ মূল মনোবাঞ্ছাসমূহ পূৰণ হোৱাৰ নিশ্চিত সংকেত দিছে।`,
-            12: `দ্বাদশ পতি ${lhAs} নং ঘৰত থকাৰ ফলত মাংগলিক বা উন্নতিমূলক কামত সুপৰিকল্পিত ব্যয়, দূৰ ভ্ৰমণৰ অভিজ্ঞতা আৰু মানসিক প্ৰশান্তিৰ সুন্দৰ ভাৰসাম্য বজাই থাকিব।`
-        };
-        return occPrefix + (houseSpecificOutcomes[hIdx] || houseSpecificOutcomes[1]);
-    };
-
-    const buildHouseCards = (startHouse, endHouse) => {
-        let cardsHtml = "";
-        for (let i = startHouse; i <= endHouse; i++) {
-            const rashiEn = getHouseRashiEn(i);
-            const rInfo = rashiDetails[rashiEn] || { asName: rashiEn, lord: "গ্ৰহ", element: "অগ্নি", trait: "বিশেষ জ্যোতিষীয় প্ৰভাৱ" };
-            const lordKey = getHouseLordKey(i);
-            const lordObj = chart.planets[lordKey] || { rashi: "Aries", rashi_no: 1, nakshatra: "অশ্বিনী" };
-            const lordHouseNo = getPlanetHouse(lordObj.rashi_no);
-            const lordRashiAs = rashiAsMap[lordObj.rashi] || lordObj.rashi;
-            const hasPlanets = hFull[i] && hFull[i].length > 0;
-            const pInH = hasPlanets ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই (ভাৱাধিপতিৰ দ্বাৰা নিয়ন্ত্ৰিত)";
-
-            const bullet1 = buildUniqueHouseNatureBullet(i, rInfo);
-            const bullet2 = buildUniqueHouseLordBullet(i, rInfo, lordHouseNo, lordRashiAs, lordObj.nakshatra || "অশ্বিনী", hasPlanets, pInH);
-
-            cardsHtml += `
-            <div class="info-card house-card" style="margin: 4px 0; padding: 6px 11px;">
-                <div class="card-title" style="font-size: 14px; margin-bottom: 2px;">${houseNames[i - 1]}</div>
-                <div class="card-content" style="font-size: 12.2px; line-height: 1.34;">
-                    <div class="badge-box" style="margin-bottom: 4px; font-size: 11.8px; color: #5c3a21; background: rgba(139,0,0,0.05); padding: 3px 7px; border-radius: 4px; border: 1px dashed #d4b483;">
-                        <strong>উদিত ৰাশি:</strong> ${rInfo.asName} (${rInfo.element} তত্ত্ব) &nbsp;|&nbsp; 
-                        <strong>ভাৱাধিপতি:</strong> ${rInfo.lord} (${toAsDigits(lordHouseNo)} নং ঘৰত) &nbsp;|&nbsp; 
-                        <strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}
-                    </div>
-                    <div style="margin-top: 2px; line-height: 1.36;">
-                        <p style="margin: 0 0 2px 0;"><strong>• ${toAsDigits(i)} নং ভাৱত ${rInfo.asName} ৰাশিৰ প্ৰকৃতি:</strong> ${bullet1}</p>
-                        <p style="margin: 0;"><strong>• ${toAsDigits(i)} নং ভাৱাধিপতি (${rInfo.lord.split(" ")[0]}) আৰু গ্ৰহ সংযোগ:</strong> ${bullet2}</p>
-                    </div>
-                </div>
-            </div>`;
-        }
-        return cardsHtml;
-    };
-
-    const page6Houses1 = `
-    <div class="page page-break">
-        <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (১ম - ৪ৰ্থ ঘৰ) ❁</h2>
-        <div class="text-section" style="margin-bottom: 8px; font-size: 13.5px;">বৈদিক জ্যোতিষত জন্ম কুণ্ডলীৰ ১২ টা ঘৰে মানৱ জীৱনৰ ১২ টা মূল স্তম্ভক নিৰ্দেশ কৰে। আপোনাৰ <strong>${ascRashiName} লগ্ন</strong> অনুসৰি প্ৰতিটো ঘৰৰ উদিত ৰাশি, ভাৱাধিপতিৰ অৱস্থান আৰু গ্ৰহৰ স্থিতিৰ গভীৰ বিশ্লেষণ তলত দিয়া হ'ল:</div>
-        ${buildHouseCards(1, 4)}
-    </div>`;
-
-    const page7Houses2 = `
-    <div class="page page-break">
-        <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (৫ম - ৮ম ঘৰ) ❁</h2>
-        ${buildHouseCards(5, 8)}
-    </div>`;
-
-    const page8Houses3 = `
-    <div class="page page-break">
-        <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (৯ম - ১২তম ঘৰ) ❁</h2>
-        ${buildHouseCards(9, 12)}
-    </div>`;
-
-    // --- Dynamic Chart-Driven Lifetime Roadmap (100% non-repetitive across all 9 life stages!) ---
-    const getDashaLordForYear = (targetYr) => {
-        for (const dItem of (chart.dashas || [])) {
-            const sy = parseInt(String(dItem.start_date).slice(0, 4), 10) || bYear;
-            const ey = parseInt(String(dItem.end_date).slice(0, 4), 10) || (bYear + 10);
-            if (targetYr >= sy && targetYr <= ey) {
-                return dItem.lord;
-            }
-        }
-        return currentDasha || "Jupiter";
-    };
-
     const lordPlacedInHouseMeaningsAs = {
         1: "আপোনাৰ নিজস্ব প্রচেষ্টা, ব্যক্তিত্ব আৰু আত্মবলৰ জৰিয়তে পোনপটীয়াকৈ বিকশিত হ'ব",
         2: "আৰ্থিক সঞ্চয়, পাৰিবাৰিক সহযোগিতা আৰু আপোনাৰ মিঠা অথচ স্পষ্ট কথনশৈলীৰ সৈতে ঘনিষ্ঠভাৱে জড়িত থাকিব",
@@ -1827,6 +1719,72 @@ function generateGrandVedicReport(order, chart) {
         12: "দূৰ স্থানৰ সংযোগ, ত্যাগ, আধ্যাত্মিক চিন্তা আৰু সুপৰিকল্পিত ব্যৱস্থাপনাৰ দ্বাৰা পৰিচালিত হ'ব"
     };
 
+    const buildHouseCards = (startHouse, endHouse) => {
+        let cardsHtml = "";
+        for (let i = startHouse; i <= endHouse; i++) {
+            const rashiEn = getHouseRashiEn(i);
+            const rInfo = rashiDetails[rashiEn] || { asName: rashiEn, lord: "গ্ৰহ", element: "অগ্নি", trait: "বিশেষ জ্যোতিষীয় প্ৰভাৱ" };
+            const lordKey = getHouseLordKey(i);
+            const lordObj = chart.planets[lordKey] || { rashi: "Aries", rashi_no: 1, nakshatra: "অশ্বিনী" };
+            const lordHouseNo = getPlanetHouse(lordObj.rashi_no);
+            const lordRashiAs = rashiAsMap[lordObj.rashi] || lordObj.rashi;
+            const hasPlanets = hFull[i] && hFull[i].length > 0;
+            const pInH = hasPlanets ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই (ভাৱাধিপতিৰ দ্বাৰা নিয়ন্ত্ৰিত)";
+
+            const planetImpact = hasPlanets
+                ? `এই ${toAsDigits(i)} নং ঘৰত পোনপটীয়াকৈ <strong>${pInH}</strong> অৱস্থান কৰিছে আৰু ভাৱাধিপতি <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${toAsDigits(lordHouseNo)} নং ঘৰত (${lordRashiAs} ৰাশিত)</strong> স্থিত হৈছে। এই দ্বৈত সংযোগৰ বাবে ${houseDomainNamesAs[i - 1]}ৰ ক্ষেত্ৰত আপুনি অত্যন্ত সক্ৰিয়, ফলপ্ৰসূ আৰু প্ৰত্যক্ষ অভিজ্ঞতা লাভ কৰিব।`
+                : `এই ঘৰত কোনো গ্ৰহ পোনপটীয়াকৈ নাথাকিলেও ইয়াৰ অধিপতি গ্ৰহ <strong>${rInfo.lord}</strong> কুণ্ডলীৰ <strong>${toAsDigits(lordHouseNo)} নং ঘৰত (${lordRashiAs} ৰাশিত, ${lordObj.nakshatra} নক্ষত্ৰত)</strong> অৱস্থান কৰি এই ভাৱক নিয়ন্ত্ৰণ কৰিছে। সেয়েহে আপোনাৰ ${houseDomainNamesAs[i - 1]} ${lordPlacedInHouseMeaningsAs[lordHouseNo] || "সুন্দৰভাৱে পৰিচালিত হ'ব"}।`;
+
+            cardsHtml += `
+            <div class="info-card house-card" style="margin: 5px 0; padding: 7px 12px;">
+                <div class="card-title" style="font-size: 14.5px; margin-bottom: 3px;">${houseNames[i - 1]}</div>
+                <div class="card-content" style="font-size: 12.6px; line-height: 1.38;">
+                    <div class="badge-box" style="margin-bottom: 6px; font-size: 12.5px; color: #5c3a21; background: rgba(139,0,0,0.05); padding: 4px 8px; border-radius: 4px; border: 1px dashed #d4b483;">
+                        <strong>উদিত ৰাশি:</strong> ${rInfo.asName} (${rInfo.element} তত্ত্ব) &nbsp;|&nbsp; 
+                        <strong>ভাৱাধিপতি:</strong> ${rInfo.lord} (${toAsDigits(lordHouseNo)} নং ঘৰত) &nbsp;|&nbsp; 
+                        <strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}
+                    </div>
+                    <div style="margin-top: 4px; line-height: 1.45;">
+                        <p style="margin-bottom: 3px;"><strong>• ৰাশি আৰু ভাৱৰ স্বকীয় প্ৰকৃতি:</strong> আপোনাৰ কুণ্ডলীৰ ${toAsDigits(i)} নং ঘৰত <strong>${rInfo.asName}</strong> ৰাশি উদিত হোৱাৰ বাবে ${houseDomainNamesAs[i - 1]}ৰ ক্ষেত্ৰত ${rInfo.trait} স্পষ্টৰূপে প্ৰতিফলিত হ'ব।</p>
+                        <p style="margin-bottom: 0;"><strong>• ভাৱাধিপতি আৰু গ্ৰহ স্থিতিৰ ফল:</strong> ${planetImpact}</p>
+                    </div>
+                </div>
+            </div>`;
+        }
+        return cardsHtml;
+    };
+
+    const page6Houses1 = `
+    <div class="page page-break">
+        <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (১ম - ৪ৰ্থ ঘৰ) ❁</h2>
+        <div class="text-section">বৈদিক জ্যোতিষত জন্ম কুণ্ডলীৰ ১২ টা ঘৰে মানৱ জীৱনৰ ১২ টা মূল স্তম্ভক নিৰ্দেশ কৰে। আপোনাৰ <strong>${ascRashiName} লগ্ন</strong> অনুসৰি প্ৰতিটো ঘৰৰ উদিত ৰাশি, ভাৱাধিপতিৰ অৱস্থান আৰু গ্ৰহৰ স্থিতিৰ গভীৰ বিশ্লেষণ তলত দিয়া হ'ল:</div>
+        ${buildHouseCards(1, 4)}
+    </div>`;
+
+    const page7Houses2 = `
+    <div class="page page-break">
+        <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (৫ম - ৮ম ঘৰ) ❁</h2>
+        ${buildHouseCards(5, 8)}
+    </div>`;
+
+    const page8Houses3 = `
+    <div class="page page-break">
+        <h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (৯ম - ১২তম ঘৰ) ❁</h2>
+        ${buildHouseCards(9, 12)}
+    </div>`;
+
+    // --- Dynamic Chart-Driven Lifetime Roadmap (tied to Customer's Dashas & House Lords) ---
+    const getDashaLordForYear = (targetYr) => {
+        for (const dItem of (chart.dashas || [])) {
+            const sy = parseInt(String(dItem.start_date).slice(0, 4), 10) || bYear;
+            const ey = parseInt(String(dItem.end_date).slice(0, 4), 10) || (bYear + 10);
+            if (targetYr >= sy && targetYr <= ey) {
+                return dItem.lord;
+            }
+        }
+        return currentDasha || "Jupiter";
+    };
+
     const dashaFocusFlavorAs = {
         Sun: "আত্মমৰ্যাদা বৃদ্ধি, চৰকাৰী বা উচ্চস্তৰীয় সংযোগ, নেতৃত্ব লাভ আৰু পিতৃ-কৰ্মক্ষেত্ৰত বিশেষ সন্মান অৰ্জন",
         Moon: "মানসিক সৃজনশীলতা, পাৰিবাৰিক সুখ, জনপ্ৰিয়তা বৃদ্ধি, নতুন ভ্ৰমণ আৰু আৰ্থিক প্রবাহৰ সম্প্ৰসাৰণ",
@@ -1839,86 +1797,48 @@ function generateGrandVedicReport(order, chart) {
         Ketu: "আধ্যাত্মিক পৰিপক্কতা, বিশেষজ্ঞমূলক জ্ঞান, গুপ্ত বাধা নিবাৰণ আৰু অন্তৰ্দৃষ্টিৰে সঠিক জীৱন সিদ্ধান্ত গ্ৰহণ"
     };
 
-    const dashaOrder9 = ["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"];
-    const getAntardashaLordForYear = (targetYr, mLord, stageIdx) => {
-        const mIdx = Math.max(0, dashaOrder9.indexOf(mLord));
-        const subIdx = (mIdx + stageIdx) % 9;
-        return dashaOrder9[subIdx];
-    };
-
-    // 9 Completely Distinct Life-Stage Narratives so no two milestones ever repeat the same sentence!
-    const buildDynamicMilestone = (stageIdx, startAge, endAge, phaseTitle, badgeTitle, badgeStyle, titleColor, houseFocusNum) => {
+    const buildDynamicMilestone = (startAge, endAge, phaseTitle, badgeTitle, badgeStyle, titleColor, houseFocusNum) => {
         const sYr = bYear + startAge;
         const eYr = endAge === Infinity ? (bYear + 75) : (bYear + endAge);
         const midYr = Math.floor((sYr + Math.min(eYr, bYear + 70)) / 2);
         const mLord = getDashaLordForYear(midYr);
-        const subLord = getAntardashaLordForYear(midYr, mLord, stageIdx);
         const mLordAs = planetNames[mLord] || mLord;
-        const subLordAs = planetNames[subLord] || subLord;
         const mLordH = getPlanetHouse(chart?.planets?.[mLord]?.rashi_no);
         const mLordRashiAs = rashiAsMap[chart?.planets?.[mLord]?.rashi] || "";
         const focusRashiEn = getHouseRashiEn(houseFocusNum);
         const focusRashiInfo = rashiDetails[focusRashiEn] || rashiDetails["Aries"];
-        const focusLordH = getHouseLordPlacedInHouse(houseFocusNum);
         const yearRangeText = endAge === Infinity ? `প্ৰায় ${toAsDigits(sYr)} চনৰ পৰা` : `প্ৰায় ${toAsDigits(sYr)}–${toAsDigits(eYr)} চন`;
-
-        const stageSpecificDashaBullets = {
-            1: `এই শিক্ষাকালত <strong>${mLordAs} মহাদশা</strong> আৰু <strong>${subLordAs} অন্তৰ্দশা</strong>ৰ সংযোগে (কুণ্ডলীৰ ${toAsDigits(mLordH)} নং ঘৰত ${mLordRashiAs} ৰাশিৰ প্ৰভাৱত) আপোনাৰ শৈক্ষিক একাগ্ৰতা, কাৰিকৰী বা বৌদ্ধিক দক্ষতা বিকাশ আৰু কেৰিয়াৰৰ প্ৰাথমিক লক্ষ্য স্থিৰ কৰাত বিশেষ শক্তি যোগাব।`,
-            2: `বয়স ২৩–২৫ বছৰৰ এই সন্ধিক্ষণত <strong>${mLordAs}–${subLordAs} দশা</strong> সক্রিয় থকাত আপুনি নিজৰ যোগ্যতাৰে প্ৰথম কর্মসংস্থাপন বা স্বতন্ত্ৰ উপাৰ্জনৰ পথ মুকলি কৰিব পাৰিব আৰু আৰ্থিক আত্মনিৰ্ভৰশীলতাৰ সুদৃঢ় ভেটি গঢ় লৈ উঠিব।`,
-            3: `বয়স ২৬–৩১ বছৰৰ এই পৰ্বত <strong>${mLordAs} মহাদশাৰ ${subLordAs} অন্তৰ্দশা</strong>ই আপোনাৰ বৃত্তিগত স্থায়িত্ব বৃদ্ধি কৰাৰ লগতে বিবাহ, সংসাৰ স্থাপন আৰু নতুন সামাজিক দায়িত্ব গ্ৰহণৰ শুভ পৰিৱেশ সৃষ্টি কৰিব।`,
-            4: `বয়স ৩২–৩৫ বছৰৰ এই সোণালী সময়ছোৱাত <strong>${mLordAs} (${toAsDigits(mLordH)}ম ভাৱস্থ) আৰু ${subLordAs}</strong>ৰ দশা সংযোগে আপোনাৰ কৰ্মক্ষেত্ৰত এক বৃহৎ উত্থান, পদোন্নতি বা ব্যৱসায়ৰ উল্লেখযোগ্য সম্প্ৰসাৰণ ঘটাব।`,
-            5: `বয়স ৩৬–৩৯ বছৰৰ এই কালছোৱাত <strong>${mLordAs}–${subLordAs}</strong>ৰ প্ৰভাৱত আপোনাৰ উপাৰ্জন স্থায়ী সম্পত্তিলৈ ৰূপান্তৰিত হ'ব; ভূমি ক্ৰয়, নিজা গৃহ নিৰ্মাণ বা পচন্দৰ বাহন লাভৰ সপোন এই পৰ্যায়ত বাস্তৱায়িত হ'ব।`,
-            6: `বয়স ৪০–৪৭ বছৰৰ এই পৰিপক্ক পৰ্বত <strong>${mLordAs} মহাদশা (${mLordRashiAs} ৰাশি) আৰু ${subLordAs} অন্তৰ্দশা</strong>ই আপোনাক উচ্চ আৰ্থিক নিৰাপত্তা, একাধিক উৎসৰ পৰা সঞ্চয় বৃদ্ধি আৰু সমাজত বিশেষ প্ৰভাৱশালী আসন প্ৰদান কৰিব।`,
-            7: `বয়স ৪৮–৫৫ বছৰৰ এই সময়ছোৱাত <strong>${mLordAs}–${subLordAs} দশা</strong>ৰ বলত আপোনাৰ দীর্ঘদিনীয়া অভিজ্ঞতাই শীর্ষ নেতৃত্বৰ মৰ্যাদা পাব আৰু সন্তানৰ উচ্চ শিক্ষা তথা সাফল্যই পৰিয়াললৈ গৌৰৱ কঢ়িয়াই আনিব।`,
-            8: `বয়স ৫৬–৬২ বছৰৰ এই শান্তিপূৰ্ণ অধ্যায়ত <strong>${mLordAs} মহাদশা আৰু ${subLordAs} অন্তৰ্দশা</strong>ই আপোনাক পূৰ্বৰ সঞ্চিত সম্পদৰ সুফল ভোগ, তীৰ্থভ্ৰমণ আৰু সমাজত এজন শ্ৰদ্ধেয় উপদেষ্টাৰ সন্মান প্ৰদান কৰিব।`,
-            9: `বয়স ৬৩+ বছৰৰ এই পৰিপূৰ্ণ জীৱন পৰ্বত <strong>${mLordAs}–${subLordAs}</strong>ৰ সাত্ত্বিক প্ৰভাৱে আপোনাক নিৰুদ্বিগ্ন বাৰ্ধক্য, নাতি-নাতিনী তথা পৰিয়ালৰ স্নেহ আৰু গভীৰ আধ্যাত্মিক আনন্দ প্ৰদান কৰিব।`
-        };
-
-        const stageSpecificHouseBullets = {
-            1: `কুণ্ডলীৰ ৫ম বিদ্যা ভাৱত <strong>${focusRashiInfo.asName} ৰাশি</strong> আৰু ইয়াৰ অধিপতি <strong>${focusRashiInfo.lord}</strong> (${toAsDigits(focusLordH)} নং ঘৰত) থকাৰ বাবে প্ৰতিযোগিতামূলক পৰীক্ষা আৰু নতুন কৌশল আয়ত্ত কৰাত আপুনি বিশেষ সফলতা লাভ কৰিব।`,
-            2: `৩য় পৰাক্ৰম ভাৱত <strong>${focusRashiInfo.asName} ৰাশি</strong>ৰ সক্রিয়তাই এই বয়সত আপোনাৰ সাহস, যোগাযোগ ক্ষমতা আৰু নতুন কর্ম-উদ্যোগক ক্ষিপ্ৰ গতি প্ৰদান কৰিব।`,
-            3: `৭ম জায়া ভাৱত <strong>${focusRashiInfo.asName} ৰাশি</strong> আৰু অধিপতি <strong>${focusRashiInfo.lord}</strong> (${toAsDigits(focusLordH)} নং ঘৰত)ৰ সংযোগে দাম্পত্য বুজাবুজি, অংশীদাৰীত্ব আৰু পাৰিবাৰিক উন্নতি সুনিশ্চিত কৰিব।`,
-            4: `১০ম কৰ্ম স্থানত <strong>${focusRashiInfo.asName} ৰাশি</strong>ৰ প্ৰভাৱে এই বয়সত আপোনাৰ বৃত্তিগত কৰ্তৃত্ব, উৰ্ধতন মহলৰ সমৰ্থন আৰু আৰ্থিক স্বাচ্ছন্দ্য দুগুণ বৃদ্ধি কৰিব।`,
-            5: `৪ৰ্থ সুখ স্থানত <strong>${focusRashiInfo.asName} ৰাশি</strong> (অধিপতি ${focusRashiInfo.lord} ${toAsDigits(focusLordH)} নং ঘৰত) জাগ্ৰত হোৱাত স্থাৱৰ সম্পত্তি গঠন, গৃহ সুখ আৰু পাৰিবাৰিক সমৃদ্ধি সুদৃঢ় হ'ব।`,
-            6: `১১তম লাভ ভাৱত <strong>${focusRashiInfo.asName} ৰাশি</strong>ৰ শক্তিয়ে দীর্ঘম্যাদী বিনিয়োগৰ পৰা বিপুল ধনলাভ আৰু জীৱনৰ ডাঙৰ আৰ্থিক লক্ষ্যসমূহ পূৰণ হোৱাত সহায় কৰিব।`,
-            7: `৯ম ভাগ্য স্থানত <strong>${focusRashiInfo.asName} ৰাশি</strong> আৰু অধিপতি <strong>${focusRashiInfo.lord}</strong>ৰ কৃপাত ধৰ্মীয় অনুষ্ঠান, সামাজিক সন্মান আৰু উত্তৰাধিকাৰৰ সুদৃঢ় ভেটি স্থাপন হ'ব।`,
-            8: `২য় কুটুম্ব আৰু ধন ভাৱত <strong>${focusRashiInfo.asName} ৰাশি</strong>ৰ স্থিতিয়ে সুৰক্ষিত বেংক সঞ্চয়, আত্মীয়-স্বজনৰ মাজত ঐক্য আৰু মানসিক প্রশান্তি অক্ষুণ্ণ ৰাখিব।`,
-            9: `১২তম মোক্ষ আৰু শুভ ব্যয় ভাৱত <strong>${focusRashiInfo.asName} ৰাশি</strong>ৰ প্ৰভাৱে পুণ্য কৰ্ম, ঈশ্বৰ ভক্তি আৰু সুস্বাস্থ্যৰে এক শান্তিময় জীৱনযাত্ৰা অব্যাহত ৰাখিব।`
-        };
 
         return {
             startAge,
             endAge,
             titleText: endAge === Infinity ? `বয়স ${toAsDigits(startAge)}+ বছৰ (${phaseTitle})` : `বয়স ${toAsDigits(startAge)}–${toAsDigits(endAge)} বছৰ (${phaseTitle})`,
             yearRangeText,
-            badgeTitle: `${badgeTitle} • দশা: ${mLordAs}–${subLordAs}`,
+            badgeTitle: `${badgeTitle} • প্রভাৱী দশা: ${mLordAs}`,
             badgeStyle,
             titleColor,
-            content: `• <strong>দশা আৰু অন্তৰ্দশাৰ ফল (${mLordAs} মহাদশা • ${subLordAs} অন্তৰ্দশা):</strong> ${stageSpecificDashaBullets[stageIdx]}<br>• <strong>সক্ৰিয় ভাৱৰ ফলাফল (${toAsDigits(houseFocusNum)} নং ভাৱ — ${focusRashiInfo.asName} ৰাশি):</strong> ${stageSpecificHouseBullets[stageIdx]}`
+            content: `• <strong>কেন্দ্ৰীয় দশা আৰু গ্ৰহ সংযোগ (${mLordAs} গ্ৰহ — কুণ্ডলীৰ ${toAsDigits(mLordH)} নং ঘৰত, ${mLordRashiAs} ৰাশিত):</strong> আপোনাৰ জন্ম কুণ্ডলীত এই কালছোৱাত <strong>${mLordAs}</strong> গ্ৰহৰ বিশেষ প্রভাৱ সক্রিয় থাকিব, যাৰ মূল ফল হৈছে— ${dashaFocusFlavorAs[mLord] || "জীৱনত স্থায়িত্ব আৰু উন্নতি"}।<br>• <strong>${toAsDigits(houseFocusNum)} নং ভাব (${focusRashiInfo.asName} ৰাশি) ৰ বিশেষ ফল:</strong> এই বয়সত আপোনাৰ ${houseDomainNamesAs[houseFocusNum - 1]}ৰ ক্ষেত্ৰত ${focusRashiInfo.trait} স্পষ্ট হ'ব আৰু অধিপতি <strong>${focusRashiInfo.lord}</strong> ৰ সহযোগত আপুনি এই পৰ্যায়ৰ লক্ষ্যসমূহ সফলতাৰে পূৰণ কৰিব পাৰিব।`
         };
     };
 
     const allMilestones = [
-        buildDynamicMilestone(1, 18, 22, "শিক্ষা, মেধা বিকাশ আৰু লক্ষ্য নিৰ্ধাৰণ", "🌱 বিদ্যাৰ্থী জীৱন আৰু কেৰিয়াৰৰ ভেটি", "border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06);", "#1d4ed8", 5),
-        buildDynamicMilestone(2, 23, 25, "প্ৰথম কর্মসংস্থাপন আৰু আত্মনিৰ্ভৰশীলতা", "🌱 কেৰিয়াৰ আৰম্ভণি আৰু প্ৰথম উপাৰ্জন", "border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06);", "#1d4ed8", 3),
-        buildDynamicMilestone(3, 26, 31, "কৰ্ম সম্প্ৰসাৰণ, বিবাহ আৰু সামাজিক স্থিতি", "💼 কৰ্মক্ষেত্ৰত স্থিতি আৰু সংসাৰ নিৰ্মাণ", "border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06);", "#1d4ed8", 7),
-        buildDynamicMilestone(4, 32, 35, "ভাগ্যোদয় আৰু কেৰিয়াৰৰ সোণালী উত্থান", "🌟 ভাগ্যোদয় আৰু কেৰিয়াৰৰ সোণালী সময়সীমা", "border-left-color: #d97706; background: rgba(217, 119, 6, 0.08);", "#b45309", 10),
-        buildDynamicMilestone(5, 36, 39, "স্থায়ী সম্পদ, মাটি-গৃহ নিৰ্মাণ আৰু বাহন সুখ", "🏡 স্থাৱৰ সম্পত্তি আৰু পাৰিবাৰিক সমৃদ্ধি", "border-left-color: #0d9488; background: rgba(13, 148, 136, 0.06);", "#0f766e", 4),
-        buildDynamicMilestone(6, 40, 47, "স্থায়ী আৰ্থিক সমৃদ্ধি আৰু উচ্চ সামাজিক প্ৰভাৱ", "💎 অৰ্থনৈতিক নিৰাপত্তা আৰু সামাজিক সন্মান", "border-left-color: #059669; background: rgba(5, 150, 105, 0.08);", "#047857", 11),
-        buildDynamicMilestone(7, 48, 55, "পৰিপক্ক নেতৃত্ব, মান-মৰ্যাদা আৰু সন্তানৰ সাফল্য", "👑 পৰিপক্ক স্থিতি আৰু উত্তৰাধিকাৰ গঢ়ন", "border-left-color: #7c3aed; background: rgba(124, 58, 237, 0.06);", "#6d28d9", 9),
-        buildDynamicMilestone(8, 56, 62, "মানসিক প্ৰশান্তি, তীৰ্থভ্ৰমণ আৰু পুণ্যফল ভোগ", "🌿 আত্মিক শান্তি আৰু সামাজিক উপদেষ্টা", "border-left-color: #0284c7; background: rgba(2, 132, 199, 0.06);", "#0369a1", 2),
-        buildDynamicMilestone(9, 63, Infinity, "পৰিপূৰ্ণ জীৱন তৃপ্তি আৰু নিৰুদ্বিগ্ন বাৰ্ধক্য", "🕊️ সুৰক্ষিত অৱসৰ আৰু আধ্যাত্মিক আনন্দ", "border-left-color: #4b5563; background: rgba(75, 85, 99, 0.06);", "#374151", 12)
+        buildDynamicMilestone(18, 22, "শিক্ষা, মেধা বিকাশ আৰু লক্ষ্য নিৰ্ধাৰণ", "🌱 বিদ্যাৰ্থী জীৱন আৰু কেৰিয়াৰৰ ভেটি", "border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06);", "#1d4ed8", 5),
+        buildDynamicMilestone(23, 25, "প্ৰথম কর্মসংস্থাপন আৰু আত্মনিৰ্ভৰশীলতা", "🌱 কেৰিয়াৰ আৰম্ভণি আৰু প্ৰথম উপাৰ্জন", "border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06);", "#1d4ed8", 3),
+        buildDynamicMilestone(26, 31, "কৰ্ম সম্প্ৰসাৰণ, বিবাহ আৰু সামাজিক স্থিতি", "💼 কৰ্মক্ষেত্ৰত স্থিতি আৰু সংসাৰ নিৰ্মাণ", "border-left-color: #2563eb; background: rgba(37, 99, 235, 0.06);", "#1d4ed8", 7),
+        buildDynamicMilestone(32, 35, "ভাগ্যোদয় আৰু কেৰিয়াৰৰ সোণালী উত্থান", "🌟 ভাগ্যোদয় আৰু কেৰিয়াৰৰ সোণালী সময়সীমা", "border-left-color: #d97706; background: rgba(217, 119, 6, 0.08);", "#b45309", 10),
+        buildDynamicMilestone(36, 39, "স্থায়ী সম্পদ, মাটি-গৃহ নিৰ্মাণ আৰু বাহন সুখ", "🏡 স্থাৱৰ সম্পত্তি আৰু পাৰিবাৰিক সমৃদ্ধি", "border-left-color: #0d9488; background: rgba(13, 148, 136, 0.06);", "#0f766e", 4),
+        buildDynamicMilestone(40, 47, "স্থায়ী আৰ্থিক সমৃদ্ধি আৰু উচ্চ সামাজিক প্ৰভাৱ", "💎 অৰ্থনৈতিক নিৰাপত্তা আৰু সামাজিক সন্মান", "border-left-color: #059669; background: rgba(5, 150, 105, 0.08);", "#047857", 11),
+        buildDynamicMilestone(48, 55, "পৰিপক্ক নেতৃত্ব, মান-মৰ্যাদা আৰু সন্তানৰ সাফল্য", "👑 পৰিপক্ক স্থিতি আৰু উত্তৰাধিকাৰ গঢ়ন", "border-left-color: #7c3aed; background: rgba(124, 58, 237, 0.06);", "#6d28d9", 9),
+        buildDynamicMilestone(56, 62, "মানসিক প্ৰশান্তি, তীৰ্থভ্ৰমণ আৰু পুণ্যফল ভোগ", "🌿 আত্মিক শান্তি আৰু সামাজিক উপদেষ্টা", "border-left-color: #0284c7; background: rgba(2, 132, 199, 0.06);", "#0369a1", 2),
+        buildDynamicMilestone(63, Infinity, "পৰিপূৰ্ণ জীৱন তৃপ্তি আৰু নিৰুদ্বিগ্ন বাৰ্ধক্য", "🕊️ সুৰক্ষিত অৱসৰ আৰু আধ্যাত্মিক আনন্দ", "border-left-color: #4b5563; background: rgba(75, 85, 99, 0.06);", "#374151", 12)
     ];
 
     let forwardMilestones = allMilestones.filter(m => m.endAge >= clientAge);
     if (forwardMilestones.length === 0) {
         forwardMilestones = allMilestones.slice(-4);
     }
-    if (forwardMilestones.length > 8) {
-        forwardMilestones = forwardMilestones.slice(0, 8);
-    }
 
-    let p1Count = Math.ceil(forwardMilestones.length / 2);
+    let p1Count = forwardMilestones.length >= 6 ? 3 : Math.ceil(forwardMilestones.length / 2);
     let p1Milestones = forwardMilestones.slice(0, p1Count);
     let p2Milestones = forwardMilestones.slice(p1Count);
 
@@ -1939,10 +1859,10 @@ function generateGrandVedicReport(order, chart) {
             let titleColor = isCurrent ? `#1d4ed8` : m.titleColor;
 
             return `
-        <div class="sub-heading" style="margin-top: 7px; margin-bottom: 3px; font-size: 14.5px;">${toAsDigits(overallIdx)}. ${m.titleText} (${m.yearRangeText})</div>
-        <div class="info-card house-card" style="${badgeStyle} margin: 4px 0; padding: 7px 11px;">
-            <div class="card-title" style="color: ${titleColor}; font-size: 14px; margin-bottom: 3px;">${badgeTitle}</div>
-            <div class="card-content" style="font-size: 12.1px; line-height: 1.35;">
+        <div class="sub-heading" style="margin-top: 10px;">${toAsDigits(overallIdx)}. ${m.titleText} (${m.yearRangeText})</div>
+        <div class="info-card" style="${badgeStyle} margin: 6px 0; padding: 10px 14px;">
+            <div class="card-title" style="color: ${titleColor}; font-size: 15px; margin-bottom: 4px;">${badgeTitle}</div>
+            <div class="card-content" style="font-size: 12.6px; line-height: 1.38;">
                 ${m.content}
             </div>
         </div>`;
@@ -1952,9 +1872,9 @@ function generateGrandVedicReport(order, chart) {
     const page9LifetimeRoadmapPart1 = `
     <div class="page page-break">
         <h2 class="section-title">❁ বৰ্তমান আৰু ভৱিষ্যতৰ ভাগ্যোদয় ৰোডমেপ (১ম খণ্ড: ${p1RangeStr}) ❁</h2>
-        <div class="shloka" style="margin: 6px 0 10px; padding: 6px 10px;">"ভাগ্যং ফলতি সৰ্বত্ৰ ন বিদ্যা ন চ পৌৰুষম্।"</div>
-        <div class="text-section" style="margin-bottom: 8px; font-size: 13.2px;">
-            আপোনাৰ <strong>${ascRashiName} লগ্ন</strong>, <strong>${moonRashiName} ৰাশি (${moonNakshatra} নক্ষত্ৰ)</strong> আৰু বিংশোত্তৰী মহাদশা-অন্তৰ্দশা চক্ৰৰ আধাৰত আপোনাৰ বৰ্তমান বয়স (${toAsDigits(clientAge)} বছৰ)ৰ পৰা আৰম্ভ কৰি অনাগত ভৱিষ্যতৰ ব্যক্তিগতকৃত সময়সীমাসমূহ তলত বিশ্লেষণ কৰা হ'ল:
+        <div class="shloka">"ভাগ্যং ফলতি সৰ্বত্ৰ ন বিদ্যা ন চ পৌৰুষম্।"</div>
+        <div class="text-section">
+            আপোনাৰ <strong>${ascRashiName} লগ্ন</strong>, <strong>${moonRashiName} ৰাশি (${moonNakshatra} নক্ষত্ৰ)</strong> আৰু বিংশোত্তৰী মহাদশা চক্ৰৰ আধাৰত আপোনাৰ বৰ্তমান বয়স (${toAsDigits(clientAge)} বছৰ)ৰ পৰা আৰম্ভ কৰি অনাগত ভৱিষ্যতৰ ব্যক্তিগতকৃত সময়সীমাসমূহ তলত বিশ্লেষণ কৰা হ'ল:
         </div>
         ${renderMilestoneCards(p1Milestones, 1)}
     </div>`;
@@ -1991,67 +1911,6 @@ function generateGrandVedicReport(order, chart) {
     const eleventhLordKey = getHouseLordKey(11);
     const eleventhLordHouse = getHouseLordPlacedInHouse(11);
 
-    // Dedicated domain-specific dictionaries so Career, Wealth, Love, and Spouse NEVER repeat phrases from the 12 Houses section
-    const careerTenthLordInHouseAs = {
-        1: "নিজৰ স্বাধীন চিন্তা, ব্যক্তিগত দক্ষতা আৰু স্ব-প্ৰচেষ্টাৰে বৃত্তিগত ক্ষেত্ৰত শীৰ্ষস্থান দখল কৰিব",
-        2: "বিত্তীয় ব্যবস্থাপনা, পাৰিবাৰিক ব্যৱসায়, বেংকিং বা বাকশক্তিৰ জৰিয়তে কর্মক্ষেত্ৰত সমৃদ্ধি লাভ কৰিব",
-        3: "নিজৰ সাহসী পদক্ষেপ, যোগাযোগ কৌশল, চুটি ভ্ৰমণ আৰু স্ব-উদ্যোগৰ বলত বৃত্তিত বিশেষ উন্নতি ঘটাব",
-        4: "গৃহভূমি, স্থাৱৰ সম্পত্তি, শিক্ষা বা জনকল্যাণমূলক প্ৰতিষ্ঠানত স্থিৰ পদমৰ্যাদা আৰু সন্মান অৰ্জন কৰিব",
-        5: "তীক্ষ্ণ মেধা, পৰিকল্পনা শক্তি আৰু বৌদ্ধিক নেতৃত্বৰ দ্বাৰা কৰ্মক্ষেত্ৰত উচ্চ কৃতিত্ব লাভ কৰিব",
-        6: "প্ৰতিযোগিতামূলক পৰীক্ষা, প্ৰশাসনিক শৃংখলা, চিকিৎসা বা আইনী সেৱা খণ্ডত অজেয় সাফল্য পাব",
-        7: "ব্যৱসায়িক অংশীদাৰীত্ব, জনসংযোগ, বাণিজ্য আৰু বিবাহোত্তৰ সৌভাগ্যৰ দ্বাৰা কেৰিয়াৰত দ্ৰুত উত্থান দেখিব",
-        8: "গৱেষণা, কাৰিকৰী বিশেষজ্ঞতা, অডিট বা জটিল সমস্যা সমাধানৰ জৰিয়তে কর্মক্ষেত্ৰত সুকীয়া স্থান গঢ়িব",
-        9: "পিতৃ-গুৰুৰ আশীৰ্বাদ, উচ্চ শিক্ষা, ধৰ্মীয় নিষ্ঠা আৰু দূৰ ভ্ৰমণৰ সহযোগত বৃত্তিগত সৌভাগ্য উদয় হ'ব",
-        10: "কৰ্মস্থানত স্বগৃহী বা বলশালী সংযোগৰ ফলত চৰকাৰী/বেচৰকাৰী উচ্চ পদবী, কৰ্তৃত্ব আৰু স্থায়ী খ্যাতি লাভ কৰিব",
-        11: "বৃত্তিগত ক্ষেত্ৰৰ পৰা বিপুল অৰ্থলাভ, প্ৰভাৱশালী নেটৱৰ্কিং আৰু পদোন্নতিৰ জৰিয়তে সকলো লক্ষ্য পূৰণ কৰিব",
-        12: "জন্মস্থানৰ বাহিৰত, বহুজাতিক প্ৰতিষ্ঠান, আমদানি-ৰপ্তানি বা চিকিৎসা/আধ্যাত্মিক ক্ষেত্ৰত বিশেষ সফলতা পাব"
-    };
-
-    const wealthEleventhLordSourceAs = {
-        1: "নিজস্ব বৌদ্ধিক কৌশল, কনছাল্টেন্সি আৰু ব্যক্তিগত ব্ৰেণ্ডিং বা স্বতন্ত্ৰ উদ্যোগ",
-        2: "পাৰিবাৰিক সম্পদ, সঞ্চয় ফাণ্ড, খাদ্য বা আতিথ্য খণ্ড আৰু বিত্তীয় লেনদেন",
-        3: "অনলাইন মাধ্যম, বিপণন (Marketing), এজেঞ্চি, যোগাযোগ বা ভ্ৰমণ সংযুক্ত কাম",
-        4: "ভূমি ক্ৰয়-বিক্ৰয়, ঘৰ ভাড়া, কৃষিভিত্তিক উৎপাদন বা বাহন সংযুক্ত ব্যৱসায়",
-        5: "শিক্ষা, সৃজনশীল কলা, শ্বেয়াৰ/মিউচুৱেল ফাণ্ডৰ সুপৰিকল্পিত বিনিয়োগ আৰু মেধাভিত্তিক প্ৰকল্প",
-        6: "চৰকাৰী সেৱা, চিকিৎসা ফাৰ্মাচী, আইনী পৰামৰ্শ বা নিযুক্তি সংযুক্ত ক্ষেত্ৰ",
-        7: "যুটীয়া ব্যৱসায়, দৈনিক বাণিজ্য, খুচুৰা বিপণী বা জীৱনসংগীৰ নামত কৰা বিনিয়োগ",
-        8: "বীমা, পৈতৃক সম্পত্তি, গৱেষণা বা দীর্ঘম্যাদী ফিক্সড ডিপ'জিট আঁচনি",
-        9: "উচ্চ শিক্ষা, প্ৰকাশন, ধৰ্মীয়-সামাজিক প্ৰতিষ্ঠান বা দূৰ স্থানৰ বাণিজ্যিক সংযোগ",
-        10: "চৰকাৰী ঠিকাদাৰী, প্ৰশাসনিক পদবী, পৰিচালনা আৰু মূল বৃত্তিৰ পদোন্নতি",
-        11: "বৃহৎ ব্যৱসায়িক নেটৱৰ্ক, পাইকাৰী বাণিজ্য আৰু একাধিক সমান্তৰাল উপাৰ্জনৰ উৎস",
-        12: "বহিঃৰাজ্য বা বিদেশ সংযোগ, অনলাইন এক্সপোৰ্ট আৰু দূৰ স্থানত কৰা বিনিয়োগ"
-    };
-
-    const loveFifthLordInHouseAs = {
-        1: "অত্যন্ত আন্তৰিক, স্বাভিমানী আৰু সংগীৰ প্ৰতি গভীৰভাৱে সমৰ্পিত হ'ব",
-        2: "পাৰিবাৰিক মৰ্যাদা, মিঠা বাক্য আৰু স্থায়ী বিশ্বাসৰ ওপৰত প্ৰতিষ্ঠিত হ'ব",
-        3: "বন্ধুত্বপূৰ্ণ কথোপকথন, আনন্দময় ভ্ৰমণ আৰু পাৰস্পৰিক উৎসাহেৰে পৰিপূৰ্ণ থাকিব",
-        4: "মানসিক শান্তি, ঘৰুৱা নিৰাপত্তা আৰু গভীৰ আৱেগিক মমতাৰে সমৃদ্ধ হ'ব",
-        5: "স্বকীয় ৰোমান্টিক মাধুৰ্য, সৃজনশীল আনন্দ আৰু নিঃচৰ্ত ভালপোৱাৰে উজ্জ্বল হ'ব",
-        6: "বাস্তৱবাদী বুজাবুজি আৰু ইজনে সিজনক বিপদত সহায় কৰাৰ মনোভাৱেৰে সুদৃঢ় হ'ব",
-        7: "প্ৰেমৰ সম্পৰ্ক সহজেই পবিত্ৰ বিবাহ আৰু আজীৱন দাম্পত্য সুখলৈ ৰূপান্তৰিত হ'ব",
-        8: "অত্যন্ত গভীৰ, একান্ত নিষ্ঠাৱান আৰু আৱেগিকভাৱে অবিচ্ছেদ্য বন্ধনযুক্ত হ'ব",
-        9: "আদৰ্শবাদী চিন্তা, ধৰ্মীয় পবিত্ৰতা আৰু ভাগ্যৰ পূৰ্ণ সহযোগিতাৰে আশীৰ্বাদপুষ্ট হ'ব",
-        10: "সামাজিক মৰ্যাদা, পাৰস্পৰিক সন্মান আৰু কেৰিয়াৰৰ উন্নতিৰ সৈতে সংযুক্ত থাকিব",
-        11: "মনৰ ইচ্ছাপূৰণ, মিত্ৰতাৰ মাধুৰ্য আৰু স্থায়ী আনন্দৰ উৎস হৈ পৰিব",
-        12: "আধ্যাত্মিক আত্মিক সংযোগ, ত্যাগ আৰু গভীৰ নিঃস্বাৰ্থ অনুভূতিৰে পৰিচালিত হ'ব"
-    };
-
-    const spouseSeventhLordInHouseAs = {
-        1: "আত্মবিশ্বাস বৃদ্ধি, সামাজিক সন্মান আৰু ব্যক্তিগত উন্নতিৰ নতুন দুৱাৰ মুকলি কৰিব",
-        2: "বেংক সঞ্চয় বৃদ্ধি, কুটুম্বত ঐক্য আৰু স্থায়ী আৰ্থিক সমৃদ্ধি কঢ়িয়াই আনিব",
-        3: "নতুন ব্যৱসায়িক উদ্যম, ভ্ৰমণৰ আনন্দ আৰু ভাতৃ-মিত্ৰৰ সৈতে সুন্দৰ সমন্বয় ঘটাব",
-        4: "নিজা গৃহ নিৰ্মাণ, বাহন ক্ৰয় আৰু ঘৰুৱা সুখ-শান্তি দুগুণ বৃদ্ধি কৰিব",
-        5: "পবিত্ৰ প্ৰেম, সন্তান সুখ আৰু পাৰিবাৰিক সৌভাগ্যৰ বিকাশ ঘটাব",
-        6: "দৈনন্দিন জীৱনৰ সকলো সংগ্ৰাম জয় কৰাত আৰু আৰ্থিক স্থায়িত্ব গঢ়াত সহায় কৰিব",
-        7: "দাম্পত্য জীৱনত স্থায়ী মাধুৰ্য, ব্যৱসায়িক উন্নতি আৰু সমাজত সুখ্যাতি আনি দিব",
-        8: "হঠাৎ আৰ্থিক লাভ, যুটীয়া সম্পদ বৃদ্ধি আৰু দীর্ঘায়ু দাম্পত্য সুখ প্ৰদান কৰিব",
-        9: "বিবাহৰ পিছতেই প্রবল ভাগ্যোদয়, তীৰ্থযাত্ৰা আৰু সৰ্বতোমুখী উন্নতি সুনিশ্চিত কৰিব",
-        10: "আপোনাৰ কৰ্মক্ষেত্ৰত পদোন্নতি, নতুন বৃত্তিগত সুযোগ আৰু সামাজিক প্ৰতিপত্তি বঢ়াব",
-        11: "একাধিক পথৰ পৰা আয় বৃদ্ধি আৰু জীৱনৰ দীৰ্ঘদিনীয়া সপোনসমূহ পূৰণ কৰাত সহায়ক হ'ব",
-        12: "দূৰ স্থানত উন্নতি, ভ্ৰমণ আৰু আধ্যাত্মিক শান্তিৰে সংসাৰখন আনন্দময় কৰি তুলিব"
-    };
-
     const careerByTenthRashi = {
         "Aries": { asName: "মেষ", lord: "মংগল (Mars)", nature: "উদ্যমী, সাহসী আৰু নেতৃত্বপ্ৰদানকাৰী। নিজা সিদ্ধান্ত আৰু সক্ৰিয়তাৰে কৰ্মক্ষেত্ৰত বিশেষ সফলতা।", fields: "প্ৰতিৰক্ষা, পুলিচ/প্ৰশাসন, ইঞ্জিনিয়াৰিং, ৰিয়েল এষ্টেট, নিৰ্মাণ কাৰ্য, ক্ৰীড়া আৰু নিজা উদ্যোগ।" },
         "Taurus": { asName: "বৃষ", lord: "শুক্ৰ (Venus)", nature: "ধৈৰ্যশীল, সুপৰিকল্পিত আৰু আৰ্থিকভাৱে সুদৃঢ় বৃত্তিগত ব্যক্তিত্ব।", fields: "বেংকিং, ফাইনেন্স, হোটেল-ৰেষ্টুৰেণ্ট, ফেশ্বন/অলংকাৰ, কৃষি বাণিজ্য আৰু চৰকাৰী কোষাগাৰ।" },
@@ -2077,7 +1936,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="card-content">
                 আপোনাৰ জন্ম কুণ্ডলীৰ দশম ভাৱত (কৰ্ম স্থানত) <strong>${cInfo.asName} (${tenthRashi})</strong> ৰাশি উদিত হৈছে আৰু দশম ভাৱাধিপতি <strong>${cInfo.lord}</strong> কুণ্ডলীৰ <strong>${toAsDigits(tenthLordHouse)} নং ঘৰত</strong> অৱস্থিত।<br><br>
                 • <strong>কৰ্ম ব্যক্তিত্ব:</strong> ${cInfo.nature}<br>
-                • <strong>দশম পতিৰ স্থিতিৰ ফল:</strong> দশম পতি ${toAsDigits(tenthLordHouse)} নং ঘৰত থকাৰ বাবে আপুনি ${careerTenthLordInHouseAs[tenthLordHouse] || careerTenthLordInHouseAs[10]}। লগতে শনি গ্ৰহ ${toAsDigits(saturnHouse)} নং ঘৰত আৰু সূৰ্য্য ${toAsDigits(sunHouse)} নং ঘৰত অৱস্থিত হোৱাত নিজৰ একাগ্ৰতা আৰু কর্মনিষ্ঠাৰ বলত আপুনি সমাজত এক সুকীয়া মৰ্যাদা লাভ কৰিব।
+                • <strong>দশম পতিৰ স্থিতিৰ ফল:</strong> দশম পতি ${toAsDigits(tenthLordHouse)} নং ঘৰত থকাৰ বাবে আপোনাৰ বৃত্তিগত জীৱন ${lordPlacedInHouseMeaningsAs[tenthLordHouse]}। লগতে শনি গ্ৰহ ${toAsDigits(saturnHouse)} নং ঘৰত আৰু সূৰ্য্য ${toAsDigits(sunHouse)} নং ঘৰত অৱস্থিত হোৱাত নিজৰ একাগ্ৰতা আৰু কর্মনিষ্ঠাৰ বলত আপুনি সমাজত এক সুকীয়া মৰ্যাদা লাভ কৰিব।
             </div>
         </div>
 
@@ -2137,7 +1996,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="card-content">
                 আপোনাৰ কুণ্ডলীৰ ২য় ভাৱত (ধন স্থানত) <strong>${rashiAsMap[secondRashi]}</strong> ৰাশি (অধিপতি <strong>${planetNames[secondLordKey]}</strong> ${toAsDigits(secondLordHouse)} নং ঘৰত) আৰু ১১তম ভাৱত (লাভ স্থানত) <strong>${rashiAsMap[eleventhRashi]}</strong> ৰাশি (অধিপতি <strong>${planetNames[eleventhLordKey]}</strong> ${toAsDigits(eleventhLordHouse)} নং ঘৰত) অৱস্থিত।<br><br>
                 • <strong>ধন প্ৰবাহ আৰু সঞ্চয়ৰ বয়স:</strong> ধনপতি ${toAsDigits(secondLordHouse)} নং ঘৰত আৰু লাভপতি ${toAsDigits(eleventhLordHouse)} নং ঘৰত থকাৰ ফলত আপোনাৰ জীৱনত ধনৰ প্ৰবাহ সচল থাকিব। বিশেষকৈ বয়স <strong>${toAsDigits(wealthSettleAge1)}–${toAsDigits(wealthSettleAge2)} বছৰ (${toAsDigits(bYear + wealthSettleAge1)}–${toAsDigits(bYear + wealthSettleAge2)} চন)</strong>ৰ পিছৰ পৰা আপোনাৰ আৰ্থিক স্থায়িত্ব আৰু স্থায়ী সঞ্চয় দ্ৰুতগতিত বৃদ্ধি পাব।<br>
-                • <strong>আয়ৰ বিশেষ উৎস:</strong> মূল বৃত্তিৰ উপৰিও ${wealthEleventhLordSourceAs[eleventhLordHouse] || wealthEleventhLordSourceAs[11]}ৰ পৰা অতিৰিক্ত উপাৰ্জন হোৱাৰ যোগ কুণ্ডলীত বিদ্যমান।
+                • <strong>আয়ৰ বিশেষ উৎস:</strong> মূল বৃত্তিৰ উপৰিও ${houseDomainNamesAs[eleventhLordHouse - 1]}ৰ সৈতে জড়িত দিশৰ পৰা অতিৰিক্ত উপাৰ্জন হোৱাৰ যোগ কুণ্ডলীত বিদ্যমান।
             </div>
         </div>
 
@@ -2243,7 +2102,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="card-content">
                 আপোনাৰ কুণ্ডলীৰ পঞ্চম ভাৱত (প্ৰেম আৰু অনুভূতি স্থানত) <strong>${rashiAsMap[fifthHouseRashi]}</strong> ৰাশি উদিত হৈছে আৰু পঞ্চম পতি <strong>${planetNames[fifthLordKey]}</strong> কুণ্ডলীৰ <strong>${toAsDigits(fifthLordHouse)} নং ঘৰত</strong> অৱস্থিত।<br><br>
                 • <strong>প্ৰেমৰ স্বকীয় প্ৰকৃতি:</strong> ${romanceByFifthRashi[fifthHouseRashi] || romanceByFifthRashi["Aries"]}<br>
-                • <strong>পঞ্চম পতিৰ ফল:</strong> পঞ্চম পতি ${toAsDigits(fifthLordHouse)} নং ঘৰত থকাৰ ফলত আপোনাৰ প্ৰেম আৰু আৱেগিক জীৱন ${loveFifthLordInHouseAs[fifthLordHouse] || loveFifthLordInHouseAs[5]}।
+                • <strong>পঞ্চম পতিৰ ফল:</strong> পঞ্চম পতি ${toAsDigits(fifthLordHouse)} নং ঘৰত থকাৰ ফলত আপোনাৰ আৱেগিক জীৱন ${lordPlacedInHouseMeaningsAs[fifthLordHouse]}।
             </div>
         </div>
 
@@ -2271,7 +2130,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="card-content">
                 আপোনাৰ কুণ্ডলীৰ সপ্তম ভাৱত (বিবাহ স্থানত) <strong>${seventhRashiAs}</strong> ৰাশি বিৰাজমান আৰু সপ্তম পতি <strong>${planetNames[seventhLordKey]}</strong> কুণ্ডলীৰ <strong>${toAsDigits(seventhLordHouse)} নং ঘৰত</strong> অৱস্থিত। এই সংযোগৰ আধাৰত আপোনাৰ জীৱনসংগীৰ বৈশিষ্ট্য:<br><br>
                 • <strong>শাৰীৰিক চেহেৰা আৰু ব্যক্তিত্ব:</strong> ${pInfo.look}।<br>
-                • <strong>স্বভাৱ আৰু ভাগ্য সংযোগ:</strong> ${pInfo.nature}। সপ্তম পতি ${toAsDigits(seventhLordHouse)} নং ঘৰত থকাৰ বাবে সংগীৰ আগমনে আপোনাৰ জীৱনত ${spouseSeventhLordInHouseAs[seventhLordHouse] || spouseSeventhLordInHouseAs[7]}।<br>
+                • <strong>স্বভাৱ আৰু মানসিকতা:</strong> ${pInfo.nature}। সপ্তম পতি ${toAsDigits(seventhLordHouse)} নং ঘৰত থকাৰ বাবে সংগীৰ আগমনে আপোনাৰ ${houseDomainNamesAs[seventhLordHouse - 1]}ত বিশেষ সৌভাগ্য যোগাব।<br>
                 • <strong>সম্ভাব্য কৰ্মক্ষেত্ৰ:</strong> ${pInfo.career}।<br>
                 • <strong>বিবাহৰ শুভ দিশ:</strong> সপ্তম ভাৱৰ ${seventhRashiAs} ৰাশি আৰু সপ্তম পতিৰ তত্ত্ব অনুসৰি আপোনাৰ জন্মস্থানৰ পৰা <strong>${pInfo.dir}</strong> সংগীৰ ঘৰ বা সংযোগ হোৱাৰ সম্ভাৱনা সৰ্বাধিক।
             </div>
@@ -2483,22 +2342,13 @@ function generateGrandVedicReport(order, chart) {
             const yrDashaAs = planetNames[yrDashaLord] || yrDashaLord;
             const tInfo = jupHouseThemes5Yr[jupHFromMoon] || jupHouseThemes5Yr[1];
 
-            const yrSubLordKey = getAntardashaLordForYear(yrVal, yrDashaLord, idx + 1);
-            const yrSubLordAs = planetNames[yrSubLordKey] || yrSubLordKey;
-            const yearSpecificSaturnNotes = [
-                `এই প্রথম বৰ্ষত ${yrDashaAs}–${yrSubLordAs} দশা আৰু শনিৰ ${toAsDigits(satHFromMoon)}ম ভাবৰ গোচৰে আপোনাৰ দৈনন্দিন কর্মশৃংখলা আৰু বিত্তীয় পৰিকল্পনাক এক সুদৃঢ় ভিত্তি প্ৰদান কৰিব।`,
-                `দ্বিতীয় বৰ্ষত ${yrDashaAs} মহাদশাৰ ${yrSubLordAs} অন্তৰ্দশাত পূৰ্বতে আৰম্ভ কৰা কামসমূহে গতি লাভ কৰিব আৰু শনিৰ স্থিতিয়ে দীর্ঘম্যাদী সঞ্চয়ত স্থায়িত্ব আনিব।`,
-                `তৃতীয় বৰ্ষত ${yrDashaAs}–${yrSubLordAs} দশা সংযোগে বৃত্তিগত ক্ষেত্ৰত নতুন দায়িত্ব কঢ়িয়াই আনিব আৰু পাৰিবাৰিক বা সামাজিক সিদ্ধান্তত আপোনাৰ মতামতক প্রতিষ্ঠিত কৰিব।`,
-                `চতুৰ্থ বৰ্ষত ${yrDashaAs} মহাদশা আৰু ${yrSubLordAs} অন্তৰ্দশাৰ প্রভাৱত স্থাৱৰ সম্পদ, গৃহ বা বৃত্তিগত সম্প্ৰসাৰণৰ ক্ষেত্ৰত উল্লেখযোগ্য অগ্ৰগতি দেখিবলৈ পাব।`,
-                `পঞ্চম বৰ্ষত ${yrDashaAs}–${yrSubLordAs} দশা আৰু শনি-গুৰুৰ সংযুক্ত গোচৰে আপোনাক পূৰ্বৰ ৪ বছৰৰ পৰিশ্ৰমৰ স্থায়ী সুফল আৰু উচ্চ সামাজিক সন্মান প্ৰদান কৰিব।`
-            ];
             return `
-        <div class="info-card" style="margin: 6px 0; padding: 8px 12px;">
-            <div class="card-title" style="font-size: 14.6px; margin-bottom: 3px; color: #8b0000;">
-                🗓️ ${toAsDigits(yrVal)} চন (${yrDashaAs}–${yrSubLordAs} দশা • চন্দ্ৰৰ পৰা গুৰু ${toAsDigits(jupHFromMoon)}ম আৰু শনি ${toAsDigits(satHFromMoon)}ম ভাবত): ${tInfo.title}
+        <div class="info-card" style="margin: 6px 0; padding: 9px 12px;">
+            <div class="card-title" style="font-size: 15px; margin-bottom: 3px; color: #8b0000;">
+                🗓️ ${toAsDigits(yrVal)} চন (${yrDashaAs} মহাদশা • চন্দ্ৰৰ পৰা গুৰু ${toAsDigits(jupHFromMoon)}ম আৰু শনি ${toAsDigits(satHFromMoon)}ম ভাবত): ${tInfo.title}
             </div>
-            <div class="card-content" style="font-size: 12.8px; line-height: 1.42;">
-                ${tInfo.body} ${yearSpecificSaturnNotes[idx % 5]}
+            <div class="card-content" style="font-size: 13.2px; line-height: 1.45;">
+                ${tInfo.body} লগতে ${yrDashaAs} মহাদশা আৰু শনিৰ ${toAsDigits(satHFromMoon)} নং ভাবৰ গোচৰ প্ৰভাৱত আপোনাৰ ${houseDomainNamesAs[(jupHFromMoon - 1) % 12]}ৰ দিশটো বিশেষভাৱে সক্ৰিয় হৈ থাকিব।
             </div>
         </div>`;
         }).join("");
@@ -2548,7 +2398,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="card-title">🌿 ${name}ৰ (${ascRashiName} লগ্ন • ${moonRashiName} ৰাশি) দৈনন্দিন জীৱনশৈলী আৰু সাধনা বিধি</div>
             <div class="card-content">
                 <ul>
-                    <li><strong>লগ্নেষ (${gemInfo.lord}) আৰু প্ৰাতঃ সূৰ্য সাধনা:</strong> আত্মবিশ্বাস, সুস্বাস্থ্য আৰু ভাগ্য উদয়ৰ বাবে প্ৰতিদিনে পুৱা তামৰ পাত্ৰত সূৰ্য অৰ্ঘ্য প্ৰদান কৰক আৰু আপোনাৰ লগ্নপতি <strong>${gemInfo.lord}</strong> দেৱতাক স্মৰণ কৰি গায়ত্ৰী মন্ত্ৰ কমেও ২৭ বাৰ জপ কৰক।</li>
+                    <li><strong>লগ্নেষ আৰু মহাদশা সাধনা (${gemInfo.lord} আৰু ${dRemedy.asName}):</strong> আত্মবিশ্বাস, সুস্বাস্থ্য আৰু ভাগ্য উদয়ৰ বাবে প্ৰতিদিনে পুৱা সূৰ্য অৰ্ঘ্য প্ৰদান কৰক আৰু আপোনাৰ চলিত <strong>${dRemedy.asName} মহাদশা</strong>ৰ বীজ মন্ত্ৰ <em>"${dRemedy.mantra}"</em> কমেও ২৭ বাৰ জপ কৰক।</li>
                     <li><strong>চন্দ্ৰ ৰাশি আৰু নক্ষত্ৰিক মানসিক প্ৰশান্তি (${moonRashiName} • ${moonNakshatra}):</strong> মানসিক চাপ হ্ৰাস আৰু সঠিক সিদ্ধান্ত গ্ৰহণৰ বাবে দৈনিক ১০ মিনিট ধ্যান কৰক আৰু আপোনাৰ শুভ বাৰ <strong>${lMeta.day}</strong>ত বিশেষ সাত্ত্বিক নিয়ম পালন কৰক।</li>
                     <li><strong>নৱম ভাগ্য ভাবৰ শক্তি বৃদ্ধি (${rashiAsMap[ninthRashi] || ninthRashi}):</strong> পিতৃ-মাতৃ, গুৰু আৰু জ্যেষ্ঠজনক নিতৌ শ্ৰদ্ধা কৰক আৰু <strong>${gemInfo.gem}</strong> বা শুভ ৰং <strong>${lMeta.color}</strong> ব্যৱহাৰ কৰক।</li>
                     <li><strong>ব্যক্তিগতকৃত বাস্তু পৰামৰ্শ (শুভ দিশ: ${lMeta.dir}):</strong> অধ্যয়ন, গুৰুত্বপূৰ্ণ আলোচনা বা ব্যৱসায়িক কাম কৰোঁতে আপোনাৰ লগ্নৰ সৰ্বোচ্চ শুভ দিশ <strong>${lMeta.dir}</strong> বা উত্তৰ-পূব (ঈশান কোণ) দিশলৈ মুখ কৰি বহিব। শুভ সংখ্যা <strong>${lMeta.num}</strong> গুৰুত্বপূৰ্ণ কাৰ্যত ব্যৱহাৰ কৰিব পাৰে।</li>
@@ -2713,10 +2563,8 @@ function generateGrandVedicReport(order, chart) {
                 .page {
                     box-shadow: none !important; margin: 0 auto !important;
                     border: 3px double #8b0000 !important; width: 100% !important; max-width: 100% !important;
-                    max-height: 278mm !important; overflow: hidden !important;
-                    padding: 16px 22px !important; box-sizing: border-box !important;
+                    padding: 20px 24px !important; box-sizing: border-box !important;
                     page-break-after: always !important; break-after: page !important;
-                    page-break-inside: avoid !important; break-inside: avoid !important;
                 }
                 .page.last-page, .page:last-of-type {
                     page-break-after: auto !important; break-after: auto !important;
@@ -2900,23 +2748,6 @@ function generateGrandVedicReport(order, chart) {
     const ninthLordKey = getHouseLordKey(9);
     const ninthLordHouse = getHouseLordPlacedInHouse(9);
 
-    const bDayNum = parseInt(String(dob).split(/[-/]/)[2] || "15", 10) || 15;
-    const seedBase = (ascRashi * 3 + moonRashiNo * 5 + (bDayNum % 9) * 2 + (curGregMonthIdx + 1) * 7) % 9;
-    const luckyDatesArr = [
-        1 + ((seedBase + ascRashi) % 4),
-        6 + ((seedBase + moonRashiNo) % 4),
-        11 + ((seedBase + bDayNum) % 4),
-        16 + ((seedBase + ascRashi * 2) % 4),
-        21 + ((seedBase + moonRashiNo * 2) % 4),
-        26 + ((seedBase + bDayNum) % 4)
-    ];
-    const cautionDatesArr = [
-        4 + ((seedBase + moonRashiNo) % 3),
-        13 + ((seedBase + ascRashi) % 4),
-        23 + ((seedBase + bDayNum) % 3)
-    ];
-    const luckyDatesStr = luckyDatesArr.map(x => toAsDigits(x)).join(", ");
-    const cautionDatesStr = cautionDatesArr.map(x => toAsDigits(x)).join(", ");
 
 
     // --- Dynamic Gochar Interpretation Dictionaries (12 Houses from Moon) ---
@@ -2992,6 +2823,90 @@ function generateGrandVedicReport(order, chart) {
         Ketu: "আধ্যাত্মিক অন্তৰ্দৃষ্টি, গুপ্ত বাধা নিবাৰণ আৰু নিখুঁত বিশ্লেষণ ক্ষমতা বৃদ্ধি কৰিব"
     };
 
+    // =========================================================================
+    // 🛰️ REAL DATE-BASED TRANSIT DATA (replaces the old pseudo-random / Gregorian-month guesses)
+    //  - Moon's true daily position -> Chandra-gochar houses, Tara-bala, Chandrashtama days
+    //  - True planet positions in the middle of each of the next 12 months
+    // =========================================================================
+    const rtIST = 5.5 * 3600 * 1000;
+    const rtDayMs = 86400000;
+    const rtTodayMidnight = (() => { const n = new Date(Date.now() + rtIST); return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate()) - rtIST; })();
+    const rtNaks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্ৰা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
+    const rtNatalMoonLon = (chart.planets.Moon && chart.planets.Moon.longitude) || 0;
+    const rtNatalNakIdx = Math.floor(rtNatalMoonLon / (360 / 27)) % 27;
+    const rtMoonAt = (ms) => {
+        const jd = ms / rtDayMs + 2440587.5;
+        const T = (jd - 2451545.0) / 36525.0;
+        const lon = ((jaMoonTropLon(jd) - (23.853 + 1.39604 * T)) % 360 + 360) % 360;
+        const no = Math.floor(lon / 30) + 1;
+        const nakIdx = Math.floor(lon / (360 / 27)) % 27;
+        return { lon: lon, no: no, nakIdx: nakIdx, nak: rtNaks[nakIdx], hMoon: getHouseFromMoon(no), hLag: getHouseFromLagna(no), tara: ((nakIdx - rtNatalNakIdx + 27) % 9) + 1 };
+    };
+    const rtFmtDM = (ms) => { const d = new Date(ms + rtIST); return `${toAsDigits(d.getUTCDate())} ${gregMonthsAs[d.getUTCMonth()]}`; };
+    const rtFmtRange = (ms1, ms2) => {
+        const a = new Date(ms1 + rtIST), b = new Date(ms2 + rtIST);
+        if (ms1 === ms2) return rtFmtDM(ms1);
+        if (a.getUTCMonth() === b.getUTCMonth()) return `${toAsDigits(a.getUTCDate())}–${toAsDigits(b.getUTCDate())} ${gregMonthsAs[a.getUTCMonth()]}`;
+        return `${rtFmtDM(ms1)}–${rtFmtDM(ms2)}`;
+    };
+    const rtGroupDays = (arr) => { const g = []; arr.forEach(ms => { const last = g[g.length - 1]; if (last && ms - last[last.length - 1] === rtDayMs) last.push(ms); else g.push([ms]); }); return g; };
+    // Tara-bala: 2,4,6,8,9 auspicious | 3,5,7 inauspicious | 1 = Janma (neutral)
+    const rtGoodTara = [2, 4, 6, 8, 9];
+    const rtDayInfo = (dayMidnightMs) => { const m = rtMoonAt(dayMidnightMs + 12 * 3600 * 1000); return { ms: dayMidnightMs, m: m, lucky: [3, 6, 10, 11].includes(m.hMoon) && rtGoodTara.includes(m.tara), caution: m.hMoon === 8 || m.tara === 7 }; };
+    const rtScan = (startMs, nDays) => { const out = []; for (let i = 0; i < nDays; i++) out.push(rtDayInfo(startMs + i * rtDayMs)); return out; };
+    const rtRangesStr = (days, maxGroups, fallback) => {
+        const groups = rtGroupDays(days.map(d => d.ms)).slice(0, maxGroups);
+        return groups.length ? groups.map(g => rtFmtRange(g[0], g[g.length - 1])).join(", ") : fallback;
+    };
+    const rtNext30 = rtScan(rtTodayMidnight, 30);
+    const luckyDatesStr = rtRangesStr(rtNext30.filter(d => d.lucky), 5, "এই সময়ছোৱাত বিশেষ শুভ দিন কম");
+    const cautionDatesStr = rtRangesStr(rtNext30.filter(d => d.caution), 4, "এই সময়ছোৱাত বিশেষ সতৰ্ক দিন নাই");
+    const bDayNum = parseInt(String(dob).split(/[-/]/)[2] || "15", 10) || 15;
+
+    // --- Mars / Venus / Mercury gochar (house counted from natal Moon) ---
+    const marsGocharByHouseAs = {
+        1: "মংগল চন্দ্ৰ ৰাশিৰ ১ম ভাবত থকা কালত শাৰীৰিক শক্তি আৰু সাহস প্ৰবল হ'ব, কিন্তু খং আৰু খৰখেদাৰ বাবে তৰ্ক বা সৰু আঘাতৰ পৰা সাৱধান থাকিব।",
+        2: "২য় ভাবত মংগলে কথাত কঠোৰতা আনিব পাৰে আৰু অপ্ৰত্যাশিত ব্যয়ৰ যোগ দিয়ে; পাৰিবাৰিক আলোচনাত মিঠা ভাষা ব্যৱহাৰ কৰক।",
+        3: "৩য় ভাবত মংগলৰ শুভ গোচৰে সাহস, উদ্যম আৰু প্ৰতিযোগিতাত জয়ৰ শক্তি দিব; নতুন কাম আৰম্ভ কৰিবলৈ উত্তম সময়।",
+        4: "৪ৰ্থ ভাবত মংগলে ঘৰুৱা অশান্তি বা সম্পত্তি-সংক্ৰান্ত তৰ্কৰ আশংকা বঢ়ায়; বাহন চলাওঁতে আৰু মাটি-বাৰীৰ কথাত ধৈৰ্য ৰাখিব।",
+        5: "৫ম ভাবত মংগলে প্ৰেম আৰু সন্তানৰ ক্ষেত্ৰত আৱেগিক উত্তেজনা বঢ়াব পাৰে; ফটকা বিনিয়োগৰ পৰা আঁতৰি বুদ্ধিমত্তাৰে সিদ্ধান্ত লওক।",
+        6: "৬ষ্ঠ ভাবত মংগলৰ অতি শুভ গোচৰে শত্ৰু, ঋণ আৰু ৰোগৰ ওপৰত জয় দিব; কৰ্মক্ষেত্ৰত আপোনাৰ পৰাক্ৰম স্পষ্ট হ'ব।",
+        7: "৭ম ভাবত মংগলে দাম্পত্য আৰু অংশীদাৰীত্বত তৰ্ক-বিতৰ্কৰ সম্ভাৱনা বঢ়ায়; জীৱনসংগীৰ সৈতে শান্তভাৱে আলোচনা কৰিব।",
+        8: "৮ম ভাবত মংগলে আঘাত, অস্ত্ৰোপচাৰ বা আকস্মিক ব্যয়ৰ আশংকা দিয়ে; যান-বাহন আৰু ধাৰালো সঁজুলিৰ ক্ষেত্ৰত অতিৰিক্ত সতৰ্কতা লওক।",
+        9: "৯ম ভাবত মংগলে ভাগ্যৰ গতি কিছু মন্থৰ কৰিব পাৰে আৰু গুৰুজনৰ সৈতে মতভেদৰ আশংকা আছে; ধৈৰ্য আৰু নম্ৰতাই সহায় কৰিব।",
+        10: "১০ম ভাবত মংগলৰ গোচৰে কৰ্মক্ষেত্ৰত উদ্যম, নতুন দায়িত্ব আৰু সাফল্য আনিব; উৰ্ধতনৰ সৈতে বিবাদ নকৰিলে পদোন্নতিৰ সুযোগ আছে।",
+        11: "১১তম ভাবত মংগলৰ শুভ গোচৰে আয় বৃদ্ধি, বন্ধু-বান্ধৱৰ সহায় আৰু বহুদিনীয়া ইচ্ছা পূৰণৰ শক্তি দিব।",
+        12: "১২তম ভাবত মংগলে অপ্ৰয়োজনীয় খৰচ, টোপনিৰ অভাৱ আৰু গোপন বিৰোধীৰ আশংকা বঢ়ায়; আবেগত কোনো ডাঙৰ সিদ্ধান্ত নল'ব।"
+    };
+    const venusGocharByHouseAs = {
+        1: "শুক্ৰ চন্দ্ৰৰ ১ম ভাবত থকাত আপোনাৰ আকৰ্ষণ, সাজ-পাৰ আৰু সামাজিক জনপ্ৰিয়তা বাঢ়িব; আনন্দ-বিলাসত পৰিমিত ব্যয় কৰিব।",
+        2: "২য় ভাবত শুক্ৰৰ গোচৰে ধন আগমন, মিঠা বাণী আৰু পাৰিবাৰিক সুখ বঢ়াব; ভাল খাদ্য আৰু বস্ত্ৰ-অলংকাৰৰ যোগ আছে।",
+        3: "৩য় ভাবত শুক্ৰৰ শুভ গোচৰে ভাতৃ-মিত্ৰৰ সহযোগ, সৃজনশীল কাম আৰু চুটি ভ্ৰমণৰ পৰা আনন্দ দিব।",
+        4: "৪ৰ্থ ভাবত শুক্ৰই ঘৰ-সংসাৰত সুখ, বাহন বা গৃহ সজ্জাৰ যোগ আৰু মাতৃৰ স্নেহ আনিব।",
+        5: "৫ম ভাবত শুক্ৰৰ গোচৰে প্ৰেমৰ সম্পৰ্কত মধুৰতা, সন্তানৰ পৰা সুখ আৰু শিল্প-সৃজনশীলতাত সাফল্য আনিব।",
+        6: "৬ষ্ঠ ভাবত শুক্ৰই সম্পৰ্কত অযথা বিতৰ্ক আৰু মিঠা-চৰ্বিযুক্ত খাদ্যৰ পৰা স্বাস্থ্য সমস্যাৰ আশংকা দিয়ে; খাদ্যাভ্যাসত সংযম ৰাখিব।",
+        7: "৭ম ভাবত শুক্ৰই সম্পৰ্কত আবেগৰ আধিক্য আৰু অংশীদাৰীত্বত ভুল বুজাবুজি আনিব পাৰে; সংগীৰ লগত খোলাখুলি কথা পাতিব।",
+        8: "৮ম ভাবত শুক্ৰই হঠাৎ ধনলাভ বা জীৱনসংগীৰ ফালৰ পৰা সহায়ৰ যোগ দিয়ে; গোপনীয় সম্পৰ্কত সংযম ৰাখিব।",
+        9: "৯ম ভাবত শুক্ৰৰ শুভ গোচৰে ভাগ্যৰ সহযোগ, ধৰ্ম-সংস্কৃতিৰ প্ৰতি আগ্ৰহ আৰু দূৰ ভ্ৰমণৰ সুযোগ আনিব।",
+        10: "১০ম ভাবত শুক্ৰই কৰ্মক্ষেত্ৰত আৰাম-প্ৰিয়তা আৰু মনোযোগ বিক্ষিপ্ততাৰ আশংকা দিয়ে; দায়িত্বত শৃংখলা বজাই ৰাখিব।",
+        11: "১১তম ভাবত শুক্ৰৰ অতি শুভ গোচৰে আয় বৃদ্ধি, বন্ধুৰ সহযোগ আৰু মনোবাঞ্ছা পূৰণ কৰিব।",
+        12: "১২তম ভাবত শুক্ৰই শয্যাসুখ, দূৰ স্থানৰ ভ্ৰমণ আৰু শুভ কামত ব্যয়ৰ যোগ দিয়ে; বিলাসী খৰচ নিয়ন্ত্ৰণত ৰাখিব।"
+    };
+    const mercuryGocharByHouseAs = {
+        1: "বুধ ১ম ভাবত থকাত চিন্তা অতি সক্ৰিয়, কথা-বতৰাত চতুৰতা বঢ়িব; মনৰ অস্থিৰতা আৰু অতিৰিক্ত চিন্তাৰ পৰা সাৱধান থাকিব।",
+        2: "২য় ভাবত বুধৰ শুভ গোচৰে হিচাপ-নিকাচ, ব্যৱসায়িক কথাবাৰ্তা আৰু বুদ্ধিৰ বলত ধন আয়ৰ যোগ দিয়ে।",
+        3: "৩য় ভাবত বুধই যোগাযোগৰ ভুল বুজাবুজি বা চুক্তিত খৰখেদাৰ আশংকা দিয়ে; লিখিত নথি ভালদৰে পঢ়ি স্বাক্ষৰ কৰিব।",
+        4: "৪ৰ্থ ভাবত বুধৰ শুভ গোচৰে শিক্ষা, গৃহ-পৰিৱেশ আৰু মাতৃ-পক্ষৰ সৈতে মধুৰ সংযোগ আনিব।",
+        5: "৫ম ভাবত বুধই পঢ়াশুনাত মনোযোগৰ বিক্ষেপ আৰু সন্তান সম্পৰ্কীয় চিন্তা বঢ়াব পাৰে; নতুন পৰিকল্পনা লিখি ৰাখিলে সুফল পাব।",
+        6: "৬ষ্ঠ ভাবত বুধৰ শুভ গোচৰে বিশ্লেষণ, আইনী বা হিচাপ-সংক্ৰান্ত কাম আৰু প্ৰতিযোগিতামূলক পৰীক্ষাত সফলতা দিব।",
+        7: "৭ম ভাবত বুধই ব্যৱসায়িক অংশীদাৰীত্বত ভুল বুজাবুজি বা দাম্পত্যত কথা-কটাকটিৰ আশংকা দিয়ে; স্পষ্ট ভাষাত কথা কওক।",
+        8: "৮ম ভাবত বুধৰ শুভ গোচৰে গৱেষণা, গুপ্ত তথ্য আৰু আকস্মিক জ্ঞান লাভৰ যোগ দিয়ে; ইণ্টাৰনেট বা বিত্তীয় প্ৰৱঞ্চনাৰ পৰা সাৱধান।",
+        9: "৯ম ভাবত বুধই উচ্চ শিক্ষা, ভ্ৰমণ বা গুৰুজনৰ সৈতে আলোচনাত বিলম্ব বা মতভেদ আনিব পাৰে; ধৈৰ্য ৰাখিব।",
+        10: "১০ম ভাবত বুধৰ শুভ গোচৰে কৰ্মক্ষেত্ৰত যোগাযোগ-দক্ষতা, নতুন চুক্তি আৰু ব্যৱসায়িক সাফল্য আনিব।",
+        11: "১১তম ভাবত বুধৰ শুভ গোচৰে বুদ্ধিৰ বলত একাধিক উৎসৰ পৰা আয় আৰু শিক্ষিত বন্ধুৰ সহায় দিব।",
+        12: "১২তম ভাবত বুধই অযথা ভ্ৰমণ-ব্যয় আৰু নথি-পত্ৰৰ ভুলৰ আশংকা দিয়ে; লেনদেনৰ হিচাব সঠিকভাৱে ৰাখিব।"
+    };
+
     // -------------------------------------------------------------------------
     // 🌙 IF SERVICE === 'monthly': RETURN DEDICATED 8-PAGE PERSONALIZED MONTHLY REPORT
     // -------------------------------------------------------------------------
@@ -3006,6 +2921,7 @@ function generateGrandVedicReport(order, chart) {
                 <div class="card-title" style="margin-bottom: 6px;">জন্ম ৰাশি (Moon Sign): <strong>${moonRashiName} ৰাশি (${moonNakshatra} নক্ষত্ৰ, পদ ${toAsDigits(chart.planets.Moon.pada || 1)})</strong></div>
                 <div class="card-title" style="margin-bottom: 0;">চলিত দশা-অন্তৰ্দশা: <strong>${currentDashaAs} মহাদশা • ${activeAntardashaAs} অন্তৰ্দশা</strong> ${activeAntardashaEnd ? `(অন্ত: ${toAsDigits(activeAntardashaEnd)})` : ''}</div>
             </div>
+            ${placeNoteHtml}
             <h2 class="section-title" style="margin-top:20px;">❁ আপোনাৰ মূল জন্ম কুণ্ডলী চক্ৰ ❁</h2>
             ${svgHtml}
             <div class="text-section" style="margin-top: 10px; font-size: 14px;">
@@ -3072,7 +2988,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="info-card">
                 <div class="card-content">
                     • <strong>বাণিজ্যিক গতিপথ:</strong> আপোনাৰ কুণ্ডলীৰ সপ্তম ভাবত <strong>${rashiAsMap[getHouseRashiEn(7)]}</strong> ৰাশি আৰু সপ্তম পতি <strong>${planetNames[seventhLordKey]}</strong> ${toAsDigits(seventhLordHouse)} নং ঘৰত স্থিত। এই মাহত বাণিজ্য কাৰক বুধ (${toAsDigits(tMercH)} নং গোচৰ ভাব) আৰু শুক্ৰ (${toAsDigits(tVenH)} নং গোচৰ ভাব) ৰ প্ৰভাৱত ${[2, 4, 6, 10, 11].includes(tMercH) ? "গ্ৰাহকৰ সংখ্যা বৃদ্ধি পাব আৰু নতুন ব্যৱসায়িক চুক্তি বা যোগানৰ কামত উল্লেখযোগ্য লাভ অৰ্জন হ'ব" : "নিয়মীয়া ব্যৱসায়িক লেনদেন স্থিৰ থাকিব, তবে নতুনকৈ ডাঙৰ মূলধন বিনিয়োগ কৰাৰ পূৰ্বে বজাৰৰ স্থিতি ভালদৰে পৰীক্ষা কৰি ল'ব"}।<br><br>
-                    • <strong>ব্যৱসায়িক সতৰ্কতা:</strong> এই মাহৰ ${cautionDatesStr} তাৰিখকেইটাত ডাঙৰ অংকৰ বাকী লেনদেন বা অপৰিচিত ব্যক্তিৰ সৈতে বিত্তীয় চুক্তি এৰাই চলাটো শ্ৰেয়।
+                    • <strong>ব্যৱসায়িক সতৰ্কতা:</strong> আগন্তুক ৩০ দিনৰ ভিতৰত ${cautionDatesStr} দিনকেইটাত ডাঙৰ অংকৰ বাকী লেনদেন বা অপৰিচিত ব্যক্তিৰ সৈতে বিত্তীয় চুক্তি এৰাই চলাটো শ্ৰেয়।
                 </div>
             </div>
 
@@ -3140,15 +3056,16 @@ function generateGrandVedicReport(order, chart) {
             { title: "আত্মসমীক্ষা, শুভ ব্যয় আৰু পৰৱৰ্তী মাহৰ সুপৰিকল্পনা", body: `সপ্তাহটোত ঘৰুৱা বা ধৰ্মীয় কামত কিছু সুপৰিকল্পিত ব্যয় হ'ব পাৰে। মানসিক শান্তি বজাই ৰাখি চলিত মাহৰ কামসমূহৰ সমীক্ষা কৰক আৰু অনাগত মাহৰ বাবে নতুন লক্ষ্য স্থিৰ কৰক।` }
         ];
 
-        const w1Idx = (moonRashiNo + ascRashi + curGregMonthIdx) % 12;
-        const w2Idx = (w1Idx + 3) % 12;
-        const w3Idx = (w1Idx + 6) % 12;
-        const w4Idx = (w1Idx + 9) % 12;
-
-        const w1 = weeklyThemesPool[w1Idx];
-        const w2 = weeklyThemesPool[w2Idx];
-        const w3 = weeklyThemesPool[w3Idx];
-        const w4 = weeklyThemesPool[w4Idx];
+        // 4 weeks starting TODAY. Each week is themed by where the real Moon stands on that week's best day
+        const rtWeekRanges = [[0, 6], [7, 13], [14, 20], [21, 29]];
+        const rtWeeks = rtWeekRanges.map(([i0, i1]) => {
+            const days = rtNext30.slice(i0, i1 + 1);
+            const key = days.find(d => d.lucky) || days.find(d => [3, 6, 10, 11].includes(d.m.hMoon)) || days[0];
+            const st = getGocharStatus("Moon", key.m.hMoon);
+            const extra = `<br><strong>🌙 সপ্তাহৰ মূল দিন ${rtFmtDM(key.ms)}:</strong> চন্দ্ৰ ${rashiAsMap[orderedRashis[key.m.no - 1]]} ৰাশিৰ ${key.m.nak} নক্ষত্ৰত — আপোনাৰ জন্ম চন্দ্ৰৰ পৰা <strong>${toAsDigits(key.m.hMoon)} নং ভাব</strong>, লগ্নৰ পৰা <strong>${toAsDigits(key.m.hLag)} নং ভাব</strong> সক্ৰিয় (<span style="color:${st.color};font-weight:700;">${st.badge}</span>)।`;
+            return { label: rtFmtRange(days[0].ms, days[days.length - 1].ms), theme: weeklyThemesPool[key.m.hLag - 1], extra: extra };
+        });
+        const w1 = rtWeeks[0].theme, w2 = rtWeeks[1].theme, w3 = rtWeeks[2].theme, w4 = rtWeeks[3].theme;
 
         const mPage7WeeklyAndDates = `
         <div class="page page-break">
@@ -3158,30 +3075,30 @@ function generateGrandVedicReport(order, chart) {
             </div>
 
             <div class="info-card" style="margin: 6px 0; padding: 9px 13px;">
-                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #8b0000;">🗓️ ১ম সপ্তাহ (১ ৰ পৰা ৭ তাৰিখ): ${w1.title}</div>
+                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #8b0000;">🗓️ ১ম সপ্তাহ (${rtWeeks[0].label}): ${w1.title}</div>
                 <div class="card-content" style="font-size: 13.5px; line-height: 1.48;">
-                    ${w1.body}
+                    ${w1.body}${rtWeeks[0].extra}
                 </div>
             </div>
 
             <div class="info-card" style="margin: 6px 0; padding: 9px 13px;">
-                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #1d4ed8;">🗓️ ২য় সপ্তাহ (৮ ৰ পৰা ১৫ তাৰিখ): ${w2.title}</div>
+                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #1d4ed8;">🗓️ ২য় সপ্তাহ (${rtWeeks[1].label}): ${w2.title}</div>
                 <div class="card-content" style="font-size: 13.5px; line-height: 1.48;">
-                    ${w2.body}
+                    ${w2.body}${rtWeeks[1].extra}
                 </div>
             </div>
 
             <div class="info-card" style="margin: 6px 0; padding: 9px 13px;">
-                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #b45309;">🗓️ ৩য় সপ্তাহ (১৬ ৰ পৰা ২৩ তাৰিখ): ${w3.title}</div>
+                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #b45309;">🗓️ ৩য় সপ্তাহ (${rtWeeks[2].label}): ${w3.title}</div>
                 <div class="card-content" style="font-size: 13.5px; line-height: 1.48;">
-                    ${w3.body}
+                    ${w3.body}${rtWeeks[2].extra}
                 </div>
             </div>
 
             <div class="info-card" style="margin: 6px 0; padding: 9px 13px;">
-                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #047857;">🗓️ ৪ৰ্থ সপ্তাহ (২৪ ৰ পৰা ৩০/৩১ তাৰিখ): ${w4.title}</div>
+                <div class="card-title" style="font-size: 15.5px; margin-bottom: 3px; color: #047857;">🗓️ ৪ৰ্থ সপ্তাহ (${rtWeeks[3].label}): ${w4.title}</div>
                 <div class="card-content" style="font-size: 13.5px; line-height: 1.48;">
-                    ${w4.body}
+                    ${w4.body}${rtWeeks[3].extra}
                 </div>
             </div>
 
@@ -3190,8 +3107,8 @@ function generateGrandVedicReport(order, chart) {
                     <tr><th colspan="2">✨ এই মাহৰ বিশেষ শুভ পঞ্জিকা আৰু সংকেত (${moonRashiName} ৰাশি • ${ascRashiName} লগ্ন) ✨</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>মাহটোৰ অতি শুভ তাৰিখসমূহ</strong></td><td><strong style="color:#047857;">${luckyDatesStr} তাৰিখ</strong> (নতুন কাম, চুক্তি আৰু ধন বিনিয়োগৰ বাবে উত্তম)</td></tr>
-                    <tr><td><strong>সতৰ্ক থাকিবলগীয়া তাৰিখসমূহ</strong></td><td><strong style="color:#8b0000;">${cautionDatesStr} তাৰিখ</strong> (তৰ্ক-বিতৰ্ক আৰু ডাঙৰ আৰ্থিক ৰিস্ক এৰাই চলিব)</td></tr>
+                    <tr><td><strong>মাহটোৰ অতি শুভ তাৰিখসমূহ</strong></td><td><strong style="color:#047857;">${luckyDatesStr}</strong> (নতুন কাম, চুক্তি আৰু ধন বিনিয়োগৰ বাবে উত্তম — চন্দ্ৰৰ প্ৰকৃত গোচৰ আৰু তাৰা-বলৰ আধাৰত)</td></tr>
+                    <tr><td><strong>সতৰ্ক থাকিবলগীয়া তাৰিখসমূহ</strong></td><td><strong style="color:#8b0000;">${cautionDatesStr}</strong> (চন্দ্ৰাষ্টম বা প্ৰতিকূল তাৰা — তৰ্ক-বিতৰ্ক আৰু ডাঙৰ আৰ্থিক ৰিস্ক এৰাই চলিব)</td></tr>
                     <tr><td><strong>মাহটোৰ শুভ ৰং আৰু শুভ সংখ্যা</strong></td><td><strong>ৰং:</strong> ${lMeta.color} &nbsp;|&nbsp; <strong>শুভ সংখ্যা:</strong> ${lMeta.num}</td></tr>
                     <tr><td><strong>মাহটোৰ শুভ বাৰ আৰু শুভ দিশ</strong></td><td><strong>শুভ বাৰ:</strong> ${lMeta.day} &nbsp;|&nbsp; <strong>শুভ দিশ:</strong> ${lMeta.dir}</td></tr>
                 </tbody>
@@ -3222,7 +3139,7 @@ function generateGrandVedicReport(order, chart) {
                 <div class="card-title">🪔 ২. ${ascRashiName} লগ্ন আৰু ${moonRashiName} ৰাশিৰ এই মাহৰ বিশেষ গোচৰ শান্তি উপায়</div>
                 <div class="card-content">
                     <ul>
-                        <li><strong>লগ্নপতি ${planetNames[lagnaLordKey]} ৰ বল বৃদ্ধি:</strong> ${lagnaRemedy.puja} লগতে আপোনাৰ লগ্নৰ শুভ ৰত্ন <strong>${gemInfo.gem}</strong> (${gemInfo.day}) বিধি অনুসৰি ধাৰণ কৰিব পাৰে।</li>
+                        <li><strong>লগ্নপতি ${planetNames[lagnaLordKey]} ৰ বল বৃদ্ধি:</strong> ${(lagnaRemedy.puja || lagnaRemedy.dan)} লগতে আপোনাৰ লগ্নৰ শুভ ৰত্ন <strong>${gemInfo.gem}</strong> (${gemInfo.day}) বিধি অনুসৰি ধাৰণ কৰিব পাৰে।</li>
                         <li><strong>চন্দ্ৰ ৰাশিৰ পৰা শনি (${toAsDigits(tSatH)} নং ভাব) আৰু ৰাহু (${toAsDigits(tRahH)} নং ভাব) ৰ গোচৰ শান্তি:</strong> এই মাহৰ প্রতিটো শনিবাৰে সন্ধিয়া নামঘৰ/মন্দিৰত বা আঁহত গছৰ তলত মিঠাতেলৰ চাকি জ্বলাওক আৰু চৰাই-চিৰিকটি বা নিৰীহ প্ৰাণীক খাদ্য দিয়ক।</li>
                         <li><strong>ধন ভাব (${rashiAsMap[secondRashi]}) আৰু কৰ্ম ভাব (${cInfo.asName}) ৰ সমৃদ্ধিৰ বাবে:</strong> মাহটোৰ শুভ বাৰসমূহত (${lMeta.day}) বগা বা হালধীয়া পুষ্প ইষ্ট দেৱতাৰ চৰণত অৰ্পণ কৰক আৰু নিজৰ কৰ্মস্থলীত সদায় বিশুদ্ধতা বজাই ৰাখক।</li>
                     </ul>
@@ -3294,53 +3211,96 @@ function generateGrandVedicReport(order, chart) {
             12: { focus: "আধ্যাত্মিক তৃপ্তি, দূৰ সংযোগৰ পৰা লাভ আৰু ভৱিষ্যতৰ নতুন আঁচনি প্ৰস্তুতকৰণ", fin: "মাংগলিক বা ঘৰুৱা উন্নতিমূলক কামত সুপৰিকল্পিত ব্যয়; বাজেট সুষম ৰাখক।", rel: "দাম্পত্য সুখ আৰু মানসিক শান্তি বজাই থাকিব; তীৰ্থ বা দূৰ ভ্ৰমণৰ যোগ।", hlth: "চকু আৰু টোপনিৰ যত্ন লওক; নিশা শুবলৈ যোৱাৰ পূৰ্বে ইষ্ট দেৱতাক স্মৰণ কৰক।" }
         };
 
-        let auspiciousMonthNames = [];
-        let cautionMonthNames = [];
+        // ---- Real planetary positions in the middle of each of the next 12 months ----
+        const rtSnaps = [];
+        for (let mOff = 0; mOff < 12; mOff++) {
+            const mIdx = (curGregMonthIdx + mOff) % 12;
+            const yrVal = curGregYear + Math.floor((curGregMonthIdx + mOff) / 12);
+            const ms = mOff === 0 ? Date.now() : Date.UTC(yrVal, mIdx, 15, 6, 30);
+            const tr = chart.transitAt(ms);
+            const hm = {}, hl = {};
+            for (const k of ['Sun', 'Mars', 'Mercury', 'Venus', 'Jupiter', 'Saturn', 'Rahu', 'Ketu']) { hm[k] = getHouseFromMoon(tr[k].rashi_no); hl[k] = getHouseFromLagna(tr[k].rashi_no); }
+            const wts = { Sun: 1, Mars: 1, Mercury: 1, Venus: 1, Jupiter: 2, Saturn: 2 };
+            let score = 0;
+            for (const k in wts) { const b = getGocharStatus(k, hm[k]).badge; if (b === "শুভ গোচৰ ফল") score += wts[k]; else if (b === "সতৰ্কতামূলক গোচৰ") score -= wts[k]; }
+            rtSnaps.push({ mOff: mOff, mIdx: mIdx, yrVal: yrVal, ms: ms, tr: tr, hm: hm, hl: hl, score: score });
+        }
+        // exact (day-level) date when a slow planet changes sign between two snapshots
+        const rtFindIngress = (planet, ms0, ms1) => {
+            let lo = ms0, hi = ms1;
+            const r0 = chart.transitAt(lo)[planet].rashi_no;
+            for (let i = 0; i < 12 && hi - lo > 6 * 3600 * 1000; i++) { const mid = Math.floor((lo + hi) / 2); if (chart.transitAt(mid)[planet].rashi_no === r0) lo = mid; else hi = mid; }
+            return hi;
+        };
+        const rtIngress = { Jupiter: [], Saturn: [], Rahu: [] };
+        for (let i = 1; i < rtSnaps.length; i++) {
+            for (const k of ['Jupiter', 'Saturn', 'Rahu']) {
+                if (rtSnaps[i].tr[k].rashi_no !== rtSnaps[i - 1].tr[k].rashi_no) {
+                    const when = rtFindIngress(k, rtSnaps[i - 1].ms, rtSnaps[i].ms);
+                    rtIngress[k].push({ snapIdx: i, when: when, rashiNo: rtSnaps[i].tr[k].rashi_no, hMoon: rtSnaps[i].hm[k], hLag: rtSnaps[i].hl[k] });
+                }
+            }
+        }
+        const rtIngressHtml = (k, dict) => (rtIngress[k] || []).map(ev => {
+            const rn = rashiAsMap[orderedRashis[ev.rashiNo - 1]];
+            return `<br>• <strong>🔄 ${rtFmtDM(ev.when)} ৰ ওচৰে-পাঁজৰে ${planetNames[k]} ${rn} ৰাশিলৈ প্ৰৱেশ কৰিব (চন্দ্ৰৰ পৰা ${toAsDigits(ev.hMoon)} নং ভাব):</strong> ${dict[ev.hMoon] || ""}`;
+        }).join("");
 
+        const rtSorted = rtSnaps.slice().sort((a, b) => b.score - a.score);
+        const rtBest = rtSorted.filter(x => x.score > 0).slice(0, 4).sort((a, b) => a.mOff - b.mOff);
+        const rtWorst = rtSorted.slice().reverse().filter(x => x.score < 0).slice(0, 2).sort((a, b) => a.mOff - b.mOff);
+        const auspiciousMonthNames = rtBest.map(x => gregMonthsAs[x.mIdx]);
+        const cautionMonthNames = rtWorst.map(x => gregMonthsAs[x.mIdx]);
+        const bestMonthsStr = auspiciousMonthNames.join(", ") || "বছৰটোৰ মধ্যভাগ";
+        const cautionMonthsStr = cautionMonthNames.join(", ") || "কোনো বিশেষ প্ৰতিকূল মাহ নাই";
+        const bestPropMonthsStr = auspiciousMonthNames.slice(0, 3).join(", ") || bestMonthsStr;
+
+        const rtHouseTopicAs = { 1: "ব্যক্তিত্ব আৰু স্বাস্থ্য", 2: "ধন আৰু পৰিয়াল", 3: "পৰাক্ৰম আৰু যোগাযোগ", 4: "গৃহ আৰু মাতৃ", 5: "বিদ্যা, প্ৰেম আৰু সন্তান", 6: "ৰোগ, ঋণ আৰু শত্ৰু", 7: "দাম্পত্য আৰু অংশীদাৰী", 8: "আকস্মিক পৰিৱৰ্তন আৰু গুপ্ত বিষয়", 9: "ভাগ্য আৰু ধৰ্ম", 10: "কৰ্ম আৰু প্ৰতিষ্ঠা", 11: "আয় আৰু মনোবাঞ্ছা", 12: "ব্যয় আৰু বিদেশ" };
         const buildMonthCardsHtml = (startOffset, endOffset) => {
             let html = "";
             for (let mOff = startOffset; mOff <= endOffset; mOff++) {
-                const mIdx = (curGregMonthIdx + mOff) % 12;
-                const yrVal = curGregYear + Math.floor((curGregMonthIdx + mOff) / 12);
-                // Sun's approximate Rashi in month mIdx (Jan=Capricorn=10 .. Apr=Aries=1 .. Oct=Libra=7)
-                const mSunRashiNo = ((mIdx + 9) % 12) + 1;
-                const mSunHFromMoon = ((mSunRashiNo - moonRashiNo + 12) % 12) + 1;
-                const mSunHFromLag = ((mSunRashiNo - ascRashi + 12) % 12) + 1;
+                const sn = rtSnaps[mOff];
+                const mSunHFromMoon = sn.hm.Sun;
+                const mSunHFromLag = sn.hl.Sun;
                 const activeHouseRashiAs = rashiAsMap[getHouseRashiEn(mSunHFromLag)] || ascRashiName;
-
                 const th = monthlySunGocharFocusAs[mSunHFromMoon] || monthlySunGocharFocusAs[1];
-                const mLuckyD1 = toAsDigits(2 + ((mIdx * 3 + ascRashi + (bDayNum % 5)) % 6));
-                const mLuckyD2 = toAsDigits(11 + ((mIdx * 5 + moonRashiNo + (bDayNum % 4)) % 7));
-                const mLuckyD3 = toAsDigits(20 + ((mIdx * 2 + ascRashi + moonRashiNo) % 8));
+                const planetLine = (k, label, dict) => {
+                    const t = sn.tr[k];
+                    const st = getGocharStatus(k, sn.hm[k]);
+                    return `• <strong>${label} (${rashiAsMap[t.rashi]} ৰাশি • চন্দ্ৰৰ পৰা ${toAsDigits(sn.hm[k])} নং ভাব) <span style="color:${st.color};">[${st.badge}]</span>:</strong> ${dict[sn.hm[k]]}<br>`;
+                };
+                // real good / caution days of this month (Moon transit + Tara-bala), scanned day by day
+                const monthStart = Date.UTC(sn.yrVal, sn.mIdx, 1) - rtIST;
+                const dim = new Date(Date.UTC(sn.yrVal, sn.mIdx + 1, 0)).getUTCDate();
+                const mDays = rtScan(monthStart, dim);
+                const mLucky = rtRangesStr(mDays.filter(d => d.lucky), 3, "—");
+                const mCaution = rtRangesStr(mDays.filter(d => d.caution), 2, "—");
+                const slowNotes = ['Jupiter', 'Saturn', 'Rahu'].map(k => {
+                    const ev = (rtIngress[k] || []).find(e => e.snapIdx === mOff);
+                    if (!ev) return "";
+                    const dict = k === 'Jupiter' ? jupiterGocharByHouseAs : (k === 'Saturn' ? saturnGocharByHouseAs : rahuKetuAxisByHouseAs);
+                    return `• <strong>🔄 ${planetNames[k]} ৰ ৰাশি পৰিৱৰ্তন (${rtFmtDM(ev.when)} ৰ ওচৰে-পাঁজৰে ${rashiAsMap[orderedRashis[ev.rashiNo - 1]]} ৰাশিলৈ, চন্দ্ৰৰ পৰা ${toAsDigits(ev.hMoon)} নং ভাব):</strong> ${dict[ev.hMoon] || ""}<br>`;
+                }).join("");
 
                 html += `
                 <div class="info-card" style="margin: 7px 0; padding: 10px 14px;">
                     <div class="card-title" style="font-size: 15.2px; margin-bottom: 4px; color: #8b0000;">
-                        🗓️ ${toAsDigits(mOff + 1)}ম মাহ — ${gregMonthsAs[mIdx]} ${toAsDigits(yrVal)} (${assameseLunarMonths[mIdx]}): ${th.focus}
+                        🗓️ ${toAsDigits(mOff + 1)}ম মাহ — ${gregMonthsAs[sn.mIdx]} ${toAsDigits(sn.yrVal)} (${assameseLunarMonths[sn.mIdx]}): ${th.focus}
                     </div>
                     <div class="card-content" style="font-size: 13.1px; line-height: 1.46;">
-                        • <strong>গোচৰ স্থিতি (${moonRashiName} ৰাশিৰ পৰা ${toAsDigits(mSunHFromMoon)} নং ভাব • লগ্নৰ ${toAsDigits(mSunHFromLag)} নং ${activeHouseRashiAs} ভাব সক্ৰিয়):</strong> ${th.fin}<br>
-                        • <strong>প্ৰেম আৰু পাৰিবাৰিক জীৱন:</strong> ${th.rel}<br>
-                        • <strong>স্বাস্থ্য আৰু শুভ তাৰিখ:</strong> ${th.hlth} &nbsp;|&nbsp; <strong style="color:#047857;">শুভ তাৰিখ: ${mLuckyD1}, ${mLuckyD2}, ${mLuckyD3}</strong>
+                        • <strong>সূৰ্য (${rashiAsMap[sn.tr.Sun.rashi]} ৰাশি • চন্দ্ৰৰ পৰা ${toAsDigits(mSunHFromMoon)} নং ভাব • লগ্নৰ ${toAsDigits(mSunHFromLag)} নং ${activeHouseRashiAs} ভাব সক্ৰিয়):</strong> ${th.fin}<br>
+                        ${planetLine('Mars', 'মংগল', marsGocharByHouseAs)}
+                        ${planetLine('Venus', 'শুক্ৰ', venusGocharByHouseAs)}
+                        ${planetLine('Mercury', 'বুধ', mercuryGocharByHouseAs)}
+                        ${slowNotes}
+                        • <strong>${ascRashiName} লগ্নৰ সাপেক্ষে সক্ৰিয় ভাব:</strong> সূৰ্য ${toAsDigits(sn.hl.Sun)} নং (${rtHouseTopicAs[sn.hl.Sun]}), মংগল ${toAsDigits(sn.hl.Mars)} নং (${rtHouseTopicAs[sn.hl.Mars]}), শুক্ৰ ${toAsDigits(sn.hl.Venus)} নং (${rtHouseTopicAs[sn.hl.Venus]}), বুধ ${toAsDigits(sn.hl.Mercury)} নং (${rtHouseTopicAs[sn.hl.Mercury]}) — এই মাহত বিশেষকৈ <strong>${rtHouseTopicAs[sn.hl.Sun]}</strong> আৰু <strong>${rtHouseTopicAs[sn.hl.Venus]}</strong> সম্পৰ্কীয় বিষয়ত মনোযোগ দিয়ক।<br>
+                        • <strong>স্বাস্থ্য:</strong> ${th.hlth}<br>
+                        • <strong style="color:#047857;">শুভ দিন: ${mLucky}</strong> &nbsp;|&nbsp; <strong style="color:#8b0000;">সতৰ্ক দিন: ${mCaution}</strong>
                     </div>
                 </div>`;
             }
             return html;
         };
-
-        for (let mOff = 0; mOff < 12; mOff++) {
-            const mIdx = (curGregMonthIdx + mOff) % 12;
-            const mSunRashiNo = ((mIdx + 9) % 12) + 1;
-            const mSunHFromMoon = ((mSunRashiNo - moonRashiNo + 12) % 12) + 1;
-            if ([3, 6, 10, 11].includes(mSunHFromMoon)) {
-                auspiciousMonthNames.push(gregMonthsAs[mIdx]);
-            } else if ([4, 8, 12].includes(mSunHFromMoon) && cautionMonthNames.length < 3) {
-                cautionMonthNames.push(gregMonthsAs[mIdx]);
-            }
-        }
-        const bestMonthsStr = auspiciousMonthNames.slice(0, 4).join(", ") || `${gregMonthsAs[(curGregMonthIdx + 2) % 12]}, ${gregMonthsAs[(curGregMonthIdx + 5) % 12]}`;
-        const cautionMonthsStr = cautionMonthNames.slice(0, 2).join(", ") || `${gregMonthsAs[(curGregMonthIdx + 4) % 12]}, ${gregMonthsAs[(curGregMonthIdx + 7) % 12]}`;
-        const bestPropMonthsStr = auspiciousMonthNames.slice(0, 3).join(", ") || bestMonthsStr;
 
         const dashaLordNatalH = getPlanetHouse(chart?.planets?.[currentDasha]?.rashi_no);
         const adLordNatalH = getPlanetHouse(chart?.planets?.[activeAntardashaLordKey]?.rashi_no);
@@ -3358,6 +3318,7 @@ function generateGrandVedicReport(order, chart) {
                 <div class="card-title" style="margin-bottom: 6px;">জন্ম ৰাশি (Moon Sign): <strong>${moonRashiName} ৰাশি (${moonNakshatra} নক্ষত্ৰ, পদ ${toAsDigits(chart.planets.Moon.pada || 1)})</strong></div>
                 <div class="card-title" style="margin-bottom: 0;">চলিত দশা-অন্তৰ্দশা: <strong>${currentDashaAs} মহাদশা • ${activeAntardashaAs} অন্তৰ্দশা</strong> ${activeAntardashaEnd ? `(অন্ত: ${toAsDigits(activeAntardashaEnd)})` : ''}</div>
             </div>
+            ${placeNoteHtml}
             <h2 class="section-title" style="margin-top:20px;">❁ আপোনাৰ মূল জন্ম কুণ্ডলী চক্ৰ ❁</h2>
             ${svgHtml}
             <div class="text-section" style="margin-top: 10px; font-size: 14px;">
@@ -3385,7 +3346,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="info-card">
                 <div class="card-content">
                     • <strong>গোচৰ অৱস্থান:</strong> চলিত বৰ্ষত বৃহস্পতি গ্ৰহ <strong>${rashiAsMap[transits.Jupiter.rashi]}</strong> ৰাশিত (আপোনাৰ চন্দ্ৰ ৰাশি ${moonRashiName} ৰ পৰা <strong>${toAsDigits(tJupH)} নং ভাবত</strong> আৰু ${ascRashiName} লগ্নৰ পৰা <strong>${toAsDigits(tJupLagH)} নং ভাবত</strong>) ভ্ৰমণৰত, লগতে আপোনাৰ মূল জন্ম কুণ্ডলীত বৃহস্পতি <strong>${toAsDigits(jupiterHouse)} নং ঘৰত</strong> অৱস্থিত।<br><br>
-                    • <strong>আপোনাৰ বাবে বাৰ্ষিক ফল:</strong> ${jupiterGocharByHouseAs[tJupH]}
+                    • <strong>আপোনাৰ বাবে বাৰ্ষিক ফল:</strong> ${jupiterGocharByHouseAs[tJupH]}${rtIngressHtml('Jupiter', jupiterGocharByHouseAs)}
                 </div>
             </div>
 
@@ -3393,7 +3354,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="info-card">
                 <div class="card-title" style="color:#8b0000; font-size:15.5px;">🪐 ${shaniStatusTitle}</div>
                 <div class="card-content">
-                    • ${shaniStatusDesc}
+                    • ${shaniStatusDesc}${rtIngressHtml('Saturn', saturnGocharByHouseAs)}
                 </div>
             </div>
 
@@ -3401,7 +3362,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="info-card">
                 <div class="card-content">
                     • <strong>গোচৰ অৱস্থান:</strong> চলিত বৰ্ষত ৰাহু গ্ৰহ আপোনাৰ চন্দ্ৰ ৰাশি ${moonRashiName} ৰ পৰা <strong>${toAsDigits(tRahH)} নং ভাবত (${rashiAsMap[transits.Rahu.rashi]})</strong> আৰু কেতু গ্ৰহ <strong>${toAsDigits(tKetH)} নং ভাবত (${rashiAsMap[transits.Ketu.rashi]})</strong> অৱস্থিত।<br><br>
-                    • <strong>আপোনাৰ বাবে বাৰ্ষিক ফল:</strong> ${rahuKetuAxisByHouseAs[tRahH] || rahuKetuAxisByHouseAs[1]}
+                    • <strong>আপোনাৰ বাবে বাৰ্ষিক ফল:</strong> ${rahuKetuAxisByHouseAs[tRahH] || rahuKetuAxisByHouseAs[1]}${rtIngressHtml('Rahu', rahuKetuAxisByHouseAs)}
                 </div>
             </div>
         </div>`;
@@ -3551,7 +3512,7 @@ function generateGrandVedicReport(order, chart) {
                 <div class="card-content">
                     • <strong>মহাদশাপতি ${currentDashaAs} ৰ বীজ মন্ত্ৰ:</strong> <em>"${dRemedy.mantra}"</em> (দৈনিক পুৱা ১০৮ বাৰ বা ২৭ বাৰ জপ কৰিব)।<br>
                     • <strong>অন্তৰ্দশাপতি ${activeAntardashaAs} ৰ বীজ মন্ত্ৰ:</strong> <em>"${adRemedy.mantra}"</em> (সন্ধিয়া ২৭ বাৰ জপ কৰিব)।<br>
-                    • <strong>দশা শান্তি দান আৰু উপাসনা:</strong> ${dRemedy.dan} লগতে ${adRemedy.puja}
+                    • <strong>দশা শান্তি দান আৰু উপাসনা:</strong> ${dRemedy.dan} লগতে ${(adRemedy.puja || adRemedy.dan)}
                 </div>
             </div>
 
@@ -3559,7 +3520,7 @@ function generateGrandVedicReport(order, chart) {
                 <div class="card-title">🌿 ৩. বাৰ্ষিক গোচৰ শান্তি (শনি ${toAsDigits(tSatH)} নং ভাব • গুৰু ${toAsDigits(tJupH)} নং ভাব) আৰু সমৃদ্ধিৰ নিয়ম</div>
                 <div class="card-content">
                     <ul>
-                        <li><strong>কৰ্মপতি ${planetNames[tenthLordKey]} আৰু গুৰুৰ কৃপা লাভ:</strong> ${tenthRemedy.puja} লগতে প্রতি বৃহস্পতিবাৰে কপালত হালধি বা চন্দনৰ ফোঁট লগাই পিতৃ-মাতৃ আৰু গুৰুজনৰ আশীৰ্বাদ লওক।</li>
+                        <li><strong>কৰ্মপতি ${planetNames[tenthLordKey]} আৰু গুৰুৰ কৃপা লাভ:</strong> ${(tenthRemedy.puja || tenthRemedy.dan)} লগতে প্রতি বৃহস্পতিবাৰে কপালত হালধি বা চন্দনৰ ফোঁট লগাই পিতৃ-মাতৃ আৰু গুৰুজনৰ আশীৰ্বাদ লওক।</li>
                         <li><strong>শনি আৰু ৰাহু-কেতুৰ বাৰ্ষিক গোচৰ শান্তি:</strong> প্ৰতি শনিবাৰে সন্ধিয়া নামঘৰ/মন্দিৰত বা আঁহত গছৰ তলত মিঠাতেলৰ চাকি জ্বলাওক আৰু মাহত অন্ততঃ এদিন অসহায়জনক অন্ন বা বস্ত্ৰ দান কৰক।</li>
                     </ul>
                 </div>
@@ -3589,6 +3550,7 @@ function generateGrandVedicReport(order, chart) {
                 <div class="card-title" style="margin-bottom: 8px;">চন্দ্ৰ ৰাশি (Moon Sign): <strong>${moonRashiName} (${moonRashi} - ${moonNakshatra} নক্ষত্ৰ, পদ ${toAsDigits(chart.planets.Moon.pada || 1)})</strong></div>
                 <div class="card-title" style="margin-bottom: 0;">বৰ্তমান দশা-অন্তৰ্দশা: <strong>${currentDashaAs} মহাদশা • ${activeAntardashaAs} অন্তৰ্দশা</strong></div>
             </div>
+            ${placeNoteHtml}
             <h2 class="section-title" style="margin-top:25px;">❁ জন্ম কুণ্ডলী (Vedic Birth Chart) ❁</h2>
             ${svgHtml}
         </div>
