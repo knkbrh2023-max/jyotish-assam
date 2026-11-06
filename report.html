@@ -153,6 +153,12 @@
         const paymentId = urlParams.get('razorpay_payment_id');
         const rzpOrderId = urlParams.get('razorpay_order_id');
         const rzpSignature = urlParams.get('razorpay_signature');
+        if (urlParams.get('pay') === 'failed') {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('statusTitle').innerText = "⚠️ পেমেণ্ট সম্পূৰ্ণ হোৱা নাই";
+            document.getElementById('statusMsg').innerText = "আপোনাৰ পেমেণ্ট সফল হোৱা নাই বা বাতিল হৈছে। টকা কাটি লোৱা হৈ থাকিলে 'সহায় (Support)'ত অৰ্ডাৰ নম্বৰ জনাওক। নহ'লে মূল পৃষ্ঠালৈ গৈ পুনৰ চেষ্টা কৰক।";
+            return;
+        }
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
@@ -188,9 +194,14 @@
         // ২. Supabase-ৰ পৰা অৰ্ডাৰ তথ্য বিচাৰি উলিওৱা
         if (orderId) {
             try {
-                const { data } = await sb.from('orders').select('*').or(`public_order_id.eq.${orderId},id.eq.${orderId}`);
-                if (data && data.length > 0) {
-                    order = data[0];
+                // 'id' column uuid হ'লে "id.eq.JA-xxx" দিলে গোটেই query ফেইল হয়; সেয়ে প্ৰতিটো ক'লাম পৃথকে চোৱা হয়
+                const _tries = [['public_order_id', orderId], ['razorpay_order_id', orderId]];
+                if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)) _tries.push(['id', orderId]);
+                for (const [col, val] of _tries) {
+                    try {
+                        const { data, error } = await sb.from('orders').select('*').eq(col, val).limit(1);
+                        if (!error && data && data.length > 0) { order = data[0]; break; }
+                    } catch (qe) { console.warn('lookup', col, qe); }
                 }
             } catch(e) {
                 console.warn("DB query error:", e);

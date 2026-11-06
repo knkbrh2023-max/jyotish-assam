@@ -1936,7 +1936,7 @@ window.processPalmistryPayment = async function(e) {
             "name": "Jyotish Assam",
             "description": "হস্তৰেখা বিশদ বিচাৰ (Palmistry Reading)",
             "order_id": responseData.razorpayOrderId,
-            "callback_url": reportUrl,
+            "callback_url": isFB ? ((window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl ? window.JA_CONFIG.apiBaseUrl : "") + "/payment-callback?return=" + encodeURIComponent(reportUrl)) : reportUrl,
             "redirect": isFB ? true : false,
             "prefill": { "name": name, "email": email },
             "theme": { "color": "#059669" },
@@ -2010,20 +2010,14 @@ window.processPalmistryPayment = async function(e) {
                     };
                     const reportHtml = generatePalmistryReportHtml(palmOrder);
                     try {
-                        sessionStorage.setItem('ja_report_' + responseData.orderId, reportHtml);
-                        localStorage.setItem('ja_report_' + responseData.orderId, reportHtml);
+                        sessionStorage.setItem('ja_report_v14_' + responseData.orderId, reportHtml);
+                        localStorage.setItem('ja_report_v14_' + responseData.orderId, reportHtml);
                         localStorage.setItem('ja_latest_order_id', responseData.orderId);
                         localStorage.setItem('ja_service_' + responseData.orderId, 'palmistry');
                     } catch(e){}
                     if (typeof closePalmistryModal === 'function') closePalmistryModal();
-                    const win = window.open('', '_blank');
-                    if (win && !win.closed) {
-                        win.document.open();
-                        win.document.write(reportHtml);
-                        win.document.close();
-                    } else {
-                        window.location.href = "report.html?order=" + encodeURIComponent(responseData.orderId);
-                    }
+                    // ফোনত popup বন্ধ হোৱাৰ বাবে নতুন tab নখুলি, একেটা tab-তে ৰিপোৰ্ট খোলা হ'ব
+                    window.location.href = "report.html?order=" + encodeURIComponent(responseData.orderId);
                 } catch(repErr) {
                     console.warn("Palmistry direct report error:", repErr);
                     window.location.href = "report.html?order=" + encodeURIComponent(responseData.orderId);
@@ -2146,7 +2140,7 @@ window.processPayment = async function(e) {
             "name": "Jyotish Assam", 
             "description": responseData.serviceName, 
             "order_id": responseData.razorpayOrderId,
-            "callback_url": reportUrl,
+            "callback_url": isFB ? ((window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl ? window.JA_CONFIG.apiBaseUrl : "") + "/payment-callback?return=" + encodeURIComponent(reportUrl)) : reportUrl,
             "redirect": isFB ? true : false,
             "prefill": { "name": orderData.name, "email": orderData.email },
             "theme": { "color": "#6D28D9" },

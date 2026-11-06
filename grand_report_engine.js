@@ -641,7 +641,10 @@ function generatePalmistryReportHtml(order) {
                <div class="card-title" style="color: #047857;">🔍 AI সমুদ্ৰিক চিত্ৰ বিশ্লেষণৰ বিশেষ সাৰাংশ (AI Palm Vision Insight)</div>
                <div class="card-content">${aiAnalysis.aiSummary}</div>
            </div>`
-        : '';
+        : `<div class="info-card" style="border-left-color: #b45309; background: rgba(180, 83, 9, 0.07);">
+               <div class="card-title" style="color: #92400e;">ℹ️ গুৰুত্বপূৰ্ণ টোকা (Important Note)</div>
+               <div class="card-content">এই ৰিপোৰ্টখন সমুদ্ৰিক শাস্ত্ৰৰ সাধাৰণ নীতিৰ আধাৰত প্ৰস্তুত কৰা হৈছে। আপোনাৰ হাতৰ ফটোৰ AI-ভিত্তিক সূক্ষ্ম ৰেখা-বিশ্লেষণ এই মুহূৰ্তত সম্পন্ন হোৱা নাই; সেয়ে তলৰ ৰেখা আৰু চিহ্নৰ বৰ্ণনাসমূহ সাধাৰণ ফলাফল হিচাপে লওক। ফটোৰ বিশদ বিশ্লেষণৰ বাবে Support-ত অৰ্ডাৰ নম্বৰ জনাওক।</div>
+           </div>`;
 
     const curYrPalm = new Date().getFullYear();
     const firstRiseAge = 21 + (palmHash % 5); // 21 to 25
@@ -808,7 +811,7 @@ function generatePalmistryReportHtml(order) {
     const photoHtml = photo 
         ? `<div style="text-align: center; margin: 20px 0;">
                 <img src="${photo}" alt="Customer Palm Photo" style="max-width: 260px; max-height: 320px; border-radius: 10px; border: 4px solid #8b0000; box-shadow: 0 8px 20px rgba(0,0,0,0.25);">
-                <div style="font-size: 13px; color: #5c3a21; margin-top: 8px; font-weight: bold;">[ ${name}ৰ আপলোড কৰা হস্ততলৰ চিত্ৰ (${handName}) • সমুদ্ৰিক স্কেন সম্পূৰ্ণ ]</div>
+                <div style="font-size: 13px; color: #5c3a21; margin-top: 8px; font-weight: bold;">[ ${name}ৰ আপলোড কৰা হস্ততলৰ চিত্ৰ (${handName}) ${aiAnalysis ? '• AI চিত্ৰ বিশ্লেষণ সম্পূৰ্ণ' : ''} ]</div>
            </div>`
         : `<div style="text-align: center; margin: 20px 0;">
                 <svg viewBox="0 0 260 300" width="230" height="270" style="background: #fdf5e6; border: 3px solid #8b0000; border-radius: 12px; margin: 0 auto; display: block;">
@@ -1161,12 +1164,12 @@ function generatePalmistryReportHtml(order) {
             <div class="sub-heading">৫. চন আৰু বয়সভিত্তিক ভাগ্যোদয়ৰ ব্যক্তিগতকৃত ৰোডমেপ</div>
             <div class="info-card">
                 <div class="card-content">
-                    <strong>${name}</strong>ৰ হস্তৰেখাৰ গাণিতিক বিভাগ অনুসৰি জীৱনৰ গুৰুত্বপূৰ্ণ সাফল্য আৰু সোণালী সময়সীমা:<br><br>
-                    • <strong>প্ৰথম আৰম্ভণি আৰু আত্মনিৰ্ভৰশীলতা (বয়স ${toAsDigits(firstRiseAge)}–${toAsDigits(firstRiseAge + 2)} বছৰ / প্ৰায় ${toAsDigits(firstRiseYear)} চন):</strong><br>
+                    <strong>${name}</strong>ৰ বাবে সমুদ্ৰিক শাস্ত্ৰৰ সাধাৰণ জীৱন-পৰ্যায় অনুসৰি আনুমানিক বয়স-সীমা (এইবোৰ সাধাৰণ নিৰ্দেশনা, নিৰ্দিষ্ট ভৱিষ্যদ্বাণী নহয়):<br><br>
+                    • <strong>প্ৰথম আৰম্ভণি আৰু আত্মনিৰ্ভৰশীলতা (বয়স ${toAsDigits(firstRiseAge)}–${toAsDigits(firstRiseAge + 2)} বছৰ):</strong><br>
                     নিজৰ ভৰিত থিয় হোৱা, প্ৰথম গুৰুত্বপূৰ্ণ উপাৰ্জন বা পেছাদাৰী জীৱনৰ সুদৃঢ় আৰম্ভণি। এই সময়ছোৱাত আত্মবিশ্বাসৰ ভেটি গঢ় লৈ উঠে।<br><br>
-                    • <strong>ডাঙৰ সাফল্য আৰু পদমৰ্যাদা বৃদ্ধি (বয়স ${toAsDigits(bigPeakAge)}–${toAsDigits(bigPeakAge + 3)} বছৰ / প্ৰায় ${toAsDigits(bigPeakYear)} চন):</strong><br>
+                    • <strong>ডাঙৰ সাফল্য আৰু পদমৰ্যাদা বৃদ্ধি (বয়স ${toAsDigits(bigPeakAge)}–${toAsDigits(bigPeakAge + 3)} বছৰ):</strong><br>
                     ভাগ্য ৰেখা আৰু মস্তিষ্ক ৰেখাৰ সংযোগস্থল অনুসৰি এই বয়সছোৱাত কেৰিয়াৰত এক ডাঙৰ ইতিবাচক উত্থান, পদোন্নতি বা ব্যৱসায়ৰ ব্যাপক সম্প্ৰসাৰণ ঘটিব।<br><br>
-                    • <strong>সৰ্বোচ্চ সম্পত্তি আৰু সমৃদ্ধিৰ সোণালী সময় (বয়স ${toAsDigits(wealthPeakAge)}+ বছৰ / প্ৰায় ${toAsDigits(wealthPeakYear)} চনৰ পৰা):</strong><br>
+                    • <strong>সৰ্বোচ্চ সম্পত্তি আৰু সমৃদ্ধিৰ সোণালী সময় (বয়স ${toAsDigits(wealthPeakAge)}+ বছৰ):</strong><br>
                     স্থায়ী মাটি-বাৰী, বাহন আৰু নিৰাপদ সঞ্চয়ৰ চূড়ান্ত স্থিতি। এই সময়ত পূৰ্বৰ পৰিশ্ৰমৰ সম্পূৰ্ণ সুফল উপভোগ কৰিব পাৰিব।
                 </div>
             </div>
@@ -1720,7 +1723,7 @@ function generateGrandVedicReport(order, chart) {
         4: "গৃহ সুখ, মাতৃৰ আশীৰ্বাদ, মাটি-বাৰী আৰু মানসিক স্থিৰতাৰ মাধ্যমেৰে সুন্দৰ ৰূপত ফুটি উঠিব",
         5: "আপোনাৰ তীক্ষ্ণ বুদ্ধিমত্তা, পূৰ্বপুণ্য, শিক্ষা আৰু সৃজনশীল সিদ্ধান্তৰ দ্বাৰা সমৃদ্ধ হ'ব",
         6: "সংঘাত জয়, কঠোৰ শৃংখলা আৰু প্রতিযোগিতামূলক মনোভাৱৰ জৰিয়তে ক্ৰমান্বয়ে শক্তিশালী হৈ উঠিব",
-        7: "বিবাহোত্তৰ জীৱন, জীৱনসংগীৰ সহযোগিতা আৰু সামাজিক বা ব্যৱসায়িক অংশীদাৰীত্বৰ দ্বাৰা উদ্ভাসিত হ'ব",
+        7: "দাম্পত্য জীৱন (বা ঘনিষ্ঠ সম্পৰ্ক), জীৱনসংগীৰ সহযোগিতা আৰু সামাজিক বা ব্যৱসায়িক অংশীদাৰীত্বৰ দ্বাৰা উদ্ভাসিত হ'ব",
         8: "গভীৰ ধৈৰ্য, গৱেষণামূলক দৃষ্টিভংগী আৰু জীৱনৰ আকস্মিক সুযোগসমূহৰ মাজেৰে ফলদায়ক হ'ব",
         9: "ভাগ্যৰ সহযোগিতা, ধৰ্মীয় নিষ্ঠা আৰু পিতৃ-গুৰুজনৰ আশীৰ্বাদত বিশেষভাৱে উজ্জ্বল হ'ব",
         10: "আপোনাৰ কৰ্মক্ষেত্ৰ, বৃত্তিগত দক্ষতা আৰু সামাজিক মান-মৰ্যাদাৰ সৈতে পোনপটীয়াকৈ সংযুক্ত হৈ থাকিব",
@@ -3310,6 +3313,19 @@ function generateGrandVedicReport(order, chart) {
         const bestMonthsStr = auspiciousMonthNames.join(", ") || "বছৰটোৰ মধ্যভাগ";
         const cautionMonthsStr = cautionMonthNames.join(", ") || "কোনো বিশেষ প্ৰতিকূল মাহ নাই";
         const bestPropMonthsStr = auspiciousMonthNames.slice(0, 3).join(", ") || bestMonthsStr;
+        // months when Venus+Mars+Jupiter (karakas of home / vehicle / property) transit favourably from the Moon
+        const rtGood = (k, sn) => getGocharStatus(k, sn.hm[k]).badge === "শুভ গোচৰ ফল";
+        const propMonthsList = rtSnaps.filter(sn => (rtGood('Venus', sn) ? 1 : 0) + (rtGood('Mars', sn) ? 1 : 0) + (rtGood('Jupiter', sn) ? 1 : 0) >= 2).map(sn => gregMonthsAs[sn.mIdx]);
+        const propMonthsStr = propMonthsList.length ? propMonthsList.slice(0, 4).join(", ") : "";
+        // months when transit Jupiter (marriage / expansion karaka) is in a favourable house from the Moon
+        const jupGoodMonthsList = rtSnaps.filter(sn => rtGood('Jupiter', sn)).map(sn => gregMonthsAs[sn.mIdx]);
+        const jupGoodMonthsStr = jupGoodMonthsList.join(", ");
+        // current dasha connection with marriage (7th lord, Venus)
+        const _curMaha = chart.activeMahadashaLord, _curAntar = chart.activeAntardashaLord;
+        const _marSig = [seventhLordKey, 'Venus'];
+        const marriageDashaNote = _marSig.includes(_curAntar)
+            ? `; তদুপৰি চলিত <strong>${planetNames[_curMaha]} মহাদশা • ${planetNames[_curAntar]} অন্তৰ্দশা</strong> (${toAsDigits(chart.activeAntardashaEnd)} লৈ) বিবাহ-সম্বন্ধীয় গ্ৰহৰ দশা হোৱাৰ বাবে এইটো অনুকূল সময়`
+            : `; কিন্তু চলিত অন্তৰ্দশাপতি ${planetNames[_curAntar]} বিবাহৰ প্ৰত্যক্ষ কাৰক নহয়, গতিকে সময় মূলতঃ গোচৰৰ ওপৰত নিৰ্ভৰ কৰিব`;
 
         const rtHouseTopicAs = { 1: "ব্যক্তিত্ব আৰু স্বাস্থ্য", 2: "ধন আৰু পৰিয়াল", 3: "পৰাক্ৰম আৰু যোগাযোগ", 4: "গৃহ আৰু মাতৃ", 5: "বিদ্যা, প্ৰেম আৰু সন্তান", 6: "ৰোগ, ঋণ আৰু শত্ৰু", 7: "দাম্পত্য আৰু অংশীদাৰী", 8: "আকস্মিক পৰিৱৰ্তন আৰু গুপ্ত বিষয়", 9: "ভাগ্য আৰু ধৰ্ম", 10: "কৰ্ম আৰু প্ৰতিষ্ঠা", 11: "আয় আৰু মনোবাঞ্ছা", 12: "ব্যয় আৰু বিদেশ" };
         const buildMonthCardsHtml = (startOffset, endOffset) => {
@@ -3431,7 +3447,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="info-card">
                 <div class="card-content">
                     • <strong>জন্ম কুণ্ডলী আৰু দশা সংযোগ:</strong> আপোনাৰ জন্ম কুণ্ডলীৰ ১০ম কৰ্ম ভাবত <strong>${cInfo.asName}</strong> ৰাশি উদিত হৈছে আৰু দশম পতি <strong>${planetNames[tenthLordKey]}</strong> কুণ্ডলীৰ <strong>${toAsDigits(tenthLordHouse)} নং ঘৰত</strong> স্থিত। বৰ্তমান চলিত <strong>${currentDashaAs} মহাদশা (${toAsDigits(dashaLordNatalH)} নং ঘৰ) • ${activeAntardashaAs} অন্তৰ্দশা (${toAsDigits(adLordNatalH)} নং ঘৰ)</strong> ৰ ফলত আপোনাৰ কৰ্মজীৱন এই বছৰ ${lordPlacedInHouseMeaningsAs[tenthLordHouse]}।<br><br>
-                    • <strong>বছৰটোৰ প্ৰথমাৰ্ধ বনাম দ্বিতীয়াৰ্ধ:</strong> বছৰটোৰ প্ৰথম ভাগত ${antardashaMonthlyFlavorAs[activeAntardashaLordKey] || "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব আহিব"}, আনহাতে বিশেষকৈ <strong>${bestMonthsStr}</strong> মাহকেইটাত সূৰ্য আৰু বৃহস্পতিৰ শুভ গোচৰ সংযোগে চাকৰিত পদোন্নতি, দৰমহা বৃদ্ধি বা পচন্দৰ স্থানলৈ বদলিৰ প্ৰৱল সুযোগ আনি দিব।
+                    • <strong>বছৰটোৰ প্ৰথমাৰ্ধ বনাম দ্বিতীয়াৰ্ধ:</strong> বছৰটোৰ প্ৰথম ভাগত ${antardashaMonthlyFlavorAs[activeAntardashaLordKey] || "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব আহিব"}, আনহাতে বিশেষকৈ <strong>${bestMonthsStr}</strong> মাহকেইটাত গ্ৰহবোৰৰ সামগ্ৰিক শুভ গোচৰৰ ফলত চাকৰিত পদোন্নতি, দৰমহা বৃদ্ধি বা পচন্দৰ স্থানলৈ বদলিৰ সুযোগ বেছি থাকিব।
                 </div>
             </div>
 
@@ -3461,7 +3477,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="info-card">
                 <div class="card-content">
                     • <strong>গৃহ আৰু মাটি-বাৰী:</strong> আপোনাৰ কুণ্ডলীৰ ৪ৰ্থ সুখ স্থানত <strong>${rashiAsMap[fourthRashi]}</strong> ৰাশি, চতুৰ্থ পতি <strong>${planetNames[fourthLordKey]}</strong> <strong>${toAsDigits(fourthLordHouse)} নং ঘৰত</strong>, ভূমি কাৰক মংগল <strong>${toAsDigits(marsHouse)} নং ঘৰত</strong> আৰু বাহন কাৰক শুক্ৰ <strong>${toAsDigits(venusHouse)} নং ঘৰত</strong> অৱস্থিত। ইয়াৰ ফলত এই বছৰ আপোনাৰ ভূমি-গৃহ আৰু সম্পত্তিৰ যোগ ${lordPlacedInHouseMeaningsAs[fourthLordHouse]}।<br><br>
-                    • <strong>গৃহ নিৰ্মাণ বা বাহন ক্ৰয়ৰ বাৰ্ষিক শুভ মাহ:</strong> আপোনাৰ জন্ম ৰাশি <strong>${moonRashiName}</strong> অনুসৰি এই বছৰ মাটি ক্ৰয়, ঘৰ নিৰ্মাণ আৰম্ভ বা বাহন ক্ৰয়ৰ বাবে <strong>${bestPropMonthsStr}</strong> মাহকেইটা সৰ্বাধিক ফলপ্ৰসূ হ'ব।
+                    • <strong>গৃহ নিৰ্মাণ বা বাহন ক্ৰয়ৰ বাৰ্ষিক শুভ মাহ:</strong> আপোনাৰ জন্ম ৰাশি <strong>${moonRashiName}</strong> অনুসৰি ${propMonthsStr ? `এই বছৰ মাটি ক্ৰয়, ঘৰ নিৰ্মাণ আৰম্ভ বা বাহন ক্ৰয়ৰ বাবে (শুক্ৰ, মংগল আৰু বৃহস্পতিৰ গোচৰ অনুকূল হোৱা) <strong>${propMonthsStr}</strong> মাহকেইটা তুলনামূলকভাৱে ভাল` : 'এই বছৰ ভূমি-গৃহ বা বাহন ক্ৰয়ৰ বাবে গ্ৰহৰ বিশেষ অনুকূল মাহ পোৱা নগ\'ল; ডাঙৰ ক্ৰয়ৰ আগতে ভালদৰে পৰীক্ষা কৰি ল\'ব'}।
                 </div>
             </div>
         </div>`;
@@ -3474,7 +3490,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="info-card">
                 <div class="card-content">
                     • <strong>প্ৰেম জীৱন:</strong> আপোনাৰ কুণ্ডলীৰ ৫ম ভাবত <strong>${rashiAsMap[fifthHouseRashi]}</strong> ৰাশি (অধিপতি ${planetNames[fifthLordKey]} ${toAsDigits(fifthLordHouse)} নং ঘৰত) আৰু শুক্ৰ <strong>${toAsDigits(venusHouse)} নং ঘৰত (${pVen.rName} ৰাশিত)</strong> স্থিত। ইয়াৰ ফলত এই বছৰ আপোনাৰ প্ৰেম আৰু আৱেগিক জীৱনত ${rashiDetails[fifthHouseRashi]?.trait || "গভীৰ আন্তৰিকতা"} প্রকাশ পাব।<br><br>
-                    • <strong>অবিবাহিতৰ বিবাহ যোগ:</strong> ৭ম ভাবত <strong>${seventhRashiAs}</strong> ৰাশি (অধিপতি ${planetNames[seventhLordKey]} ${toAsDigits(seventhLordHouse)} নং ঘৰত) আৰু চলিত বৰ্ষত বৃহস্পতি চন্দ্ৰৰ পৰা ${toAsDigits(tJupH)} নং ভাবত থকাত ${[1, 2, 5, 7, 9, 11].includes(tJupH) ? `এই বছৰ অবিবাহিতসকলৰ বাবে বিবাহৰ কথা-বতৰা পাকা হোৱা আৰু মাংগলিক বিবাহ সম্পন্ন হোৱাৰ অতি প্ৰৱল যোগ সূচিত হৈছে (বিশেষকৈ ${bestPropMonthsStr} মাহত)` : `পৰিয়ালৰ জ্যেষ্ঠজনৰ সহযোগত উপযুক্ত জীৱনসংগীৰ সন্ধান আগবাঢ়িব আৰু ইতিবাচক যোগাযোগ গঢ়ি উঠিব`}।
+                    • <strong>অবিবাহিতৰ বিবাহ যোগ:</strong> ৭ম ভাবত <strong>${seventhRashiAs}</strong> ৰাশি (অধিপতি ${planetNames[seventhLordKey]} ${toAsDigits(seventhLordHouse)} নং ঘৰত) ${jupGoodMonthsStr ? `এই বছৰৰ <strong>${jupGoodMonthsStr}</strong> মাহত গোচৰৰ বৃহস্পতি চন্দ্ৰৰ পৰা শুভ ভাবত থাকে, সেয়ে সেই সময়ত বিবাহৰ কথা-বতৰা আগবঢ়াৰ সুযোগ বেছি` : `এই বছৰ বৃহস্পতিৰ গোচৰ বিবাহৰ বাবে বিশেষ অনুকূল নহয়`}${marriageDashaNote}।
                 </div>
             </div>
 
@@ -3494,7 +3510,7 @@ function generateGrandVedicReport(order, chart) {
             <div class="sub-heading">১. বাৰ্ষিক স্বাস্থ্য আৰু শাৰীৰিক ভাৰসাম্য (${ascRashiName} লগ্ন • ${rashiAsMap[sixthRashi]} ৬ষ্ঠ ভাব)</div>
             <div class="info-card">
                 <div class="card-content">
-                    • <strong>দেহ আৰু জীৱনীশক্তি:</strong> আপোনাৰ <strong>${ascRashiName} লগ্ন</strong> (লগ্নপতি ${planetNames[getHouseLordKey(1)]} ${toAsDigits(getHouseLordPlacedInHouse(1))} নং ঘৰত) আৰু ৬ষ্ঠ পতি <strong>${planetNames[sixthLordKey]}</strong> <strong>${toAsDigits(sixthLordHouse)} নং ঘৰত</strong> অৱস্থিত হোৱাত এই বছৰ সামগ্ৰিক ৰোগ প্ৰতিৰোধ ক্ষমতা সবল থাকিব।<br><br>
+                    • <strong>দেহ আৰু জীৱনীশক্তি:</strong> আপোনাৰ <strong>${ascRashiName} লগ্ন</strong> (লগ্নপতি ${planetNames[getHouseLordKey(1)]} ${toAsDigits(getHouseLordPlacedInHouse(1))} নং ঘৰত) আৰু ৬ষ্ঠ পতি <strong>${planetNames[sixthLordKey]}</strong> <strong>${toAsDigits(sixthLordHouse)} নং ঘৰত</strong> অৱস্থিত। ${[6, 8, 12].includes(getHouseLordPlacedInHouse(1)) ? 'লগ্নপতি দুষ্ঠান (৬/৮/১২) ঘৰত থকাৰ বাবে শৰীৰৰ শক্তি ওঠৰ-নমা কৰিব পাৰে; নিয়মীয়া টোপনি, বিশ্ৰাম আৰু চেক-আপলৈ বিশেষ গুৰুত্ব দিয়ক।' : 'লগ্নপতি শুভ ঘৰত থকাৰ বাবে এই বছৰ সামগ্ৰিক ৰোগ প্ৰতিৰোধ ক্ষমতা ভাল থাকিব।'}<br><br>
                     • <strong>বিশেষ স্বাস্থ্য যত্ন:</strong> চন্দ্ৰ ৰাশি ${moonRashiName} ৰ পৰা শনি ${toAsDigits(tSatH)} নং ভাবত আৰু ৰাহু ${toAsDigits(tRahH)} নং ভাবত ভ্ৰমণ কৰাত বিশেষকৈ <strong>${cautionMonthsStr}</strong> মাহত হজম শক্তি, গেছ/অম্লতা বা স্নায়ৱিক ভাগৰৰ প্ৰতি সচেতন থাকিব। দৈনিক সূৰ্য নমস্কাৰ, প্ৰাণায়াম আৰু বিশুদ্ধ আহাৰ গ্ৰহণে আপোনাক গোটেই বছৰটো নিৰোগী কৰি ৰাখিব।
                 </div>
             </div>
@@ -3502,14 +3518,14 @@ function generateGrandVedicReport(order, chart) {
             <div class="sub-heading">২. শিক্ষা, উচ্চ অধ্যয়ন আৰু প্ৰতিযোগিতামূলক পৰীক্ষা (${rashiAsMap[fifthHouseRashi]} ৫ম • ${rashiAsMap[ninthRashi]} ৯ম ভাব)</div>
             <div class="info-card">
                 <div class="card-content">
-                    • কুণ্ডলীৰ ৫ম পতি <strong>${planetNames[fifthLordKey]}</strong> (${toAsDigits(fifthLordHouse)} নং ঘৰত), ৯ম ভাগ্য পতি <strong>${planetNames[ninthLordKey]}</strong> (${toAsDigits(ninthLordHouse)} নং ঘৰত) আৰু বুধ (${toAsDigits(mercuryHouse)} নং ঘৰত) ৰ স্থিতিয়ে সূচায় যে বিদ্যাৰ্থীসকলৰ বাবে এই বছৰটো উচ্চ শিক্ষা, বৃত্তিমূলক পাঠ্যক্ৰম আৰু চৰকাৰী প্ৰতিযোগিতামূলক পৰীক্ষাত সফলতা লাভৰ এক সোণালী সময়।
+                    • কুণ্ডলীৰ ৫ম পতি <strong>${planetNames[fifthLordKey]}</strong> (${toAsDigits(fifthLordHouse)} নং ঘৰত), ৯ম ভাগ্য পতি <strong>${planetNames[ninthLordKey]}</strong> (${toAsDigits(ninthLordHouse)} নং ঘৰত) আৰু বুধ (${toAsDigits(mercuryHouse)} নং ঘৰত) ৰ স্থিতিয়ে সূচায় যে ${[6, 8, 12].includes(fifthLordHouse) ? 'বিদ্যাৰ্থীসকলৰ বাবে এই বছৰ অধ্যয়নত অতিৰিক্ত পৰিশ্ৰম আৰু মনোযোগ-সংযমৰ প্ৰয়োজন হ\'ব (পঞ্চম পতি দুষ্ঠান ঘৰত); দূৰ স্থান বা বিদেশত পঢ়াৰ সুযোগো আহিব পাৰে। নিয়মীয়া পঢ়া-পৰিকল্পনা কৰিলে সফলতা সম্ভৱ।' : 'বিদ্যাৰ্থীসকলৰ বাবে এই বছৰটো উচ্চ শিক্ষা, বৃত্তিমূলক পাঠ্যক্ৰম আৰু প্ৰতিযোগিতামূলক পৰীক্ষাত সফলতা লাভৰ এক অনুকূল সময়।'}
                 </div>
             </div>
 
             <div class="sub-heading">৩. বাৰ্ষিক ভ্ৰমণ আৰু তীৰ্থযাত্ৰা যোগ (${rashiAsMap[thirdRashi]} ৩য় • ${rashiAsMap[twelfthRashi]} ১২তম ভাব)</div>
             <div class="info-card">
                 <div class="card-content">
-                    • ৩য় ভ্ৰমণ ভাবত <strong>${rashiAsMap[thirdRashi]}</strong> (অধিপতি ${planetNames[thirdLordKey]} ${toAsDigits(thirdLordHouse)} নং ঘৰত) আৰু ৯ম পুণ্য স্থানত <strong>${rashiAsMap[ninthRashi]}</strong> ৰাশিৰ সংযোগে এই বছৰ কৰ্মসূত্ৰে লাভজনক ভ্ৰমণৰ লগতে পৰিয়ালৰ সৈতে পবিত্ৰ তীৰ্থস্থান দৰ্শনৰ সুন্দৰ যোগ সৃষ্টি কৰিছে।
+                    • ৩য় ভ্ৰমণ ভাবত <strong>${rashiAsMap[thirdRashi]}</strong> (অধিপতি ${planetNames[thirdLordKey]} ${toAsDigits(thirdLordHouse)} নং ঘৰত) আৰু ৯ম পুণ্য স্থানত <strong>${rashiAsMap[ninthRashi]}</strong> ৰাশিৰ সংযোগে এই বছৰ কৰ্মসূত্ৰে লাভজনক ভ্ৰমণৰ লগতে পৰিয়ালৰ সৈতে পবিত্ৰ তীৰ্থস্থান দৰ্শনৰ সম্ভাৱনা আছে।
                 </div>
             </div>
         </div>`;
@@ -3538,7 +3554,7 @@ function generateGrandVedicReport(order, chart) {
                     <tr><th colspan="2">🌟 বছৰটোৰ সামগ্ৰিক শুভ সংকেত আৰু পঞ্জিকা (${moonRashiName} ৰাশি • ${ascRashiName} লগ্ন) 🌟</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>বছৰটোৰ সৰ্বশ্ৰেষ্ঠ শুভ মাহসমূহ</strong></td><td><strong style="color:#047857;">${bestMonthsStr}</strong> (চন্দ্ৰ ৰাশিৰ পৰা ৩য়, ৬ষ্ঠ, ১০ম আৰু ১১তম শুভ সূৰ্য গোচৰ মাহ)</td></tr>
+                    <tr><td><strong>বছৰটোৰ সৰ্বশ্ৰেষ্ঠ শুভ মাহসমূহ</strong></td><td><strong style="color:#047857;">${bestMonthsStr}</strong> (সূৰ্য, মংগল, বুধ, শুক্ৰ, বৃহস্পতি আৰু শনিৰ প্ৰকৃত গোচৰ চন্দ্ৰ ৰাশিৰ পৰা গণনা কৰি উলিওৱা)</td></tr>
                     <tr><td><strong>সতৰ্ক থাকিবলগীয়া মাহসমূহ</strong></td><td><strong style="color:#8b0000;">${cautionMonthsStr}</strong> (স্বাস্থ্য, বাহন আৰু ডাঙৰ বিত্তীয় ব্যয়ত সংযম ৰাখিব)</td></tr>
                     <tr><td><strong>বাৰ্ষিক শুভ ৰং, সংখ্যা আৰু দিশ</strong></td><td><strong>ৰং:</strong> ${lMeta.color} &nbsp;|&nbsp; <strong>সংখ্যা:</strong> ${lMeta.num} &nbsp;|&nbsp; <strong>দিশ:</strong> ${lMeta.dir}</td></tr>
                 </tbody>
