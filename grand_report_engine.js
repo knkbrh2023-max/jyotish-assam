@@ -122,16 +122,9 @@ function jaNormPlace(s/*:any*/)/*:string*/ {
   return String(s == null ? "" : s).toLowerCase().replace(/[.,()\-_\/]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
-// Returns {lat, lon, matched, source, name}. matched=false means the place was NOT recognised
-// and Guwahati is used as an approximation (reports show a visible note in that case).
-function jaResolvePlace(placeStr/*:any*/, opts/*:any*/)/*:{lat:number,lon:number,matched:boolean,source:string,name:string}*/ {
-  if (opts && opts.lat !== null && opts.lat !== undefined && opts.lat !== "" && opts.lon !== null && opts.lon !== undefined && opts.lon !== "") {
-    const la = Number(opts.lat), lo = Number(opts.lon);
-    if (isFinite(la) && isFinite(lo) && Math.abs(la) <= 66 && Math.abs(lo) <= 180 && !(la === 0 && lo === 0)) {
-      return { lat: la, lon: lo, matched: true, source: "order", name: String(placeStr || "") };
-    }
-  }
-  const q = jaNormPlace(placeStr);
+function jaMatchPlace(text/*:string*/)/*:any*/ {
+  const q = jaNormPlace(text);
+  if (!q) return null;
   const padded = " " + q + " ";
   let best/*:any*/ = null, bestLen = 0;
   for (const row of JA_PLACES) {
@@ -143,7 +136,27 @@ function jaResolvePlace(placeStr/*:any*/, opts/*:any*/)/*:{lat:number,lon:number
       if (hit && k.length > bestLen) { best = row; bestLen = k.length; }
     }
   }
-  if (best) return { lat: best[1], lon: best[2], matched: true, source: "gazetteer", name: best[0][0] };
+  return best;
+}
+
+// Returns {lat, lon, matched, source, name}. matched=false means the place was NOT recognised
+// and Guwahati is used as an approximation (reports show a visible note in that case).
+function jaResolvePlace(placeStr/*:any*/, opts/*:any*/)/*:{lat:number,lon:number,matched:boolean,source:string,name:string}*/ {
+  if (opts && opts.lat !== null && opts.lat !== undefined && opts.lat !== "" && opts.lon !== null && opts.lon !== undefined && opts.lon !== "") {
+    const la = Number(opts.lat), lo = Number(opts.lon);
+    if (isFinite(la) && isFinite(lo) && Math.abs(la) <= 66 && Math.abs(lo) <= 180 && !(la === 0 && lo === 0)) {
+      return { lat: la, lon: lo, matched: true, source: "order", name: String(placeStr || "") };
+    }
+  }
+  const full = String(placeStr == null ? "" : placeStr);
+  // read the parts from left to right (village first, then district): "Laluk, Lakhimpur" -> Laluk
+  const parts = full.split(/[,;\/|]+/);
+  for (const part of parts) {
+    const row = jaMatchPlace(part);
+    if (row) return { lat: row[1], lon: row[2], matched: true, source: "gazetteer", name: row[0][0] };
+  }
+  const whole = jaMatchPlace(full);
+  if (whole) return { lat: whole[1], lon: whole[2], matched: true, source: "gazetteer", name: whole[0][0] };
   return { lat: 26.1445, lon: 91.7362, matched: false, source: "default-guwahati", name: "Guwahati" };
 }
 
@@ -636,6 +649,7 @@ function generatePalmistryReportHtml(order) {
         traits: (aiAnalysis && aiAnalysis.personalityTraits) ? aiAnalysis.personalityTraits : baseElem.traits,
         bestFields: (aiAnalysis && aiAnalysis.bestCareerFields) ? aiAnalysis.bestCareerFields : baseElem.bestFields
     };
+    const aiOk = !!(aiAnalysis && aiAnalysis.aiSummary);
     const aiVisionBanner = (aiAnalysis && aiAnalysis.aiSummary)
         ? `<div class="info-card" style="border-left-color: #059669; background: rgba(5, 150, 105, 0.08);">
                <div class="card-title" style="color: #047857;">🔍 AI সমুদ্ৰিক চিত্ৰ বিশ্লেষণৰ বিশেষ সাৰাংশ (AI Palm Vision Insight)</div>
@@ -811,7 +825,7 @@ function generatePalmistryReportHtml(order) {
     const photoHtml = photo 
         ? `<div style="text-align: center; margin: 20px 0;">
                 <img src="${photo}" alt="Customer Palm Photo" style="max-width: 260px; max-height: 320px; border-radius: 10px; border: 4px solid #8b0000; box-shadow: 0 8px 20px rgba(0,0,0,0.25);">
-                <div style="font-size: 13px; color: #5c3a21; margin-top: 8px; font-weight: bold;">[ ${name}ৰ আপলোড কৰা হস্ততলৰ চিত্ৰ (${handName}) ${aiAnalysis ? '• AI চিত্ৰ বিশ্লেষণ সম্পূৰ্ণ' : ''} ]</div>
+                <div style="font-size: 13px; color: #5c3a21; margin-top: 8px; font-weight: bold;">[ ${name}ৰ আপলোড কৰা হস্ততলৰ চিত্ৰ (${handName}) ${aiOk ? '• AI চিত্ৰ বিশ্লেষণ সম্পূৰ্ণ' : ''} ]</div>
            </div>`
         : `<div style="text-align: center; margin: 20px 0;">
                 <svg viewBox="0 0 260 300" width="230" height="270" style="background: #fdf5e6; border: 3px solid #8b0000; border-radius: 12px; margin: 0 auto; display: block;">
@@ -1463,6 +1477,9 @@ function generateGrandVedicReport(order, chart) {
         const lKey = getHouseLordKey(houseNumber);
         return getPlanetHouse(chart?.planets?.[lKey]?.rashi_no);
     };
+    const rtDebilSign = { Sun: 'Libra', Moon: 'Scorpio', Mars: 'Cancer', Mercury: 'Pisces', Jupiter: 'Capricorn', Venus: 'Virgo', Saturn: 'Aries' };
+    const rtIsDebil = (k) => !!(chart.planets[k] && rtDebilSign[k] === chart.planets[k].rashi);
+    // debilitation (neecha) signs, used to avoid calling a weak lord "very strong"
 
     // Planetary Dignity (উচ্চস্থ / স্বক্ষেত্ৰী / মিত্ৰক্ষেত্ৰী / সম / নিদানযোগ্য)
     const getPlanetDignityInfo = (pKey, rashiEn) => {
@@ -1886,7 +1903,7 @@ function generateGrandVedicReport(order, chart) {
         <h2 class="section-title">❁ বৰ্তমান আৰু ভৱিষ্যতৰ ভাগ্যোদয় ৰোডমেপ (১ম খণ্ড: ${p1RangeStr}) ❁</h2>
         <div class="shloka">"ভাগ্যং ফলতি সৰ্বত্ৰ ন বিদ্যা ন চ পৌৰুষম্।"</div>
         <div class="text-section">
-            আপোনাৰ <strong>${ascRashiName} লগ্ন</strong>, <strong>${moonRashiName} ৰাশি (${moonNakshatra} নক্ষত্ৰ)</strong> আৰু বিংশোত্তৰী মহাদশা চক্ৰৰ আধাৰত আপোনাৰ বৰ্তমান বয়স (${toAsDigits(clientAge)} বছৰ)ৰ পৰা আৰম্ভ কৰি অনাগত ভৱিষ্যতৰ ব্যক্তিগতকৃত সময়সীমাসমূহ তলত বিশ্লেষণ কৰা হ'ল:
+            আপোনাৰ <strong>${ascRashiName} লগ্ন</strong>, <strong>${moonRashiName} ৰাশি (${moonNakshatra} নক্ষত্ৰ)</strong> আৰু বিংশোত্তৰী মহাদশা চক্ৰৰ আধাৰত ${clientAge < 1 ? 'জন্মৰ পৰা' : `আপোনাৰ বৰ্তমান বয়স (${toAsDigits(clientAge)} বছৰ)ৰ পৰা`} আৰম্ভ কৰি অনাগত ভৱিষ্যতৰ ব্যক্তিগতকৃত সময়সীমাসমূহ তলত বিশ্লেষণ কৰা হ'ল:
         </div>
         ${renderMilestoneCards(p1Milestones, 1)}
     </div>`;
@@ -1964,7 +1981,7 @@ function generateGrandVedicReport(order, chart) {
         <div class="info-card">
             <div class="card-title">চাকৰি আৰু চৰকাৰী/বেচৰকাৰী সেৱা (Job & Service Sector)</div>
             <div class="card-content">
-                ✓ আপোনাৰ কুণ্ডলীত সূৰ্য্য (${toAsDigits(sunHouse)} নং ঘৰ, ${pSun.rName} ৰাশি), বৃহস্পতি (${toAsDigits(jupiterHouse)} নং ঘৰ) আৰু ৬ষ্ঠ ভাৱত <strong>${rashiAsMap[sixthRashi]}</strong> ৰাশিৰ প্ৰভাৱে সূচায় যে ${[1, 5, 6, 9, 10, 11].includes(sunHouse) || [1, 5, 9, 10, 11].includes(jupiterHouse) ? "চৰকাৰী বা উচ্চস্তৰীয় প্ৰতিষ্ঠানত সন্মানজনক পদবী লাভৰ যোগ অত্যন্ত প্ৰৱল" : "প্ৰশাসনিক, তদাৰকী বা দক্ষতাভিত্তিক চাকৰিত আপুনি ক্ৰমান্বয়ে উচ্চ স্থান লাভ কৰিব"}।<br>
+                ✓ আপোনাৰ কুণ্ডলীত সূৰ্য্য (${toAsDigits(sunHouse)} নং ঘৰ, ${pSun.rName} ৰাশি), বৃহস্পতি (${toAsDigits(jupiterHouse)} নং ঘৰ) আৰু ৬ষ্ঠ ভাৱত <strong>${rashiAsMap[sixthRashi]}</strong> ৰাশিৰ প্ৰভাৱে সূচায় যে ${rtIsDebil(tenthLordKey) ? "চৰকাৰী বা উচ্চস্তৰীয় প্ৰতিষ্ঠানত পদবী লাভৰ সম্ভাৱনা আছে, কিন্তু দশম পতি নীচ ৰাশিত থকাৰ বাবে ইয়াৰ বাবে অতিৰিক্ত পৰিশ্ৰম, ধৈৰ্য আৰু সঠিক পৰিকল্পনাৰ প্ৰয়োজন হ'ব" : ([1, 5, 6, 9, 10, 11].includes(sunHouse) || [1, 5, 9, 10, 11].includes(jupiterHouse)) ? "চৰকাৰী বা উচ্চস্তৰীয় প্ৰতিষ্ঠানত সন্মানজনক পদবী লাভৰ যোগ প্ৰৱল" : "প্ৰশাসনিক, তদাৰকী বা দক্ষতাভিত্তিক চাকৰিত আপুনি ক্ৰমান্বয়ে উচ্চ স্থান লাভ কৰিব"}।<br>
                 ✓ বিশেষকৈ <strong>${planetNames[tenthLordKey]}</strong> আৰু <strong>${currentDashaAs}</strong> ৰ দশা-অন্তৰ্দশাত পদোন্নতি আৰু দৰমহা বৃদ্ধি ক্ষিপ্ৰ হ'ব।
             </div>
         </div>
@@ -2127,10 +2144,18 @@ function generateGrandVedicReport(order, chart) {
     };
     const compatibleRashisAs = compatibleRashisMap[moonRashi] || "সিংহ, ধনু, বৃষ আৰু তুলা ৰাশি";
 
-    const hasLoveLink = [1, 5, 7, 9, 11].includes(venusHouse) || fifthLordHouse === 7 || seventhLordHouse === 5 || fifthLordKey === seventhLordKey;
+    // classical indicators of a love-linked marriage (5th = romance, 7th = marriage)
+    const _loveSignals = [];
+    if (fifthLordKey === seventhLordKey) _loveSignals.push('পঞ্চম আৰু সপ্তম দুয়োটা ভাৱৰ অধিপতি একেজন গ্ৰহ');
+    else if (fifthLordHouse === seventhLordHouse) _loveSignals.push(`পঞ্চম পতি ${planetNames[fifthLordKey]} আৰু সপ্তম পতি ${planetNames[seventhLordKey]} একেটা ঘৰত (যুতি)`);
+    if (Math.abs(fifthLordHouse - seventhLordHouse) === 6) _loveSignals.push('পঞ্চম পতি আৰু সপ্তম পতিৰ পাৰস্পৰিক দৃষ্টি');
+    if (fifthLordHouse === 7 || seventhLordHouse === 5) _loveSignals.push(`পঞ্চম আৰু সপ্তম ভাৱৰ অধিপতিৰ স্থান-সম্বন্ধ (পঞ্চম পতি ${toAsDigits(fifthLordHouse)} নং ঘৰত, সপ্তম পতি ${toAsDigits(seventhLordHouse)} নং ঘৰত)`);
+    if ([5, 7].includes(venusHouse)) _loveSignals.push(`প্ৰেম-কাৰক শুক্ৰ ${toAsDigits(venusHouse)} নং ভাৱত`);
+    if (rtOccupants(5).concat(rtOccupants(7)).includes('Mars') && [5, 7].includes(venusHouse)) _loveSignals.push('শুক্ৰ-মংগলৰ প্ৰভাৱ');
+    const hasLoveLink = _loveSignals.length > 0;
     const marriageTypeAssessment = hasLoveLink
-        ? `আপোনাৰ কুণ্ডলীত পঞ্চম পতি <strong>${planetNames[fifthLordKey]}</strong> (${toAsDigits(fifthLordHouse)} নং ঘৰত), সপ্তম পতি <strong>${planetNames[seventhLordKey]}</strong> (${toAsDigits(seventhLordHouse)} নং ঘৰত) আৰু শুক্ৰ (${toAsDigits(venusHouse)} নং ঘৰত) ৰ মাজত অনুকূল সংযোগ থকাৰ বাবে <strong>প্ৰেমৰ অন্তত পাৰিবাৰিক সন্মতিৰে বিবাহ (Love-cum-Arranged Marriage)</strong> হোৱাৰ সম্ভাৱনা অত্যন্ত প্ৰৱল।`
-        : `আপোনাৰ কুণ্ডলীত সপ্তম পতি <strong>${planetNames[seventhLordKey]}</strong> ${toAsDigits(seventhLordHouse)} নং ঘৰত আৰু গুৰু বৃহস্পতি ${toAsDigits(jupiterHouse)} নং ঘৰত অৱস্থিত হোৱাৰ বাবে পৰিয়াল আৰু জ্যেষ্ঠজনৰ আশীৰ্বাদেৰে নিৰ্বাচিত <strong>সম্বন্ধভিত্তিক বিবাহ (Arranged Marriage)</strong> আপোনাৰ বাবে অধিক শুভ, সন্মানজনক আৰু চিৰসুখী হ'ব।`;
+        ? `আপোনাৰ কুণ্ডলীত <strong>${_loveSignals.join('; ')}</strong> থকাৰ বাবে <strong>প্ৰেমৰ অন্তত পাৰিবাৰিক সন্মতিৰে বিবাহ (Love-cum-Arranged Marriage)</strong> হোৱাৰ সম্ভাৱনা আছে।`
+        : `আপোনাৰ কুণ্ডলীত পঞ্চম পতি <strong>${planetNames[fifthLordKey]}</strong> (${toAsDigits(fifthLordHouse)} নং ঘৰত) আৰু সপ্তম পতি <strong>${planetNames[seventhLordKey]}</strong> (${toAsDigits(seventhLordHouse)} নং ঘৰত)ৰ মাজত প্ৰত্যক্ষ সংযোগ (যুতি, পাৰস্পৰিক দৃষ্টি বা স্থান-সম্বন্ধ) পোৱা নগ'ল; সেয়ে পৰিয়াল আৰু জ্যেষ্ঠজনৰ আশীৰ্বাদেৰে নিৰ্বাচিত <strong>সম্বন্ধভিত্তিক বিবাহ (Arranged Marriage)</strong> আপোনাৰ বাবে অধিক অনুকূল।`;
 
     // Personalized Marriage Age & Year Window
     const curYrNow = new Date().getFullYear();
@@ -2275,7 +2300,17 @@ function generateGrandVedicReport(order, chart) {
         <div class="info-card">
             <div class="card-content">
                 আপোনাৰ কুণ্ডলীৰ ষষ্ঠ ভাৱত (ৰোগ স্থানত) <strong>${rashiAsMap[sixthRashi]}</strong> ৰাশি (অধিপতি <strong>${planetNames[sixthLordKey]}</strong>) আৰু অষ্টম ভাৱত (আয়ু স্থানত) <strong>${rashiAsMap[eighthRashi]}</strong> ৰাশি (অধিপতি <strong>${planetNames[eighthLordKey]}</strong>) অৱস্থিত।<br><br>
-                • <strong>সামগ্ৰিক স্বাস্থ্য আৰু দীৰ্ঘায়ু:</strong> লগ্নপতি আৰু অষ্টম পতি <strong>${planetNames[eighthLordKey]}</strong> ৰ অৱস্থানে আপোনাক শক্তিশালী জীবনীশক্তি আৰু দীর্ঘায়ু যোগ প্ৰদান কৰিছে। সামান্য ঋতুজনিত অসুস্থতা থাকিলেও আপোনাৰ ৰোগ প্ৰতিৰোধ ক্ষমতা অত্যন্ত সবল।<br>
+                • <strong>সামগ্ৰিক স্বাস্থ্য আৰু জীৱনীশক্তি:</strong> ${(() => {
+                    const llKey = getHouseLordKey(1), llHouse = getHouseLordPlacedInHouse(1), l8House = getHouseLordPlacedInHouse(8);
+                    let sc = 0;
+                    if ([1, 4, 5, 7, 9, 10, 11].includes(llHouse)) sc += 1; else if ([6, 8, 12].includes(llHouse)) sc -= 1;
+                    if (rtIsDebil(llKey)) sc -= 1;
+                    if ([1, 2, 3, 4, 5, 7, 9, 10, 11, 12].includes(l8House) && ![6, 8].includes(l8House)) sc += 0; else sc -= 0;
+                    const base = `লগ্নপতি <strong>${planetNames[llKey]}</strong> ${toAsDigits(llHouse)} নং ঘৰত${rtIsDebil(llKey) ? ' (নীচ ৰাশিত)' : ''} আৰু অষ্টম পতি <strong>${planetNames[eighthLordKey]}</strong> ${toAsDigits(l8House)} নং ঘৰত অৱস্থিত। `;
+                    if (sc >= 1) return base + 'লগ্নপতিৰ এই স্থিতিয়ে সামগ্ৰিক জীৱনীশক্তি আৰু ৰোগ প্ৰতিৰোধ ক্ষমতাৰ বাবে সহায়ক; তথাপি নিয়মিত জীৱনশৈলী বজাই ৰখাটো প্ৰয়োজনীয়।';
+                    if (sc === 0) return base + 'শাৰীৰিক শক্তি মোটামুটি স্থিৰ, কিন্তু লগ্নপতিৰ স্থিতিত কিছু দুৰ্বলতা থকাৰ বাবে নিয়মীয়া টোপনি, সুষম আহাৰ আৰু ব্যায়ামলৈ গুৰুত্ব দিয়ক।';
+                    return base + 'লগ্নপতিৰ এই স্থিতিয়ে শাৰীৰিক শক্তিত উঠা-নমা আনিব পাৰে; স্বাস্থ্যৰ প্ৰতি অতিৰিক্ত যত্ন, নিয়মীয়া চেক-আপ আৰু বিশ্ৰামৰ প্ৰয়োজন।';
+                })()}<br>
                 • <strong>যত্ন ল'বলগীয়া শৰীৰৰ অংগসমূহ:</strong> আপোনাৰ <strong>${ascRashiName} লগ্ন</strong> আৰু <strong>${moonRashiName} ৰাশি</strong>ৰ গঠন অনুসৰি বিশেষকৈ <strong>${hProfile.areas}</strong>ৰ প্ৰতি সচেতন থকাটো বাঞ্ছনীয়।
             </div>
         </div>
@@ -2388,15 +2423,22 @@ function generateGrandVedicReport(order, chart) {
         12: { title: "শুভ মাংগলিক ব্যয়, দূৰ ভ্ৰমণ, মানসিক শান্তি আৰু ভৱিষ্যত প্ৰস্তুতি", body: "দ্বাদশ ভাৱত বৃহস্পতিৰ ভ্ৰমণে ঘৰত মাংগলিক কাৰ্য, তীৰ্থযাত্ৰা বা ভৱিষ্যতৰ স্থায়ী আঁচনিত শুভ ব্যয় সূচায়। ঈশ্বৰ ভক্তি আৰু সংযত বাজেটেৰে বছৰটো অত্যন্ত শান্তিপূৰ্ণভাৱে অতিবাহিত হ'ব।" }
     };
 
-    const baseJupRashiNow = (chart?.currentTransits?.Jupiter?.rashi_no) || 4;
-    const baseSatRashiNow = (chart?.currentTransits?.Saturn?.rashi_no) || 12;
-
     const buildFiveYearCardsHtml = () => {
         return yArr.map((yrVal, idx) => {
-            const jupRashiForYr = ((baseJupRashiNow - 1 + idx) % 12) + 1;
-            const satRashiForYr = ((baseSatRashiNow - 1 + Math.floor(idx / 2.5)) % 12) + 1;
+            // real sidereal positions: today for the current year, otherwise 1 July of that year
+            const firstYear = idx === 0 && yrVal === new Date().getFullYear();
+            const midMs = firstYear ? Date.now() : Date.UTC(yrVal, 6, 1, 6, 30);
+            const startMs = firstYear ? Date.now() : Date.UTC(yrVal, 0, 1, 6, 30);
+            const endMs = Date.UTC(yrVal, 11, 31, 6, 30);
+            const trMid = chart.transitAt(midMs), trStart = chart.transitAt(startMs), trEnd = chart.transitAt(endMs);
+            const jupRashiForYr = trMid.Jupiter.rashi_no;
+            const satRashiForYr = trMid.Saturn.rashi_no;
             const jupHFromMoon = ((jupRashiForYr - moonRashiNo + 12) % 12) + 1;
             const satHFromMoon = ((satRashiForYr - moonRashiNo + 12) % 12) + 1;
+            const signChanges = [['Jupiter', 'বৃহস্পতি'], ['Saturn', 'শনি']]
+                .filter(([k]) => trStart[k].rashi_no !== trEnd[k].rashi_no)
+                .map(([k, nm]) => `${nm} ${rashiAsMap[trStart[k].rashi]} ৰাশিৰ পৰা ${rashiAsMap[trEnd[k].rashi]} ৰাশিলৈ`);
+            const changeNote = signChanges.length ? ` (এই বছৰত ${signChanges.join(' আৰু ')} ৰাশি সলাব; তলৰ ফল বছৰটোৰ মধ্যভাগৰ স্থিতিৰ ভিত্তিত)` : '';
             const yrDashaLord = getDashaLordForYear(yrVal);
             const yrDashaAs = planetNames[yrDashaLord] || yrDashaLord;
             const tInfo = jupHouseThemes5Yr[jupHFromMoon] || jupHouseThemes5Yr[1];
@@ -2407,7 +2449,7 @@ function generateGrandVedicReport(order, chart) {
                 🗓️ ${toAsDigits(yrVal)} চন (${yrDashaAs} মহাদশা • চন্দ্ৰৰ পৰা গুৰু ${toAsDigits(jupHFromMoon)}ম আৰু শনি ${toAsDigits(satHFromMoon)}ম ভাবত): ${tInfo.title}
             </div>
             <div class="card-content" style="font-size: 13.2px; line-height: 1.45;">
-                ${tInfo.body} লগতে ${yrDashaAs} মহাদশা আৰু শনিৰ ${toAsDigits(satHFromMoon)} নং ভাবৰ গোচৰ প্ৰভাৱত আপোনাৰ ${houseDomainNamesAs[(jupHFromMoon - 1) % 12]}ৰ দিশটো বিশেষভাৱে সক্ৰিয় হৈ থাকিব।
+                ${tInfo.body} লগতে ${yrDashaAs} মহাদশা আৰু শনিৰ ${toAsDigits(satHFromMoon)} নং ভাবৰ গোচৰ প্ৰভাৱত আপোনাৰ ${houseDomainNamesAs[(jupHFromMoon - 1) % 12]}ৰ দিশটো বিশেষভাৱে সক্ৰিয় হৈ থাকিব।${changeNote}
             </div>
         </div>`;
         }).join("");
@@ -2467,7 +2509,7 @@ function generateGrandVedicReport(order, chart) {
 
         <div class="disclaimer">
             <strong>⚠️ অস্বীকাৰকৰণ (Disclaimer):</strong><br>
-            এই ৰিপোৰ্টখন <strong>${name}</strong>ৰ জন্ম তথ্য (${dob}, সময়: ${tob}, স্থান: ${place}) অনুসৰি লাহিৰী অয়নাংশ আৰু প্ৰাচীন বৈদিক জ্যোতিষ শাস্ত্ৰৰ গাণিতিক সূত্ৰৰ আধাৰত ব্যক্তিগতভাৱে প্ৰস্তুত কৰা হৈছে। ইয়াক জীৱনৰ পথ প্ৰদৰ্শক হিচাপে ব্যৱহাৰ কৰক। জীৱনৰ চূড়ান্ত সফলতা আপোনাৰ সৎ কৰ্ম, নিষ্ঠা আৰু নিৰন্তৰ প্ৰচেষ্টাৰ ওপৰত নিৰ্ভৰশীল।
+            এই ৰিপোৰ্টখন <strong>${name}</strong>ৰ জন্ম তথ্য (${toAsDigits(dob)}, সময়: ${toAsDigits(tob)}, স্থান: ${place}) অনুসৰি লাহিৰী অয়নাংশ আৰু প্ৰাচীন বৈদিক জ্যোতিষ শাস্ত্ৰৰ গাণিতিক সূত্ৰৰ আধাৰত ব্যক্তিগতভাৱে প্ৰস্তুত কৰা হৈছে। ইয়াক জীৱনৰ পথ প্ৰদৰ্শক হিচাপে ব্যৱহাৰ কৰক। জীৱনৰ চূড়ান্ত সফলতা আপোনাৰ সৎ কৰ্ম, নিষ্ঠা আৰু নিৰন্তৰ প্ৰচেষ্টাৰ ওপৰত নিৰ্ভৰশীল।
         </div>
 
         <div class="footer-seal">
