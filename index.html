@@ -1486,6 +1486,11 @@
                             <option value="PM">PM</option>
                         </select>
                     </div>
+                    <select id="custTimeBasis" aria-label="জন্ম সময়ৰ ধৰণ" class="form-control" style="margin-top: 8px; padding: 10px 8px; background: #fff; font-size: 13px;">
+                        <option value="IST">সময়টো সাধাৰণ ঘড়ীৰ সময় (IST)</option>
+                        <option value="BAGAN">সময়টো চাহ-বাগানৰ সময় (IST-তকৈ ১ ঘণ্টা আগত)</option>
+                    </select>
+                    <div style="font-size: 12px; color: #64748b; margin-top: 4px;">⚠️ জন্মৰ সময় যিমান শুদ্ধ হ'ব, লগ্ন আৰু ৰিপোৰ্ট সিমান শুদ্ধ হ'ব। সময় নিশ্চিত নহ'লে লগ্ন সলনি হ'ব পাৰে।</div>
                 </div>
             </div>
             <div id="orderPlaceRow">
@@ -2082,6 +2087,15 @@ window.processPayment = async function(e) {
     if (ampm === 'PM' && h < 12) h += 12;
     if (ampm === 'AM' && h === 12) h = 0;
     let dbTime = h.toString().padStart(2, '0') + ":" + m + ":00";
+    // চাহ-বাগানৰ সময় (IST+১ ঘণ্টা) হ'লে IST লৈ ৰূপান্তৰ কৰা (তাৰিখো আগৰ দিনলৈ যাব পাৰে)
+    let _adjDate = (document.getElementById('custDate') && document.getElementById('custDate').value) ? document.getElementById('custDate').value : '1995-01-01';
+    const _basisEl = document.getElementById('custTimeBasis');
+    if (_basisEl && _basisEl.value === 'BAGAN' && /^\d{4}-\d{2}-\d{2}$/.test(_adjDate)) {
+        const [_yy, _mm, _dd] = _adjDate.split('-').map(Number);
+        const _dt = new Date(Date.UTC(_yy, _mm - 1, _dd, h, parseInt(m, 10)) - 3600000);
+        _adjDate = _dt.getUTCFullYear() + '-' + String(_dt.getUTCMonth() + 1).padStart(2, '0') + '-' + String(_dt.getUTCDate()).padStart(2, '0');
+        dbTime = String(_dt.getUTCHours()).padStart(2, '0') + ':' + String(_dt.getUTCMinutes()).padStart(2, '0') + ':00';
+    }
 
     // জন্মস্থানৰ অক্ষাংশ-দ্ৰাঘিমাংশ (সঠিক লগ্ন গণনাৰ বাবে): প্ৰথমে অন্তৰ্নিৰ্মিত তালিকা, নাথাকিলে অনলাইন geocoding
     let geoLat = null, geoLon = null;
@@ -2094,7 +2108,7 @@ window.processPayment = async function(e) {
         service: selectedService,
         name: document.getElementById('custName').value,
         email: document.getElementById('custEmail').value,
-        birthDate: (document.getElementById('custDate') && document.getElementById('custDate').value) ? document.getElementById('custDate').value : '1995-01-01',
+        birthDate: _adjDate,
         birthTime: dbTime || '10:30:00',
         birthPlace: (document.getElementById('custPlace') && document.getElementById('custPlace').value) ? document.getElementById('custPlace').value : 'অসম',
         birthLat: geoLat,
