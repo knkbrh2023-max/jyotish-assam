@@ -256,7 +256,7 @@
         .close-horoscope-btn:hover { background: #fee2e2; color: #dc2626; }
     </style>
     <script src="config.js"></script>
-    <script src="rashifal.js"></script>
+    <script src="rashifal.js?v=20261113"></script>
     <script src="grand_report_engine.js?v=15"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
@@ -1884,9 +1884,14 @@ window.processPalmistryPayment = async function(e) {
     };
 
     try {
+        const _sbKey = (window.JA_CONFIG && window.JA_CONFIG.supabaseAnonKey) || "";
         const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': _sbKey,
+                'Authorization': 'Bearer ' + _sbKey
+            },
             body: JSON.stringify(orderPayload)
         });
         const responseData = await createRes.json();
@@ -2240,25 +2245,6 @@ async function showReportToCustomer(orderId) {
         try { localStorage.setItem('ja_service_' + orderId, 'palmistry'); localStorage.setItem('ja_latest_order_id', orderId); } catch(e) {}
         window.location.href = "report.html?order=" + encodeURIComponent(orderId);
         return;
-        const reportHtml = generatePalmistryReportHtml(palmOrder);
-        try {
-            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
-            sessionStorage.setItem('ja_report_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_' + orderId, reportHtml);
-            localStorage.setItem('ja_service_' + orderId, service);
-            sessionStorage.setItem('ja_service_' + orderId, service);
-            localStorage.setItem('ja_latest_order_id', orderId);
-        } catch(e) {}
-        const win = window.open('', '_blank');
-        if(win && !win.closed) {
-            win.document.open();
-            win.document.write(reportHtml);
-            win.document.close();
-        } else {
-            window.location.href = "report.html?order=" + encodeURIComponent(orderId);
-        }
-        return;
     }
 
     if (service === 'premium_tarot') {
@@ -2452,8 +2438,8 @@ function updateDate() {
         }
         const pValues = document.querySelectorAll('.panchang-grid .p-item .p-value');
         if (pValues && pValues.length >= 3) {
-            pValues[0].innerText = "পুৱা ০৫:২০ বজা";
-            pValues[1].innerText = "সন্ধিয়া ০৫:৩৫ বজা";
+            pValues[0].innerText = dailyObj.sunriseAs || "পুৱা ০৫:৩৫ বজা";
+            pValues[1].innerText = dailyObj.sunsetAs || "সন্ধিয়া ০৪:৩৫ বজা";
             pValues[2].innerText = `${dailyObj.tithi} (${dailyObj.nakshatra} নক্ষত্ৰ)`;
         }
     } else {
