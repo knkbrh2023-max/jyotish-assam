@@ -257,7 +257,7 @@
     </style>
     <script src="config.js"></script>
     <script src="rashifal.js"></script>
-    <script src="grand_report_engine.js?v=14"></script>
+    <script src="grand_report_engine.js?v=15"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
     
@@ -1982,49 +1982,14 @@ window.processPalmistryPayment = async function(e) {
                 
                 try {
                     window.selectedService = 'palmistry';
-                    let aiPalmAnalysis = null;
-                    if (photo) {
-                        try {
-                            const aiRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/analyze-palm', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ palmPhoto: photo, palmHand: hand, palmGender: gender, name: name })
-                            });
-                            if (aiRes.ok) {
-                                const aiData = await aiRes.json();
-                                if (aiData && aiData.success && aiData.analysis) {
-                                    aiPalmAnalysis = aiData.analysis;
-                                }
-                            }
-                        } catch (aiErr) {
-                            console.warn("AI Palm Vision fallback to Samudrik engine:", aiErr);
-                        }
-                    }
-                    const palmOrder = {
-                        id: responseData.orderId,
-                        public_order_id: responseData.orderId,
-                        name: name,
-                        email: email,
-                        birth_date: 'N/A',
-                        birth_place: 'অসম',
-                        service: 'palmistry',
-                        palmHand: hand,
-                        palmGender: gender,
-                        palmPhoto: photo,
-                        aiPalmAnalysis: aiPalmAnalysis
-                    };
-                    const reportHtml = generatePalmistryReportHtml(palmOrder);
                     try {
-                        sessionStorage.setItem('ja_report_v14_' + responseData.orderId, reportHtml);
-                        localStorage.setItem('ja_report_v14_' + responseData.orderId, reportHtml);
-                        localStorage.setItem('ja_latest_order_id', responseData.orderId);
                         localStorage.setItem('ja_service_' + responseData.orderId, 'palmistry');
+                        localStorage.setItem('ja_latest_order_id', responseData.orderId);
                     } catch(e){}
                     if (typeof closePalmistryModal === 'function') closePalmistryModal();
-                    // ফোনত popup বন্ধ হোৱাৰ বাবে নতুন tab নখুলি, একেটা tab-তে ৰিপোৰ্ট খোলা হ'ব
+                    // ৰিপোৰ্ট পৃষ্ঠাই হাতৰ ফটো AI-ৰে বিশ্লেষণ কৰি ৰিপোৰ্ট বনাব (একেটা tab-তে)
                     window.location.href = "report.html?order=" + encodeURIComponent(responseData.orderId);
                 } catch(repErr) {
-                    console.warn("Palmistry direct report error:", repErr);
                     window.location.href = "report.html?order=" + encodeURIComponent(responseData.orderId);
                 }
                 btn.innerText = "🔒 পেমেন্ট কৰক — মাত্ৰ ₹১৯৯"; btn.disabled = false;
@@ -2228,7 +2193,7 @@ window.processPayment = async function(e) {
 };
 
 
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=14
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=15
 
 
 async function showReportToCustomer(orderId) {
@@ -2271,10 +2236,14 @@ async function showReportToCustomer(orderId) {
             palmGender: gender,
             palmPhoto: window.currentPalmPhotoBase64 || null
         };
+        // ফটোৰ AI বিশ্লেষণ ৰিপোৰ্ট পৃষ্ঠাত হয়; বিশ্লেষণ নোহোৱাকৈ ইয়াতে ৰিপোৰ্ট বনোৱা নহয়
+        try { localStorage.setItem('ja_service_' + orderId, 'palmistry'); localStorage.setItem('ja_latest_order_id', orderId); } catch(e) {}
+        window.location.href = "report.html?order=" + encodeURIComponent(orderId);
+        return;
         const reportHtml = generatePalmistryReportHtml(palmOrder);
         try {
-            sessionStorage.setItem('ja_report_v14_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v14_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);
@@ -2431,8 +2400,8 @@ async function showReportToCustomer(orderId) {
         const reportHtml = generateGrandVedicReport(orderObj, chart);
 
         try {
-            sessionStorage.setItem('ja_report_v14_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v14_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);

@@ -68,7 +68,7 @@
             }
         }
     </style>
-    <script src="grand_report_engine.js?v=14"></script>
+    <script src="grand_report_engine.js?v=15"></script>
 </head>
 <body>
 
@@ -120,7 +120,7 @@
 
     <script>
     
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=14
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=15
 
 
 // --- Fallback Vedic Chart Calculation Engine ---
@@ -162,7 +162,7 @@
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
-            const cached = sessionStorage.getItem('ja_report_v14_' + orderId) || localStorage.getItem('ja_report_v14_' + orderId);
+            const cached = sessionStorage.getItem('ja_report_v15_' + orderId) || localStorage.getItem('ja_report_v15_' + orderId);
             const savedSvc = (localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || '').toLowerCase();
             const isValidMonthly = !(savedSvc === 'monthly' || (cached && cached.includes('মাহেকীয়া ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('মাহটোৰ ৪টা সপ্তাহৰ বিস্তৃত সাপ্তাহিক ফলাফল'));
             const isValidYearly = !(savedSvc === 'yearly' || (cached && cached.includes('বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('বাৰ্ষিক ১২ মাহৰ বিস্তৃত মাহেকীয়া ফলাফল'));
@@ -267,27 +267,33 @@
                 }
             }
 
-            // যদি হস্তৰেখা অৰ্ডাৰ হয় আৰু হাতৰ ফটো আছে, তেন্তে AI Vision বিশ্লেষণ চেষ্টা কৰক
-            if (order.service === 'palmistry' && order.palmPhoto && !order.aiPalmAnalysis) {
-                try {
-                    const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1');
-                    const aiRes = await fetch(apiBase + '/analyze-palm', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            palmPhoto: order.palmPhoto,
-                            palmHand: order.palmHand || order.palm_hand || 'right',
-                            palmGender: order.palmGender || order.palm_gender || 'male',
-                            name: order.name
-                        })
-                    });
-                    if (aiRes.ok) {
+            // হস্তৰেখা: হাতৰ ফটোৰ AI বিশ্লেষণ (Gemini). বিশ্লেষণ নোহোৱাকৈ কোনো ৰিপোৰ্ট বনোৱা নহয়।
+            if (String(order.service || '').toLowerCase().includes('palm')) {
+                let analysis = (order.palm_analysis && order.palm_analysis.version === 2) ? order.palm_analysis : null;
+                let errMsg = '';
+                if (!analysis) {
+                    document.getElementById('statusTitle').innerText = "🔍 আপোনাৰ হাতৰ ফটো বিশ্লেষণ কৰি আছোঁ...";
+                    document.getElementById('statusMsg').innerText = "ইয়াত ১০–৩০ ছেকেণ্ড সময় লাগিব পাৰে। অনুগ্ৰহ কৰি পৃষ্ঠাখন বন্ধ নকৰিব।";
+                    try {
+                        const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1');
+                        const aiRes = await fetch(apiBase + '/analyze-palm', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY },
+                            body: JSON.stringify({ orderId: order.public_order_id || orderId })
+                        });
                         const aiJson = await aiRes.json();
-                        if (aiJson && aiJson.success && aiJson.analysis) {
-                            order.aiPalmAnalysis = aiJson.analysis;
-                        }
-                    }
-                } catch(e) {}
+                        if (aiJson && aiJson.success && aiJson.analysis) analysis = aiJson.analysis;
+                        else errMsg = (aiJson && aiJson.error) || '';
+                    } catch (e) { errMsg = ''; }
+                }
+                if (!analysis) {
+                    document.getElementById('spinner').style.display = 'none';
+                    document.getElementById('statusTitle').innerText = "⚠️ হাতৰ ফটোৰ বিশ্লেষণ সম্পূৰ্ণ নহ'ল";
+                    document.getElementById('statusMsg').innerText = (errMsg || "বিশ্লেষণ সেৱা এই মুহূৰ্তত উপলব্ধ নহয়। অলপ পিছত আকৌ চেষ্টা কৰক।") + " (অৰ্ডাৰ নম্বৰ: " + (order.public_order_id || orderId) + ")";
+                    document.getElementById('statusMsg').insertAdjacentHTML('afterend', '<button onclick="location.reload()" style="margin-top:14px;background:#8b0000;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-size:15px;cursor:pointer;">🔄 আকৌ চেষ্টা কৰক</button>');
+                    return;
+                }
+                order.palmAnalysis = analysis;
             }
 
             const dobStr = order.birth_date || order.birthDate || '';
@@ -306,8 +312,8 @@
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
             try {
-                localStorage.setItem('ja_report_v14_' + saveId, reportHtml);
-                sessionStorage.setItem('ja_report_v14_' + saveId, reportHtml);
+                localStorage.setItem('ja_report_v15_' + saveId, reportHtml);
+                sessionStorage.setItem('ja_report_v15_' + saveId, reportHtml);
                 localStorage.setItem('ja_report_' + saveId, reportHtml);
                 sessionStorage.setItem('ja_report_' + saveId, reportHtml);
                 localStorage.setItem('ja_latest_order_id', saveId);
@@ -378,7 +384,7 @@
             const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
                 const reportHtml = renderFullReport(order, chart);
 
-                localStorage.setItem('ja_report_v14_' + order.id, reportHtml);
+                localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
                 localStorage.setItem('ja_report_' + order.id, reportHtml);
                 localStorage.setItem('ja_latest_order_id', order.id);
 

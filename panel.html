@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="fav.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="grand_report_engine.js?v=14"></script>
+    <script src="grand_report_engine.js?v=15"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1530,16 +1530,21 @@
                         service: 'palmistry',
                         palmHand: order.palmHand || order.palm_hand || 'right',
                         palmGender: order.palmGender || order.palm_gender || 'male',
-                        palmPhoto: savedPhoto || null
+                        palmPhoto: savedPhoto || null,
+                        palmAnalysis: order.palm_analysis || null
                     };
+                    if (!(palmOrderObj.palmAnalysis && palmOrderObj.palmAnalysis.version === 2)) {
+                        alert("এই অৰ্ডাৰৰ হাতৰ ফটোৰ AI বিশ্লেষণ এতিয়াও সম্পন্ন হোৱা নাই। গ্ৰাহকে ৰিপোৰ্ট লিংক খুলিলে বিশ্লেষণ হ'ব; নহ'লে analyze-palm function আৰু GEMINI_API_KEY পৰীক্ষা কৰক।");
+                        return;
+                    }
                     const reportHtml = generatePalmistryReportHtml(palmOrderObj);
                     try {
-                        localStorage.setItem('ja_report_v14_' + order.id, reportHtml);
-                        sessionStorage.setItem('ja_report_v14_' + order.id, reportHtml);
+                        localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
+                        sessionStorage.setItem('ja_report_v15_' + order.id, reportHtml);
                         localStorage.setItem('ja_service_' + order.id, 'palmistry');
                         if (order.public_order_id) {
-                            localStorage.setItem('ja_report_v14_' + order.public_order_id, reportHtml);
-                            sessionStorage.setItem('ja_report_v14_' + order.public_order_id, reportHtml);
+                            localStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
+                            sessionStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
                             localStorage.setItem('ja_service_' + order.public_order_id, 'palmistry');
                         }
                     } catch(e){}
@@ -1574,12 +1579,12 @@
                 const reportHtml = generateGrandVedicReport(cleanVedicOrder, chart);
 
                 try {
-                    localStorage.setItem('ja_report_v14_' + order.id, reportHtml);
-                    sessionStorage.setItem('ja_report_v14_' + order.id, reportHtml);
+                    localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
+                    sessionStorage.setItem('ja_report_v15_' + order.id, reportHtml);
                     localStorage.setItem('ja_service_' + order.id, resolvedService);
                     if (order.public_order_id) {
-                        localStorage.setItem('ja_report_v14_' + order.public_order_id, reportHtml);
-                        sessionStorage.setItem('ja_report_v14_' + order.public_order_id, reportHtml);
+                        localStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
+                        sessionStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
                         localStorage.setItem('ja_service_' + order.public_order_id, resolvedService);
                     }
                 } catch(e){}
