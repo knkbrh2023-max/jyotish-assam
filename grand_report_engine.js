@@ -695,6 +695,123 @@ function generatePalmistryReportHtml(order) {
         ? flatMounts.map(([k, title]) => `<li><strong>${title} শক্তিশালী কৰিবলৈ:</strong> ${REM[k]}</li>`).join('')
         : `<li>আপোনাৰ ফটোত কোনো পৰ্বত বিশেষভাৱে সমতল দেখা পোৱা নগ'ল; সেয়ে বিশেষ প্ৰতিকাৰৰ প্ৰয়োজন নাই। প্ৰতিদিনৰ সাধনাই যথেষ্ট।</li>`;
 
+    // ---------- 10. Detailed General, Career (Job vs Business + Timing), Love/Marriage (Love vs Arranged + Timing), & Health ----------
+    const hs = A.handShape, th = A.thumbAngle, ir = A.indexVsRing;
+    const lf = A.lines.life || {}, hd = A.lines.head || {}, ht = A.lines.heart || {}, ft = A.lines.fate || {}, sn = A.lines.sun || {};
+    const mt = A.mounts || {};
+
+    // General personality & life summary
+    const generalPts = [];
+    if (hs === 'earth') generalPts.push(`আপোনাৰ <strong>পৃথিৱী হস্ত (Earth Hand)</strong> হোৱাৰ বাবে আপুনি অত্যন্ত বাস্তৱবাদী, বিশ্বাসযোগ্য আৰু হাতে-কামে ফল দেখুওৱা ব্যক্তি।`);
+    else if (hs === 'air') generalPts.push(`আপোনাৰ <strong>বায়ু হস্ত (Air Hand)</strong> হোৱাৰ বাবে আপুনি তীক্ষ্ণ বুদ্ধি, যুক্তি আৰু যোগাযোগ দক্ষতাৰে জীৱনত আগবাঢ়ে।`);
+    else if (hs === 'fire') generalPts.push(`আপোনাৰ <strong>অগ্নি হস্ত (Fire Hand)</strong> হোৱাৰ বাবে আপোনাৰ মাজত অদম্য উৎসাহ, সাহস আৰু নেতৃত্ব দিয়াৰ জন্মগত গুণ আছে।`);
+    else if (hs === 'water') generalPts.push(`আপোনাৰ <strong>জল হস্ত (Water Hand)</strong> হোৱাৰ বাবে আপুনি সংবেদনশীল, কল্পনাপ্ৰৱণ আৰু আনৰ মনৰ কথা সহজে বুজি পোৱা স্বভাৱৰ।`);
+    else generalPts.push(`আপোনাৰ হাতৰ গঠন অনুসৰি আপুনি পৰিস্থিতিৰ সৈতে খাপ খুৱাই আগবাঢ়িব পৰা ব্যক্তিত্বৰ অধিকাৰী।`);
+
+    if (ir === 'index_longer') generalPts.push(`তৰ্জনী আঙুলি দীঘল হোৱাত আপোনাৰ মাজত আত্মসন্মান আৰু ডাঙৰ লক্ষ্য লোৱাৰ প্ৰৱণতা প্ৰবল।`);
+    else if (ir === 'ring_longer') generalPts.push(`অনামিকা আঙুলি দীঘল হোৱাত সৃজনশীলতা, সৌন্দৰ্যবোধ আৰু সাহসিক সিদ্ধান্ত লোৱাৰ ক্ষমতা অধিক।`);
+    else if (ir === 'equal') generalPts.push(`তৰ্জনী আৰু অনামিকা সমান হোৱাত জীৱনত শান্ত স্বভাৱ আৰু ভাৰসাম্য বজাই ৰাখিব পাৰে।`);
+
+    if (th === 'wide') generalPts.push(`বহল বুঢ়া আঙুলিৰ কোণে মুক্ত চিন্তা আৰু স্বাধীন সিদ্ধান্ত লোৱাৰ ক্ষমতা সূচায়।`);
+    else if (th === 'narrow') generalPts.push(`সতৰ্ক বুঢ়া আঙুলিৰ কোণে ভাবি-চিন্তি আৰু সুৰক্ষিতভাৱে পদক্ষেপ লোৱাৰ অভ্যাস সূচায়।`);
+
+    // Career: Job vs Business & Timing
+    let bizScore = 0, jobScore = 0;
+    if (mt.mercury === 'high') bizScore += 2;
+    if (hd.start === 'separated') bizScore += 2;
+    if (ft.origin === 'moon_mount') bizScore += 2;
+    if (hs === 'fire' || hs === 'air') bizScore += 1;
+    if (ir === 'ring_longer') bizScore += 1;
+
+    if (mt.saturn === 'high' || mt.saturn === 'normal') jobScore += 1;
+    if (mt.jupiter === 'high') jobScore += 2;
+    if (hd.start === 'joined_with_life' || hd.start === 'touching') jobScore += 2;
+    if (ft.origin === 'wrist' || ft.origin === 'life_line') jobScore += 1;
+    if (hs === 'earth') jobScore += 1;
+
+    let jobVsBizText = '';
+    if (bizScore > jobScore + 1) {
+        jobVsBizText = `<strong>ব্যৱসায় / স্বাধীন কৰ্মৰ যোগ অধিক প্ৰবল:</strong> আপোনাৰ বুধ পৰ্বত, মস্তিষ্ক ৰেখা আৰু চন্দ্ৰ-সংযোগে স্বাধীন চিন্তা, বাণিজ্যিক বুদ্ধি আৰু নিজাকৈ কিবা এটা গঢ়ি তোলাৰ শক্তি সূচায়। চাকৰি কৰিলেও নিজাকৈ পাৰ্শ্ব-ব্যৱসায়, ডিজিটেল কাম বা পৰামৰ্শমূলক ক্ষেত্ৰত অধিক লাভবান হ'ব।`;
+    } else if (jobScore > bizScore + 1) {
+        jobVsBizText = `<strong>চাকৰি / প্ৰশাসনিক কৰ্মৰ যোগ অধিক শক্তিশালী:</strong> আপোনাৰ বৃহস্পতি-শনি পৰ্বত আৰু ৰেখাসমূহৰ গাঁথনিয়ে শৃংখলাবদ্ধ কাম, চৰকাৰী বা প্ৰতিষ্ঠিত প্ৰতিষ্ঠানত চাকৰি, মেনেজমেণ্ট আৰু ধাৰাবাহিক পদোন্নতিৰ শুভ সংকেত দিয়ে।`;
+    } else {
+        jobVsBizText = `<strong>চাকৰি আৰু ব্যৱসায় — দুয়োটাতে সম্ভাৱনা:</strong> আপোনাৰ হাতত চাকৰিৰ জৰিয়তে অভিজ্ঞতা লৈ পিছলৈ নিজা ব্যৱসায় বা দুয়োটা ক্ষেত্ৰতে সমানে উন্নতি কৰাৰ যুগ্ম যোগ দেখা যায়। প্ৰাৰম্ভিক অৱস্থাত স্থিৰ চাকৰি বা দক্ষতা গঢ়ি তাৰ পিছত নিজা উদ্যোগ আৰম্ভ কৰিলে সৰ্বাধিক লাভ হ'ব।`;
+    }
+
+    let careerTimingText = '';
+    if (ft.presence === 'clear' && ft.origin === 'wrist') {
+        careerTimingText = `ভাগ্য ৰেখা মণিবন্ধৰ পৰা স্পষ্টভাৱে উঠা বাবে <strong>২১–২৫ বছৰ বয়সৰ পৰাই</strong> কৰ্মজীৱনৰ ভেটি গঢ় লৈ উঠিব আৰু <strong>২৬–৩০ বছৰ বয়সৰ ভিতৰত</strong> বিশেষ স্থিৰতা ও উন্নতি লাভ কৰিব।`;
+    } else if (ft.presence === 'clear' && ft.origin === 'life_line') {
+        careerTimingText = `ভাগ্য ৰেখা জীৱন ৰেখাৰ পৰা আৰম্ভ হোৱাত প্ৰাৰম্ভিক অৱস্থাত পৰিয়ালৰ পৰামৰ্শ বা পৰিশ্ৰমৰ জৰিয়তে <strong>২৪–২৮ বছৰ বয়সত</strong> কৰ্মক্ষেত্ৰত স্পষ্ট অগ্ৰগতি আৰু <strong>৩০–৩৪ বছৰ বয়সত</strong> ডাঙৰ সফলতা আহিব।`;
+    } else if (ft.presence === 'clear' && ft.origin === 'middle_palm') {
+        careerTimingText = `ভাগ্য ৰেখা তলুৱাৰ মাজৰ পৰা আৰম্ভ হোৱাটো সমুদ্ৰিক শাস্ত্ৰত এক গুৰুত্বপূৰ্ণ সংকেত — জীৱনৰ প্ৰথম ভাগত কিছু সংগ্ৰাম থাকিলেও <strong>২৮–৩৫ বছৰ বয়সৰ পৰা</strong> কৰ্মজীৱনত শক্তিশালী উত্থান আৰু স্থায়ী আৰ্থিক লাভ আৰম্ভ হয়।`;
+    } else if (ft.presence === 'clear' && ft.origin === 'moon_mount') {
+        careerTimingText = `ভাগ্য ৰেখা চন্দ্ৰ পৰ্বতৰ পৰা উঠা বাবে দূৰ ঠাই, বাহিৰৰ যোগাযোগ বা জনসম্পৰ্কৰ জৰিয়তে <strong>২৫–৩২ বছৰ বয়সৰ ভিতৰত</strong> বিশেষ উন্নতি আৰু নতুন সুযোগ লাভ কৰিব।`;
+    } else if (ft.presence === 'faint') {
+        careerTimingText = `ভাগ্য ৰেখা পাতল হোৱাত <strong>২৩–২৭ বছৰ বয়সত</strong> কিছু পৰিৱৰ্তন বা পৰীক্ষা থাকিব পাৰে, কিন্তু ধৈৰ্যৰে এক দিশত লাগি থাকিলে <strong>২৯–৩৪ বছৰ বয়সৰ ভিতৰত</strong> নিজা কষ্টেৰে স্থায়ী সফলতা অৰ্জন কৰিব।`;
+    } else {
+        careerTimingText = `আপোনাৰ কৰ্মসফলতা কোনো আকস্মিক ভাগ্যৰ ওপৰত নহয়, বৰং নিজৰ দক্ষতা আৰু ধাৰাবাহিক প্ৰচেষ্টাৰ ওপৰত নিৰ্ভৰশীল — সাধাৰণতে <strong>২৬–৩২ বছৰ বয়সৰ ভিতৰত</strong> কৰ্মক্ষেত্ৰত স্থায়ী পৰিচয় গঢ় লৈ উঠে।`;
+    }
+    if (sn.presence === 'clear') {
+        careerTimingText += ` লগতে স্পষ্ট সূৰ্য ৰেখাই আপোনাৰ কামত সন্মান, জনপ্ৰিয়তা আৰু চৰকাৰী/উচ্চ পৰ্যায়ৰ স্বীকৃতিৰ যোগ বৃদ্ধি কৰিছে।`;
+    }
+
+    // Love vs Arranged Marriage & Timing
+    let loveScore = 0, arrScore = 0;
+    if (ht.ending === 'jupiter_mount' || ht.ending === 'forked') loveScore += 2;
+    if (ht.curve === 'curved') loveScore += 1;
+    if (hd.start === 'separated') loveScore += 2;
+    if (mt.venus === 'high') loveScore += 1;
+    if (ft.origin === 'moon_mount') loveScore += 1;
+
+    if (hd.start === 'joined_with_life') arrScore += 2;
+    if (ht.ending === 'saturn_mount') arrScore += 2;
+    if (ht.curve === 'straight') arrScore += 1;
+    if (mt.jupiter === 'high' && hd.start !== 'separated') arrScore += 1;
+
+    let marriageTypeText = '';
+    if (loveScore >= arrScore + 2) {
+        marriageTypeText = `<strong>প্ৰেম বিবাহ (Love Marriage) ৰ যোগ অধিক প্ৰবল:</strong> হৃদয় ৰেখাৰ গতি, শুক্ৰ পৰ্বতৰ উষ্ণতা আৰু স্বাধীন চিন্তাশক্তিয়ে নিজৰ পচন্দ আৰু হৃদয়ৰ মিল থকা সংগীৰ সৈতে বিবাহ হোৱাৰ প্ৰবল সম্ভাৱনা সূচায়।`;
+    } else if (arrScore >= loveScore + 2) {
+        marriageTypeText = `<strong>সামাজিক বিবাহ (Arranged Marriage) ৰ যোগ অধিক শক্তিশালী:</strong> মস্তিষ্ক ৰেখা আৰু হৃদয় ৰেখাৰ গাঁথনি অনুসৰি আপোনাৰ জীৱনত পৰিয়ালৰ মতামত আৰু জ্যেষ্ঠসকলৰ আশীৰ্বাদত হোৱা সামাজিক বিবাহে অধিক স্থায়িত্ব আৰু সুখ আনিব।`;
+    } else {
+        marriageTypeText = `<strong>প্ৰেম-সন্মত সামাজিক বিবাহ (Love-cum-Arranged Marriage) ৰ যোগ:</strong> আপোনাৰ হাতত নিজৰ পচন্দ বা পূৰ্ব-পৰিচিত ব্যক্তিৰ সৈতে পৰিয়ালৰ সম্পূৰ্ণ সন্মতিৰে বিবাহ সম্পন্ন হোৱাৰ সুন্দৰ ভাৰসাম্যপূর্ণ যোগ দেখা যায়।`;
+    }
+
+    let marriageTimingText = '';
+    if (mt.venus === 'high' && (ht.ending === 'jupiter_mount' || ht.ending === 'forked')) {
+        marriageTimingText = `<strong>সম্ভাব্য বিবাহৰ সময়:</strong> শুক্ৰ পৰ্বত আৰু হৃদয় ৰেখা সক্ৰিয় হোৱাত <strong>২৪–২৮ বছৰ বয়সৰ ভিতৰত</strong> বিবাহ বা স্থায়ী জীৱনসংগী লাভৰ অনুকূল যোগ আছে।`;
+    } else if (hd.start === 'separated' || ft.origin === 'middle_palm') {
+        marriageTimingText = `<strong>সম্ভাব্য বিবাহৰ সময়:</strong> আপুনি কেৰিয়াৰ আৰু দায়িত্বৰ প্ৰতি সচেতন হোৱা বাবে <strong>২৭–৩২ বছৰ বয়সৰ ভিতৰত</strong> সুস্থিৰভাৱে বিবাহ সম্পন্ন হোৱাৰ সম্ভাৱনা অধিক।`;
+    } else {
+        marriageTimingText = `<strong>সম্ভাব্য বিবাহৰ সময়:</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি <strong>২৫–৩০ বছৰ বয়সৰ ভিতৰত</strong> বিবাহৰ শুভ যোগ আৰু দাম্পত্য জীৱনত সুন্দৰ বুজাবুজি গঢ় লৈ উঠিব।`;
+    }
+
+    // Health analysis
+    const healthPts = [];
+    if (lf.depth === 'deep' && lf.breaks === 'none') {
+        healthPts.push(`আপোনাৰ জীৱন ৰেখা গভীৰ আৰু অবিচ্ছিন্ন হোৱা বাবে সামগ্ৰিক <strong>প্ৰাণশক্তি আৰু ৰোগ প্ৰতিৰোধ ক্ষমতা সবল</strong>।`);
+    } else if (lf.depth === 'faint' || lf.breaks === 'few' || lf.breaks === 'many') {
+        healthPts.push(`জীৱন ৰেখাত কিছু সূক্ষ্ম পৰিৱৰ্তন বা পাতল অংশ থকাত <strong>অতিৰিক্ত মানসিক চাপ, অনিয়মীয়া টোপনি আৰু হজম শক্তিৰ</strong> প্ৰতি বিশেষ যত্ন লোৱাটো জৰুৰী।`);
+    } else {
+        healthPts.push(`জীৱন ৰেখাৰ গঠন অনুসৰি আপোনাৰ শাৰীৰিক শক্তি স্বাভাৱিক; নিয়মীয়া ব্যায়াম আৰু সুষম আহাৰে স্বাস্থ্য অটুট ৰাখিব।`);
+    }
+    if (mt.venus === 'high') healthPts.push(`শুক্ৰ পৰ্বত উন্নত হোৱাত শৰীৰৰ উষ্ণতা আৰু জীৱন-উপভোগৰ শক্তি ভালে থাকে; অৱশ্যে মিঠা বা চৰ্বিযুক্ত আহাৰ পৰিমিতভাৱে গ্ৰহণ কৰিব।`);
+    if (mt.moon === 'high') healthPts.push(`চন্দ্ৰ পৰ্বত উচ্চ হোৱাত আৱেগিক সংবেদনশীলতা বেছি — পানী পৰ্যাপ্ত পৰিমাণে খাব আৰু ঠাণ্ডা-কফৰ পৰা সাৱধান থাকিব।`);
+    if (mt.moon === 'flat') healthPts.push(`কামৰ হেঁচাৰ মাজতো মানসিক বিশ্ৰাম, ধ্যান আৰু ৭–৮ ঘণ্টা টোপনিৰ অভ্যাস গঢ়ি তোলাটো উপকাৰী হ'ব।`);
+
+    const generalSummaryHtml = bullets(generalPts);
+    const careerDetailHtml = bullets([
+        jobVsBizText,
+        `<strong>কেতিয়া উন্নতি আৰু সফলতা আহিব:</strong> ${careerTimingText}`
+    ]);
+    const loveMarriageHtml = bullets([
+        marriageTypeText,
+        marriageTimingText,
+        `<strong>দাম্পত্য জীৱনৰ পৰামৰ্শ:</strong> ${ht.curve === 'curved' ? 'আপুনি মৰম-ভালপোৱা খোলাখুলিকৈ প্ৰকাশ কৰে, যিয়ে সম্পৰ্ক মধুৰ কৰি ৰাখে।' : 'আৱেগৰ লগতে সংগীৰ সৈতে খোলা কথা-বতৰা বঢ়ালে সম্পৰ্ক অধিক গাঢ় হ\'ব।'}`
+    ]);
+    const healthDetailHtml = bullets(healthPts);
+
     const clarityNote = A.quality.clarity === 'fair'
         ? `<div class="info-card" style="border-left-color:#b45309;"><div class="card-content">ℹ️ ফটোৰ স্পষ্টতা মধ্যম হোৱাৰ বাবে কিছুমান সূক্ষ্ম বৈশিষ্ট্য চিনাক্ত কৰিব পৰা নগ'ল; সেইবোৰৰ বিষয়ে মন্তব্য কৰা হোৱা নাই।</div></div>`
         : '';
@@ -1001,7 +1118,25 @@ function generatePalmistryReportHtml(order) {
             <div class="info-card"><div class="card-content">${mountsHtml}</div></div>
         </div>
 
-        <!-- PAGE 6: REMEDIES & SEAL -->
+        <!-- PAGE 6: GENERAL, CAREER (JOB VS BUSINESS & TIMING) & HEALTH -->
+        <div class="page page-break">
+            <h2 class="section-title">❁ সামগ্ৰিক জীৱন, কেৰিয়াৰ আৰু স্বাস্থ্য বিচাৰ ❁</h2>
+            <div class="sub-heading">১. সামগ্ৰিক জীৱন আৰু ব্যক্তিত্ব (General Report)</div>
+            <div class="info-card"><div class="card-content">${generalSummaryHtml}</div></div>
+            <div class="sub-heading">২. কেৰিয়াৰ: চাকৰি নে ব্যৱসায় আৰু সফলতাৰ সময়</div>
+            <div class="info-card"><div class="card-content">${careerDetailHtml}</div></div>
+            <div class="sub-heading">৩. স্বাস্থ্য আৰু প্ৰাণশক্তি বিশ্লেষণ (Health Report)</div>
+            <div class="info-card"><div class="card-content">${healthDetailHtml}</div></div>
+        </div>
+
+        <!-- PAGE 7: LOVE, MARRIAGE (LOVE VS ARRANGED & TIMING) -->
+        <div class="page page-break">
+            <h2 class="section-title">❁ প্ৰেম, বিবাহ আৰু দাম্পত্য ভৱিষ্যৎ ❁</h2>
+            <div class="sub-heading">১. প্ৰেম বিবাহ নে সামাজিক বিবাহ আৰু সম্ভাব্য সময়</div>
+            <div class="info-card"><div class="card-content">${loveMarriageHtml}</div></div>
+        </div>
+
+        <!-- PAGE 8: REMEDIES & SEAL -->
         <div class="page">
             <h2 class="section-title">❁ ${name}ৰ বাবে প্ৰতিকাৰ আৰু সাধনা ❁</h2>
             <div class="info-card remedy-card">
