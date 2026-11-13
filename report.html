@@ -279,7 +279,7 @@
                         const aiRes = await fetch(apiBase + '/analyze-palm', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY },
-                            body: JSON.stringify({ orderId: order.public_order_id || orderId })
+                            body: JSON.stringify({ orderId: order.public_order_id || orderId, palmPhoto: order.palmPhoto || undefined })
                         });
                         const aiJson = await aiRes.json();
                         if (aiJson && aiJson.success && aiJson.analysis) analysis = aiJson.analysis;
@@ -307,7 +307,7 @@
                 document.getElementById('statusMsg').innerText = "এই অৰ্ডাৰত জন্ম তাৰিখ সংৰক্ষিত হোৱা নাই। সঠিক ৰিপোৰ্টৰ বাবে তলৰ '🎧 সহায় (Support)' বুটামত অৰ্ডাৰ নম্বৰ লিখি জনাওক।";
                 return;
             }
-            const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
+            const chart = _isPalmOrder ? null : buildFallbackVedicChart(dobStr, tobStr, placeStr);
             const reportHtml = renderFullReport(order, chart);
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
@@ -381,7 +381,7 @@
                 const dobStr = order.birth_date || '';
                 const tobStr = order.birth_time || '10:30:00';
                 const placeStr = order.birth_place || order.birthPlace || 'অসম';
-            const chart = buildFallbackVedicChart(dobStr, tobStr, placeStr);
+            const chart = _isPalmOrder ? null : buildFallbackVedicChart(dobStr, tobStr, placeStr);
                 const reportHtml = renderFullReport(order, chart);
 
                 localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
