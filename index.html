@@ -1897,25 +1897,7 @@ window.processPalmistryPayment = async function(e) {
         const responseData = await createRes.json();
         if (!responseData.success) throw new Error(responseData.error || "Order creation failed");
 
-        const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
-        try {
-            const sbInit = window.supabase.createClient("https://ihbdrtnkfitytklonnel.supabase.co", SUPABASE_KEY);
-            // ১. হাতৰ ফটোখন ডাটাবেছত (birth_profiles আৰু orders) সংৰক্ষণ কৰা যাতে এডমিনে পেনেলত সদায় দেখিবলৈ পায়
-            await sbInit.from('birth_profiles').insert([{
-                customer_name: 'PALM:' + responseData.orderId + ':' + email,
-                birth_date: '1995-01-01',
-                birth_time: (hand || 'right') + '|' + (gender || 'male'),
-                birth_place: photo
-            }]);
-            await sbInit.from('orders').update({
-                service: 'palmistry',
-                palm_hand: hand,
-                palm_gender: gender,
-                tarot_question: photo
-            }).eq('public_order_id', responseData.orderId);
-        } catch(dbSaveErr) {
-            console.warn("Palm photo DB save fallback:", dbSaveErr);
-        }
+        const SUPABASE_KEY = (window.JA_CONFIG && window.JA_CONFIG.supabaseAnonKey) || "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
 
         try {
             localStorage.setItem('ja_latest_order_id', responseData.orderId);
@@ -1952,9 +1934,9 @@ window.processPalmistryPayment = async function(e) {
             "theme": { "color": "#059669" },
             "handler": async function (response) {
                 btn.innerText = "ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে... ⏳";
-                const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
+                const SUPABASE_KEY = (window.JA_CONFIG && window.JA_CONFIG.supabaseAnonKey) || "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
                 try {
-                    await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', {
+                    const vRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1968,22 +1950,16 @@ window.processPalmistryPayment = async function(e) {
                             razorpay_signature: response.razorpay_signature
                         })
                     });
-                } catch(e){}
-
-                // Update the order in Supabase database so Admin Panel & Records see it as 'palmistry'
-                try {
-                    const sb = window.supabase.createClient("https://ihbdrtnkfitytklonnel.supabase.co", SUPABASE_KEY);
-                    await sb.from('orders').update({
-                        service: 'palmistry',
-                        palm_hand: hand,
-                        palm_gender: gender,
-                        tarot_question: photo,
-                        payment_status: 'paid',
-                        status: 'paid',
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_order_id: response.razorpay_order_id
-                    }).eq('public_order_id', responseData.orderId);
-                } catch(e){}
+                    const vJson = await vRes.json();
+                    if (!vRes.ok || vJson.success === false) {
+                        throw new Error(vJson.error || "পেমেন্ট ভেৰিফিকেচন সম্পূৰ্ণ নহ'ল।");
+                    }
+                    try { sessionStorage.setItem('ja_paid_' + responseData.orderId, 'true'); } catch(e){}
+                } catch(vErr) {
+                    alert("⚠️ " + (vErr.message || "পেমেন্ট ভেৰিফিকেচনত সমস্যা হৈছে। অৰ্ডাৰ নম্বৰ: " + responseData.orderId));
+                    btn.innerText = "🔒 পেমেন্ট কৰক — মাত্ৰ ₹১৯৯"; btn.disabled = false;
+                    return;
+                }
                 
                 try {
                     window.selectedService = 'palmistry';
@@ -2088,7 +2064,15 @@ window.processPayment = async function(e) {
     
     try {
 
-        const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
+        const createRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/create-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY
+            },
+            body: JSON.stringify(orderData)
+        });
         const responseData = await createRes.json();
         if (!responseData.success) throw new Error(responseData.error || "Order failed");
         
@@ -2131,8 +2115,9 @@ window.processPayment = async function(e) {
             "handler": async function (response) {
                 btn.innerText = "কুণ্ডলী প্ৰস্তুত কৰা হৈছে... ⏳";
                 
-                // ১. Edge Function: verify-payment কল কৰা
+                // ১. Edge Function: verify-payment কল কৰা (HMAC-SHA256 সুৰক্ষিত ভেৰিফিকেচন)
                 let isVerified = false;
+                let verifyErrMsg = "";
                 try {
                     const verifyRes = await fetch(window.JA_CONFIG.apiBaseUrl + '/verify-payment', { 
                         method: 'POST', 
@@ -2148,27 +2133,22 @@ window.processPayment = async function(e) {
                             razorpay_signature: response.razorpay_signature 
                         })
                     });
-                    if (verifyRes.ok) {
-                        const vData = await verifyRes.json();
-                        if (vData && vData.success !== false) isVerified = true;
+                    const vData = await verifyRes.json();
+                    if (verifyRes.ok && vData && vData.success !== false) {
+                        isVerified = true;
+                        try { sessionStorage.setItem('ja_paid_' + responseData.orderId, 'true'); } catch(e){}
+                    } else {
+                        verifyErrMsg = (vData && vData.error) || "পেমেন্ট ভেৰিফিকেচন বিফল হ'ল।";
                     }
                 } catch(netErr) {
-                    console.warn("verify-payment edge function offline or network error:", netErr);
+                    console.warn("verify-payment network error:", netErr);
+                    verifyErrMsg = "নেটৱৰ্ক সমস্যাৰ বাবে পেমেন্ট ভেৰিফিকেচন সম্পূৰ্ণ নহ'ল।";
                 }
 
-                // ২. Supabase orders টেবুলত পোনপটীয়াকৈ 'paid' আপডেট কৰা
-                if (response.razorpay_payment_id) {
-                    try {
-                        await mySbClient.from('orders').update({
-                            payment_status: 'paid',
-                            status: 'paid',
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_order_id: response.razorpay_order_id
-                        }).eq('public_order_id', responseData.orderId);
-                        isVerified = true;
-                    } catch(dbErr) {
-                        console.warn("Direct Supabase update note:", dbErr);
-                    }
+                if (!isVerified) {
+                    alert("⚠️ " + verifyErrMsg + " (অৰ্ডাৰ নম্বৰ: " + responseData.orderId + ")");
+                    btn.innerText = "Pay Now"; btn.disabled = false;
+                    return;
                 }
 
                 // ৩. পেমেন্ট সম্পন্ন হোৱাৰ পিছত গ্ৰাহকক তৎক্ষণাৎ ৰিপোৰ্ট প্ৰদৰ্শন কৰা

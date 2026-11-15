@@ -248,7 +248,7 @@
             if (paymentId && rzpOrderId && rzpSignature && order.payment_status !== 'paid') {
                 try {
                     const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1');
-                    await fetch(apiBase + '/verify-payment', {
+                    const vRes = await fetch(apiBase + '/verify-payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -262,9 +262,28 @@
                             razorpay_signature: rzpSignature
                         })
                     });
+                    const vJson = await vRes.json();
+                    if (vRes.ok && vJson && vJson.success !== false) {
+                        order.payment_status = 'paid';
+                        try { sessionStorage.setItem('ja_paid_' + sKey, 'true'); } catch(e){}
+                    }
                 } catch(e) {
                     console.warn("Payment verification call warning:", e);
                 }
+            }
+
+            // 🔒 পেমেন্ট নোহোৱা অৰ্ডাৰৰ বাবে ৰিপোৰ্ট ব্লক কৰা
+            const isOrderPaid = (
+                order.payment_status === 'paid' ||
+                order.status === 'paid' ||
+                sessionStorage.getItem('ja_paid_' + sKey) === 'true'
+            );
+            if (!isOrderPaid) {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('statusTitle').innerText = "🔒 পেমেন্ট সম্পূৰ্ণ হোৱা নাই";
+                document.getElementById('statusMsg').innerText = "এই অৰ্ডাৰটোৰ (" + sKey + ") পেমেন্ট এতিয়ালৈকে নিশ্চিত হোৱা নাই। যদি আপোনাৰ একাউণ্টৰ পৰা টকা কটা গৈছে, তেন্তে তলৰ বুটামটো টিপি পুনৰ পৰীক্ষা কৰক বা Support-ত যোগাযোগ কৰক।";
+                document.getElementById('statusMsg').insertAdjacentHTML('afterend', '<div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button onclick="location.reload()" style="background:#059669;color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:15px;cursor:pointer;font-weight:bold;">🔄 পুনৰ পৰীক্ষা কৰক</button><a href="index.html" style="background:#8b0000;color:#fff;text-decoration:none;padding:10px 20px;border-radius:6px;font-size:15px;font-weight:bold;">🏠 মূল পৃষ্ঠালৈ যাওক</a></div>');
+                return;
             }
 
             // হস্তৰেখা: হাতৰ ফটোৰ AI বিশ্লেষণ (Gemini). বিশ্লেষণ নোহোৱাকৈ কোনো ৰিপোৰ্ট বনোৱা নহয়।
