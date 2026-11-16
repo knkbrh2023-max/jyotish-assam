@@ -1537,8 +1537,8 @@
                 <span style="font-size: 11px; color: #64748b;">(ৰিপোৰ্টৰ লিংক আৰু ৰচিদ এই ইমেইলত প্ৰেৰণ কৰা হ'ব)</span>
             </div>
 
-            <!-- 3. Hand & Gender Selection Row -->
-            <div style="display: flex; gap: 12px; margin-bottom: 14px;">
+            <!-- 3. Hand, Gender & Age Group Selection -->
+            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
                 <div style="flex: 1;">
                     <label for="palmCustHand" style="font-size: 13px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 5px;">প্ৰধান হাত (Hand):</label>
                     <select id="palmCustHand" class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13.5px; background: white; box-sizing: border-box;">
@@ -1549,11 +1549,18 @@
                 <div style="flex: 1;">
                     <label for="palmCustGender" style="font-size: 13px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 5px;">লিংগ (Gender):</label>
                     <select id="palmCustGender" class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13.5px; background: white; box-sizing: border-box;">
-                        <option value="male" selected>পুৰুষ (Male)</option>
-                        <option value="female">মহিলা (Female)</option>
+                        <option value="male" selected>পুৰুষ / ল'ৰা (Male)</option>
+                        <option value="female">মহিলা / ছোৱালী (Female)</option>
                         <option value="other">অন্যান্য (Other)</option>
                     </select>
                 </div>
+            </div>
+            <div style="margin-bottom: 14px;">
+                <label for="palmCustAgeGroup" style="font-size: 13px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 5px;">বয়সৰ শ্ৰেণী (Age Group):</label>
+                <select id="palmCustAgeGroup" class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13.5px; background: white; box-sizing: border-box;">
+                    <option value="adult" selected>১৭+ বছৰ (বয়স্ক / তৰুণ — কেৰিয়াৰ, বিবাহ, ধন ও ভৱিষ্যৎ বিচাৰ)</option>
+                    <option value="child">১৬ বছৰৰ তলৰ শিশু / ছাত্ৰ-ছাত্ৰী (শিক্ষা, মেধা, স্বাস্থ্য ও ভৱিষ্যৎ কেৰিয়াৰ বিচাৰ)</option>
+                </select>
             </div>
 
             <!-- 4. Palm Photo Upload Box -->
@@ -1858,6 +1865,7 @@ window.processPalmistryPayment = async function(e) {
     const email = document.getElementById('palmCustEmail').value.trim();
     const hand = document.getElementById('palmCustHand').value || 'right';
     const gender = document.getElementById('palmCustGender').value || 'male';
+    const ageGroup = (document.getElementById('palmCustAgeGroup') && document.getElementById('palmCustAgeGroup').value) || 'adult';
     const photo = window.currentPalmPhotoBase64 || null;
 
     if (!photo) {
@@ -1879,7 +1887,8 @@ window.processPalmistryPayment = async function(e) {
         palmGender: gender,
         palmPhoto: photo,
         tarot_question: photo,
-        tarot_topic: hand + '|' + gender,
+        tarot_topic: hand + '|' + gender + '|' + ageGroup,
+        palmAgeGroup: ageGroup,
         language: typeof currentLang !== 'undefined' ? currentLang : 'as'
     };
 
@@ -1902,6 +1911,7 @@ window.processPalmistryPayment = async function(e) {
         try {
             localStorage.setItem('ja_latest_order_id', responseData.orderId);
             if (photo) { localStorage.setItem('ja_palm_photo_' + responseData.orderId, photo); }
+            localStorage.setItem('ja_palm_age_' + responseData.orderId, ageGroup);
             localStorage.setItem('ja_pending_order', JSON.stringify({
                 id: responseData.orderId,
                 public_order_id: responseData.orderId,
@@ -1911,6 +1921,8 @@ window.processPalmistryPayment = async function(e) {
                 service: 'palmistry',
                 palmHand: hand,
                 palmGender: gender,
+                palmAgeGroup: ageGroup,
+                tarot_topic: hand + '|' + gender + '|' + ageGroup,
                 palmPhoto: photo
             }));
         } catch(e){}

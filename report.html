@@ -68,7 +68,7 @@
             }
         }
     </style>
-    <script src="grand_report_engine.js?v=18"></script>
+    <script src="grand_report_engine.js?v=20"></script>
 </head>
 <body>
 
@@ -120,7 +120,7 @@
 
     <script>
     
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=18
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=20
 
 
 // --- Fallback Vedic Chart Calculation Engine ---
@@ -162,7 +162,7 @@
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
-            const cached = sessionStorage.getItem('ja_report_v18_' + orderId) || localStorage.getItem('ja_report_v18_' + orderId);
+            const cached = sessionStorage.getItem('ja_report_v20_' + orderId) || localStorage.getItem('ja_report_v20_' + orderId);
             const savedSvc = (localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || '').toLowerCase();
             const isValidMonthly = !(savedSvc === 'monthly' || (cached && cached.includes('মাহেকীয়া ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('মাহটোৰ ৪টা সপ্তাহৰ বিস্তৃত সাপ্তাহিক ফলাফল'));
             const isValidYearly = !(savedSvc === 'yearly' || (cached && cached.includes('বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('বাৰ্ষিক ১২ মাহৰ বিস্তৃত মাহেকীয়া ফলাফল'));
@@ -226,6 +226,11 @@
             const savedSvc = localStorage.getItem('ja_service_' + sKey) || sessionStorage.getItem('ja_service_' + sKey);
             if (savedSvc) order.service = savedSvc;
             if (String(order.service || '').toLowerCase().includes('palm')) {
+                const _tParts = String(order.tarot_topic || '').split('|');
+                if (!order.palmHand && !order.palm_hand && _tParts[0]) order.palmHand = _tParts[0];
+                if (!order.palmGender && !order.palm_gender && _tParts[1]) order.palmGender = _tParts[1];
+                const _savedAgeGrp = _tParts[2] || localStorage.getItem('ja_palm_age_' + sKey) || localStorage.getItem('ja_palm_age_' + order.id);
+                if (!order.palmAgeGroup && _savedAgeGrp) order.palmAgeGroup = _savedAgeGrp;
                 let pPhoto = order.palmPhoto || order.palm_photo ||
                     ((order.tarot_question && String(order.tarot_question).startsWith('data:image/')) ? order.tarot_question : null) ||
                     localStorage.getItem('ja_palm_photo_' + sKey) ||
@@ -331,8 +336,8 @@
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
             try {
-                localStorage.setItem('ja_report_v18_' + saveId, reportHtml);
-                sessionStorage.setItem('ja_report_v18_' + saveId, reportHtml);
+                localStorage.setItem('ja_report_v20_' + saveId, reportHtml);
+                sessionStorage.setItem('ja_report_v20_' + saveId, reportHtml);
                 localStorage.setItem('ja_report_' + saveId, reportHtml);
                 sessionStorage.setItem('ja_report_' + saveId, reportHtml);
                 localStorage.setItem('ja_latest_order_id', saveId);
@@ -403,7 +408,7 @@
             const chart = _isPalmOrder ? null : buildFallbackVedicChart(dobStr, tobStr, placeStr);
                 const reportHtml = renderFullReport(order, chart);
 
-                localStorage.setItem('ja_report_v18_' + order.id, reportHtml);
+                localStorage.setItem('ja_report_v20_' + order.id, reportHtml);
                 localStorage.setItem('ja_report_' + order.id, reportHtml);
                 localStorage.setItem('ja_latest_order_id', order.id);
 

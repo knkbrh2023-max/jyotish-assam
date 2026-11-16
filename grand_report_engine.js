@@ -581,7 +581,12 @@ function generatePalmistryReportHtml(order) {
     const photo = order.palmPhoto || order.palm_photo || ((order.tarot_question && String(order.tarot_question).startsWith('data:image/')) ? order.tarot_question : null) || (typeof localStorage !== 'undefined' ? (localStorage.getItem('ja_palm_photo_' + (order.public_order_id || order.id)) || localStorage.getItem('ja_palm_photo_' + order.id)) : null) || null;
     const A = order.palmAnalysis || order.palm_analysis || null;
     const handName = ({ right: `সোঁহাত (Right Hand)`, left: `বাওঁহাত (Left Hand)` })[hand] || `সোঁহাত (Right Hand)`;
-    const genderName = ({ male: `পুৰুষ (Male)`, female: `মহিলা (Female)`, other: `অন্যান্য` })[gender] || `পুৰুষ (Male)`;
+    const _topicParts = String(order.tarot_topic || '').split('|');
+    const rawAgeGroup = order.palmAgeGroup || order.palm_age_group || _topicParts[2] || (A && A.ageGroup) || (typeof localStorage !== 'undefined' ? localStorage.getItem('ja_palm_age_' + (order.public_order_id || order.id)) : null) || 'adult';
+    const isChild = (String(rawAgeGroup).toLowerCase().trim() === 'child' || (Number(order.age) > 0 && Number(order.age) <= 16));
+    const genderName = isChild
+        ? (({ male: `ল'ৰা / ছাত্ৰ (Boy)`, female: `ছোৱালী / ছাত্ৰী (Girl)`, other: `শিশু / ছাত্ৰ-ছাত্ৰী` })[gender] || `শিশু / ছাত্ৰ-ছাত্ৰী`)
+        : (({ male: `পুৰুষ (Male)`, female: `মহিলা (Female)`, other: `অন্যান্য` })[gender] || `পুৰুষ (Male)`);
 
     // The report is built ONLY from what the AI actually saw in the customer's photo. No photo analysis -> no report.
     const usable = !!(A && A.version === 2 && A.quality && A.quality.side === 'palm' && A.lines && A.mounts);
@@ -931,6 +936,111 @@ function generatePalmistryReportHtml(order) {
         `<strong>শুভ ৰং, শুভ সংখ্যা আৰু শুভ বাৰ:</strong> মহত্ত্বপূৰ্ণ কাম, পৰীক্ষা বা ব্যৱসায়িক চুক্তিত <strong>${domMount.color}</strong> ৰঙৰ বস্ত্ৰ ব্যৱহাৰ কৰিব। আপোনাৰ বাবে <strong>${domMount.day}</strong> আৰু শুভ সংখ্যা <strong>${domMount.num}</strong> বিশেষ ফলপ্ৰসূ।`
     ]);
 
+    // ---------- 11. Child / Student Mode (Under 16 Years) Customizations ----------
+    let page5Section7Heading = `৭. ধন-সম্পত্তি, সঞ্চয় আৰু ভূমি-গৃহ যোগ (Wealth & Property)`;
+    let page5Section7Html = wealthPropertyHtml;
+    let page6Section3Heading = `৩. বয়স অনুসৰি জীৱনৰ ৫টা মূল পৰ্যায়ৰ ৰোডমেপ (Life Roadmap)`;
+    let page6Section3Html = lifeRoadmapHtml;
+    let page7Title = `❁ কেৰিয়াৰ (চাকৰি নে ব্যৱসায়) আৰু স্বাস্থ্য বিচাৰ ❁`;
+    let page7Sub1 = `১. কেৰিয়াৰ: চাকৰি নে ব্যৱসায়, সফলতাৰ বয়স আৰু উপযুক্ত ক্ষেত্ৰ`;
+    let page8Title = `❁ প্ৰেম, বিবাহ, জীৱনসংগী আৰু দাম্পত্য ভৱিষ্যৎ ❁`;
+    let page8Sub1 = `১. প্ৰেম বিবাহ নে সামাজিক বিবাহ আৰু সম্ভাব্য বিবাহৰ সময়`;
+    let page8Body1 = loveMarriageHtml;
+    let page8Sub2 = `২. হ’বলগা জীৱনসংগীৰ স্বভাৱ আৰু পাৰস্পৰিক বুজাবুজি`;
+    let page8Body2 = spouseNatureHtml;
+    let page8Sub3 = `৩. বিবাহোত্তৰ ভাগ্যোদয় আৰু পাৰিবাৰিক সুখ-সমৃদ্ধি`;
+    let page8Body3 = postMarriageHtml;
+    let finalSummaryTableHtml = summaryTableHtml;
+    let finalGeneralSummaryHtml = generalSummaryHtml;
+    let finalCareerDetailHtml = careerDetailHtml;
+    let finalGemLuckyTitle = `💎 ১. হস্ত-তত্ত্ব আৰু গ্ৰহ পৰ্বত অনুসৰি শুভ ৰত্ন, ৰং আৰু বাৰ`;
+    let finalGemLuckyHtml = gemLuckyHtml;
+
+    if (isChild) {
+        const studyStreamShort = (hs === 'air' || mt.mercury === 'high')
+            ? 'বিজ্ঞান, তথ্য-প্ৰযুক্তি (IT), গণিত বা বাণিজ্য'
+            : (hs === 'fire' || mt.jupiter === 'high' || mt.sun === 'high')
+            ? 'প্ৰশাসনিক সেৱা (Civil Services), নেতৃত্ব, বিজ্ঞান বা আইন'
+            : (hs === 'water' || mt.moon === 'high' || mt.venus === 'high')
+            ? 'চিকিৎসা বিজ্ঞান, কলা-সাহিত্য, ডিজাইন বা মনোবিজ্ঞান'
+            : 'অভিযান্ত্ৰিক (Engineering), বাণিজ্য, কৃষি বিজ্ঞান বা ব্যৱস্থাপনা';
+
+        const memoryIqShort = (hd.length === 'long' && hd.depth === 'deep')
+            ? 'অতি তীক্ষ্ণ স্মৃতিশক্তি আৰু গভীৰ বিশ্লেষণ ক্ষমতা'
+            : (hd.slope === 'slightly_sloping' || hd.slope === 'steeply_sloping')
+            ? 'সৃজনশীল বুদ্ধি আৰু কল্পনাশক্তিৰে সোনকালে শিকাৰ ক্ষমতা'
+            : 'ব্যৱহাৰিক বুদ্ধি আৰু হাতে-কামে শিকাৰ সহজাত দক্ষতা';
+
+        finalSummaryTableHtml = `
+        <table class="vedic-table" style="margin-top: 12px;">
+            <thead>
+                <tr><th colspan="2">🌟 ${name}ৰ শৈক্ষিক আৰু সমুদ্ৰিক সাৰাংশ ফলাফল (Child / Student Summary) 🌟</th></tr>
+            </thead>
+            <tbody>
+                <tr><td style="width:38%;"><strong>হস্তৰ পঞ্চমহাভূত তত্ত্ব</strong></td><td><strong>${elemLabelAs}</strong></td></tr>
+                <tr><td><strong>প্ৰধান শক্তিশালী গ্ৰহ-পৰ্বত</strong></td><td><strong>${domMount.name}</strong> (${domMount.power.split(',')[0]})</td></tr>
+                <tr><td><strong>স্মৃতিশক্তি আৰু বৌদ্ধিক ধৰণ</strong></td><td><strong>${memoryIqShort}</strong></td></tr>
+                <tr><td><strong>ভৱিষ্যতে উপযুক্ত শিক্ষাৰ ধাৰা</strong></td><td><strong>${studyStreamShort}</strong></td></tr>
+                <tr><td><strong>ভৱিষ্যৎ কৰ্ম-সম্ভাৱনা (ডাঙৰ হ'লে)</strong></td><td><strong>${jobVsBizShort}</strong></td></tr>
+                <tr><td><strong>শুভ ৰং, শুভ সংখ্যা আৰু শুভ বাৰ</strong></td><td><strong>ৰং:</strong> ${domMount.color} &nbsp;|&nbsp; <strong>সংখ্যা:</strong> ${domMount.num} &nbsp;|&nbsp; <strong>বাৰ:</strong> ${domMount.day}</td></tr>
+            </tbody>
+        </table>`;
+
+        finalGeneralSummaryHtml = bullets([
+            `<strong>শিশুৰ হস্তৰেখাৰ বিশেষ সমুদ্ৰিক নীতি:</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি ১৬ বছৰ বয়সৰ তলৰ শিশু আৰু কিশোৰ-কিশোৰীৰ হাতৰ ৰেখা মানসিক বিকাশৰ লগে লগে ক্ৰমান্বয়ে অধিক সুস্পষ্ট হয়। সেয়েহে এই প্ৰতিবেদনখনত শিশুটিৰ জন্মগত মেধা, স্মৃতিশক্তি, স্বাস্থ্য, ক্ৰীড়া/কলা প্ৰতিভা আৰু ভৱিষ্যৎ শিক্ষাৰ দিশসমূহক বিশেষভাৱে বিশ্লেষণ কৰা হৈছে।`,
+            ...generalPts.slice(1)
+        ]);
+
+        page5Section7Heading = `৭. মেধা, স্মৃতিশক্তি আৰু একাগ্ৰতাৰ বিকাশ (Memory & Concentration)`;
+        page5Section7Html = bullets([
+            `<strong>স্মৃতিশক্তি আৰু গ্ৰহণ ক্ষমতা:</strong> মস্তিষ্ক ৰেখাৰ গঠন অনুসৰি শিশুটিৰ <strong>${memoryIqShort}</strong> দেখা যায়। কোনো বিষয় মুখস্থ কৰাতকৈ উদাহৰণ আৰু চিত্ৰৰ সহায়ত বুজাই দিলে শিশুটিয়ে বহু দিনলৈ মনত ৰাখিব পাৰে।`,
+            `<strong>একাগ্ৰতা বৃদ্ধিৰ উপায়:</strong> ${hd.depth === 'faint' || mt.moon === 'high' ? 'মন সোনকালে চঞ্চল হ’ব পাৰে বাবে মোবাইল/টিভিৰ ব্যৱহাৰ সীমিত ৰাখি পুৱা পঢ়াৰ অভ্যাস গঢ়ি তোলা উচিত।' : 'একাগ্ৰতা স্বাভাৱিকভাৱে ভাল; নিৰ্দিষ্ট সময়সূচী (Routine) অনুসৰি পঢ়া-শুনা কৰিলে পৰীক্ষাত অতি উচ্চ ফলাফল লাভ কৰিব।'}`
+        ]);
+
+        page6Section3Heading = `৩. বয়স অনুসৰি শৈক্ষিক আৰু ভৱিষ্যৎ বিকাশৰ ৫-পৰ্যায়ৰ ৰোডমেপ`;
+        page6Section3Html = bullets([
+            `<strong>১ম পৰ্যায় (৫ – ১২ বছৰ বয়স — বুনিয়াদী শিক্ষা আৰু কৌতূহল):</strong> শাৰীৰিক বৃদ্ধি, ভাষা শিকা, চিত্ৰাংকন, সংগীত বা খেল-ধেমালিৰ জৰিয়তে মানসিক বিকাশ হোৱাৰ সময়।`,
+            `<strong>২য় পৰ্যায় (১৩ – ১৬ বছৰ বয়স — মাধ্যমিক শিক্ষা আৰু একাগ্ৰতা):</strong> এই সময়ত মস্তিষ্ক ৰেখা অধিক সক্ৰিয় হয়; গণিত, বিজ্ঞান আৰু ভাষা চৰ্চাত বিশেষ মনোযোগ দিলে ভৱিষ্যতৰ শক্তিশালী ভেটি গঢ় লৈ উঠিব।`,
+            `<strong>৩য় পৰ্যায় (১৭ – ২১ বছৰ বয়স — উচ্চতৰ শিক্ষা আৰু সঠিক কেৰিয়াৰ বাছনি):</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি এই বয়সত শিশুটিৰ মূল লক্ষ্য স্পষ্ট হ'ব আৰু উচ্চ শিক্ষাত বিশেষ কৃতিত্ব দেখুৱাব পাৰিব।`,
+            `<strong>৪ৰ্থ পৰ্যায় (২২ – ২৬ বছৰ বয়স — প্ৰতিযোগিতামূলক পৰীক্ষা আৰু কৰ্মত প্ৰৱেশ):</strong> উচ্চ শিক্ষা সমাপ্ত কৰি প্ৰতিযোগিতামূলক পৰীক্ষা, বৃত্তিমূলক প্রশিক্ষণ বা প্ৰথম কর্মজীবনত সফলতাৰে পদাৰ্পণ কৰাৰ যোগ।`,
+            `<strong>৫ম পৰ্যায় (২৭+ বছৰ বয়স — পূৰ্ণ প্রতিষ্ঠা আৰু সামাজিক সন্মান):</strong> নিজৰ দক্ষতা আৰু পিতৃ-মাতৃৰ আশীৰ্বাদত এখন সুদৃঢ় কেৰিয়াৰ আৰু সন্মানজনক জীৱন গঢ়ি তুলিব।`
+        ]);
+
+        page7Title = `❁ ভৱিষ্যৎ শিক্ষাৰ ধাৰা, কেৰিয়াৰ সম্ভাৱনা আৰু স্বাস্থ্য বিচাৰ ❁`;
+        page7Sub1 = `১. ভৱিষ্যতে কোন লাইনত পঢ়ালে ভাল হ'ব আৰু ডাঙৰ হ'লে চাকৰি নে ব্যৱসায় হ'ব`;
+        finalCareerDetailHtml = bullets([
+            `<strong>উপযুক্ত শিক্ষাৰ ধাৰা (Recommended Study Stream):</strong> হাতৰ পঞ্চমহাভূত তত্ত্ব (${elemLabelAs}) আৰু মস্তিষ্ক ৰেখাৰ দিশ অনুসৰি শিশুটিক ভৱিষ্যতে <strong>${studyStreamShort}</strong> শিতানত উচ্চ শিক্ষা দিয়াটো সৰ্বাধিক ফলপ্ৰসূ হ'ব।`,
+            jobVsBizText.replace(/আপোনাৰ/g, 'শিশুটিয়ে ডাঙৰ হ’লে ইয়াৰ'),
+            `<strong>ভৱিষ্যৎ উন্নতিৰ বয়স:</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি <strong>২২–২৭ বছৰ বয়সৰ ভিতৰত</strong> উচ্চ শিক্ষা ও কেৰিয়াৰৰ ভেটি স্থাপন হ'ব আৰু <strong>${goldenAgeShort}</strong>ত পূৰ্ণ সাফল্য লাভ কৰিব।`
+        ]);
+
+        page8Title = `❁ সৃজনশীল প্ৰতিভা, ক্ৰীড়া আৰু পিতৃ-মাতৃৰ বাবে বিশেষ নিৰ্দেশনা ❁`;
+        page8Sub1 = `১. ক্ৰীড়া, কলা-সংস্কৃতি আৰু সহ-পাঠ্যক্ৰমিক প্ৰতিভা (Sports & Creative Talent)`;
+        page8Body1 = bullets([
+            `<strong>সৃজনশীল আৰু বাহ্যিক প্ৰতিভা:</strong> ${ir === 'ring_longer' || mt.venus === 'high' || mt.sun === 'high' ? 'অনামিকা আঙুলি আৰু শুক্ৰ/সূৰ্য পৰ্বতৰ স্থিতিয়ে সংগীত, অংকন, আবৃত্তি, অভিনয় বা সৃজনশীল ক্ষেত্ৰত বিশেষ সুপ্ত প্ৰতিভা সূচায়।' : 'শিশুটিৰ হাতত যুক্তিমূলক খেল (যেনে দবা, কুইজ, বিজ্ঞান প্ৰদৰ্শনী) আৰু দলীয় খেল-ধেমালিত ভাল কৰাৰ লক্ষণ স্পষ্ট।'}`,
+            `<strong>নেতৃত্ব আৰু আদান-প্ৰদান:</strong> ${ir === 'index_longer' || lfng === 'high' ? 'তৰ্জনী আৰু কনিষ্ঠা আঙুলিৰ গঠনে দেখুৱায় যে শিশুটিয়ে বিদ্যালয় বা সমনীয়াৰ মাজত নেতৃত্ব দিব পাৰে আৰু স্পষ্টকৈ নিজৰ কথা উপস্থাপন কৰিব পাৰে।' : 'শিশুটিক বিদ্যালয়ৰ বিভিন্ন প্ৰতিযোগিতা আৰু সমূহীয়া কাৰ্যসূচীত অংশগ্ৰহণ কৰিবলৈ উৎসাহিত কৰিলে আত্মবিশ্বাস দ্ৰুতগতিত বৃদ্ধি পাব।'}`
+        ]);
+
+        page8Sub2 = `২. পিতৃ-মাতৃ আৰু অভিভাৱকৰ বাবে সমুদ্ৰিক পৰামৰ্শ (Parenting Guidance)`;
+        page8Body2 = bullets([
+            `<strong>মনস্তাত্ত্বিক যত্ন:</strong> ${hd.start === 'joined_with_life' || ht.curve === 'curved' ? 'শিশুটি সংবেদনশীল আৰু পৰিয়ালৰ মৰম বিচৰা স্বভাৱৰ — কঠোৰ গালি-শপনি বা আনৰ লগত তুলনা নকৰি মৰমেৰে বুজালে দুগুণ উৎসাহেৰে পঢ়া-শুনা কৰিব।' : 'শিশুটি স্বাধীনচেতা আৰু কৌতূহলী স্বভাৱৰ — জোৰ জবৰদস্তি নকৰি যুক্তিৰে বুজাই দায়িত্ব দিলে সহজেই মানি চলিব।'}`,
+            `<strong>শৃংখলা আৰু অভ্যাস:</strong> সৰুৰে পৰা পুৱা সোনকালে উঠা, শাৰীৰিক ব্যায়াম কৰা আৰু পঢ়াৰ সময়ত মোবাইল ফোন আঁতৰত ৰখাৰ অভ্যাস গঢ়ি তুলিব।`
+        ]);
+
+        page8Sub3 = `৩. পৰীক্ষাত সফলতা আৰু একাগ্ৰতা বৃদ্ধিৰ বাস্তু ও বৈদিক নিয়ম`;
+        page8Body3 = bullets([
+            `<strong>পঢ়া টেবুলৰ শুভ দিশ:</strong> সমুদ্ৰিক আৰু বাস্তু শাস্ত্ৰ অনুসৰি শিশুটিয়ে পঢ়া-শুনা কৰোঁতে সদায় <strong>পূব দিশ (East) বা উত্তৰ দিশ (North)</strong>লৈ মুখ কৰি বহি পঢ়িব লাগে; ইয়াৰ ফলত সূৰ্য আৰু বুধৰ ইতিবাচক শক্তি লাভ হয় আৰু স্মৃতিশক্তি বৃদ্ধি পায়।`,
+            `<strong>পঢ়া কোঠাৰ পৰিৱেশ:</strong> পঢ়া টেবুলখন সদায় পৰিষ্কাৰ ৰাখিব আৰু কোঠাত পাতল হালধীয়া, বগা বা পাতল সেউজীয়া ৰঙৰ ব্যৱহাৰ কৰিলে মন শান্ত আৰু একাগ্ৰ থাকে।`
+        ]);
+
+        finalGemLuckyTitle = `📚 ১. মেধা বিকাশৰ বাবে শুভ ৰং, বাৰ আৰু শৈক্ষিক নিদান`;
+        finalGemLuckyHtml = bullets([
+            `<strong>ৰত্নৰ সলনি সাত্ত্বিক নিদান:</strong> ১৬ বছৰৰ তলৰ শিশুৰ ক্ষেত্ৰত গধুৰ গ্ৰহ-ৰত্ন ধাৰণ কৰাৰ প্ৰয়োজন নাই; প্ৰতিদিনে বিদ্যাৰ দেৱী <strong>মা সৰস্বতী আৰু সিদ্ধিদাতা গণেশৰ</strong> স্মৰণ কৰাটোৱেই সৰ্বশ্ৰেষ্ঠ সৌভাগ্যদায়ক।`,
+            `<strong>শুভ ৰং, শুভ সংখ্যা আৰু শুভ বাৰ:</strong> পৰীক্ষা বা বিশেষ প্ৰতিযোগিতাত অংশ লওঁতে <strong>${domMount.color}</strong> ৰং ব্যৱহাৰ কৰা শুভ। শিশুটিৰ বাবে <strong>${domMount.day}</strong> আৰু শুভ সংখ্যা <strong>${domMount.num}</strong> বিশেষ ফলপ্ৰসূ।`,
+            `<strong>স্মৃতিশক্তি বৃদ্ধিৰ মন্ত্ৰ:</strong> পঢ়া আৰম্ভ কৰাৰ আগতে প্রতিদিনে ৩ বাৰ <em>"ওঁ ঐং সৰস্বত্যৈ নমঃ"</em> বা <em>"ওঁ গং গণপতয়ে নমঃ"</em> উচ্চাৰণ কৰিবলৈ শিকাব।`
+        ]);
+    }
+
     const clarityNote = A.quality.clarity === 'fair'
         ? `<div class="info-card" style="border-left-color:#b45309;"><div class="card-content">ℹ️ ফটোৰ স্পষ্টতা মধ্যম হোৱাৰ বাবে কিছুমান সূক্ষ্ম বৈশিষ্ট্য চিনাক্ত কৰিব পৰা নগ'ল; সেইবোৰৰ বিষয়ে মন্তব্য কৰা হোৱা নাই।</div></div>`
         : '';
@@ -1216,9 +1326,9 @@ function generatePalmistryReportHtml(order) {
         <div class="page page-break">
             <h2 class="section-title">❁ হস্ততলৰ চিত্ৰ, মূল সাৰাংশ আৰু ব্যক্তিত্ব বিচাৰ ❁</h2>
             ${photoHtml}
-            ${summaryTableHtml}
+            ${finalSummaryTableHtml}
             <div class="sub-heading">১. সামগ্ৰিক জীৱন আৰু ব্যক্তিত্ব বিশ্লেষণ (General Report)</div>
-            <div class="info-card"><div class="card-content">${generalSummaryHtml}</div></div>
+            <div class="info-card"><div class="card-content">${finalGeneralSummaryHtml}</div></div>
         </div>
 
         <!-- PAGE 4: LIFE, HEAD, HEART -->
@@ -1241,8 +1351,8 @@ function generatePalmistryReportHtml(order) {
             <div class="info-card"><div class="card-content">${sunHtml}</div></div>
             <div class="sub-heading">৬. হস্ততলৰ বিশেষ চিহ্ন</div>
             <div class="info-card"><div class="card-content">${marksHtml}</div></div>
-            <div class="sub-heading">৭. ধন-সম্পত্তি, সঞ্চয় আৰু ভূমি-গৃহ যোগ (Wealth & Property)</div>
-            <div class="info-card"><div class="card-content">${wealthPropertyHtml}</div></div>
+            <div class="sub-heading">${page5Section7Heading}</div>
+            <div class="info-card"><div class="card-content">${page5Section7Html}</div></div>
         </div>
 
         <!-- PAGE 6: MOUNTS & LIFE ROADMAP -->
@@ -1252,36 +1362,36 @@ function generatePalmistryReportHtml(order) {
             <div class="info-card"><div class="card-content">${mountsHtml}</div></div>
             <div class="sub-heading">২. আপোনাৰ হাতৰ প্ৰধান শক্তিশালী গ্ৰহ পৰ্বতৰ বিশেষ প্ৰভাৱ</div>
             <div class="info-card"><div class="card-content">${mountsDominantHtml}</div></div>
-            <div class="sub-heading">৩. বয়স অনুসৰি জীৱনৰ ৫টা মূল পৰ্যায়ৰ ৰোডমেপ (Life Roadmap)</div>
-            <div class="info-card"><div class="card-content">${lifeRoadmapHtml}</div></div>
+            <div class="sub-heading">${page6Section3Heading}</div>
+            <div class="info-card"><div class="card-content">${page6Section3Html}</div></div>
         </div>
 
         <!-- PAGE 7: CAREER (JOB VS BUSINESS & TIMING) & HEALTH -->
         <div class="page page-break">
-            <h2 class="section-title">❁ কেৰিয়াৰ (চাকৰি নে ব্যৱসায়) আৰু স্বাস্থ্য বিচাৰ ❁</h2>
-            <div class="sub-heading">১. কেৰিয়াৰ: চাকৰি নে ব্যৱসায়, সফলতাৰ বয়স আৰু উপযুক্ত ক্ষেত্ৰ</div>
-            <div class="info-card"><div class="card-content">${careerDetailHtml}</div></div>
+            <h2 class="section-title">${page7Title}</h2>
+            <div class="sub-heading">${page7Sub1}</div>
+            <div class="info-card"><div class="card-content">${finalCareerDetailHtml}</div></div>
             <div class="sub-heading">২. স্বাস্থ্য, মানসিক শক্তি আৰু প্ৰাণশক্তি বিশ্লেষণ (Health Report)</div>
             <div class="info-card"><div class="card-content">${healthDetailHtml}</div></div>
         </div>
 
         <!-- PAGE 8: LOVE, MARRIAGE (LOVE VS ARRANGED & TIMING), SPOUSE & FAMILY -->
         <div class="page page-break">
-            <h2 class="section-title">❁ প্ৰেম, বিবাহ, জীৱনসংগী আৰু দাম্পত্য ভৱিষ্যৎ ❁</h2>
-            <div class="sub-heading">১. প্ৰেম বিবাহ নে সামাজিক বিবাহ আৰু সম্ভাব্য বিবাহৰ সময়</div>
-            <div class="info-card"><div class="card-content">${loveMarriageHtml}</div></div>
-            <div class="sub-heading">২. হ’বলগা জীৱনসংগীৰ স্বভাৱ আৰু পাৰস্পৰিক বুজাবুজি</div>
-            <div class="info-card"><div class="card-content">${spouseNatureHtml}</div></div>
-            <div class="sub-heading">৩. বিবাহোত্তৰ ভাগ্যোদয় আৰু পাৰিবাৰিক সুখ-সমৃদ্ধি</div>
-            <div class="info-card"><div class="card-content">${postMarriageHtml}</div></div>
+            <h2 class="section-title">${page8Title}</h2>
+            <div class="sub-heading">${page8Sub1}</div>
+            <div class="info-card"><div class="card-content">${page8Body1}</div></div>
+            <div class="sub-heading">${page8Sub2}</div>
+            <div class="info-card"><div class="card-content">${page8Body2}</div></div>
+            <div class="sub-heading">${page8Sub3}</div>
+            <div class="info-card"><div class="card-content">${page8Body3}</div></div>
         </div>
 
         <!-- PAGE 9: REMEDIES, GEMSTONE & SEAL -->
         <div class="page">
             <h2 class="section-title">❁ ${name}ৰ বাবে বৈদিক প্ৰতিকাৰ, শুভ ৰত্ন আৰু সাধনা ❁</h2>
             <div class="info-card remedy-card">
-                <div class="card-title">💎 ১. হস্ত-তত্ত্ব আৰু গ্ৰহ পৰ্বত অনুসৰি শুভ ৰত্ন, ৰং আৰু বাৰ</div>
-                <div class="card-content">${gemLuckyHtml}</div>
+                <div class="card-title">${finalGemLuckyTitle}</div>
+                <div class="card-content">${finalGemLuckyHtml}</div>
             </div>
             <div class="info-card remedy-card">
                 <div class="card-title">🕉️ ২. প্ৰাত্যহিক সাধনা আৰু গ্ৰহ-পৰ্বত শক্তি বৃদ্ধিৰ উপায়</div>
