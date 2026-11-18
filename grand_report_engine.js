@@ -881,12 +881,32 @@ function generatePalmistryReportHtml(order) {
     ];
     const lifeRoadmapHtml = compactBullets(roadmapPts);
 
-    // Expanded Mounts Deep-Dive (for Page 6 — 100% consistent with whether mounts are high or normal)
+    // Expanded Mounts Deep-Dive (for Page 6 — tailored to each mount's interaction with fingers & lines)
+    const normalMountDetails = {
+        jupiter: (ir === 'index_longer' || ht.ending === 'jupiter_mount')
+            ? `সুষম ও সক্ৰিয় — তৰ্জনী আঙুলি আৰু হৃদয় ৰেখাৰ সংযোগে উচ্চ আদৰ্শ, আত্মসন্মান আৰু নেতৃত্বৰ গুণ সূচায়।`
+            : `সুষম — সমাজত সন্মান, নৈতিকতাবোধ আৰু ভাৰসাম্যপূৰ্ণ সিদ্ধান্ত লোৱাৰ ক্ষমতা সূচায়।`,
+        saturn: (ft.presence === 'clear')
+            ? `সুষম ও সবল — স্পষ্ট ভাগ্য ৰেখাৰ সংযোগে কৰ্মনিষ্ঠা, ধৈৰ্য আৰু মধ্যবয়সৰ পৰা স্থায়ী আৰ্থিক সফলতা সূচায়।`
+            : (ft.presence === 'faint' ? `সুষম — নিজৰ কঠোৰ পৰিশ্ৰম আৰু শৃংখলাৰ জৰিয়তে ধীৰে ধীৰে স্থায়ী সফলতা গঢ়ি তোলাৰ সংকেত।` : `সুষম — স্বাভাৱিক ধৈৰ্য, আত্মনিৰ্ভৰশীল কৰ্মশক্তি আৰু ভাৰসাম্যপূৰ্ণ প্ৰভাৱ।`),
+        sun: (sn.presence === 'clear')
+            ? `সুষম ও উজ্জ্বল — স্পষ্ট সূৰ্য ৰেখাৰ সংযোগে সমাজত খ্যাতি, সন্মান আৰু উচ্চ স্বীকৃতি সূচায়।`
+            : (ir === 'ring_longer' ? `সুষম ও সক্ৰিয় — দীঘল অনামিকা আঙুলিয়ে সৃজনশীল প্ৰতিভা, সাহস আৰু নিজৰ কৰ্মেৰে পৰিচয় গঢ়াৰ শক্তি সূচায়।` : `সুষম — নিজৰ নিষ্ঠা আৰু ধৈৰ্যৰ বলত কৰ্মক্ষেত্ৰত সুনাম অৰ্জনৰ সংকেত।`),
+        mercury: (lfng === 'high' || hd.fork === 'end_fork')
+            ? `সুষম ও সক্ৰিয় — কনিষ্ঠা আঙুলি আৰু মস্তিষ্ক ৰেখাৰ গঠনে উন্নত যোগাযোগ কৌশল আৰু বাণিজ্যিক বুদ্ধি সূচায়।`
+            : (hs === 'air' ? `সুষম — বায়ু হস্তৰ প্ৰভাৱত তীক্ষ্ণ বিশ্লেষণ ক্ষমতা, যুক্তিবাদী কথা-বতৰা আৰু বৌদ্ধিক দক্ষতা সূচায়।` : `সুষম — ব্যৱহাৰিক যোগাযোগ দক্ষতা আৰু সঠিক হিচাপ-নিকাচৰ ক্ষমতা সূচায়।`),
+        venus: (lf.curve === 'wide')
+            ? `সুষম ও প্ৰশস্ত — জীৱন ৰেখাই বহলকৈ আৱৰি থকা বাবে উদাৰ হৃদয়, পৰিয়ালপ্ৰেম আৰু গৃহ-বাহন সুখৰ যোগ সূচায়।`
+            : `সুষম — সম্পৰ্কত সংযম, স্নেহশীল স্বভাৱ আৰু ভাৰসাম্যপূৰ্ণ জীৱনশৈলী সূচায়।`,
+        moon: (hd.slope === 'steeply_sloping' || ft.origin === 'moon_mount')
+            ? `সুষম ও কল্পনাশীল — নামনিমুৱা মস্তিষ্ক ৰেখাৰ সংযোগে গভীৰ কল্পনাশক্তি, সৃজনশীল চিন্তা আৰু ভ্ৰমণৰ যোগ সূচায়।`
+            : (hd.slope === 'slightly_sloping' ? `সুষম — বাস্তৱ যুক্তি আৰু কোমল কল্পনাশক্তিৰ সুন্দৰ সমন্বয় সূচায়।` : `সুষম — স্থিৰ মন, বাস্তৱবাদী চিন্তা আৰু মানসিক শান্তি সূচায়।`)
+    };
     const mountsCompactHtml = compactBullets(MOUNTS.map(([k, title, hi, flat]) => {
         const v = A.mounts[k];
         if (v === 'high') return `<strong>${title}:</strong> ${hi}।`;
         if (v === 'flat') return `<strong>${title}:</strong> ${flat}।`;
-        if (v === 'normal') return `<strong>${title}:</strong> ${NORMAL_MOUNT}`;
+        if (v === 'normal') return `<strong>${title}:</strong> ${normalMountDetails[k] || NORMAL_MOUNT}`;
         return '';
     }));
 
