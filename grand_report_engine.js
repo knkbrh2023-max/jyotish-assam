@@ -704,22 +704,33 @@ function generatePalmistryReportHtml(order) {
     const hs = A.handShape, th = A.thumbAngle, ir = A.indexVsRing, lfng = A.littleFinger;
     const lf = A.lines.life || {}, hd = A.lines.head || {}, ht = A.lines.heart || {}, ft = A.lines.fate || {}, sn = A.lines.sun || {};
     const mt = A.mounts || {};
+    const compactBullets = (items) => { const xs = items.filter(Boolean); return xs.length ? xs.map(x => `<div style="margin-bottom:6px;">• ${x}</div>`).join('') : NONE; };
 
-    // Dominant & Supporting Mounts detection
+    // Dominant & Supporting Mounts detection (100% consistent with Section 1 Mounts & Career/Finger traits)
     const mountMeta = {
         jupiter: { name: 'বৃহস্পতি (গুৰু) পৰ্বত', planet: 'বৃহস্পতি', day: 'বৃহস্পতিবাৰ', color: 'হালধীয়া, সোণালী আৰু ক্ৰীম', num: '৩, ৯', gem: 'পোখৰাজ বা সোণালী টোপাজ (Yellow Topaz)', finger: 'তৰ্জনী আঙুলি (Index Finger)', metal: 'সোণ বা পিতল', power: 'নেতৃত্ব, উচ্চ শিক্ষা, সামাজিক সন্মান, ধৰ্মীয় নিষ্ঠা আৰু প্ৰশাসনিক দক্ষতা' },
         saturn:  { name: 'শনি পৰ্বত', planet: 'শনি', day: 'শনিবাৰ', color: 'গাঢ় নীলা, ক’লা আৰু বগা', num: '৮, ৪', gem: 'নীলা (Blue Sapphire) বা এমনেথিষ্ট (Amethyst / জামুনিয়া)', finger: 'মাজু আঙুলি (Middle Finger)', metal: 'ৰূপ বা পঞ্চধাতু', power: 'কঠোৰ পৰিশ্ৰম, গভীৰ একাগ্ৰতা, স্থায়ী সম্পত্তি, ভূমি-লাভ আৰু ন্যায়পৰায়ণতা' },
         sun:     { name: 'সূৰ্য (ৰবি) পৰ্বত', planet: 'সূৰ্য', day: 'দেওবাৰ', color: 'কমলা, ৰঙা আৰু সোণালী', num: '১, ৯', gem: 'চুন্নী (Ruby) বা গাৰ্ণেট (Red Garnet)', finger: 'অনামিকা আঙুলি (Ring Finger)', metal: 'সোণ বা তাম', power: 'যশস্যা, চৰকাৰী বা উচ্চ পদবীৰ স্বীকৃতি, আত্মবিশ্বাস আৰু সৃজনশীল প্ৰতিভা' },
-        mercury: { name: 'বুধ পৰ্বত', planet: 'বুধ', day: 'বুধবাৰ', color: 'সেউজীয়া, পাতল হালধীয়া আৰু বগা', num: '৫, ৬', gem: 'পান্না (Emerald) বা পেৰিডট (Peridot)', finger: 'কনিষ্ঠা আঙুলি (Little Finger)', metal: 'ৰূপ বা সোণ', power: 'তীক্ষ্ণ বাণিজ্যিক বুদ্ধি, যোগাযোগ কৌশল, গণিত-হিচাপ আৰু স্বাধীন ব্যৱসায়ত সফলতা' },
+        mercury: { name: 'বুধ পৰ্বত', planet: 'বুধ', day: 'বুধবাৰ', color: 'সেউজীয়া, পাতল হালধীয়া আৰু বগা', num: '৫, ৬', gem: 'পান্না (Emerald) বা পেৰিডট (Peridot)', finger: 'কনিষ্ঠা আঙুলি (Little Finger)', metal: 'ৰূপ বা সোণ', power: 'তীক্ষ্ণ বিশ্লেষণ ক্ষমতা, যোগাযোগ কৌশল, গণিত-হিচাপ আৰু বৌদ্ধিক দক্ষতা' },
         venus:   { name: 'শুক্ৰ পৰ্বত', planet: 'শুক্ৰ', day: 'শুক্ৰবাৰ', color: 'বগা, উজ্জ্বল ক্ৰীম আৰু পাতল গুলপীয়া', num: '৬, ৫', gem: 'ওপাল (White Opal) বা জাৰকন (Zircon)', finger: 'মাজু বা অনামিকা আঙুলি', metal: 'ৰূপ (Silver)', power: 'আকৰ্ষণীয় ব্যক্তিত্ব, প্ৰেম-ভালপোৱা, কলা-সৌন্দৰ্য, বাহন ও গৃহ-সুখ আৰু জীৱনীশক্তি' },
         moon:    { name: 'চন্দ্ৰ পৰ্বত', planet: 'চন্দ্ৰ', day: 'সোমবাৰ', color: 'ৰূপালী বগা, আকাশী নীলা আৰু ক্ৰীম', num: '২, ৭', gem: 'মুকুতা (Natural Pearl) বা মুনষ্টোন (Moonstone)', finger: 'কনিষ্ঠা আঙুলি', metal: 'ৰূপ (Silver)', power: 'কল্পনাশক্তি, মানসিক শান্তি, জনসংযোগ, ভ্ৰমণযোগ আৰু দূৰ ঠাইৰ পৰা ভাগ্যোদয়' }
     };
 
     const highMountKeys = Object.keys(mountMeta).filter(k => mt[k] === 'high');
-    const normalMountKeys = Object.keys(mountMeta).filter(k => mt[k] === 'normal');
-    let domKey = highMountKeys[0] || (hs === 'air' ? 'mercury' : hs === 'fire' ? 'sun' : hs === 'water' ? 'moon' : 'jupiter');
+    let domKey = highMountKeys[0] || (
+        ir === 'index_longer' ? 'jupiter' :
+        ir === 'ring_longer' ? 'sun' :
+        lfng === 'high' ? 'mercury' :
+        hs === 'earth' ? 'saturn' :
+        hs === 'water' ? 'moon' :
+        hs === 'fire' ? 'sun' : 'jupiter'
+    );
     if (!mountMeta[domKey]) domKey = 'jupiter';
     const domMount = mountMeta[domKey];
+
+    const dominantSummaryLabel = highMountKeys.length > 0
+        ? `<strong>${domMount.name} (উচ্চ)</strong> — ${domMount.power.split(',')[0]}`
+        : `<strong>সকলো গ্ৰহ-পৰ্বত সুষম</strong> (${domMount.planet}-প্ৰধান: ${domMount.power.split(',')[0]})`;
 
     const elemLabelAs = ({
         air: 'বায়ু তত্ত্ব (Air Element)',
@@ -748,28 +759,37 @@ function generatePalmistryReportHtml(order) {
     else if (th === 'narrow') generalPts.push(`সতৰ্ক বুঢ়া আঙুলিৰ কোণে ভাবি-চিন্তি আৰু সুৰক্ষিতভাৱে পদক্ষেপ লোৱাৰ অভ্যাস সূচায়।`);
     else if (th === 'medium') generalPts.push(`মধ্যম বুঢ়া আঙুলিৰ কোণে ইচ্ছাশক্তি আৰু যুক্তিৰ সুন্দৰ সমতা সূচায় — আপুনি আৱেগত উটি নগৈ সময়মতে সঠিক সিদ্ধান্ত ল’ব পাৰে।`);
 
-    // Career: Job vs Business & Timing
+    // Career: Job vs Business & Timing (strictly matched to visible traits)
     let bizScore = 0, jobScore = 0;
     if (mt.mercury === 'high') bizScore += 2;
     if (hd.start === 'separated') bizScore += 2;
     if (ft.origin === 'moon_mount') bizScore += 2;
-    if (hs === 'fire' || hs === 'air') bizScore += 1;
+    if (hs === 'fire') bizScore += 1;
     if (ir === 'ring_longer') bizScore += 1;
     if (lfng === 'high') bizScore += 1;
 
-    if (mt.saturn === 'high' || mt.saturn === 'normal') jobScore += 1;
+    if (mt.saturn === 'high') jobScore += 2;
     if (mt.jupiter === 'high') jobScore += 2;
+    if (ir === 'index_longer') jobScore += 2;
     if (hd.start === 'joined_with_life' || hd.start === 'touching') jobScore += 2;
     if (ft.origin === 'wrist' || ft.origin === 'life_line') jobScore += 1;
     if (hs === 'earth') jobScore += 1;
 
+    const jobReasonPhrase = (mt.jupiter === 'high' || mt.saturn === 'high')
+        ? 'উন্নত বৃহস্পতি-শনি পৰ্বত'
+        : (ir === 'index_longer' ? 'দীঘল তৰ্জনী (বৃহস্পতি আঙুলি), সুষম গ্ৰহ-পৰ্বত' : 'সুষম গ্ৰহ-পৰ্বত');
+
+    const bizReasonPhrase = (mt.mercury === 'high')
+        ? 'উন্নত বুধ পৰ্বত আৰু স্বাধীন মস্তিষ্ক ৰেখা'
+        : 'স্বাধীন মস্তিষ্ক ৰেখা, আঙুলিৰ গঠন আৰু বৌদ্ধিক তত্ত্ব';
+
     let jobVsBizText = '', jobVsBizShort = '';
     if (bizScore > jobScore + 1) {
         jobVsBizShort = 'স্বাধীন ব্যৱসায় / উদ্যোগ আৰু ডিজিটেল ক্ষেত্ৰ';
-        jobVsBizText = `<strong>ব্যৱসায় / স্বাধীন কৰ্মৰ যোগ অধিক প্ৰবল:</strong> আপোনাৰ বুধ পৰ্বত, মস্তিষ্ক ৰেখা আৰু চন্দ্ৰ-সংযোগে স্বাধীন চিন্তা, বাণিজ্যিক বুদ্ধি আৰু নিজাকৈ কিবা এটা গঢ়ি তোলাৰ শক্তি সূচায়। চাকৰি কৰিলেও নিজাকৈ পাৰ্শ্ব-ব্যৱসায়, ই-কমাৰ্চ/ডিজিটেল কাম, কণ্টেন্ট বা পৰামৰ্শমূলক ক্ষেত্ৰত অধিক লাভবান হ'ব।`;
+        jobVsBizText = `<strong>ব্যৱসায় / স্বাধীন কৰ্মৰ যোগ অধিক প্ৰবল:</strong> আপোনাৰ ${bizReasonPhrase}ই স্বাধীন চিন্তা, বাণিজ্যিক বুদ্ধি আৰু নিজাকৈ কিবা এটা গঢ়ি তোলাৰ শক্তি সূচায়। চাকৰি কৰিলেও নিজাকৈ পাৰ্শ্ব-ব্যৱসায়, ই-কমাৰ্চ/ডিজিটেল কাম, কণ্টেন্ট বা পৰামৰ্শমূলক ক্ষেত্ৰত অধিক লাভবান হ'ব।`;
     } else if (jobScore > bizScore + 1) {
         jobVsBizShort = 'চৰকাৰী / প্ৰতিষ্ঠিত চাকৰি আৰু প্ৰশাসনিক ক্ষেত্ৰ';
-        jobVsBizText = `<strong>চাকৰি / প্ৰশাসনিক কৰ্মৰ যোগ অধিক শক্তিশালী:</strong> আপোনাৰ বৃহস্পতি-শনি পৰ্বত আৰু ৰেখাসমূহৰ গাঁথনিয়ে শৃংখলাবদ্ধ কাম, চৰকাৰী বা প্ৰতিষ্ঠিত প্ৰতিষ্ঠানত চাকৰি, শিক্ষা, মেনেজমেণ্ট আৰু ধাৰাবাহিক পদোন্নতিৰ শুভ সংকেত দিয়ে।`;
+        jobVsBizText = `<strong>চাকৰি / প্ৰশাসনিক কৰ্মৰ যোগ অধিক শক্তিশালী:</strong> আপোনাৰ ${jobReasonPhrase} আৰু সংযত মস্তিষ্ক-ভাগ্য ৰেখাৰ গাঁথনিয়ে শৃংখলাবদ্ধ কাম, চৰকাৰী বা প্ৰতিষ্ঠিত প্ৰতিষ্ঠানত চাকৰি, শিক্ষা, মেনেজমেণ্ট আৰু ধাৰাবাহিক পদোন্নতিৰ শুভ সংকেত দিয়ে।`;
     } else {
         jobVsBizShort = 'চাকৰি আৰু নিজা ব্যৱসায় — দুয়োটাৰ যুগ্ম যোগ';
         jobVsBizText = `<strong>চাকৰি আৰু ব্যৱসায় — দুয়োটাতে সম্ভাৱনা:</strong> আপোনাৰ হাতত চাকৰিৰ জৰিয়তে স্থায়ী আধাৰ গঢ়ি লৈ সমান্তৰালভাৱে বা পিছলৈ নিজা ব্যৱসায়/উদ্যোগত উন্নতি কৰাৰ যুগ্ম যোগ দেখা যায়। প্ৰাৰম্ভিক অৱস্থাত স্থিৰ চাকৰি বা দক্ষতা গঢ়ি তাৰ পিছত নিজা উদ্যোগ সম্প্ৰসাৰণ কৰিলে সৰ্বাধিক লাভ হ'ব।`;
@@ -801,7 +821,7 @@ function generatePalmistryReportHtml(order) {
 
     const suitableFieldsText = elem ? elem.fields : `প্ৰশাসন, বাণিজ্য, শিক্ষা, পৰামৰ্শ আৰু স্ব-নিয়োজিত উদ্যোগ।`;
 
-    // Wealth, Money Triangle & Property Analysis (for Page 5)
+    // Wealth, Money Triangle & Property Analysis (for Page 5 — 100% consistent with Venus mount & Life Line)
     const hasMoneyTriangleSign = (ft.presence === 'clear' && (hd.depth === 'deep' || hd.depth === 'medium') && (lf.depth === 'deep' || lf.depth === 'medium'));
     const wealthPts = [];
     if (hasMoneyTriangleSign) {
@@ -809,32 +829,44 @@ function generatePalmistryReportHtml(order) {
     } else {
         wealthPts.push(`<strong>আয় আৰু সঞ্চয়ৰ প্ৰকৃতি:</strong> আপোনাৰ হাতৰ ৰেখাৰ গঠন অনুসৰি ধন উপাৰ্জনতকৈ ধন ধৰি ৰখাটোত অধিক পৰিকল্পনাৰ প্ৰয়োজন। উপাৰ্জনৰ এটা নিৰ্ধাৰিত অংশ সোণ, মাটি বা দীর্ঘম্যাদী সঞ্চয়ত নিয়োজিত কৰিলে আৰ্থিক ভৱিষ্যৎ সুৰক্ষিত হ'ব।`);
     }
-    if (mt.venus === 'high' || mt.jupiter === 'high' || lf.curve === 'wide') {
-        wealthPts.push(`<strong>ভূমি, গৃহ নিৰ্মাণ আৰু বাহন সুখ:</strong> আপোনাৰ উন্নত শুক্ৰ পৰ্বত আৰু সুদৃঢ় জীৱন ৰেখাই নিজা চেষ্টাৰে সুন্দৰ ঘৰ নিৰ্মাণ, মাটি-বাৰী আৰু বাহন সুখৰ স্পষ্ট যোগ সূচায়। বিশেষকৈ <strong>৩০–৩৮ বছৰ বয়সৰ ভিতৰত</strong> স্থাৱৰ সম্পত্তি বৃদ্ধিত বিশেষ সফলতা পাব।`);
+
+    if (mt.venus === 'high' && lf.curve === 'wide') {
+        wealthPts.push(`<strong>ভূমি, গৃহ নিৰ্মাণ আৰু বাহন সুখ:</strong> আপোনাৰ উন্নত শুক্ৰ পৰ্বত আৰু বহল জীৱন ৰেখাই নিজা চেষ্টাৰে সুন্দৰ ঘৰ নিৰ্মাণ, মাটি-বাৰী আৰু বাহন সুখৰ স্পষ্ট যোগ সূচায়। বিশেষকৈ <strong>৩০–৩৮ বছৰ বয়সৰ ভিতৰত</strong> স্থাৱৰ সম্পত্তি বৃদ্ধিত বিশেষ সফলতা পাব।`);
+    } else if (mt.venus === 'high') {
+        wealthPts.push(`<strong>ভূমি, গৃহ নিৰ্মাণ আৰু বাহন সুখ:</strong> আপোনাৰ ফটোত শুক্ৰ পৰ্বত উন্নত দেখা গৈছে, যিয়ে নিজা চেষ্টাৰে সুন্দৰ ঘৰ, বাহন আৰু আৰামদায়ক জীৱনযাত্ৰাৰ যোগ সূচায়। বিশেষকৈ <strong>৩০–৩৮ বছৰ বয়সৰ ভিতৰত</strong> সম্পত্তি বৃদ্ধিত সফলতা পাব।`);
+    } else if (lf.curve === 'wide') {
+        wealthPts.push(`<strong>ভূমি, গৃহ নিৰ্মাণ আৰু বাহন সুখ:</strong> আপোনাৰ শুক্ৰ পৰ্বতক বহলকৈ আৱৰি থকা গভীৰ জীৱন ৰেখাই নিজা চেষ্টাৰে সুন্দৰ ঘৰ নিৰ্মাণ, মাটি-বাৰী আৰু বাহন সুখৰ স্পষ্ট যোগ সূচায়। বিশেষকৈ <strong>৩০–৩৮ বছৰ বয়সৰ ভিতৰত</strong> স্থাৱৰ সম্পত্তি বৃদ্ধিত বিশেষ সফলতা পাব।`);
     } else {
-        wealthPts.push(`<strong>সম্পত্তি আৰু গৃহ যোগ:</strong> শনি আৰু জীৱন ৰেখাৰ স্থিৰতাই ক্ৰমান্বয়ে নিজা গৃহ আৰু স্থায়ী সম্পত্তি গঢ়ি তোলাৰ সংকেত দিয়ে; খৰখেদাকৈ ঋণ লোৱাতকৈ পৰিকল্পিতভাৱে আগবাঢ়িলে লাভবান হ'ব।`);
+        wealthPts.push(`<strong>সম্পত্তি আৰু গৃহ যোগ:</strong> শনি পৰ্বত আৰু জীৱন ৰেখাৰ স্থিৰতাই ক্ৰমান্বয়ে নিজা গৃহ আৰু স্থায়ী সম্পত্তি গঢ়ি তোলাৰ সংকেত দিয়ে; খৰখেদাকৈ ঋণ লোৱাতকৈ পৰিকল্পিতভাৱে আগবাঢ়িলে লাভবান হ'ব।`);
     }
-    const wealthPropertyHtml = bullets(wealthPts);
+    const wealthPropertyHtml = compactBullets(wealthPts);
 
-    // Age-wise 5-stage Life Roadmap (for Page 5)
+    // Age-wise 5-stage Life Roadmap (for Page 6 — compact so Page 6 never overflows)
     const roadmapPts = [
-        `<strong>১ম পৰ্যায় (১৮ – ২৪ বছৰ বয়স — শিক্ষা আৰু অন্বেষণ):</strong> ${hd.start === 'joined_with_life' ? 'পৰিয়ালৰ নিৰ্দেশনা আৰু সতৰ্কতাৰে ভৱিষ্যতৰ ভেটি গঢ়াৰ সময়; এই সময়ত কিছু মানসিক দোমোজা থাকিলেও শিকাৰ আগ্ৰহ প্ৰবল থাকে।' : 'স্বাধীন চিন্তা আৰু নতুন অভিজ্ঞতা অৰ্জনৰ সময়; নিজৰ দক্ষতা চিনাক্ত কৰাত মনোযোগী হয়।'}`,
-        `<strong>২য় পৰ্যায় (২৫ – ৩০ বছৰ বয়স — কৰ্মসংগ্ৰাম আৰু আধাৰ নিৰ্মাণ):</strong> ${ft.origin === 'middle_palm' ? 'নিজৰ সঠিক পথ বিচাৰি লোৱাৰ বাবে কিছু পৰিশ্ৰম আৰু পৰিৱৰ্তনৰ সময়; কিন্তু এই বয়সতে কৰা সংগ্ৰামে পৰৱৰ্তী সফলতাৰ দুৱাৰ মুকলি কৰে।' : 'কৰ্মজীৱনত প্ৰৱেশ, নতুন দায়িত্ব গ্ৰহণ আৰু আৰ্থিক আত্মনিৰ্ভৰশীলতা আৰম্ভ হোৱাৰ সময়।'}`,
-        `<strong>৩য় পৰ্যায় (৩১ – ৩৬ বছৰ বয়স — ভাগ্যোদয় আৰু স্থায়িত্ব):</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি আপোনাৰ মস্তিষ্ক ৰেখা আৰু ভাগ্য ৰেখাৰ বলত এই সময়ছোৱা জীৱনৰ অন্যতম শ্ৰেষ্ঠ নিৰ্ণায়ক সময় — কেৰিয়াৰত স্থিৰতা, আয় বৃদ্ধি আৰু পাৰিবাৰিক উন্নতি ঘটে।`,
-        `<strong>৪ৰ্থ পৰ্যায় (৩৭ – ৪৫ বছৰ বয়স — সম্পত্তি, সন্মান আৰু বিস্তাৰ):</strong> এই পৰ্যায়ত পূৰ্বৰ অভিজ্ঞতাৰ ফল লাভ, গৃহ-ভূমি বা ব্যৱসায়িক সম্প্ৰসাৰণ আৰু সমাজত বিশেষ সন্মান ও প্ৰতিষ্ঠা লাভৰ যোগ দেখা যায়।`,
-        `<strong>৫ম পৰ্যায় (৪৫+ বছৰ বয়স — আৰ্থিক নিৰাপত্তা আৰু শান্তি):</strong> ${lf.depth === 'deep' ? 'গভীৰ জীৱন ৰেখাৰ প্ৰভাৱত উত্তৰ-জীৱনত সুস্বাস্থ্য, পৰিয়ালৰ সুখ আৰু আধ্যাত্মিক ও মানসিক প্ৰশান্তি অটুট থাকিব।' : 'সুষম জীৱনশৈলী আৰু সঞ্চয়ৰ বলত জীৱনৰ পৰৱৰ্তী অধ্যায় শান্তিপূৰ্ণ আৰু সন্মানজনক হ’ব।'}`
+        `<strong>১ম পৰ্যায় (১৮ – ২৪ বছৰ — শিক্ষা আৰু অন্বেষণ):</strong> ${hd.start === 'joined_with_life' ? 'পৰিয়ালৰ নিৰ্দেশনা আৰু সতৰ্কতাৰে ভৱিষ্যতৰ ভেটি গঢ়াৰ সময়; কিছু মানসিক দোমোজা থাকিলেও শিকাৰ আগ্ৰহ প্ৰবল থাকে।' : 'স্বাধীন চিন্তা আৰু নতুন অভিজ্ঞতা অৰ্জনৰ সময়; নিজৰ দক্ষতা চিনাক্ত কৰাত মনোযোগী হয়।'}`,
+        `<strong>২য় পৰ্যায় (২৫ – ৩০ বছৰ — কৰ্মসংগ্ৰাম আৰু আধাৰ নিৰ্মাণ):</strong> ${ft.origin === 'middle_palm' ? 'নিজৰ সঠিক পথ বিচাৰি লোৱাৰ বাবে কিছু পৰিশ্ৰম আৰু পৰিৱৰ্তনৰ সময়; এই বয়সৰ সংগ্ৰামে পৰৱৰ্তী সফলতাৰ দুৱাৰ মুকলি কৰে।' : 'কৰ্মজীৱনত প্ৰৱেশ, নতুন দায়িত্ব গ্ৰহণ আৰু আৰ্থিক আত্মনিৰ্ভৰশীলতা আৰম্ভ হোৱাৰ সময়।'}`,
+        `<strong>৩য় পৰ্যায় (৩১ – ৩৬ বছৰ — ভাগ্যোদয় আৰু স্থায়িত্ব):</strong> মস্তিষ্ক ৰেখা আৰু ভাগ্য ৰেখাৰ বলত এই সময়ছোৱা জীৱনৰ অন্যতম শ্ৰেষ্ঠ নিৰ্ণায়ক সময় — কেৰিয়াৰত স্থিৰতা, আয় বৃদ্ধি আৰু পাৰিবাৰিক উন্নতি ঘটে।`,
+        `<strong>৪ৰ্থ পৰ্যায় (৩৭ – ৪৫ বছৰ — সম্পত্তি, সন্মান আৰু বিস্তাৰ):</strong> পূৰ্বৰ অভিজ্ঞতাৰ সুফল লাভ, গৃহ-ভূমি বা ব্যৱসায়িক সম্প্ৰসাৰণ আৰু সমাজত বিশেষ সন্মান ও প্ৰতিষ্ঠা লাভৰ যোগ।`,
+        `<strong>৫ম পৰ্যায় (৪৫+ বছৰ — আৰ্থিক নিৰাপত্তা আৰু শান্তি):</strong> ${lf.depth === 'deep' ? 'গভীৰ জীৱন ৰেখাৰ প্ৰভাৱত উত্তৰ-জীৱনত সুস্বাস্থ্য, পৰিয়ালৰ সুখ আৰু মানসিক প্ৰশান্তি অটুট থাকিব।' : 'সুষম জীৱনশৈলী আৰু সঞ্চয়ৰ বলত জীৱনৰ পৰৱৰ্তী অধ্যায় শান্তিপূৰ্ণ আৰু সন্মানজনক হ’ব।'}`
     ];
-    const lifeRoadmapHtml = bullets(roadmapPts);
+    const lifeRoadmapHtml = compactBullets(roadmapPts);
 
-    // Expanded Mounts Deep-Dive (for Page 6)
-    const mountsDominantHtml = bullets([
-        `<strong>প্ৰধান শক্তিশালী পৰ্বত — ${domMount.name}:</strong> আপোনাৰ ফটোত <strong>${domMount.name}</strong>ৰ প্ৰভাৱ বিশেষভাৱে সক্ৰিয় দেখা গৈছে। সমুদ্ৰিক শাস্ত্ৰ অনুসৰি ই আপোনাৰ জীৱনত <strong>${domMount.power}</strong> প্রদান কৰে।`,
+    // Expanded Mounts Deep-Dive (for Page 6 — 100% consistent with whether mounts are high or normal)
+    const mountsCompactHtml = compactBullets(MOUNTS.map(([k, title, hi, flat]) => {
+        const v = A.mounts[k];
+        if (v === 'high') return `<strong>${title}:</strong> ${hi}।`;
+        if (v === 'flat') return `<strong>${title}:</strong> ${flat}।`;
+        if (v === 'normal') return `<strong>${title}:</strong> ${NORMAL_MOUNT}`;
+        return '';
+    }));
+
+    const mountsDominantHtml = compactBullets([
         highMountKeys.length > 0
-            ? `<strong>উচ্চ পৰ্বতৰ বিশেষ আশীৰ্বাদ:</strong> উন্নত পৰ্বতসমূহে জীৱনৰ জটিল সময়তো আপোনাক অন্তৰ্নিহিত আত্মবল, আকৰ্ষণ শক্তি আৰু নিজৰ লক্ষ্য পূৰণ কৰাৰ ক্ষমতা যোগায়।`
-            : `<strong>সুষম পৰ্বতৰ ভাৰসাম্য:</strong> আপোনাৰ তলুৱাৰ পৰ্বতসমূহ সমতাপূৰ্ণ হোৱাত আপুনি উগ্ৰতা বা অহংকাৰৰ পৰা মুক্ত থাকি ধৈৰ্যৰে কাম আদায় কৰিব পাৰে।`,
+            ? `<strong>প্ৰধান উচ্চ গ্ৰহ-পৰ্বত — ${domMount.name}:</strong> আপোনাৰ ফটোত <strong>${domMount.name}</strong> উচ্চ দেখা গৈছে। সমুদ্ৰিক শাস্ত্ৰ অনুসৰি ই আপোনাৰ জীৱনত <strong>${domMount.power}</strong> প্রদান কৰে।`
+            : `<strong>সুষম গ্ৰহ-পৰ্বত আৰু ${domMount.planet}-শক্তিৰ প্ৰভাৱ:</strong> আপোনাৰ ফটোত ৬টা গ্ৰহ-পৰ্বত সুষম অৱস্থাত দেখা গৈছে আৰু আঙুলি তথা হস্ত-গঠন অনুসৰি <strong>${domMount.planet} গ্ৰহৰ গুণ (${domMount.power})</strong> বিশেষভাৱে সহায়ক হ'ব।`,
         flatMounts.length > 0
-            ? `<strong>মনোযোগ দিবলগীয়া পৰ্বত (${flatMounts.map(x => x[1]).join(', ')}):</strong> এই পৰ্বতসমূহ ফটোত সমতল দেখা গৈছে — ইয়াৰ অৰ্থ হ'ল সেই গ্ৰহৰ ক্ষেত্ৰত খৰখেদা নকৰি ধৈৰ্য, আত্মবিশ্বাস আৰু নিয়মিত সাধনা বঢ়ালে সহজেই শুভ ফল লাভ কৰিব।`
-            : `<strong>সকলো গ্ৰহ-পৰ্বতৰ অনুকূল স্থিতি:</strong> আপোনাৰ হাতত কোনো পৰ্বত দুৰ্বল নোহোৱা বাবে জীবনৰ বিভিন্ন ক্ষেত্ৰত (কৰ্ম, সম্পৰ্ক আৰু স্বাস্থ্য) এক সুন্দৰ ভাৰসাম্য বজাই থাকিব।`
+            ? `<strong>মনোযোগ দিবলগীয়া পৰ্বত (${flatMounts.map(x => x[1]).join(', ')}):</strong> এই পৰ্বত ফটোত সমতল দেখা গৈছে — সেই ক্ষেত্ৰত খৰখেদা নকৰি ধৈৰ্য, আত্মবিশ্বাস আৰু নিয়মিত সাধনা বঢ়ালে সহজেই শুভ ফল লাভ কৰিব।`
+            : `<strong>সকলো গ্ৰহ-পৰ্বতৰ অনুকূল ভাৰসাম্য:</strong> আপোনাৰ হাতত কোনো পৰ্বত দুৰ্বল নোহোৱা বাবে কৰ্ম, সম্পৰ্ক আৰু মানসিক স্থিৰতাত এক সুন্দৰ ভাৰসাম্য বজাই থাকিব।`
     ]);
 
     // Love vs Arranged Marriage & Timing (for Page 8)
@@ -853,7 +885,7 @@ function generatePalmistryReportHtml(order) {
     let marriageTypeText = '', marriageTypeShort = '';
     if (loveScore >= arrScore + 2) {
         marriageTypeShort = 'প্ৰেম বিবাহ (Love Marriage)';
-        marriageTypeText = `<strong>প্ৰেম বিবাহ (Love Marriage) ৰ যোগ অধিক প্ৰবল:</strong> হৃদয় ৰেখাৰ গতি, শুক্ৰ পৰ্বতৰ উষ্ণতা আৰু স্বাধীন চিন্তাশক্তিয়ে নিজৰ পচন্দ আৰু হৃদয়ৰ মিল থকা সংগীৰ সৈতে বিবাহ হোৱাৰ প্ৰবল সম্ভাৱনা সূচায়।`;
+        marriageTypeText = `<strong>প্ৰেম বিবাহ (Love Marriage) ৰ যোগ অধিক প্ৰবল:</strong> হৃদয় ৰেখাৰ গতি, আৱেগিক উষ্ণতা আৰু স্বাধীন চিন্তাশক্তিয়ে নিজৰ পচন্দ আৰু হৃদয়ৰ মিল থকা সংগীৰ সৈতে বিবাহ হোৱাৰ প্ৰবল সম্ভাৱনা সূচায়।`;
     } else if (arrScore >= loveScore + 2) {
         marriageTypeShort = 'সামাজিক বিবাহ (Arranged Marriage)';
         marriageTypeText = `<strong>সামাজিক বিবাহ (Arranged Marriage) ৰ যোগ অধিক শক্তিশালী:</strong> মস্তিষ্ক ৰেখা আৰু হৃদয় ৰেখাৰ গাঁথনি অনুসৰি আপোনাৰ জীৱনত পৰিয়ালৰ মতামত আৰু জ্যেষ্ঠসকলৰ আশীৰ্বাদত হোৱা সামাজিক বিবাহে অধিক স্থায়িত্ব আৰু সুখ আনিব।`;
@@ -881,26 +913,28 @@ function generatePalmistryReportHtml(order) {
     ];
     const postMarriagePts = [
         `<strong>বিবাহোত্তৰ ভাগ্যোদয় (Post-Marriage Fortune):</strong> ${ft.origin === 'middle_palm' || ft.origin === 'moon_mount' || mt.venus === 'high' ? 'সমুদ্ৰিক শাস্ত্ৰ অনুসৰি বিবাহৰ পিছত আপোনাৰ জীৱনত এক স্থিৰতা আহিব; জীৱনসংগীৰ পুণ্য আৰু সহযোগিতাই আপোনাৰ আৰ্থিক সঞ্চয় ও সামাজিক সন্মান বৃদ্ধিত বিশেষ সহায় কৰিব।' : 'বিবাহৰ পিছত দায়িত্ববোধ বৃদ্ধিৰ লগে লগে কৰ্মক্ষেত্ৰত একাগ্ৰতা আৰু আৰ্থিক অনুশাসন অধিক সুদৃঢ় হ’ব।'}`,
-        `<strong>পাৰিবাৰিক সুখ আৰু সন্তান যোগ:</strong> বহল জীৱন ৰেখা আৰু শুক্ৰ পৰ্বতৰ শুভ প্ৰভাৱত সুন্দৰ পাৰিবাৰিক পৰিৱেশ, জ্যেষ্ঠজনৰ আশীৰ্বাদ আৰু সন্তানৰ জৰিয়তে আনন্দ ও গৌৰৱ লাভৰ যোগ স্পষ্ট।`
+        `<strong>পাৰিবাৰিক সুখ আৰু সন্তান যোগ:</strong> ${lf.curve === 'wide' ? 'বহল জীৱন ৰেখা' : 'সুদৃঢ় জীৱন ৰেখা'} আৰু ${mt.venus === 'high' ? 'উন্নত শুক্ৰ পৰ্বতৰ' : 'সুষম শুক্ৰ পৰ্বতৰ'} শুভ প্ৰভাৱত সুন্দৰ পাৰিবাৰিক পৰিৱেশ, জ্যেষ্ঠজনৰ আশীৰ্বাদ আৰু সন্তানৰ জৰিয়তে আনন্দ ও গৌৰৱ লাভৰ যোগ স্পষ্ট।`
     ];
     const spouseNatureHtml = bullets(spouseNaturePts);
     const postMarriageHtml = bullets(postMarriagePts);
 
-    // Health analysis
+    // Health analysis (expanded so Page 7 is full and balanced)
     const healthPts = [];
     if (lf.depth === 'deep' && lf.breaks === 'none') {
-        healthPts.push(`আপোনাৰ জীৱন ৰেখা গভীৰ আৰু অবিচ্ছিন্ন হোৱা বাবে সামগ্ৰিক <strong>প্ৰাণশক্তি, শাৰীৰিক সহনশীলতা আৰু ৰোগ প্ৰতিৰোধ ক্ষমতা সবল</strong>।`);
+        healthPts.push(`<strong>প্ৰাণশক্তি আৰু ৰোগ প্ৰতিৰোধ ক্ষমতা:</strong> আপোনাৰ জীৱন ৰেখা গভীৰ আৰু অবিচ্ছিন্ন হোৱা বাবে সামগ্ৰিক <strong>প্ৰাণশক্তি, শাৰীৰিক সহনশীলতা আৰু ৰোগ প্ৰতিৰোধ ক্ষমতা সবল</strong>। সৰু-সুৰা অসুস্থতাৰ পৰা আপুনি সোনকালে আৰোগ্য লাভ কৰে।`);
     } else if (lf.depth === 'faint' || lf.breaks === 'few' || lf.breaks === 'many') {
-        healthPts.push(`জীৱন ৰেখাত কিছু সূক্ষ্ম পৰিৱৰ্তন বা পাতল অংশ থকাত <strong>অতিৰিক্ত মানসিক চাপ, অনিয়মীয়া টোপনি আৰু হজম শক্তিৰ</strong> প্ৰতি বিশেষ যত্ন লোৱাটো জৰুৰী।`);
+        healthPts.push(`<strong>প্ৰাণশক্তি আৰু বিশেষ যত্ন:</strong> জীৱন ৰেখাত কিছু সূক্ষ্ম পৰিৱৰ্তন বা পাতল অংশ থকাত <strong>অতিৰিক্ত মানসিক চাপ, অনিয়মীয়া টোপনি আৰু হজম শক্তিৰ</strong> প্ৰতি বিশেষ যত্ন লোৱাটো জৰুৰী।`);
     } else {
-        healthPts.push(`জীৱন ৰেখাৰ গঠন অনুসৰি আপোনাৰ শাৰীৰিক শক্তি স্বাভাৱিক; নিয়মীয়া ব্যায়াম আৰু সুষম আহাৰে স্বাস্থ্য অটুট ৰাখিব।`);
+        healthPts.push(`<strong>শাৰীৰিক ভাৰসাম্য:</strong> জীৱন ৰেখাৰ গঠন অনুসৰি আপোনাৰ শাৰীৰিক শক্তি স্বাভাৱিক; নিয়মীয়া ব্যায়াম আৰু সুষম আহাৰে স্বাস্থ্য অটুট ৰাখিব।`);
     }
-    if (hd.length === 'long') healthPts.push(`মস্তিষ্ক ৰেখা দীঘল হোৱাৰ বাবে আপুনি যিকোনো কথা বহু গভীৰভাৱে চিন্তা কৰে — সেয়েহে অযথা দুশ্চিন্তা বা ৰাতি দেৰিলৈকে উজাগৰে থকাৰ অভ্যাস পৰিহাৰ কৰিব।`);
-    if (mt.venus === 'high') healthPts.push(`শুক্ৰ পৰ্বত উন্নত হোৱাত শৰীৰৰ উষ্ণতা আৰু জীৱন-উপভোগৰ শক্তি ভালে থাকে; অৱশ্যে মিঠা বা চৰ্বিযুক্ত আহাৰ পৰিমিতভাৱে গ্ৰহণ কৰিব আৰু পৰ্যাপ্ত পানী খাব।`);
-    if (mt.moon === 'high') healthPts.push(`চন্দ্ৰ পৰ্বত উচ্চ হোৱাত আৱেগিক সংবেদনশীলতা বেছি — পানী পৰ্যাপ্ত পৰিমাণে খাব আৰু ঠাণ্ডা-কফৰ পৰা সাৱধান থাকিব।`);
-    if (mt.moon === 'flat') healthPts.push(`কামৰ হেঁচাৰ মাজতো মানসিক বিশ্ৰাম, প্ৰাণায়াম আৰু ৭–৮ ঘণ্টা নিদ্ৰাৰ অভ্যাস গঢ়ি তোলাটো উপকাৰী হ'ব।`);
+    if (hd.length === 'long') healthPts.push(`<strong>মানসিক স্বাস্থ্য আৰু নিদ্ৰা:</strong> মস্তিষ্ক ৰেখা দীঘল হোৱাৰ বাবে আপুনি যিকোনো কথা বহু গভীৰভাৱে চিন্তা কৰে — সেয়েহে অযথা দুশ্চিন্তা, স্নায়বিক ক্লান্তি বা ৰাতি দেৰিলৈকে উজাগৰে থকাৰ অভ্যাস পৰিহাৰ কৰিব।`);
+    else healthPts.push(`<strong>মানসিক সতেজতা:</strong> কামৰ ব্যস্ততাৰ মাজতো দৈনিক কিছু সময় প্ৰকৃতিৰ সান্নিধ্য, লঘু ব্যায়াম বা প্ৰাণায়াম কৰিলে মানসিক শক্তি সদায় সতেজ থাকিব।`);
 
-    const generalSummaryHtml = bullets(generalPts);
+    if (mt.venus === 'high') healthPts.push(`<strong>খাদ্যাভ্যাস আৰু জীৱনশৈলী:</strong> শুক্ৰ পৰ্বত উন্নত হোৱাত শৰীৰৰ উষ্ণতা ভালে থাকে; অৱশ্যে মিঠা বা চৰ্বিযুক্ত আহাৰ পৰিমিতভাৱে গ্ৰহণ কৰিব আৰু পৰ্যাপ্ত পানী খাব।`);
+    else if (hs === 'air') healthPts.push(`<strong>বায়ু-তত্ত্বৰ বিশেষ স্বাস্থ্য টিপছ:</strong> বায়ু হস্তৰ লোকসকলে গেছ্ট্ৰিক, পেটৰ সমস্যাত ভোগা বা কান্ধ-ডিঙিৰ বিষৰ পৰা বাচিবলৈ সময়মতে আহাৰ গ্ৰহণ কৰিব আৰু দৈনিক পৰ্যাপ্ত কুহুমীয়া পানী খাব।`);
+    else healthPts.push(`<strong>দৈনন্দিন স্বাস্থ্য বিধি:</strong> ঋতু পৰিৱৰ্তনৰ সময়ত ঠাণ্ডা-কফৰ পৰা সাৱধান থাকিব আৰু প্রতিদিনে অন্ততঃ ৭–৮ ঘণ্টা গভীৰ নিদ্ৰা গ্ৰহণ কৰিব।`);
+
+    const generalSummaryHtml = compactBullets(generalPts);
     const careerDetailHtml = bullets([
         jobVsBizText,
         `<strong>কেতিয়া উন্নতি আৰু সফলতা আহিব:</strong> ${careerTimingText}`,
@@ -915,13 +949,13 @@ function generatePalmistryReportHtml(order) {
 
     // Quick Executive Summary Table (for Page 3 beneath palm photo)
     const summaryTableHtml = `
-        <table class="vedic-table" style="margin-top: 12px;">
+        <table class="vedic-table" style="margin-top: 8px;">
             <thead>
                 <tr><th colspan="2">🌟 ${name}ৰ হস্তৰেখাৰ এক নজৰত সাৰাংশ ফলাফল (Quick Summary) 🌟</th></tr>
             </thead>
             <tbody>
                 <tr><td style="width:38%;"><strong>হস্তৰ পঞ্চমহাভূত তত্ত্ব</strong></td><td><strong>${elemLabelAs}</strong></td></tr>
-                <tr><td><strong>প্ৰধান শক্তিশালী গ্ৰহ-পৰ্বত</strong></td><td><strong>${domMount.name}</strong> (${domMount.power.split(',')[0]})</td></tr>
+                <tr><td><strong>গ্ৰহ-পৰ্বত আৰু মুখ্য শক্তি</strong></td><td>${dominantSummaryLabel}</td></tr>
                 <tr><td><strong>কৰ্মযোগ (চাকৰি নে ব্যৱসায়)</strong></td><td><strong>${jobVsBizShort}</strong></td></tr>
                 <tr><td><strong>ভাগ্যোদয় আৰু উন্নতিৰ বয়স</strong></td><td><strong>${goldenAgeShort}</strong></td></tr>
                 <tr><td><strong>বিবাহৰ যোগ আৰু সম্ভাব্য বয়স</strong></td><td><strong>${marriageTypeShort} • ${marriageAgeShort}</strong></td></tr>
@@ -931,7 +965,7 @@ function generatePalmistryReportHtml(order) {
 
     // Gemstone & Lucky Guidelines (for Page 9)
     const gemLuckyHtml = bullets([
-        `<strong>শুভ ৰত্ন / উপৰত্ন (Lucky Gemstone):</strong> আপোনাৰ হাতৰ প্ৰধান গ্ৰহ-পৰ্বত (${domMount.name}) আৰু হস্ত-তত্ত্বৰ শক্তি বৃদ্ধিৰ বাবে <strong>${domMount.gem}</strong> অথবা শুক্ৰ-চন্দ্ৰৰ সুষমতাৰ বাবে <strong>ৰূপৰ আঙুঠিত ওপাল (White Opal) / পান্না</strong> ধাৰণ কৰাটো বিশেষ শুভদায়ক।`,
+        `<strong>শুভ ৰত্ন / উপৰত্ন (Lucky Gemstone):</strong> আপোনাৰ হস্ত-গঠন আৰু মুখ্য গ্ৰহ-শক্তি (${domMount.planet}) বৃদ্ধিৰ বাবে <strong>${domMount.gem}</strong> অথবা শুক্ৰ-চন্দ্ৰৰ সুষমতাৰ বাবে <strong>ৰূপৰ আঙুঠিত ওপাল (White Opal) / পান্না</strong> ধাৰণ কৰাটো বিশেষ শুভদায়ক।`,
         `<strong>ধাৰণ বিধি:</strong> ${domMount.metal}ত নিৰ্মিত আঙুঠিত <strong>${domMount.day}</strong> পুৱা স্নান কৰি গংগাজল বা কেঁচা গাখীৰেৰে শোধন কৰি ইষ্ট দেৱতাক স্মৰণ কৰি সোঁহাতত ধাৰণ কৰিব।`,
         `<strong>শুভ ৰং, শুভ সংখ্যা আৰু শুভ বাৰ:</strong> মহত্ত্বপূৰ্ণ কাম, পৰীক্ষা বা ব্যৱসায়িক চুক্তিত <strong>${domMount.color}</strong> ৰঙৰ বস্ত্ৰ ব্যৱহাৰ কৰিব। আপোনাৰ বাবে <strong>${domMount.day}</strong> আৰু শুভ সংখ্যা <strong>${domMount.num}</strong> বিশেষ ফলপ্ৰসূ।`
     ]);
@@ -972,13 +1006,13 @@ function generatePalmistryReportHtml(order) {
             : 'ব্যৱহাৰিক বুদ্ধি আৰু হাতে-কামে শিকাৰ সহজাত দক্ষতা';
 
         finalSummaryTableHtml = `
-        <table class="vedic-table" style="margin-top: 12px;">
+        <table class="vedic-table" style="margin-top: 8px;">
             <thead>
                 <tr><th colspan="2">🌟 ${name}ৰ শৈক্ষিক আৰু সমুদ্ৰিক সাৰাংশ ফলাফল (Child / Student Summary) 🌟</th></tr>
             </thead>
             <tbody>
                 <tr><td style="width:38%;"><strong>হস্তৰ পঞ্চমহাভূত তত্ত্ব</strong></td><td><strong>${elemLabelAs}</strong></td></tr>
-                <tr><td><strong>প্ৰধান শক্তিশালী গ্ৰহ-পৰ্বত</strong></td><td><strong>${domMount.name}</strong> (${domMount.power.split(',')[0]})</td></tr>
+                <tr><td><strong>গ্ৰহ-পৰ্বত আৰু মুখ্য শক্তি</strong></td><td>${dominantSummaryLabel}</td></tr>
                 <tr><td><strong>স্মৃতিশক্তি আৰু বৌদ্ধিক ধৰণ</strong></td><td><strong>${memoryIqShort}</strong></td></tr>
                 <tr><td><strong>ভৱিষ্যতে উপযুক্ত শিক্ষাৰ ধাৰা</strong></td><td><strong>${studyStreamShort}</strong></td></tr>
                 <tr><td><strong>ভৱিষ্যৎ কৰ্ম-সম্ভাৱনা (ডাঙৰ হ'লে)</strong></td><td><strong>${jobVsBizShort}</strong></td></tr>
@@ -986,24 +1020,24 @@ function generatePalmistryReportHtml(order) {
             </tbody>
         </table>`;
 
-        finalGeneralSummaryHtml = bullets([
+        finalGeneralSummaryHtml = compactBullets([
             `<strong>শিশুৰ হস্তৰেখাৰ বিশেষ সমুদ্ৰিক নীতি:</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি ১৬ বছৰ বয়সৰ তলৰ শিশু আৰু কিশোৰ-কিশোৰীৰ হাতৰ ৰেখা মানসিক বিকাশৰ লগে লগে ক্ৰমান্বয়ে অধিক সুস্পষ্ট হয়। সেয়েহে এই প্ৰতিবেদনখনত শিশুটিৰ জন্মগত মেধা, স্মৃতিশক্তি, স্বাস্থ্য, ক্ৰীড়া/কলা প্ৰতিভা আৰু ভৱিষ্যৎ শিক্ষাৰ দিশসমূহক বিশেষভাৱে বিশ্লেষণ কৰা হৈছে।`,
             ...generalPts.slice(1)
         ]);
 
         page5Section7Heading = `৭. মেধা, স্মৃতিশক্তি আৰু একাগ্ৰতাৰ বিকাশ (Memory & Concentration)`;
-        page5Section7Html = bullets([
+        page5Section7Html = compactBullets([
             `<strong>স্মৃতিশক্তি আৰু গ্ৰহণ ক্ষমতা:</strong> মস্তিষ্ক ৰেখাৰ গঠন অনুসৰি শিশুটিৰ <strong>${memoryIqShort}</strong> দেখা যায়। কোনো বিষয় মুখস্থ কৰাতকৈ উদাহৰণ আৰু চিত্ৰৰ সহায়ত বুজাই দিলে শিশুটিয়ে বহু দিনলৈ মনত ৰাখিব পাৰে।`,
             `<strong>একাগ্ৰতা বৃদ্ধিৰ উপায়:</strong> ${hd.depth === 'faint' || mt.moon === 'high' ? 'মন সোনকালে চঞ্চল হ’ব পাৰে বাবে মোবাইল/টিভিৰ ব্যৱহাৰ সীমিত ৰাখি পুৱা পঢ়াৰ অভ্যাস গঢ়ি তোলা উচিত।' : 'একাগ্ৰতা স্বাভাৱিকভাৱে ভাল; নিৰ্দিষ্ট সময়সূচী (Routine) অনুসৰি পঢ়া-শুনা কৰিলে পৰীক্ষাত অতি উচ্চ ফলাফল লাভ কৰিব।'}`
         ]);
 
         page6Section3Heading = `৩. বয়স অনুসৰি শৈক্ষিক আৰু ভৱিষ্যৎ বিকাশৰ ৫-পৰ্যায়ৰ ৰোডমেপ`;
-        page6Section3Html = bullets([
-            `<strong>১ম পৰ্যায় (৫ – ১২ বছৰ বয়স — বুনিয়াদী শিক্ষা আৰু কৌতূহল):</strong> শাৰীৰিক বৃদ্ধি, ভাষা শিকা, চিত্ৰাংকন, সংগীত বা খেল-ধেমালিৰ জৰিয়তে মানসিক বিকাশ হোৱাৰ সময়।`,
-            `<strong>২য় পৰ্যায় (১৩ – ১৬ বছৰ বয়স — মাধ্যমিক শিক্ষা আৰু একাগ্ৰতা):</strong> এই সময়ত মস্তিষ্ক ৰেখা অধিক সক্ৰিয় হয়; গণিত, বিজ্ঞান আৰু ভাষা চৰ্চাত বিশেষ মনোযোগ দিলে ভৱিষ্যতৰ শক্তিশালী ভেটি গঢ় লৈ উঠিব।`,
-            `<strong>৩য় পৰ্যায় (১৭ – ২১ বছৰ বয়স — উচ্চতৰ শিক্ষা আৰু সঠিক কেৰিয়াৰ বাছনি):</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি এই বয়সত শিশুটিৰ মূল লক্ষ্য স্পষ্ট হ'ব আৰু উচ্চ শিক্ষাত বিশেষ কৃতিত্ব দেখুৱাব পাৰিব।`,
-            `<strong>৪ৰ্থ পৰ্যায় (২২ – ২৬ বছৰ বয়স — প্ৰতিযোগিতামূলক পৰীক্ষা আৰু কৰ্মত প্ৰৱেশ):</strong> উচ্চ শিক্ষা সমাপ্ত কৰি প্ৰতিযোগিতামূলক পৰীক্ষা, বৃত্তিমূলক প্রশিক্ষণ বা প্ৰথম কর্মজীবনত সফলতাৰে পদাৰ্পণ কৰাৰ যোগ।`,
-            `<strong>৫ম পৰ্যায় (২৭+ বছৰ বয়স — পূৰ্ণ প্রতিষ্ঠা আৰু সামাজিক সন্মান):</strong> নিজৰ দক্ষতা আৰু পিতৃ-মাতৃৰ আশীৰ্বাদত এখন সুদৃঢ় কেৰিয়াৰ আৰু সন্মানজনক জীৱন গঢ়ি তুলিব।`
+        page6Section3Html = compactBullets([
+            `<strong>১ম পৰ্যায় (৫ – ১২ বছৰ — বুনিয়াদী শিক্ষা আৰু কৌতূহল):</strong> শাৰীৰিক বৃদ্ধি, ভাষা শিকা, চিত্ৰাংকন, সংগীত বা খেল-ধেমালিৰ জৰিয়তে মানসিক বিকাশ হোৱাৰ সময়।`,
+            `<strong>২য় পৰ্যায় (১৩ – ১৬ বছৰ — মাধ্যমিক শিক্ষা আৰু একাগ্ৰতা):</strong> এই সময়ত মস্তিষ্ক ৰেখা অধিক সক্ৰিয় হয়; গণিত, বিজ্ঞান আৰু ভাষা চৰ্চাত বিশেষ মনোযোগ দিলে ভৱিষ্যতৰ শক্তিশালী ভেটি গঢ় লৈ উঠিব।`,
+            `<strong>৩য় পৰ্যায় (১৭ – ২১ বছৰ — উচ্চতৰ শিক্ষা আৰু সঠিক কেৰিয়াৰ বাছনি):</strong> সমুদ্ৰিক শাস্ত্ৰ অনুসৰি এই বয়সত শিশুটিৰ মূল লক্ষ্য স্পষ্ট হ'ব আৰু উচ্চ শিক্ষাত বিশেষ কৃতিত্ব দেখুৱাব পাৰিব।`,
+            `<strong>৪ৰ্থ পৰ্যায় (২২ – ২৬ বছৰ — প্ৰতিযোগিতামূলক পৰীক্ষা আৰু কৰ্মত প্ৰৱেশ):</strong> উচ্চ শিক্ষা সমাপ্ত কৰি প্ৰতিযোগিতামূলক পৰীক্ষা, বৃত্তিমূলক প্রশিক্ষণ বা প্ৰথম কর্মজীবনত সফলতাৰে পদাৰ্পণ কৰাৰ যোগ।`,
+            `<strong>৫ম পৰ্যায় (২৭+ বছৰ — পূৰ্ণ প্রতিষ্ঠা আৰু সামাজিক সন্মান):</strong> নিজৰ দক্ষতা আৰু পিতৃ-মাতৃৰ আশীৰ্বাদত এখন সুদৃঢ় কেৰিয়াৰ আৰু সন্মানজনক জীৱন গঢ়ি তুলিব।`
         ]);
 
         page7Title = `❁ ভৱিষ্যৎ শিক্ষাৰ ধাৰা, কেৰিয়াৰ সম্ভাৱনা আৰু স্বাস্থ্য বিচাৰ ❁`;
@@ -1045,7 +1079,7 @@ function generatePalmistryReportHtml(order) {
         ? `<div class="info-card" style="border-left-color:#b45309;"><div class="card-content">ℹ️ ফটোৰ স্পষ্টতা মধ্যম হোৱাৰ বাবে কিছুমান সূক্ষ্ম বৈশিষ্ট্য চিনাক্ত কৰিব পৰা নগ'ল; সেইবোৰৰ বিষয়ে মন্তব্য কৰা হোৱা নাই।</div></div>`
         : '';
     const photoHtml = photo
-        ? `<div style="text-align: center; margin: 14px 0;"><img src="${photo}" alt="Customer Palm Photo" style="max-width: 240px; max-height: 280px; border-radius: 10px; border: 4px solid #8b0000; box-shadow: 0 8px 20px rgba(0,0,0,0.25);"><div style="font-size: 13px; color: #5c3a21; margin-top: 8px; font-weight: bold;">[ ${name}ৰ আপলোড কৰা হস্ততলৰ চিত্ৰ (${handName}) • AI চিত্ৰ বিশ্লেষণ সম্পূৰ্ণ ]</div></div>`
+        ? `<div style="text-align: center; margin: 8px 0;"><img src="${photo}" alt="Customer Palm Photo" style="max-width: 185px; max-height: 205px; border-radius: 10px; border: 3.5px solid #8b0000; box-shadow: 0 6px 16px rgba(0,0,0,0.22);"><div style="font-size: 12.5px; color: #5c3a21; margin-top: 5px; font-weight: bold;">[ ${name}ৰ আপলোড কৰা হস্ততলৰ চিত্ৰ (${handName}) • AI চিত্ৰ বিশ্লেষণ সম্পূৰ্ণ ]</div></div>`
         : '';
 
     return `
@@ -1056,8 +1090,8 @@ function generatePalmistryReportHtml(order) {
         <title>${name} - হস্তৰেখা বিশদ বিচাৰ</title>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
         <style>
-            body { font-family: 'Noto Sans Assamese', Georgia, serif; line-height: 1.8; color: #3e2723; background: #e8dcc4; margin: 0; padding: 20px; }
-            .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 50px 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px double #8b0000; position: relative; box-sizing: border-box; }
+            body { font-family: 'Noto Sans Assamese', Georgia, serif; line-height: 1.72; color: #3e2723; background: #e8dcc4; margin: 0; padding: 20px; }
+            .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 40px 42px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px double #8b0000; position: relative; box-sizing: border-box; }
             .page::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #8b0000; pointer-events: none; }
             .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
             .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; }
@@ -1066,23 +1100,23 @@ function generatePalmistryReportHtml(order) {
             .cover-details { margin-top: 40px; text-align: left; background: rgba(219, 190, 146, 0.2); padding: 30px; border: 1px solid #c9a961; border-radius: 4px; }
             .detail-row { font-size: 18px; margin-bottom: 12px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px; }
             .detail-label { font-weight: 600; color: #8b0000; display: inline-block; width: 170px; }
-            .section-title { font-size: 25px; font-weight: 700; color: #8b0000; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #8b0000; padding-bottom: 10px; }
-            .sub-heading { font-size: 19px; color: #5c3a21; margin-top: 25px; margin-bottom: 12px; border-left: 4px solid #8b0000; padding-left: 10px; font-weight: bold;}
-            .shloka { text-align: center; font-size: 17px; color: #8b0000; font-style: italic; margin: 15px 0 25px; padding: 12px; background: rgba(139,0,0,0.05); border-radius: 5px; }
-            .text-section { font-size: 15.5px; margin-bottom: 18px; text-align: justify; }
-            .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 18px; margin: 14px 0; border-radius: 3px; }
+            .section-title { font-size: 23px; font-weight: 700; color: #8b0000; text-align: center; margin-bottom: 18px; border-bottom: 2px solid #8b0000; padding-bottom: 8px; }
+            .sub-heading { font-size: 17.5px; color: #5c3a21; margin-top: 16px; margin-bottom: 8px; border-left: 4px solid #8b0000; padding-left: 10px; font-weight: bold; page-break-after: avoid; break-after: avoid; }
+            .shloka { text-align: center; font-size: 16.5px; color: #8b0000; font-style: italic; margin: 12px 0 18px; padding: 10px; background: rgba(139,0,0,0.05); border-radius: 5px; }
+            .text-section { font-size: 15px; margin-bottom: 14px; text-align: justify; }
+            .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 14px 16px; margin: 10px 0; border-radius: 3px; }
             .remedy-card { border-left-color: #5c3a21; background: rgba(92, 58, 33, 0.05); }
-            .card-title { font-weight: 700; color: #8b0000; margin-bottom: 8px; font-size: 17px; }
-            .card-content { font-size: 15.5px; color: #3e2723; text-align: justify; line-height: 1.7; }
-            .vedic-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 15px; background: rgba(255, 251, 235, 0.7); border: 1.5px solid #8b0000; }
-            .vedic-table th { background: #8b0000; color: #fde047; padding: 10px 14px; font-size: 16px; text-align: center; border: 1px solid #8b0000; }
-            .vedic-table td { padding: 9px 14px; border: 1px solid #c9a961; color: #3e2723; vertical-align: top; }
-            .disclaimer { background: rgba(139, 0, 0, 0.05); padding: 15px; margin-top: 25px; font-size: 13.5px; border: 1px solid #8b0000; text-align: justify; }
-            .footer-seal { text-align: center; margin-top: 25px; color: #8b0000; font-size: 17px; font-weight: bold; border-top: 2px dashed #8b0000; padding-top: 15px; }
+            .card-title { font-weight: 700; color: #8b0000; margin-bottom: 6px; font-size: 16.5px; }
+            .card-content { font-size: 14.8px; color: #3e2723; text-align: justify; line-height: 1.62; }
+            .vedic-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14.2px; background: rgba(255, 251, 235, 0.7); border: 1.5px solid #8b0000; }
+            .vedic-table th { background: #8b0000; color: #fde047; padding: 8px 12px; font-size: 15px; text-align: center; border: 1px solid #8b0000; }
+            .vedic-table td { padding: 7px 12px; border: 1px solid #c9a961; color: #3e2723; vertical-align: top; }
+            .disclaimer { background: rgba(139, 0, 0, 0.05); padding: 12px 14px; margin-top: 18px; font-size: 13px; border: 1px solid #8b0000; text-align: justify; }
+            .footer-seal { text-align: center; margin-top: 18px; color: #8b0000; font-size: 16px; font-weight: bold; border-top: 2px dashed #8b0000; padding-top: 12px; }
             .print-btn-wrapper { text-align: center; margin-top: 15px; padding-bottom: 30px; }
             .print-btn { background: #8b0000; color: #fdf5e6; border: 2px solid #5c3a21; padding: 12px 30px; font-size: 17px; cursor: pointer; font-weight: bold; border-radius: 6px; }
-            ul { margin: 8px 0 8px 18px; }
-            li { margin-bottom: 6px; }
+            ul { margin: 6px 0 6px 18px; }
+            li { margin-bottom: 5px; }
             
             .page.royal-cover-page {
                 padding: 0 !important;
@@ -1211,7 +1245,7 @@ function generatePalmistryReportHtml(order) {
                 text-overflow: ellipsis !important;
             }
             @media print {
-                @page { size: A4 portrait; margin: 8mm; }
+                @page { size: A4 portrait; margin: 7mm; }
                 html, body {
                     background: #fdf5e6 !important;
                     padding: 0 !important;
@@ -1229,7 +1263,7 @@ function generatePalmistryReportHtml(order) {
                     border: 3px double #8b0000 !important;
                     width: 100% !important;
                     max-width: 100% !important;
-                    padding: 24px 28px !important;
+                    padding: 18px 24px !important;
                     box-sizing: border-box !important;
                     page-break-after: always !important;
                     break-after: page !important;
@@ -1259,11 +1293,33 @@ function generatePalmistryReportHtml(order) {
                     page-break-after: always !important;
                     break-after: page !important;
                 }
+                .section-title {
+                    font-size: 21px !important;
+                    margin-bottom: 12px !important;
+                    padding-bottom: 6px !important;
+                    page-break-after: avoid !important;
+                    break-after: avoid !important;
+                }
+                .sub-heading {
+                    font-size: 16.5px !important;
+                    margin-top: 11px !important;
+                    margin-bottom: 6px !important;
+                    page-break-after: avoid !important;
+                    break-after: avoid !important;
+                }
                 .info-card, .vedic-table, .remedy-card, .disclaimer, .footer-seal {
                     page-break-inside: avoid !important;
                     break-inside: avoid !important;
-                    margin: 7px 0 !important;
-                    padding: 10px 14px !important;
+                    margin: 6px 0 !important;
+                    padding: 9px 13px !important;
+                }
+                .card-content {
+                    font-size: 14px !important;
+                    line-height: 1.54 !important;
+                }
+                .vedic-table th, .vedic-table td {
+                    padding: 5.5px 10px !important;
+                    font-size: 13.5px !important;
                 }
             }
         </style>
@@ -1359,8 +1415,8 @@ function generatePalmistryReportHtml(order) {
         <div class="page page-break">
             <h2 class="section-title">❁ গ্ৰহ পৰ্বতৰ বিচাৰ আৰু জীৱনৰ ৫-পৰ্যায়ৰ ৰোডমেপ ❁</h2>
             <div class="sub-heading">১. তলুৱাৰ ৬টা গ্ৰহ পৰ্বতৰ স্থিতি</div>
-            <div class="info-card"><div class="card-content">${mountsHtml}</div></div>
-            <div class="sub-heading">২. আপোনাৰ হাতৰ প্ৰধান শক্তিশালী গ্ৰহ পৰ্বতৰ বিশেষ প্ৰভাৱ</div>
+            <div class="info-card"><div class="card-content">${mountsCompactHtml}</div></div>
+            <div class="sub-heading">২. আপোনাৰ হাতৰ গ্ৰহ-পৰ্বতৰ সামগ্ৰিক প্ৰভাৱ</div>
             <div class="info-card"><div class="card-content">${mountsDominantHtml}</div></div>
             <div class="sub-heading">${page6Section3Heading}</div>
             <div class="info-card"><div class="card-content">${page6Section3Html}</div></div>
