@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="fav.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="grand_report_engine.js?v=15"></script>
+    <script src="grand_report_engine.js?v=23"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1361,6 +1361,18 @@
                 alert("অনুগ্ৰহ কৰি গ্ৰাহকৰ নাম আৰু জন্ম তাৰিখ পূৰণ কৰক!");
                 return;
             }
+            if (isPalmService && !palmPhoto) {
+                alert("হস্তৰেখা ৰিপোৰ্টৰ বাবে অনুগ্ৰহ কৰি হাতৰ তলুৱাৰ এখন ফটো আপলোড কৰক!");
+                return;
+            }
+
+            // ব্ৰাউজাৰৰ পপ-আপ ব্লকাৰ এৰাই চলিবলৈ ক্লিকৰ লগে লগেই (await ৰ আগতে) নতুন টেব খোলক
+            const preOpenedWin = window.open('', '_blank');
+            if (preOpenedWin && !preOpenedWin.closed) {
+                preOpenedWin.document.open();
+                preOpenedWin.document.write('<!DOCTYPE html><html lang="as"><head><meta charset="UTF-8"><title>ৰিপোৰ্ট প্ৰস্তুত হৈ আছে...</title></head><body style="font-family:sans-serif;background:#fdf5e6;color:#5c3a21;display:flex;align-items:center;justify-content:center;height:90vh;text-align:center;"><div><h2 style="color:#8b0000;">⏳ আপোনাৰ ৰিপোৰ্ট প্ৰস্তুত কৰা হৈছে...</h2><p>অনুগ্ৰহ কৰি কেইছেকেণ্ডমান অপেক্ষা কৰক।</p></div></body></html>');
+                preOpenedWin.document.close();
+            }
 
             const manualPayId = "pay_AdminManual_" + Date.now();
             const publicOrderId = "JA-ADM-" + Date.now().toString(36).toUpperCase();
@@ -1388,13 +1400,20 @@
 
             try {
                 const insertRow = {
+                    public_order_id: publicOrderId,
                     name: name,
                     email: email,
                     service: service,
+                    amount: amount,
                     birth_date: birth_date,
                     birth_time: birth_time,
                     birth_place: birth_place,
-                    razorpay_payment_id: manualPayId
+                    payment_status: 'pending',
+                    razorpay_payment_id: manualPayId,
+                    palm_hand: palmHand || null,
+                    palm_gender: palmGender || null,
+                    tarot_question: isPalmService ? (palmPhoto || null) : null,
+                    tarot_topic: isPalmService ? ((palmHand || 'right') + '|' + (palmGender || 'male')) : null
                 };
                 const { data, error } = await sbClient.from('orders').insert([insertRow]).select();
 
@@ -1450,7 +1469,7 @@
             updateStats(allOrders);
             showToast("✨ নতুন ৰিপোৰ্ট সফলতাৰে প্ৰস্তুত কৰা হ'ল!");
 
-            generateAndShowReport(newOrder.id);
+            generateAndShowReport(newOrder.id, preOpenedWin);
         }
 
         async function resetToPending(orderId) {
@@ -1480,13 +1499,17 @@
             return null;
         }
 
-        async function generateAndShowReport(orderId) {
+        async function generateAndShowReport(orderId, existingWin) {
             const order = allOrders.find(o => String(o.id) === String(orderId) || String(o.public_order_id) === String(orderId));
-            if (!order) return alert("অৰ্ডাৰৰ ডাটা পোৱা নগ'ল!");
+            if (!order) {
+                if (existingWin && !existingWin.closed) existingWin.close();
+                return alert("অৰ্ডাৰৰ ডাটা পোৱা নগ'ল!");
+            }
 
             const resolvedService = normalizeServiceKey(order);
 
             if (resolvedService === 'chat') {
+                if (existingWin && !existingWin.closed) existingWin.close();
                 alert("এইটো এটা পুৰণি 'আচাৰ্যৰ লগত কথা পাতক' (Chat) অৰ্ডাৰ। ইয়াৰ কোনো PDF ৰিপোৰ্ট নাথাকে।");
                 if (!order.razorpay_payment_id) {
                     const adminTag = "pay_AdminView_" + Date.now();
@@ -1502,7 +1525,7 @@
             }
 
             // ব্ৰাউজাৰৰ পপ-আপ ব্লকাৰ এৰাই চলিবলৈ প্ৰথমেই উইণ্ডো খোলক
-            const win = window.open('', '_blank');
+            const win = (existingWin && !existingWin.closed) ? existingWin : window.open('', '_blank');
 
             try {
                 if (!order.razorpay_payment_id) {
@@ -1515,36 +1538,78 @@
                         }).eq('id', order.id);
                     } catch (e) {}
                     order.razorpay_payment_id = adminTag;
-                    if (!localAdminViewedIds.includes(String(order.id))) {
-                        localAdminViewedIds.push(String(order.id));
-                        localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
-                    }
-                    filterTable();
-                    updateStats(allOrders);
                 }
+                order.payment_status = 'paid';
+                if (!localAdminViewedIds.includes(String(order.id))) {
+                    localAdminViewedIds.push(String(order.id));
+                }
+                if (order.public_order_id && !localAdminViewedIds.includes(String(order.public_order_id))) {
+                    localAdminViewedIds.push(String(order.public_order_id));
+                }
+                try {
+                    localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
+                    sessionStorage.setItem('ja_paid_' + (order.public_order_id || order.id), 'true');
+                    sessionStorage.setItem('ja_paid_' + order.id, 'true');
+                } catch(e){}
+                filterTable();
+                updateStats(allOrders);
 
                 if (resolvedService === 'palmistry') {
                     const savedPhoto = resolveOrderPalmPhoto(order);
+                    const _tParts = String(order.tarot_topic || '').split('|');
                     const palmOrderObj = {
                         ...order,
                         service: 'palmistry',
-                        palmHand: order.palmHand || order.palm_hand || 'right',
-                        palmGender: order.palmGender || order.palm_gender || 'male',
+                        palmHand: order.palmHand || order.palm_hand || _tParts[0] || 'right',
+                        palmGender: order.palmGender || order.palm_gender || _tParts[1] || 'male',
+                        palmAgeGroup: order.palmAgeGroup || _tParts[2] || 'adult',
                         palmPhoto: savedPhoto || null,
-                        palmAnalysis: order.palm_analysis || null
+                        palmAnalysis: order.palm_analysis || order.palmAnalysis || null
                     };
                     if (!(palmOrderObj.palmAnalysis && palmOrderObj.palmAnalysis.version === 2)) {
-                        alert("এই অৰ্ডাৰৰ হাতৰ ফটোৰ AI বিশ্লেষণ এতিয়াও সম্পন্ন হোৱা নাই। গ্ৰাহকে ৰিপোৰ্ট লিংক খুলিলে বিশ্লেষণ হ'ব; নহ'লে analyze-palm function আৰু GEMINI_API_KEY পৰীক্ষা কৰক।");
-                        return;
+                        if (!savedPhoto) {
+                            if (win && !win.closed) win.close();
+                            alert("এই হস্তৰেখা অৰ্ডাৰটোত হাতৰ তলুৱাৰ ফটো সংযুক্ত নাই। অনুগ্ৰহ কৰি তালিকাত থকা '📷 হাতৰ ফটো যোগ কৰক' বুটামেৰে ফটো আপলোড কৰি লওক।");
+                            return;
+                        }
+                        if (win && !win.closed) {
+                            win.document.open();
+                            win.document.write('<!DOCTYPE html><html lang="as"><head><meta charset="UTF-8"><title>হাতৰ ফটো বিশ্লেষণ চলি আছে...</title></head><body style="font-family:sans-serif;background:#fdf5e6;color:#5c3a21;display:flex;align-items:center;justify-content:center;height:90vh;text-align:center;"><div><h2 style="color:#8b0000;">🔍 হাতৰ তলুৱাৰ ফটো AI-ৰে বিশ্লেষণ কৰি থকা হৈছে...</h2><p>ইয়াত ১০–২৫ ছেকেণ্ড সময় লাগিব পাৰে। অনুগ্ৰহ কৰি এই টেবটো বন্ধ নকৰিব।</p></div></body></html>');
+                            win.document.close();
+                        }
+                        const apiBase = (window.JA_CONFIG && window.JA_CONFIG.apiBaseUrl) || (SUPABASE_URL + '/functions/v1');
+                        const aiRes = await fetch(apiBase + '/analyze-palm', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': 'Bearer ' + SUPABASE_KEY
+                            },
+                            body: JSON.stringify({
+                                orderId: order.public_order_id || order.id,
+                                palmPhoto: savedPhoto,
+                                adminBypass: true
+                            })
+                        });
+                        const aiJson = await aiRes.json();
+                        if (aiJson && aiJson.success && aiJson.analysis) {
+                            order.palm_analysis = aiJson.analysis;
+                            order.palmAnalysis = aiJson.analysis;
+                            palmOrderObj.palmAnalysis = aiJson.analysis;
+                        } else {
+                            if (win && !win.closed) win.close();
+                            alert("⚠️ হাতৰ ফটো বিশ্লেষণ সম্পূৰ্ণ নহ'ল: " + ((aiJson && aiJson.error) || "analyze-palm ফাংচন বা GEMINI_API_KEY পৰীক্ষা কৰক।"));
+                            return;
+                        }
                     }
                     const reportHtml = generatePalmistryReportHtml(palmOrderObj);
                     try {
-                        localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
-                        sessionStorage.setItem('ja_report_v15_' + order.id, reportHtml);
+                        localStorage.setItem('ja_report_v23_' + order.id, reportHtml);
+                        sessionStorage.setItem('ja_report_v23_' + order.id, reportHtml);
                         localStorage.setItem('ja_service_' + order.id, 'palmistry');
                         if (order.public_order_id) {
-                            localStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
-                            sessionStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
+                            localStorage.setItem('ja_report_v23_' + order.public_order_id, reportHtml);
+                            sessionStorage.setItem('ja_report_v23_' + order.public_order_id, reportHtml);
                             localStorage.setItem('ja_service_' + order.public_order_id, 'palmistry');
                         }
                     } catch(e){}
@@ -1553,6 +1618,7 @@
                         win.document.write(reportHtml);
                         win.document.close();
                     } else {
+                        try { localStorage.setItem('ja_pending_order', JSON.stringify(order)); } catch(e){}
                         window.location.href = 'report.html?order=' + encodeURIComponent(order.public_order_id || order.id);
                     }
                     return;
@@ -1579,12 +1645,12 @@
                 const reportHtml = generateGrandVedicReport(cleanVedicOrder, chart);
 
                 try {
-                    localStorage.setItem('ja_report_v15_' + order.id, reportHtml);
-                    sessionStorage.setItem('ja_report_v15_' + order.id, reportHtml);
+                    localStorage.setItem('ja_report_v23_' + order.id, reportHtml);
+                    sessionStorage.setItem('ja_report_v23_' + order.id, reportHtml);
                     localStorage.setItem('ja_service_' + order.id, resolvedService);
                     if (order.public_order_id) {
-                        localStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
-                        sessionStorage.setItem('ja_report_v15_' + order.public_order_id, reportHtml);
+                        localStorage.setItem('ja_report_v23_' + order.public_order_id, reportHtml);
+                        sessionStorage.setItem('ja_report_v23_' + order.public_order_id, reportHtml);
                         localStorage.setItem('ja_service_' + order.public_order_id, resolvedService);
                     }
                 } catch(e){}
@@ -1594,7 +1660,8 @@
                     win.document.write(reportHtml);
                     win.document.close();
                 } else {
-                    window.location.href = 'report.html?order=' + encodeURIComponent(order.public_order_id || order.id);
+                    try { localStorage.setItem('ja_pending_order', JSON.stringify(order)); } catch(e){}
+                        window.location.href = 'report.html?order=' + encodeURIComponent(order.public_order_id || order.id);
                 }
             } catch (error) {
                 if (win && !win.closed) win.close();

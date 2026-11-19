@@ -278,10 +278,21 @@
             }
 
             // 🔒 পেমেন্ট নোহোৱা অৰ্ডাৰৰ বাবে ৰিপোৰ্ট ব্লক কৰা
+            let isAdminApproved = false;
+            try {
+                const admList = JSON.parse(localStorage.getItem('ja_admin_viewed_ids') || '[]');
+                if (Array.isArray(admList) && (admList.includes(String(sKey)) || admList.includes(String(order.id)))) {
+                    isAdminApproved = true;
+                }
+            } catch(e){}
             const isOrderPaid = (
                 order.payment_status === 'paid' ||
                 order.status === 'paid' ||
-                sessionStorage.getItem('ja_paid_' + sKey) === 'true'
+                String(order.razorpay_payment_id || '').startsWith('pay_') ||
+                String(sKey || '').startsWith('JA-ADM-') ||
+                sessionStorage.getItem('ja_paid_' + sKey) === 'true' ||
+                sessionStorage.getItem('ja_paid_' + order.id) === 'true' ||
+                isAdminApproved
             );
             if (!isOrderPaid) {
                 document.getElementById('spinner').style.display = 'none';
