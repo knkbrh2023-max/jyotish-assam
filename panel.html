@@ -687,6 +687,53 @@
             </div>
         </div>
 
+        <!-- 🤝 PARTNER & AFFILIATE REVENUE REPORT -->
+        <div class="table-container" style="border-top: 3px solid #eab308; margin-bottom: 28px;">
+            <div class="table-top-bar">
+                <h2 style="color: #fde047;">🤝 পাৰ্টনাৰ আৰু এফিলিয়েট উপাৰ্জন ৰিপোৰ্ট (Partner Revenue Report)</h2>
+                <button type="button" class="hdr-btn hdr-btn-refresh" onclick="fetchPartnerReport()">🔄 পাৰ্টনাৰ ৰিপোৰ্ট ৰিফ্ৰেছ কৰক</button>
+            </div>
+            <div id="partnerSummaryStrip" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:16px;">
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px;">
+                    <div style="font-size:11.5px; color:#94a3b8;">মুঠ পাৰ্টনাৰ</div>
+                    <div id="prTotalPartners" style="font-size:22px; font-weight:800; color:#fff;">—</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px;">
+                    <div style="font-size:11.5px; color:#94a3b8;">White-Label উপাৰ্জন</div>
+                    <div id="prTotalWl" style="font-size:22px; font-weight:800; color:#fde047;">₹০</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px;">
+                    <div style="font-size:11.5px; color:#94a3b8;">Referral মুঠ বিক্ৰী</div>
+                    <div id="prTotalRef" style="font-size:22px; font-weight:800; color:#38bdf8;">₹০</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px;">
+                    <div style="font-size:11.5px; color:#94a3b8;">পাৰ্টনাৰক দিবলগীয়া কমিচন</div>
+                    <div id="prTotalComm" style="font-size:22px; font-weight:800; color:#fb7185;">₹০</div>
+                </div>
+                <div style="background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.35); border-radius:12px; padding:12px 14px;">
+                    <div style="font-size:11.5px; color:#6ee7b7;">আপোনাৰ নিট উপাৰ্জন</div>
+                    <div id="prTotalNet" style="font-size:22px; font-weight:800; color:#34d399;">₹০</div>
+                </div>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>পাৰ্টনাৰ / ব্ৰেণ্ড / ক'ড</th>
+                            <th>ফোন / UPI ID</th>
+                            <th>White-Label অৰ্ডাৰ & টকা</th>
+                            <th>Referral অৰ্ডাৰ & বিক্ৰী</th>
+                            <th>পাৰ্টনাৰৰ কমিচন (৩০%)</th>
+                            <th>আপোনাৰ নিট লাভ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="partnerTableBody">
+                        <tr><td colspan="6" style="text-align: center; padding: 24px; color: #94a3b8;">পাৰ্টনাৰ ৰিপোৰ্ট লোড হৈ আছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- 🎧 CUSTOMER SUPPORT MESSAGES TABLE -->
         <div class="table-container" style="border-top: 3px solid #10b981;">
             <div class="table-top-bar">
@@ -965,6 +1012,7 @@
         function refreshAllAdminData() {
             fetchOrders();
             fetchSupportMessages();
+            fetchPartnerReport();
             showToast("🔄 শেহতীয়া ডাটা আপডেট কৰা হৈছে...");
         }
 
@@ -975,6 +1023,7 @@
                 document.getElementById('mainDashboard').style.display = 'block';
                 fetchOrders();
                 fetchSupportMessages();
+                fetchPartnerReport();
             }
         });
 
@@ -1667,6 +1716,63 @@
                 if (win && !win.closed) win.close();
                 console.error("Report generation error:", error);
                 alert("ৰিপোৰ্ট খোলোঁতে সমস্যা হৈছে: " + error.message);
+            }
+        }
+        async function fetchPartnerReport() {
+            const tbody = document.getElementById('partnerTableBody');
+            if (!tbody) return;
+            try {
+                const res = await fetch(SUPABASE_URL + '/functions/v1/partner-api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': 'Bearer ' + SUPABASE_KEY
+                    },
+                    body: JSON.stringify({ action: 'admin_summary' })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || 'Partner API error');
+                }
+                const t = data.totals || {};
+                const list = data.partners || [];
+                const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+                setTxt('prTotalPartners', String(t.totalPartners || 0));
+                setTxt('prTotalWl', '₹' + Number(t.totalWlRevenue || 0).toLocaleString('en-IN'));
+                setTxt('prTotalRef', '₹' + Number(t.totalRefRevenue || 0).toLocaleString('en-IN'));
+                setTxt('prTotalComm', '₹' + Number(t.totalCommissionOwed || 0).toLocaleString('en-IN'));
+                setTxt('prTotalNet', '₹' + Number(t.totalNetToAdmin || 0).toLocaleString('en-IN'));
+
+                if (list.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:24px; color:#94a3b8;">এতিয়ালৈকে কোনো পাৰ্টনাৰ পঞ্জীয়ন হোৱা নাই।</td></tr>';
+                    return;
+                }
+                const escHtml = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                tbody.innerHTML = list.map(p => `
+                    <tr>
+                        <td>
+                            <div style="font-weight:700; color:#fff;">${escHtml(p.brand_name || p.name)}</div>
+                            <div style="font-size:12px; color:#94a3b8;">${escHtml(p.name)} • <span style="color:#fde047; font-weight:700;">${escHtml(p.partner_code)}</span></div>
+                        </td>
+                        <td>
+                            <div style="font-size:13px; color:#e2e8f0;">📞 ${escHtml(p.phone || '—')}</div>
+                            <div style="font-size:11.5px; color:#94a3b8;">UPI: ${escHtml(p.upi_id || 'নাই')}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight:700; color:#fde047;">₹${Number(p.wlRevenue || 0).toLocaleString('en-IN')}</div>
+                            <div style="font-size:11.5px; color:#94a3b8;">${p.wlCount || 0} টা ৰিপোৰ্ট</div>
+                        </td>
+                        <td>
+                            <div style="font-weight:700; color:#38bdf8;">₹${Number(p.refRevenue || 0).toLocaleString('en-IN')}</div>
+                            <div style="font-size:11.5px; color:#94a3b8;">${p.refCount || 0} টা অৰ্ডাৰ</div>
+                        </td>
+                        <td style="font-weight:700; color:#fb7185;">₹${Number(p.commissionOwed || 0).toLocaleString('en-IN')}</td>
+                        <td style="font-weight:800; color:#34d399;">₹${Number(p.netToAdmin || 0).toLocaleString('en-IN')}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:#fda4af;">পাৰ্টনাৰ ৰিপোৰ্ট লোড কৰিব পৰা নগ'ল: ${err.message}</td></tr>`;
             }
         }
     </script>
