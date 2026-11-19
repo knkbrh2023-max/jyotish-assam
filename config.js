@@ -14,7 +14,7 @@ window.JA_CONFIG = {
 
   // Production মুকলি কৰাৰ সময়ত আপোনাৰ Live Key (rzp_live_...) ইয়াত দিব
   razorpayKeyId:
-    "rzp_test_U1y44ZuGR97emy",
+    "rzp_live_U1Z0nyr0WRzdEP",
 
   siteUrl:
     "https://jyotishassam.com/",
