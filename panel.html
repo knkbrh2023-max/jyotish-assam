@@ -1598,7 +1598,7 @@
                             palmOrderObj.palmAnalysis = aiJson.analysis;
                         } else {
                             if (win && !win.closed) win.close();
-                            alert("⚠️ হাতৰ ফটো বিশ্লেষণ সম্পূৰ্ণ নহ'ল: " + ((aiJson && aiJson.error) || "analyze-palm ফাংচন বা GEMINI_API_KEY পৰীক্ষা কৰক।"));
+                            alert("⚠️ হাতৰ ফটো বিশ্লেষণ সম্পূৰ্ণ নহ'ল: " + ((aiJson && aiJson.error) || "analyze-palm ফাংচন বা GEMINI_API_KEY পৰীক্ষা কৰক।") + (aiJson && aiJson.detail ? "\n\n[Reason: " + aiJson.detail + "]" : ""));
                             return;
                         }
                     }
