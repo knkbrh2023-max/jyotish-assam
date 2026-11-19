@@ -68,7 +68,7 @@
             }
         }
     </style>
-    <script src="grand_report_engine.js?v=23"></script>
+    <script src="grand_report_engine.js?v=24"></script>
 </head>
 <body>
 
@@ -120,7 +120,7 @@
 
     <script>
     
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=23
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=24
 
 
 // --- Fallback Vedic Chart Calculation Engine ---
@@ -162,7 +162,7 @@
 
         // ১. যদি ব্ৰাউজাৰৰ স্থানীয় সংৰক্ষণত নতুনকৈ তৈয়াৰী (v8) বৈধ ৰিপোৰ্ট মজুত আছে
         if (orderId) {
-            const cached = sessionStorage.getItem('ja_report_v23_' + orderId) || localStorage.getItem('ja_report_v23_' + orderId);
+            const cached = sessionStorage.getItem('ja_report_v24_' + orderId) || localStorage.getItem('ja_report_v24_' + orderId);
             const savedSvc = (localStorage.getItem('ja_service_' + orderId) || sessionStorage.getItem('ja_service_' + orderId) || '').toLowerCase();
             const isValidMonthly = !(savedSvc === 'monthly' || (cached && cached.includes('মাহেকীয়া ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('মাহটোৰ ৪টা সপ্তাহৰ বিস্তৃত সাপ্তাহিক ফলাফল'));
             const isValidYearly = !(savedSvc === 'yearly' || (cached && cached.includes('বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'))) || (cached && cached.includes('বাৰ্ষিক ১২ মাহৰ বিস্তৃত মাহেকীয়া ফলাফল'));
@@ -223,6 +223,19 @@
         // ৪. যদি অৰ্ডাৰ পোৱা গ'ল, ৰিপোৰ্ট প্ৰস্তুত কৰা
         if (order) {
             const sKey = order.public_order_id || order.id || orderId;
+            try {
+                const wlRaw = localStorage.getItem('ja_wl_' + sKey) || localStorage.getItem('ja_wl_' + order.id);
+                if (wlRaw) {
+                    const wl = JSON.parse(wlRaw);
+                    if (wl && wl.brandName) {
+                        order.is_white_label = true;
+                        order.brandName = wl.brandName;
+                        order.brandTagline = wl.brandTagline || '';
+                        order.brandContact = wl.brandContact || '';
+                        order.brandLogo = wl.brandLogo || '';
+                    }
+                }
+            } catch(e){}
             const savedSvc = localStorage.getItem('ja_service_' + sKey) || sessionStorage.getItem('ja_service_' + sKey);
             if (savedSvc) order.service = savedSvc;
             if (String(order.service || '').toLowerCase().includes('palm')) {
@@ -347,8 +360,8 @@
 
             const saveId = order.public_order_id || order.id || orderId || 'temp';
             try {
-                localStorage.setItem('ja_report_v23_' + saveId, reportHtml);
-                sessionStorage.setItem('ja_report_v23_' + saveId, reportHtml);
+                localStorage.setItem('ja_report_v24_' + saveId, reportHtml);
+                sessionStorage.setItem('ja_report_v24_' + saveId, reportHtml);
                 localStorage.setItem('ja_report_' + saveId, reportHtml);
                 sessionStorage.setItem('ja_report_' + saveId, reportHtml);
                 localStorage.setItem('ja_latest_order_id', saveId);
@@ -419,7 +432,7 @@
             const chart = _isPalmOrder ? null : buildFallbackVedicChart(dobStr, tobStr, placeStr);
                 const reportHtml = renderFullReport(order, chart);
 
-                localStorage.setItem('ja_report_v23_' + order.id, reportHtml);
+                localStorage.setItem('ja_report_v24_' + order.id, reportHtml);
                 localStorage.setItem('ja_report_' + order.id, reportHtml);
                 localStorage.setItem('ja_latest_order_id', order.id);
 

@@ -1,3 +1,57 @@
+
+function applyWhiteLabelBranding(html, order) {
+    if (!order) return html;
+    const isWL = Boolean(order.is_white_label || order.isWhiteLabel || order.whiteLabel || order.brandName || order.brand_name);
+    if (!isWL) return html;
+
+    const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const brandName = esc(order.brandName || order.brand_name || 'বৈদিক জ্যোতিষ কেন্দ্ৰ');
+    const brandTagline = esc(order.brandTagline || order.brand_tagline || 'বৈদিক জ্যোতিষ আৰু হস্তৰেখা পৰামৰ্শ');
+    const brandContact = esc(order.brandContact || order.brand_contact || '');
+    const brandLogo = (order.brandLogo || order.brand_logo || '');
+    const custName = esc(order.name || 'গ্ৰাহক');
+
+    let reportLabel = 'বৈদিক জ্যোতিষ বিশদ প্ৰতিবেদন';
+    let reportSub = 'VEDIC ASTROLOGY REPORT';
+    const svc = String(order.service || '').toLowerCase();
+    if (svc.includes('palm')) { reportLabel = 'হস্তৰেখা বিশদ প্ৰতিবেদন'; reportSub = 'PALMISTRY REPORT'; }
+    else if (svc === 'love') { reportLabel = 'প্ৰেম আৰু বিবাহ বিচাৰ'; reportSub = 'LOVE & MARRIAGE REPORT'; }
+    else if (svc === 'career') { reportLabel = 'কেৰিয়াৰ আৰু ব্যৱসায় বিচাৰ'; reportSub = 'CAREER & BUSINESS REPORT'; }
+    else if (svc === 'monthly') { reportLabel = 'মাহেকীয়া ৰাশিফল প্ৰতিবেদন'; reportSub = 'MONTHLY HOROSCOPE'; }
+    else if (svc === 'yearly') { reportLabel = 'বাৰ্ষিক ৰাশিফল প্ৰতিবেদন'; reportSub = 'YEARLY HOROSCOPE'; }
+    else if (svc === 'birth') { reportLabel = 'সম্পূৰ্ণ জন্ম কুণ্ডলী'; reportSub = 'GRAND VEDIC HOROSCOPE'; }
+
+    const detailsMatch = html.match(/<div class="royal-details-overlay">([\s\S]*?)<\/div>\s*<\/div>\s*(?=<!-- PAGE 2|<div class="page)/);
+    const detailsInner = detailsMatch ? detailsMatch[1] : `<div class="royal-detail-item"><span class="royal-detail-label">গ্ৰাহকৰ নাম</span><span class="royal-detail-colon">:</span><span class="royal-detail-val">${custName}</span></div>`;
+
+    const logoBlock = (brandLogo && String(brandLogo).startsWith('data:image/'))
+        ? `<img src="${brandLogo}" alt="${brandName}" style="max-width:110px;max-height:110px;border-radius:50%;border:3px solid #ca8a04;box-shadow:0 6px 18px rgba(0,0,0,0.25);margin:0 auto 14px;display:block;object-fit:cover;">`
+        : `<div style="width:92px;height:92px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(135deg,#8b0000,#5c0000);border:3px solid #eab308;display:flex;align-items:center;justify-content:center;font-size:46px;color:#fde047;box-shadow:0 6px 18px rgba(0,0,0,0.25);">ॐ</div>`;
+
+    const wlCover = `<div class="page page-break cover" style="background:linear-gradient(180deg,#fffdf7 0%,#fdf3dc 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:260mm;padding:40px 36px;">
+            ${logoBlock}
+            <div style="font-size:36px;font-weight:800;color:#8b0000;line-height:1.25;margin-bottom:6px;">${brandName}</div>
+            <div style="font-size:16px;color:#5c3a21;font-weight:600;margin-bottom:24px;">${brandTagline}</div>
+            <div style="width:100%;max-width:520px;background:linear-gradient(135deg,#8b0000,#600000);color:#fde047;padding:14px 22px;border-radius:10px;border:2px solid #eab308;margin-bottom:8px;">
+                <div style="font-size:24px;font-weight:700;">${reportLabel}</div>
+            </div>
+            <div style="font-size:12px;letter-spacing:3px;color:#5c3a21;font-weight:700;margin-bottom:26px;">${reportSub}</div>
+            <div style="width:100%;max-width:540px;background:rgba(219,190,146,0.22);border:1.5px solid #c9a961;border-radius:10px;padding:20px 26px;text-align:left;">
+                ${detailsInner}
+            </div>
+            ${brandContact ? `<div style="margin-top:26px;padding:10px 20px;border-radius:999px;background:#fef3c7;border:1px solid #d97706;color:#78350f;font-size:15px;font-weight:700;">📞 যোগাযোগ: ${brandContact}</div>` : ''}
+        </div>`;
+
+    html = html.replace(/<div class="page page-break cover royal-cover-page">[\s\S]*?<\/div>\s*(?=<!-- PAGE 2|<div class="page)/, wlCover);
+    html = html.replace(/॥ ইতি জ্যোতিষ অসম[^<]*॥/g, `॥ ইতি ${brandName} ॥`);
+    html = html.replace(/জ্যোতিষ অসম/g, brandName);
+    html = html.replace(/www\.jyotishassam\.com/gi, brandContact || brandName);
+    if (brandContact) {
+        html = html.replace(/<\/div>\s*<\/body>/, `<div style="text-align:center;font-size:13px;color:#5c3a21;margin-top:8px;">📞 ${brandContact}</div></div></body>`);
+    }
+    return html;
+}
+
 // ============================================================================
 // 🪐 ACCURATE VEDIC EPHEMERIS, LAGNA, VIMSHOTTARI DASHA BALANCE & GOCHAR ENGINE
 // (Meeus / Schlyter Orbital Elements + Lahiri Chitrapaksha Ayanamsa)
@@ -1132,7 +1186,7 @@ function generatePalmistryReportHtml(order) {
         ? `<div style="text-align: center; margin: 8px 0;"><img src="${photo}" alt="Customer Palm Photo" style="max-width: 185px; max-height: 205px; border-radius: 10px; border: 3.5px solid #8b0000; box-shadow: 0 6px 16px rgba(0,0,0,0.22);"><div style="font-size: 12.5px; color: #5c3a21; margin-top: 5px; font-weight: bold;">[ ${name}ৰ আপলোড কৰা হস্ততলৰ চিত্ৰ (${handName}) • AI চিত্ৰ বিশ্লেষণ সম্পূৰ্ণ ]</div></div>`
         : '';
 
-    return `
+    return applyWhiteLabelBranding(`
     <!DOCTYPE html>
     <html lang="as">
     <head>
@@ -1515,7 +1569,7 @@ function generatePalmistryReportHtml(order) {
         </div>
     </body>
     </html>
-    `;
+    `, order);
 }
 
 function generateGrandVedicReport(order, chart) {
@@ -2792,7 +2846,7 @@ function generateGrandVedicReport(order, chart) {
     const plaqueTitleAs = plaqueTitleMap[service] || 'জন্মকুণ্ডলী প্ৰতিবেদন';
     const plaqueSubEn = plaqueSubMap[service] || 'ASTROLOGY REPORT';
 
-    const buildFinalDocumentHtml = (bodyPagesHtml) => `
+    const buildFinalDocumentHtml = (bodyPagesHtml) => applyWhiteLabelBranding(`
     <!DOCTYPE html>
     <html lang="as">
     <head>
@@ -3009,7 +3063,7 @@ function generateGrandVedicReport(order, chart) {
         </div>
     </body>
     </html>
-    `;
+    `, order);
 
     // =========================================================================
     // 🌙 100% PERSONALIZED MONTHLY HOROSCOPE REPORT (service === 'monthly')

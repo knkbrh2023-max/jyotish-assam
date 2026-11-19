@@ -257,7 +257,7 @@
     </style>
     <script src="config.js"></script>
     <script src="rashifal.js?v=20261113"></script>
-    <script src="grand_report_engine.js?v=15"></script>
+    <script src="grand_report_engine.js?v=23"></script>
     <link rel="stylesheet" href="jyotishassam-2.0.css">
 
     
@@ -582,6 +582,12 @@
     }
     </style>
 
+<script>
+try {
+    const _refP = new URLSearchParams(window.location.search).get('ref');
+    if (_refP && _refP.trim()) localStorage.setItem('ja_ref_code', _refP.trim().toUpperCase());
+} catch(e){}
+</script>
 </head>
 <body>
 
@@ -1889,7 +1895,9 @@ window.processPalmistryPayment = async function(e) {
         tarot_question: photo,
         tarot_topic: hand + '|' + gender + '|' + ageGroup,
         palmAgeGroup: ageGroup,
-        language: typeof currentLang !== 'undefined' ? currentLang : 'as'
+        refCode: (typeof localStorage !== 'undefined' ? localStorage.getItem('ja_ref_code') : null) || undefined,
+        language: typeof currentLang !== 'undefined' ? currentLang : 'as',
+        refCode: (typeof localStorage !== 'undefined' ? localStorage.getItem('ja_ref_code') : null) || undefined
     };
 
     try {
@@ -1922,6 +1930,7 @@ window.processPalmistryPayment = async function(e) {
                 palmHand: hand,
                 palmGender: gender,
                 palmAgeGroup: ageGroup,
+        refCode: (typeof localStorage !== 'undefined' ? localStorage.getItem('ja_ref_code') : null) || undefined,
                 tarot_topic: hand + '|' + gender + '|' + ageGroup,
                 palmPhoto: photo
             }));
@@ -2190,7 +2199,7 @@ window.processPayment = async function(e) {
 };
 
 
-// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=15
+// generatePalmistryReportHtml is loaded from grand_report_engine.js?v=23
 
 
 async function showReportToCustomer(orderId) {
@@ -2378,8 +2387,8 @@ async function showReportToCustomer(orderId) {
         const reportHtml = generateGrandVedicReport(orderObj, chart);
 
         try {
-            sessionStorage.setItem('ja_report_v15_' + orderId, reportHtml);
-            localStorage.setItem('ja_report_v15_' + orderId, reportHtml);
+            sessionStorage.setItem('ja_report_v23_' + orderId, reportHtml);
+            localStorage.setItem('ja_report_v23_' + orderId, reportHtml);
             sessionStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_report_' + orderId, reportHtml);
             localStorage.setItem('ja_service_' + orderId, service);

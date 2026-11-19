@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="as">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পাৰ্টনাৰ ও এফিলিয়েট প’ৰ্টেল | নিজৰ ব্ৰেণ্ডত ৰিপোৰ্ট</title>
+    <link rel="icon" type="image/png" href="fav.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+    <script src="config.js"></script>
+    <script src="grand_report_engine.js?v=24"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #070b14;
+            --bg-card: rgba(17, 25, 45, 0.92);
+            --gold-light: #fef08a;
+            --gold-main: #eab308;
+            --gold-border: rgba(234, 179, 8, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --emerald: #10b981;
+            --royal-blue: #3b82f6;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Noto Sans Assamese', 'Poppins', sans-serif;
+            background: radial-gradient(circle at 15% 0%, #171332 0%, #090d1a 48%, #050811 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px 14px 50px;
+            line-height: 1.55;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .topbar {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+            background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 14px;
+            padding: 14px 20px; margin-bottom: 20px;
+        }
+        .brand-h { font-size: 20px; font-weight: 800; color: var(--gold-light); }
+        .btn {
+            border: none; border-radius: 9px; padding: 10px 16px; font-weight: 700; cursor: pointer;
+            font-family: inherit; font-size: 13.5px; transition: 0.2s;
+        }
+        .btn-gold { background: linear-gradient(135deg, #eab308, #ca8a04); color: #0f172a; }
+        .btn-green { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+        .btn-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
+        .btn-ghost { background: rgba(255,255,255,0.08); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.16); text-decoration: none; display: inline-flex; align-items: center; }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px;
+            padding: 22px; margin-bottom: 20px; box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+        }
+        .card h2 { font-size: 18px; color: var(--gold-light); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 18px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 5px; font-weight: 600; }
+        input, select {
+            width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(15, 23, 42, 0.9); color: #fff; font-family: inherit; font-size: 14px; margin-bottom: 12px;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--gold-main); }
+        .tab-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+        .tab-btn { flex: 1; padding: 10px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); color: #cbd5e1; font-weight: 700; cursor: pointer; font-family: inherit; }
+        .tab-btn.active { background: linear-gradient(135deg, #eab308, #ca8a04); color: #0f172a; border-color: transparent; }
+        .stat-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; text-align: center; }
+        .stat-num { font-size: 24px; font-weight: 800; color: var(--gold-light); }
+        .stat-lbl { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+        .ref-box {
+            display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+            background: rgba(16, 185, 129, 0.08); border: 1px dashed #10b981; border-radius: 10px; padding: 12px;
+        }
+        .ref-url { flex: 1; font-size: 13.5px; color: #a7f3d0; word-break: break-all; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 10px; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }
+        th { color: var(--gold-light); font-size: 12.5px; }
+        .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+        .pill-ok { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+        .pill-pending { background: rgba(234,179,8,0.2); color: #fde047; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="topbar">
+        <div>
+            <div class="brand-h">🤝 পাৰ্টনাৰ ও এফিলিয়েট প’ৰ্টেল</div>
+            <div style="font-size:12.5px; color:#94a3b8;">নিজৰ ব্ৰেণ্ডত অফলাইন গ্ৰাহকক ৰিপোৰ্ট দিয়ক (কোনো দাম নোহোৱাকৈ) + ৰেফাৰেল লিংকেৰে ৩০% কমিছন উপাৰ্জন কৰক</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <a href="index.html" class="btn btn-ghost">← মূল পৃষ্ঠা</a>
+            <button id="logoutBtn" class="btn btn-ghost hidden" onclick="partnerLogout()">লগ-আউট</button>
+        </div>
+    </div>
+
+    <!-- AUTH SECTION -->
+    <div id="authSection" class="card" style="max-width:520px; margin: 20px auto;">
+        <div class="tab-bar">
+            <button class="tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">লগ-ইন কৰক</button>
+            <button class="tab-btn" id="tabRegBtn" onclick="switchAuthTab('register')">নতুন পাৰ্টনাৰ হওক</button>
+        </div>
+
+        <form id="loginForm" onsubmit="handlePartnerLogin(event)">
+            <label>ইমেইল (Email) *</label>
+            <input type="email" id="lEmail" required placeholder="partner@gmail.com">
+            <label>পাছৱৰ্ড (Password) *</label>
+            <input type="password" id="lPass" required placeholder="আপোনাৰ পাছৱৰ্ড">
+            <button type="submit" class="btn btn-gold" style="width:100%; padding:12px;">🔓 পাৰ্টনাৰ ডেশ্ববৰ্ড খোলক</button>
+        </form>
+
+        <form id="registerForm" class="hidden" onsubmit="handlePartnerRegister(event)">
+            <label>আপোনাৰ সম্পূৰ্ণ নাম *</label>
+            <input type="text" id="rName" required placeholder="যেনে: ৰাতুল শৰ্মা">
+            <label>নিজৰ ব্ৰেণ্ড / জ্যোতিষ কেন্দ্ৰৰ নাম (ৰিপোৰ্টত এই নাম ওলাব) *</label>
+            <input type="text" id="rBrand" required placeholder="যেনে: শ্ৰী গণেশ জ্যোতিষ কেন্দ্ৰ">
+            <div class="grid-2">
+                <div>
+                    <label>ফোন / WhatsApp নম্বৰ *</label>
+                    <input type="text" id="rPhone" required placeholder="9876543210">
+                </div>
+                <div>
+                    <label>কমিছন পোৱা UPI ID (ঐচ্ছিক)</label>
+                    <input type="text" id="rUpi" placeholder="name@upi">
+                </div>
+            </div>
+            <label>ইমেইল (Email) *</label>
+            <input type="email" id="rEmail" required placeholder="example@gmail.com">
+            <label>পাছৱৰ্ড বনাওক (কমেও ৪টা আখৰ) *</label>
+            <input type="password" id="rPass" required minlength="4" placeholder="******">
+            <button type="submit" class="btn btn-green" style="width:100%; padding:12px;">✨ বিনামূলীয়াকৈ পাৰ্টনাৰ একাউণ্ট খোলক</button>
+        </form>
+    </div>
+
+    <!-- DASHBOARD SECTION -->
+    <div id="dashSection" class="hidden">
+        <div class="grid-3" style="margin-bottom:20px;">
+            <div class="stat-box">
+                <div class="stat-num" id="statWlCount">০</div>
+                <div class="stat-lbl">নিজৰ ব্ৰেণ্ডৰ মুঠ ৰিপোৰ্ট</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num" id="statRefCount">০</div>
+                <div class="stat-lbl">লিংকৰ পৰা অহা বিক্ৰী</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num" id="statCommAmt">₹০</div>
+                <div class="stat-lbl">মুঠ এফিলিয়েট কমিছন (৩০%)</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- BRAND SETTINGS -->
+            <div class="card">
+                <h2>🏷️ আপোনাৰ নিজা ব্ৰেণ্ড ছেটিংছ (White-Label)</h2>
+                <p style="font-size:12.5px; color:#94a3b8; margin-bottom:12px;">ৰিপোৰ্টত "জ্যোতিষ অসম" বা কোনো দাম নাথাকে — কেৱল তলৰ আপোনাৰ ব্ৰেণ্ডৰ নাম ও নম্বৰ ওলাব।</p>
+                <form onsubmit="saveBrandSettings(event)">
+                    <label>ব্ৰেণ্ড / কেন্দ্ৰৰ নাম *</label>
+                    <input type="text" id="bName" required>
+                    <label>ব্ৰেণ্ড টেগলাইন (উপ-শিৰোনাম)</label>
+                    <input type="text" id="bTagline" placeholder="বৈদিক জ্যোতিষ আৰু হস্তৰেখা পৰামৰ্শ">
+                    <label>যোগাযোগ নম্বৰ (ৰিপোৰ্টত ছপা হ’ব)</label>
+                    <input type="text" id="bContact">
+                    <label>কমিছনৰ বাবে UPI ID</label>
+                    <input type="text" id="bUpi" placeholder="name@upi">
+                    <label>নিজা লগ’ আপলোড (ঐচ্ছিক)</label>
+                    <input type="file" id="bLogoFile" accept="image/*" onchange="handleBrandLogoUpload(event)">
+                    <div id="bLogoPreviewWrap" class="hidden" style="margin-bottom:12px; text-align:center;">
+                        <img id="bLogoPreview" src="" style="max-height:70px; border-radius:50%; border:2px solid #eab308;">
+                    </div>
+                    <button type="submit" class="btn btn-gold" style="width:100%;">💾 ব্ৰেণ্ড তথ্য ছেভ কৰক</button>
+                </form>
+
+                <hr style="border:none; border-top:1px dashed rgba(255,255,255,0.14); margin:18px 0;">
+                <h2>🔗 আপোনাৰ এফিলিয়েট ৰেফাৰেল লিংক (৩০% কমিছন)</h2>
+                <div class="ref-box">
+                    <span class="ref-url" id="refLinkText"></span>
+                    <button type="button" class="btn btn-green" onclick="copyRefLink()">📋 কপি</button>
+                    <button type="button" class="btn btn-blue" onclick="shareRefWhatsApp()">📲 WhatsApp</button>
+                </div>
+            </div>
+
+            <!-- DIRECT PAY WHITE-LABEL REPORT GENERATOR -->
+            <div class="card">
+                <h2>📄 নিজৰ ব্ৰেণ্ডত গ্ৰাহকৰ ৰিপোৰ্ট বনাওক (Direct Pay)</h2>
+                <p style="font-size:12.5px; color:#94a3b8; margin-bottom:12px;">Wallet নালাগে — প্ৰতিটো ৰিপোৰ্টৰ পাৰ্টনাৰ মূল্য পোনপটীয়াকৈ Pay কৰি তৎক্ষণাৎ গ্ৰাহকৰ বাবে PDF ৰিপোৰ্ট ডাউনলোড কৰক।</p>
+                <form onsubmit="createWhiteLabelReportDirectPay(event)">
+                    <label>সেৱা বাছনি কৰক (Partner Wholesale Rate) *</label>
+                    <select id="wlService" onchange="toggleWlServiceFields()">
+                        <option value="birth">সম্পূৰ্ণ জন্ম কুণ্ডলী — ₹১৪৯ (সাধাৰণ মূল্য ₹২৯৯)</option>
+                        <option value="palmistry">হস্তৰেখা বিশদ বিচাৰ — ₹১২৯ (সাধাৰণ মূল্য ₹১৯৯)</option>
+                        <option value="career">কেৰিয়াৰ আৰু ব্যৱসায় বিচাৰ — ₹৯৯ (সাধাৰণ মূল্য ₹১৯৯)</option>
+                        <option value="love">প্ৰেম আৰু বিবাহ বিচাৰ — ₹৬৯ (সাধাৰণ মূল্য ₹৯৯)</option>
+                        <option value="yearly">বাৰ্ষিক ৰাশিফল — ₹৩৯ (সাধাৰণ মূল্য ₹৪৯)</option>
+                        <option value="monthly">মাহেকীয়া ৰাশিফল — ₹১৫ (সাধাৰণ মূল্য ₹১৯)</option>
+                    </select>
+
+                    <label>গ্ৰাহকৰ নাম *</label>
+                    <input type="text" id="wlCustName" required placeholder="গ্ৰাহকৰ নাম">
+
+                    <div id="wlBirthFields">
+                        <div class="grid-2">
+                            <div>
+                                <label>জন্ম তাৰিখ *</label>
+                                <input type="date" id="wlDob">
+                            </div>
+                            <div>
+                                <label>জন্ম সময়</label>
+                                <input type="time" id="wlTob" value="10:30">
+                            </div>
+                        </div>
+                        <label>জন্মস্থান *</label>
+                        <input type="text" id="wlPlace" placeholder="যেনে: গুৱাহাটী, অসম">
+                    </div>
+
+                    <div id="wlPalmFields" class="hidden">
+                        <div class="grid-2">
+                            <div>
+                                <label>প্ৰধান হাত</label>
+                                <select id="wlPalmHand">
+                                    <option value="right">সোঁহাত (Right Hand)</option>
+                                    <option value="left">বাওঁহাত (Left Hand)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>লিংগ</label>
+                                <select id="wlPalmGender">
+                                    <option value="male">পুৰুষ / ল'ৰা</option>
+                                    <option value="female">মহিলা / ছোৱালী</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label>বয়সৰ শ্ৰেণী</label>
+                        <select id="wlPalmAge">
+                            <option value="adult">১৭+ বছৰ (বয়স্ক / তৰুণ)</option>
+                            <option value="child">১৬ বছৰৰ তলৰ শিশু / ছাত্ৰ-ছাত্ৰী</option>
+                        </select>
+                        <label>হাতৰ তলুৱাৰ ফটো আপলোড কৰক *</label>
+                        <input type="file" id="wlPalmFile" accept="image/*" onchange="handleWlPalmPhoto(event)">
+                        <div id="wlPalmPreviewWrap" class="hidden" style="margin-bottom:12px; text-align:center;">
+                            <img id="wlPalmPreview" src="" style="max-height:110px; border-radius:8px; border:1px solid #10b981;">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="wlPayBtn" class="btn btn-green" style="width:100%; padding:13px; font-size:15px;">
+                        💳 Direct Pay কৰক — ₹১৪৯ আৰু ৰিপোৰ্ট উলিয়াওক
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ORDERS HISTORY -->
+        <div class="card">
+            <h2>📊 আপোনাৰ ব্ৰেণ্ডৰ ৰিপোৰ্টসমূহ আৰু ৰেফাৰেল তালিকা</h2>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>তাৰিখ</th>
+                            <th>গ্ৰাহকৰ নাম</th>
+                            <th>সেৱা</th>
+                            <th>ধৰণ</th>
+                            <th>স্থিতি / কমিছন</th>
+                            <th>একচন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="partnerOrdersBody">
+                        <tr><td colspan="6" style="text-align:center; color:#94a3b8;">তথ্য লোড হৈ আছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const C = window.JA_CONFIG || {};
+const API_BASE = C.apiBaseUrl || "https://ihbdrtnkfitytklonnel.supabase.co/functions/v1";
+const SB_KEY = C.supabaseAnonKey || "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
+const WL_PRICES = { birth: 149, palmistry: 129, career: 99, love: 69, yearly: 39, monthly: 15 };
+
+let currentPartner = null;
+let wlPalmBase64 = null;
+let wlLogoBase64 = null;
+
+function switchAuthTab(tab) {
+    document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+    document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+    document.getElementById('tabLoginBtn').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegBtn').classList.toggle('active', tab === 'register');
+}
+
+async function callPartnerApi(payload) {
+    const res = await fetch(API_BASE + '/partner-api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+        body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Partner API error');
+    return data;
+}
+
+async function handlePartnerLogin(e) {
+    e.preventDefault();
+    try {
+        const res = await callPartnerApi({
+            action: 'login',
+            email: document.getElementById('lEmail').value.trim(),
+            password: document.getElementById('lPass').value
+        });
+        setPartnerSession(res.partner);
+    } catch (err) { alert('❌ ' + err.message); }
+}
+
+async function handlePartnerRegister(e) {
+    e.preventDefault();
+    try {
+        const res = await callPartnerApi({
+            action: 'register',
+            name: document.getElementById('rName').value.trim(),
+            brand_name: document.getElementById('rBrand').value.trim(),
+            phone: document.getElementById('rPhone').value.trim(),
+            upi_id: document.getElementById('rUpi').value.trim(),
+            email: document.getElementById('rEmail').value.trim(),
+            password: document.getElementById('rPass').value
+        });
+        alert('✅ পাৰ্টনাৰ একাউণ্ট সফলতাৰে খোলা হ’ল!');
+        setPartnerSession(res.partner);
+    } catch (err) { alert('❌ ' + err.message); }
+}
+
+function setPartnerSession(partner) {
+    currentPartner = partner;
+    try { localStorage.setItem('ja_partner_session', JSON.stringify(partner)); } catch(e){}
+    document.getElementById('authSection').classList.add('hidden');
+    document.getElementById('dashSection').classList.remove('hidden');
+    document.getElementById('logoutBtn').classList.remove('hidden');
+
+    document.getElementById('bName').value = partner.brand_name || '';
+    document.getElementById('bTagline').value = partner.brand_tagline || '';
+    document.getElementById('bContact').value = partner.brand_contact || partner.phone || '';
+    document.getElementById('bUpi').value = partner.upi_id || '';
+    if (partner.brand_logo) {
+        wlLogoBase64 = partner.brand_logo;
+        document.getElementById('bLogoPreview').src = partner.brand_logo;
+        document.getElementById('bLogoPreviewWrap').classList.remove('hidden');
+    }
+    const baseSite = (C.siteUrl || 'https://jyotishassam.com/').replace(/\/?$/, '/');
+    document.getElementById('refLinkText').innerText = `${baseSite}?ref=${partner.partner_code}`;
+    loadPartnerStats();
+}
+
+function partnerLogout() {
+    currentPartner = null;
+    try { localStorage.removeItem('ja_partner_session'); } catch(e){}
+    location.reload();
+}
+
+function compressImg(dataUrl, maxDim, q) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) {
+                if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+                else { w = Math.round(w * maxDim / h); h = maxDim; }
+            }
+            const c = document.createElement('canvas'); c.width = w; c.height = h;
+            c.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(c.toDataURL('image/jpeg', q));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+    });
+}
+
+function handleBrandLogoUpload(evt) {
+    const f = evt.target.files && evt.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = async (e) => {
+        wlLogoBase64 = await compressImg(e.target.result, 240, 0.8);
+        document.getElementById('bLogoPreview').src = wlLogoBase64;
+        document.getElementById('bLogoPreviewWrap').classList.remove('hidden');
+    };
+    r.readAsDataURL(f);
+}
+
+function handleWlPalmPhoto(evt) {
+    const f = evt.target.files && evt.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = async (e) => {
+        wlPalmBase64 = await compressImg(e.target.result, 650, 0.72);
+        document.getElementById('wlPalmPreview').src = wlPalmBase64;
+        document.getElementById('wlPalmPreviewWrap').classList.remove('hidden');
+    };
+    r.readAsDataURL(f);
+}
+
+async function saveBrandSettings(e) {
+    e.preventDefault();
+    if (!currentPartner) return;
+    try {
+        const res = await callPartnerApi({
+            action: 'update_brand',
+            partnerId: currentPartner.id,
+            brand_name: document.getElementById('bName').value.trim(),
+            brand_tagline: document.getElementById('bTagline').value.trim(),
+            brand_contact: document.getElementById('bContact').value.trim(),
+            upi_id: document.getElementById('bUpi').value.trim(),
+            brand_logo: wlLogoBase64 || undefined
+        });
+        setPartnerSession(res.partner);
+        alert('✅ আপোনাৰ নিজা ব্ৰেণ্ড তথ্য ছেভ হ’ল!');
+    } catch (err) { alert('❌ ' + err.message); }
+}
+
+function copyRefLink() {
+    const txt = document.getElementById('refLinkText').innerText;
+    navigator.clipboard.writeText(txt).then(() => alert('🔗 ৰেফাৰেল লিংক কপি হ’ল!'));
+}
+function shareRefWhatsApp() {
+    const txt = document.getElementById('refLinkText').innerText;
+    window.open('https://wa.me/?text=' + encodeURIComponent('🔮 আপোনাৰ জন্ম কুণ্ডলী আৰু হস্তৰেখা চাবলৈ এই লিংকত ক্লিক কৰক: ' + txt), '_blank');
+}
+
+function toggleWlServiceFields() {
+    const svc = document.getElementById('wlService').value;
+    const isPalm = (svc === 'palmistry');
+    document.getElementById('wlBirthFields').classList.toggle('hidden', isPalm);
+    document.getElementById('wlPalmFields').classList.toggle('hidden', !isPalm);
+    const price = WL_PRICES[svc] || 149;
+    document.getElementById('wlPayBtn').innerText = `💳 Direct Pay কৰক — ₹${price} আৰু ৰিপোৰ্ট উলিয়াওক`;
+}
+
+async function createWhiteLabelReportDirectPay(e) {
+    e.preventDefault();
+    if (!currentPartner) return;
+    const svc = document.getElementById('wlService').value;
+    const custName = document.getElementById('wlCustName').value.trim();
+    const isPalm = (svc === 'palmistry');
+
+    if (isPalm && !wlPalmBase64) return alert('অনুগ্ৰহ কৰি গ্ৰাহকৰ হাতৰ ফটো আপলোড কৰক!');
+    const dob = document.getElementById('wlDob').value || '1995-01-01';
+    const tob = document.getElementById('wlTob').value || '10:30';
+    const place = document.getElementById('wlPlace').value.trim() || 'অসম';
+    if (!isPalm && !document.getElementById('wlDob').value) return alert('গ্ৰাহকৰ জন্ম তাৰিখ দিয়ক!');
+
+    const btn = document.getElementById('wlPayBtn');
+    const origText = btn.innerText;
+    btn.innerText = 'প্ৰস্তুত হৈ আছে... ⏳'; btn.disabled = true;
+
+    const hand = document.getElementById('wlPalmHand').value || 'right';
+    const gender = document.getElementById('wlPalmGender').value || 'male';
+    const ageGrp = document.getElementById('wlPalmAge').value || 'adult';
+
+    try {
+        const orderPayload = {
+            service: svc,
+            name: custName,
+            email: currentPartner.email,
+            birthDate: dob,
+            birthTime: tob,
+            birthPlace: place,
+            palmHand: isPalm ? hand : undefined,
+            palmGender: isPalm ? gender : undefined,
+            tarot_question: isPalm ? wlPalmBase64 : undefined,
+            tarot_topic: isPalm ? `${hand}|${gender}|${ageGrp}` : undefined,
+            partnerId: currentPartner.id,
+            isWhiteLabel: true,
+            brandName: currentPartner.brand_name,
+            brandContact: currentPartner.brand_contact || currentPartner.phone || ''
+        };
+
+        const createRes = await fetch(API_BASE + '/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+            body: JSON.stringify(orderPayload)
+        });
+        const ord = await createRes.json();
+        if (!ord.success) throw new Error(ord.error || 'Order failed');
+
+        const wlMeta = {
+            brandName: currentPartner.brand_name,
+            brandTagline: currentPartner.brand_tagline || '',
+            brandContact: currentPartner.brand_contact || currentPartner.phone || '',
+            brandLogo: currentPartner.brand_logo || ''
+        };
+        try {
+            localStorage.setItem('ja_wl_' + ord.orderId, JSON.stringify(wlMeta));
+            localStorage.setItem('ja_service_' + ord.orderId, svc);
+            if (isPalm) {
+                localStorage.setItem('ja_palm_photo_' + ord.orderId, wlPalmBase64);
+                localStorage.setItem('ja_palm_age_' + ord.orderId, ageGrp);
+            }
+        } catch(err){}
+
+        const options = {
+            key: ord.keyId,
+            amount: ord.amount,
+            currency: 'INR',
+            name: currentPartner.brand_name || 'Partner Portal',
+            description: `${ord.serviceName} (White-Label)`,
+            order_id: ord.razorpayOrderId,
+            prefill: { name: currentPartner.name, email: currentPartner.email },
+            theme: { color: '#ca8a04' },
+            handler: async function(r) {
+                const vRes = await fetch(API_BASE + '/verify-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+                    body: JSON.stringify({
+                        orderId: ord.orderId,
+                        razorpay_order_id: r.razorpay_order_id,
+                        razorpay_payment_id: r.razorpay_payment_id,
+                        razorpay_signature: r.razorpay_signature
+                    })
+                });
+                const vj = await vRes.json();
+                if (!vRes.ok || vj.success === false) {
+                    alert('⚠️ পেমেণ্ট ভেৰিফিকেচন বিফল হ’ল!');
+                    btn.innerText = origText; btn.disabled = false;
+                    return;
+                }
+                try { sessionStorage.setItem('ja_paid_' + ord.orderId, 'true'); } catch(err){}
+                loadPartnerStats();
+                window.open('report.html?order=' + encodeURIComponent(ord.orderId), '_blank');
+                btn.innerText = origText; btn.disabled = false;
+            }
+        };
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', (r) => {
+            alert('Failed: ' + r.error.description);
+            btn.innerText = origText; btn.disabled = false;
+        });
+        rzp.open();
+    } catch (err) {
+        alert('❌ ' + err.message);
+        btn.innerText = origText; btn.disabled = false;
+    }
+}
+
+async function loadPartnerStats() {
+    if (!currentPartner) return;
+    try {
+        const res = await callPartnerApi({
+            action: 'stats',
+            partnerId: currentPartner.id,
+            partnerCode: currentPartner.partner_code
+        });
+        const wl = res.whiteLabelOrders || [];
+        const rf = res.referralOrders || [];
+        document.getElementById('statWlCount').innerText = wl.filter(x => x.payment_status === 'paid').length;
+        document.getElementById('statRefCount').innerText = rf.length;
+        document.getElementById('statCommAmt').innerText = '₹' + (res.totalCommission || 0);
+
+        const rows = [
+            ...wl.map(o => ({ ...o, kind: 'White-Label (নিজৰ ব্ৰেণ্ড)' })),
+            ...rf.map(o => ({ ...o, kind: 'Affiliate Referral (৩০%)' }))
+        ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        const tbody = document.getElementById('partnerOrdersBody');
+        if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8;">এতিয়ালৈকে কোনো অৰ্ডাৰ নাই।</td></tr>';
+            return;
+        }
+        tbody.innerHTML = rows.map(o => {
+            const dt = o.created_at ? new Date(o.created_at).toLocaleDateString('as-IN') : '-';
+            const paid = o.payment_status === 'paid';
+            const st = o.commission_amount ? `<span class="pill pill-ok">+₹${o.commission_amount} কমিছন</span>` : (paid ? '<span class="pill pill-ok">পৰিশোধিত</span>' : '<span class="pill pill-pending">পেনণ্ডিং</span>');
+            const act = (paid && o.kind.startsWith('White-Label'))
+                ? `<a href="report.html?order=${encodeURIComponent(o.public_order_id || o.id)}" target="_blank" class="btn btn-gold" style="padding:5px 10px;font-size:12px;text-decoration:none;">📄 ৰিপোৰ্ট খোলক</a>`
+                : '—';
+            return `<tr><td>${dt}</td><td>${o.name || 'গ্ৰাহক'}</td><td>${o.service}</td><td>${o.kind}</td><td>${st}</td><td>${act}</td></tr>`;
+        }).join('');
+    } catch (err) { console.warn(err); }
+}
+
+window.addEventListener('load', () => {
+    try {
+        const saved = localStorage.getItem('ja_partner_session');
+        if (saved) setPartnerSession(JSON.parse(saved));
+    } catch(e){}
+});
+</script>
+</body>
+</html>
