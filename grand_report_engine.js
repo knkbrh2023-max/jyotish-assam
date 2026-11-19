@@ -813,21 +813,25 @@ function generatePalmistryReportHtml(order) {
     else if (th === 'narrow') generalPts.push(`সতৰ্ক বুঢ়া আঙুলিৰ কোণে ভাবি-চিন্তি আৰু সুৰক্ষিতভাৱে পদক্ষেপ লোৱাৰ অভ্যাস সূচায়।`);
     else if (th === 'medium') generalPts.push(`মধ্যম বুঢ়া আঙুলিৰ কোণে ইচ্ছাশক্তি আৰু যুক্তিৰ সুন্দৰ সমতা সূচায় — আপুনি আৱেগত উটি নগৈ সময়মতে সঠিক সিদ্ধান্ত ল’ব পাৰে।`);
 
-    // Career: Job vs Business & Timing (strictly matched to visible traits)
+    // Career: Job vs Business & Timing (balanced weighting across all palm traits)
     let bizScore = 0, jobScore = 0;
     if (mt.mercury === 'high') bizScore += 2;
     if (hd.start === 'separated') bizScore += 2;
     if (ft.origin === 'moon_mount') bizScore += 2;
-    if (hs === 'fire') bizScore += 1;
+    if (mt.sun === 'high') bizScore += 1;
+    if (mt.moon === 'high') bizScore += 1;
+    if (hs === 'fire' || hs === 'air' || hs === 'water') bizScore += 1;
     if (ir === 'ring_longer') bizScore += 1;
     if (lfng === 'high') bizScore += 1;
+    if (th === 'wide') bizScore += 1;
 
     if (mt.saturn === 'high') jobScore += 2;
-    if (mt.jupiter === 'high') jobScore += 2;
+    if (mt.jupiter === 'high') jobScore += (ft.presence === 'clear' || mt.sun === 'high') ? 2 : 1;
     if (ir === 'index_longer') jobScore += 2;
-    if (hd.start === 'joined_with_life' || hd.start === 'touching') jobScore += 2;
+    if (hd.start === 'joined_with_life' || hd.start === 'touching') jobScore += 1;
     if (ft.origin === 'wrist' || ft.origin === 'life_line') jobScore += 1;
     if (hs === 'earth') jobScore += 1;
+    if (th === 'narrow') jobScore += 1;
 
     const jobReasonPhrase = (mt.jupiter === 'high' || mt.saturn === 'high')
         ? 'উন্নত বৃহস্পতি-শনি পৰ্বত'
